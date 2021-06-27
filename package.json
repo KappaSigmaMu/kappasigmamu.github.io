@@ -1,7 +1,8 @@
 {
   "name": "ksm-app",
   "version": "0.1.0",
-  "private": true,
+  "homepage": "https://KappaSigmaMu.github.io/ksm-app",
+  "private": false,
   "dependencies": {
     "@popperjs/core": "^2.9.2",
     "@testing-library/jest-dom": "^5.11.4",
