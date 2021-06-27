@@ -34,6 +34,6 @@ Builds the app for production to the `build` folder.
 
 ## Documentation
 
-[Substrate Developer Hub](https://substrate.dev)
-[Create React App](https://github.com/facebook/create-react-app)
-[Polkadot js API](https://polkadot.js.org/api)
+* [Substrate Developer Hub](https://substrate.dev)
+* [Create React App](https://github.com/facebook/create-react-app)
+* [Polkadot js API](https://polkadot.js.org/api)
