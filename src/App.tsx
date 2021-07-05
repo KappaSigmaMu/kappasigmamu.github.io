@@ -8,7 +8,7 @@ import Home from './pages/Home';
 
 function App() {
   return (
-    <Container>
+    <Container fluid className="px-0">
       <Navbar bg="dark" variant="dark">
         <Container>
         <Navbar.Brand as={Link} to="/">KappaSigmaMu Society</Navbar.Brand>
