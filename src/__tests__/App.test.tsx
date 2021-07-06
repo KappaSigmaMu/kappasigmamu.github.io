@@ -7,7 +7,7 @@ test('renders App', () => {
   render(
     <BrowserRouter>
       <App />
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 
   const element = screen.getByText(/KappaSigmaMu Society/i);
