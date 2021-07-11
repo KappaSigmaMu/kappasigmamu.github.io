@@ -22,7 +22,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-      run: yarn ci
+    - run: yarn ci
 
     - name: Run the tests and generate coverage report
       run: yarn test -- --coverage
