@@ -42,8 +42,8 @@
     "cy:open": "cypress open",
     "eslint": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\"",
     "eslint:fix": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\" --fix",
-    "prettier": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "prettier:fix": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "prettier": "prettier --check \"src/**/*.{ts,tsx,scss}\"",
+    "prettier:fix": "prettier --write \"src/**/*.{ts,tsx,scss}\"",
     "linter": "yarn eslint && yarn prettier",
     "linter:fix": "yarn eslint:fix && yarn prettier:fix"
   },
