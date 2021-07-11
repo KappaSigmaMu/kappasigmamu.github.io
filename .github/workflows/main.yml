@@ -26,26 +26,10 @@ jobs:
       run: yarn test -- --coverage
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
-
-  linters-check:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install modules
-        run: yarn
-      - name: Run linter
-        run: yarn linter
-
-  cypress-run:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cypress run
+    - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
           build: yarn run build
           start: yarn start
+    - name: Run linter
+        run: yarn linter
