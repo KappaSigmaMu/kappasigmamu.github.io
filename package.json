@@ -24,7 +24,14 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
-    "cypress": "^7.6.0"
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "cypress": "^7.6.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "prettier": "^2.3.2"
   },
   "scripts": {
     "build": "react-scripts build",
@@ -32,7 +39,12 @@
     "eject": "react-scripts eject",
     "start": "react-scripts start",
     "test": "react-scripts test",
-    "cy:open": "cypress open"
+    "cy:open": "cypress open",
+    "eslint": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\"",
+    "eslint:fix": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\" --fix",
+    "prettier:fix": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "prettier:check": "prettier --check \"src/**/*.{ts,tsx}\"",
+    "linter:fix": "yarn eslint:fix && yarn prettier:fix"
   },
   "eslintConfig": {
     "extends": [
