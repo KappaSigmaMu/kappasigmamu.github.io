@@ -17,12 +17,30 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn run ci
+    - run: yarn ci
+
     - name: Run the tests and generate coverage report
-      run: npm test -- --coverage
+      run: yarn test -- --coverage
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
+
+    - name: Run linter
+      run: yarn linter      
+
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          build: yarn build
+          start: yarn start
