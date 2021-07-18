@@ -2,8 +2,8 @@ import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import { Switch, Route, Link } from 'react-router-dom'
-import { About } from './pages/About'
-import { Home } from './pages/Home'
+import { About } from './About'
+import { Home } from './Home'
 
 function App() {
   return (
