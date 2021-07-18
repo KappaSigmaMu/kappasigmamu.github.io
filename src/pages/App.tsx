@@ -1,6 +1,9 @@
+import ThreeCanary from 'canary-component'
+import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
+import Row from 'react-bootstrap/Row'
 import { Switch, Route, Link } from 'react-router-dom'
 import { About } from './About'
 import { Home } from './Home'
@@ -32,6 +35,15 @@ function App() {
           <About />
         </Route>
       </Switch>
+
+      <Row>
+        <Col>
+          {process.env.PUBLIC_URL}
+          <ThreeCanary
+            objectUrl={process.env.PUBLIC_URL + '/assets/canary.obj'}
+          />
+        </Col>
+      </Row>
     </Container>
   )
 }
