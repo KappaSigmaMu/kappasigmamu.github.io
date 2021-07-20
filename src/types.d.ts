@@ -1,5 +1,5 @@
-declare module 'canary-component';
+declare module 'canary-component'
 
 declare class ThreeCanary {
-  constructor(objectUrl?: string);
+  constructor(objectUrl?: string)
 }
