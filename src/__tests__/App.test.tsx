@@ -1,15 +1,16 @@
 import { render, screen } from '@testing-library/react'
-import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import ShallowRenderer from 'react-test-renderer/shallow'
 import { App } from '../pages/App'
 
 test('renders App', () => {
-  render(
+  const renderer = new ShallowRenderer()
+
+  const tree = renderer.render(
     <BrowserRouter>
       <App />
     </BrowserRouter>,
   )
 
-  const element = screen.getByText(/KappaSigmaMu Society/i)
-  expect(element).toBeInTheDocument()
+  expect(tree).toMatchSnapshot()
 })
