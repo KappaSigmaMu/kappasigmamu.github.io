@@ -14,9 +14,9 @@ function App() {
           <Navbar.Brand as={Link} to="/">
             <img
               src={NavLogo}
+              alt="KappaSigmaMu"
               width="150"
               className="d-inline-block align-top"
-              alt="Kappa Sigma Mu logo"
             />
           </Navbar.Brand>
           <Nav className="mx-auto">
