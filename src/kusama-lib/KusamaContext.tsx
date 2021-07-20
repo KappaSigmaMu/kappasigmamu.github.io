@@ -1,8 +1,11 @@
+import React, { useReducer, useContext } from 'react'
 import { ApiPromise, WsProvider } from '@polkadot/api'
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc'
+import keyring from '@polkadot/ui-keyring'
 import PropTypes from 'prop-types'
 import queryString from 'query-string'
-import React, { useReducer, useContext } from 'react'
+
 import { config } from './config'
 
 const parsedQuery = queryString.parse(window.location.search)
@@ -67,6 +70,39 @@ const connect = (state: any, dispatch: any) => {
   _api.on('error', (err) => dispatch({ type: 'CONNECT_ERROR', payload: err }))
 }
 
+let loadAccts = false
+const loadAccounts = (state: any, dispatch: any) => {
+  const asyncLoadAccounts = async () => {
+    dispatch({ type: 'LOAD_KEYRING' })
+    try {
+      await web3Enable(config.APP_NAME)
+      let allAccounts = await web3Accounts()
+      allAccounts = allAccounts.map(({ address, meta }) => ({
+        address,
+        meta: { ...meta, name: `${meta.name} (${meta.source})` },
+      }))
+      keyring.loadAll(
+        { isDevelopment: config.DEVELOPMENT_KEYRING },
+        allAccounts,
+      )
+      dispatch({ type: 'SET_KEYRING', payload: keyring })
+    } catch (e) {
+      console.error(e)
+      dispatch({ type: 'KEYRING_ERROR' })
+    }
+  }
+
+  const { keyringState } = state
+  // If `keyringState` is not null `asyncLoadAccounts` is running.
+  if (keyringState) return
+  // If `loadAccts` is true, the `asyncLoadAccounts` has been run once.
+  if (loadAccts) return dispatch({ type: 'SET_KEYRING', payload: keyring })
+
+  // This is the heavy duty work
+  loadAccts = true
+  asyncLoadAccounts()
+}
+
 const KusamaContext = React.createContext<any>('')
 
 const KusamaContextProvider = (props: any) => {
@@ -79,6 +115,7 @@ const KusamaContextProvider = (props: any) => {
 
   const [state, dispatch] = useReducer(reducer, initState)
   connect(state, dispatch)
+  loadAccounts(state, dispatch)
 
   return (
     <KusamaContext.Provider value={state}>
