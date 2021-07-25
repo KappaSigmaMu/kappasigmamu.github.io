@@ -20,11 +20,11 @@ type StateType = {
 }
 
 type ActionType =
-  | { type: "CONNECTING" }
-  | { type: "CONNECTED"; payload: ApiPromise }
-  | { type: "READY" }
-  | { type: "DISCONNECTED" }
-  | { type: "ERROR"; payload: any }
+  | { type: 'CONNECTING' }
+  | { type: 'CONNECTED'; payload: ApiPromise }
+  | { type: 'READY' }
+  | { type: 'DISCONNECTED' }
+  | { type: 'ERROR'; payload: any }
 
 function reducer(state: StateType, action: ActionType): StateType {
   switch (action.type) {
