@@ -28,34 +28,29 @@ module.exports = {
   },
   rules: {
     'semi': ['error', 'never'],
-    'no-multiple-empty-lines': ['error', { max: 1 }],
-    'no-import-assign': 'error',
-    'no-duplicate-imports': 'error',
-    'no-useless-rename': 'error',
-    'object-shorthand': 'error',
+    'no-multiple-empty-lines': ['warn', { max: 1 }],
+    'no-import-assign': 'warn',
+    'no-duplicate-imports': 'warn',
+    'no-useless-rename': 'warn',
+    'object-shorthand': 'warn',
     '@typescript-eslint/camelcase': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
-    '@typescript-eslint/no-explicit-any': 'error',
-    '@typescript-eslint/no-inferrable-types': 'error',
-    '@typescript-eslint/no-unused-vars': 'error',
-    '@typescript-eslint/member-ordering': 'error',
+    '@typescript-eslint/no-inferrable-types': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/member-ordering': 'warn',
     '@typescript-eslint/explicit-member-accessibility': [
-      'error',
+      'warn',
       { overrides: { constructors: 'no-public' } },
     ],
     '@typescript-eslint/naming-convention': [
-      'error',
+      'warn',
       {
         'selector': 'interface',
         'format': ['PascalCase'],
-        'custom': {
-          'regex': 'I[A-Z]',
-          'match': true
-        }
       }
     ],
     'import/order': [
-      'error',
+      'warn',
       {
         groups: ['external', 'builtin'],
         'newlines-between': 'never',
@@ -65,8 +60,9 @@ module.exports = {
         },
       },
     ],
-    'import/newline-after-import': ['error'],
-    'import/no-default-export': ['error'],
+    'import/newline-after-import': ['warn'],
+    'import/no-default-export': ['warn'],
     '@typescript-eslint/explicit-module-boundary-types': 0,
+    'prettier/prettier': 'warn'
   },
 };

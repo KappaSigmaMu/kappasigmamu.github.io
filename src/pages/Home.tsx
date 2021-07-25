@@ -1,3 +1,6 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
+import { useEffect, useState } from 'react'
 import {
   Container,
   Image,
@@ -8,15 +11,27 @@ import {
   FormControl,
 } from 'react-bootstrap'
 import { BlogCard } from '../components/BlogCard'
-import CanaryComponent from '../static/canary-component.png'
+import { Canary } from '../components/canary'
+import { useKusama } from '../kusama-lib'
 import GavinWood from '../static/gavin-wood.png'
 
 function Home() {
+  const { api } = useKusama()
+  const [members, setMembers] = useState([])
+
+  useEffect(() => {
+    if (api) {
+      api.derive.society.members().then((response: any) => {
+        setMembers(response)
+      })
+    }
+  }, [])
+
   return (
     <>
       <Container>
         <Row className="my-5 justify-content-md-center">
-          <Image width="600" src={CanaryComponent} />
+          <Canary />
         </Row>
       </Container>
       <Container>
@@ -29,6 +44,14 @@ function Home() {
           </Col>
           <Col md={3}>
             <p className="text-center">POT 1234 KSM</p>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            {members.length}
+            {members.map((member: any) => (
+              <p key={member.accountId}>{member.accountId.toHuman()}</p>
+            ))}
           </Col>
         </Row>
       </Container>
