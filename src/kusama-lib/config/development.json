@@ -1,3 +1,6 @@
 {
-  "PROVIDER_SOCKET": "wss://kusama-rpc.polkadot.io"
+  "APP_NAME": "[DEVELOPMENT] Kusama Society",
+  "PROVIDER_SOCKET": "wss://kusama-rpc.polkadot.io",
+  "DEVELOPMENT_KEYRING": true,
+  "RPC": {}
 }
