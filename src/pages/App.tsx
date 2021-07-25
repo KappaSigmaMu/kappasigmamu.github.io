@@ -1,6 +1,7 @@
+import { useReducer } from 'react'
 import { Container, Nav, Navbar, Button } from 'react-bootstrap'
 import { Switch, Route, Link } from 'react-router-dom'
-import { KusamaContextProvider, useKusama } from '../kusama-lib'
+import { KusamaContextProvider, useKusama, reducer, INIT_STATE, loadAccounts } from '../kusama-lib'
 import NavLogo from '../static/nav-logo.png'
 import { About } from './About'
 import { Blog } from './Blog'
@@ -9,6 +10,7 @@ import { Home } from './Home'
 
 function Main() {
   const { apiState, apiError } = useKusama()
+  const [state, dispatch] = useReducer(reducer, INIT_STATE)
 
   const loader = (text: string) => {
     return <p>{text}</p>
@@ -44,7 +46,7 @@ function Main() {
               Cyborg Journey
             </Nav.Link>
           </Nav>
-          <Button>Connect Wallet</Button>
+          <Button onClick={() => loadAccounts(state, dispatch)}>Connect Wallet</Button>
         </Container>
       </Navbar>
 

@@ -1,3 +1,3 @@
-import { useKusama, KusamaContextProvider } from './KusamaContext'
+import { useKusama, KusamaContextProvider, reducer, INIT_STATE, loadAccounts } from './KusamaContext'
 
-export { useKusama, KusamaContextProvider }
+export { useKusama, KusamaContextProvider, reducer, INIT_STATE, loadAccounts }

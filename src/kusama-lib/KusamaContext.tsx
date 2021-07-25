@@ -124,4 +124,4 @@ function KusamaContextProvider(props: { children: JSX.Element }) {
 
 const useKusama = () => ({ ...useContext(KusamaContext) })
 
-export { KusamaContextProvider, useKusama }
+export { KusamaContextProvider, useKusama, reducer, INIT_STATE, loadAccounts }
