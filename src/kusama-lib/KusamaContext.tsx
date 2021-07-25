@@ -1,83 +1,70 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc'
-import PropTypes from 'prop-types'
-import queryString from 'query-string'
 import React, { useReducer, useContext } from 'react'
 import { config } from './config'
 
-const parsedQuery = queryString.parse(window.location.search)
-const connectedSocket = parsedQuery.rpc || config.PROVIDER_SOCKET
-console.log(`Connected socket: ${connectedSocket}`)
+const RPC = { ...jsonrpc, ...config.RPC }
+const SOCKET = config.PROVIDER_SOCKET
+const TYPES = config.types
 
 const INIT_STATE = {
-  socket: connectedSocket,
-  jsonrpc: { ...jsonrpc, ...config.RPC },
-  types: config.types,
-  keyring: null,
-  keyringState: null,
   api: null,
   apiError: null,
   apiState: null,
 }
 
-const reducer = (state: any, action: any) => {
+type StateType = {
+  api: ApiPromise | null
+  apiError: string | null
+  apiState: string | null
+}
+
+type ActionType =
+  | { type: "CONNECTING" }
+  | { type: "CONNECTED"; payload: ApiPromise }
+  | { type: "READY" }
+  | { type: "DISCONNECTED" }
+  | { type: "ERROR"; payload: any }
+
+function reducer(state: StateType, action: ActionType): StateType {
   switch (action.type) {
-    case 'CONNECT_INIT':
-      return { ...state, apiState: 'CONNECT_INIT' }
-
-    case 'CONNECT':
-      return { ...state, api: action.payload, apiState: 'CONNECTING' }
-
-    case 'CONNECT_SUCCESS':
+    case 'CONNECTING':
+      return { ...state, apiState: 'CONNECTING' }
+    case 'CONNECTED':
+      return { ...state, api: action.payload, apiState: 'CONNECTED' }
+    case 'READY':
       return { ...state, apiState: 'READY' }
-
-    case 'CONNECT_ERROR':
+    case 'DISCONNECTED':
+      return { ...state, apiState: 'DISCONNECTED' }
+    case 'ERROR':
       return { ...state, apiState: 'ERROR', apiError: action.payload }
-
-    case 'LOAD_KEYRING':
-      return { ...state, keyringState: 'LOADING' }
-
-    case 'SET_KEYRING':
-      return { ...state, keyring: action.payload, keyringState: 'READY' }
-
-    case 'KEYRING_ERROR':
-      return { ...state, keyring: null, keyringState: 'ERROR' }
-
-    default:
-      throw new Error(`Unknown type: ${action.type}`)
   }
 }
 
-const connect = (state: any, dispatch: any) => {
-  const { apiState, socket, jsonrpc, types } = state
+function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
+  const { apiState } = state
 
-  if (apiState) return
+  if (apiState && apiState !== 'DISCONNECTED') return
 
-  dispatch({ type: 'CONNECT_INIT' })
+  dispatch({ type: 'CONNECTING' })
 
-  const provider = new WsProvider(socket)
-  const _api = new ApiPromise({ provider, types, rpc: jsonrpc })
+  const provider = new WsProvider(SOCKET)
+  const api = new ApiPromise({ provider, types: TYPES, rpc: RPC })
 
-  _api.on('connected', () => {
-    dispatch({ type: 'CONNECT', payload: _api })
-
-    _api.isReady.then(() => dispatch({ type: 'CONNECT_SUCCESS' }))
+  api.on('connected', () => {
+    dispatch({ type: 'CONNECTED', payload: api })
+    api.isReady.then(() => dispatch({ type: 'READY' }))
   })
-  _api.on('ready', () => dispatch({ type: 'CONNECT_SUCCESS' }))
-  _api.on('error', (err) => dispatch({ type: 'CONNECT_ERROR', payload: err }))
+  api.on('disconnected', () => dispatch({ type: 'DISCONNECTED' }))
+  api.on('error', (err) => dispatch({ type: 'ERROR', payload: err }))
+  api.on('ready', () => dispatch({ type: 'READY' }))
 }
 
-const KusamaContext = React.createContext<any>('')
+const KusamaContext = React.createContext<StateType>(INIT_STATE)
 
-const KusamaContextProvider = (props: any) => {
-  const initState: any = { ...INIT_STATE }
-  const neededPropNames = ['socket', 'types']
-  neededPropNames.forEach((key) => {
-    initState[key] =
-      typeof props[key] === 'undefined' ? initState[key] : props[key]
-  })
+function KusamaContextProvider(props: { children: JSX.Element }) {
+  const [state, dispatch] = useReducer(reducer, INIT_STATE)
 
-  const [state, dispatch] = useReducer(reducer, initState)
   connect(state, dispatch)
 
   return (
@@ -85,11 +72,6 @@ const KusamaContextProvider = (props: any) => {
       {props.children}
     </KusamaContext.Provider>
   )
-}
-
-KusamaContextProvider.propTypes = {
-  socket: PropTypes.string,
-  types: PropTypes.object,
 }
 
 const useKusama = () => ({ ...useContext(KusamaContext) })

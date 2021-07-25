@@ -3,21 +3,25 @@ import { Switch, Route } from 'react-router-dom'
 import { Navbar } from '../components/navbar'
 import { About } from './About'
 import { Home } from './Home'
+import { KusamaContextProvider } from '../kusama-lib'
 
 function App() {
   return (
-    <Container fluid className="px-0">
-      <Navbar />
+    <KusamaContextProvider>
 
-      <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route path="/about">
-          <About />
-        </Route>
-      </Switch>
-    </Container>
+      <Container fluid className="px-0">
+        <Navbar />
+
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/about">
+            <About />
+          </Route>
+        </Switch>
+      </Container>
+    </KusamaContextProvider>
   )
 }
 
