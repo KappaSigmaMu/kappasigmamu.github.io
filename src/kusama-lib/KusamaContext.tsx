@@ -92,6 +92,7 @@ function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
         { isDevelopment: config.DEVELOPMENT_KEYRING },
         allAccounts,
       )
+      console.log(keyring)
       dispatch({ type: 'KEYRING_READY', payload: keyring })
     } catch (e) {
       console.error(e)
