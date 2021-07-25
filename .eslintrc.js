@@ -63,5 +63,6 @@ module.exports = {
     'import/newline-after-import': ['warn'],
     'import/no-default-export': ['warn'],
     '@typescript-eslint/explicit-module-boundary-types': 0,
+    'prettier/prettier': 'warn'
   },
 };
