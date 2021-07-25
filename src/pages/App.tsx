@@ -1,6 +1,6 @@
 import { Container, Nav, Navbar, Button } from 'react-bootstrap'
 import { Switch, Route, Link } from 'react-router-dom'
-import { KusamaContextProvider, useKusama } from '../kusama-lib'
+import { KusamaContextProvider, useKusama, loadAccounts } from '../kusama-lib'
 import NavLogo from '../static/nav-logo.png'
 import { About } from './About'
 import { Blog } from './Blog'
@@ -44,7 +44,7 @@ function Main() {
               Cyborg Journey
             </Nav.Link>
           </Nav>
-          <Button>Connect Wallet</Button>
+          <Button onClick={loadAccounts}>Connect Wallet</Button>
         </Container>
       </Navbar>
 

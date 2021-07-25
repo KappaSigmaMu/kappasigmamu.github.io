@@ -1,3 +1,4 @@
 import { useKusama, KusamaContextProvider } from './KusamaContext'
+import { loadAccounts } from './loadAccounts'
 
-export { useKusama, KusamaContextProvider }
+export { useKusama, KusamaContextProvider, loadAccounts }
