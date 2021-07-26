@@ -12,11 +12,11 @@ import {
 } from 'react-bootstrap'
 import { BlogCard } from '../components/BlogCard'
 import { Canary } from '../components/canary'
-import { useKusama } from '../kusama-lib'
 import GavinWood from '../static/gavin-wood.png'
+import { useSubstrate } from '../substrate'
 
 function Home() {
-  const { api } = useKusama()
+  const { api } = useSubstrate()
   const [members, setMembers] = useState([])
 
   useEffect(() => {

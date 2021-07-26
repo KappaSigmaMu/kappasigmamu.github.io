@@ -1,14 +1,14 @@
 import { Container } from 'react-bootstrap'
 import { Switch, Route } from 'react-router-dom'
 import { Navbar } from '../components/navbar'
-import { KusamaContextProvider, useKusama } from '../kusama-lib'
+import { SubstrateContextProvider, useSubstrate } from '../substrate'
 import { About } from './About'
 import { Blog } from './Blog'
 import { CyborgJourney } from './CyborgJourney'
 import { Home } from './Home'
 
 function Main() {
-  const { apiState, apiError } = useKusama()
+  const { apiState, apiError } = useSubstrate()
 
   const loader = (text: string) => {
     return <p>{text}</p>
@@ -41,9 +41,9 @@ function Main() {
 
 function App() {
   return (
-    <KusamaContextProvider>
+    <SubstrateContextProvider>
       <Main />
-    </KusamaContextProvider>
+    </SubstrateContextProvider>
   )
 }
 

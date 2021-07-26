@@ -108,21 +108,27 @@ function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
   asyncLoadAccounts()
 }
 
-const KusamaContext = React.createContext<StateType>(INIT_STATE)
+const SubstrateContext = React.createContext<StateType>(INIT_STATE)
 
-function KusamaContextProvider(props: { children: JSX.Element }) {
+function SubstrateContextProvider(props: { children: JSX.Element }) {
   const [state, dispatch] = useReducer(reducer, INIT_STATE)
 
   connect(state, dispatch)
   loadAccounts(state, dispatch)
 
   return (
-    <KusamaContext.Provider value={state}>
+    <SubstrateContext.Provider value={state}>
       {props.children}
-    </KusamaContext.Provider>
+    </SubstrateContext.Provider>
   )
 }
 
-const useKusama = () => ({ ...useContext(KusamaContext) })
+const useSubstrate = () => ({ ...useContext(SubstrateContext) })
 
-export { KusamaContextProvider, useKusama, reducer, INIT_STATE, loadAccounts }
+export {
+  SubstrateContextProvider,
+  useSubstrate,
+  reducer,
+  INIT_STATE,
+  loadAccounts,
+}
