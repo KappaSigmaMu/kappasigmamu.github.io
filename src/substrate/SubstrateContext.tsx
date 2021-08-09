@@ -4,6 +4,7 @@ import { ApiPromise, WsProvider } from '@polkadot/api'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc'
 import keyring from '@polkadot/ui-keyring'
+import type { KeyringStruct } from '@polkadot/ui-keyring/types'
 import React, { useReducer, useContext } from 'react'
 import { config } from './config'
 
@@ -15,7 +16,7 @@ const INIT_STATE = {
   api: null,
   apiError: null,
   apiState: null,
-  keyring: null,
+  keyring: {},
   keyringState: null,
 }
 
@@ -23,7 +24,7 @@ type StateType = {
   api: ApiPromise | null
   apiError: string | null
   apiState: string | null
-  keyring: string | null
+  keyring: KeyringStruct | Record<string, never>
   keyringState: string | null
 }
 
@@ -52,7 +53,7 @@ function reducer(state: StateType, action: ActionType): StateType {
     case 'KEYRING_READY':
       return { ...state, keyringState: 'READY', keyring: action.payload }
     case 'KEYRING_ERROR':
-      return { ...state, keyringState: 'ERROR', keyring: null }
+      return { ...state, keyringState: 'ERROR', keyring: {} }
     case 'ERROR':
       return { ...state, apiState: 'ERROR', apiError: action.payload }
   }

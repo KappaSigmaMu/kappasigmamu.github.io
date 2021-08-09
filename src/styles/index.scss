@@ -6,9 +6,14 @@ $theme-colors: (
   'success': #0dd27f,
   'cian': #00ffe1,
   'dark': black,
-  'grey-dark': #2d2d2d,
+  'grey-dark': #2e2e2d,
   'light': #ffff,
 );
+
+.dropdown-toggle::after {
+  vertical-align: 36% !important;
+  margin-left: 0.7em !important;
+}
 
 // Import Bootstrap and its default variables
 @import '~bootstrap/scss/bootstrap.scss';
