@@ -38,6 +38,7 @@ module.exports = {
     ],
     '@typescript-eslint/no-inferrable-types': 'warn',
     '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/ban-ts-comment': 'warn',
     'import/newline-after-import': ['warn'],
     'import/no-default-export': ['warn'],
     'import/order': [
