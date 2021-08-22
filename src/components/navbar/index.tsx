@@ -1,16 +1,15 @@
-import { useReducer } from 'react'
-import { Button } from 'react-bootstrap'
+import { useState } from 'react'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import { default as BNavbar } from 'react-bootstrap/Navbar'
 import { Link } from 'react-router-dom'
-import { reducer, INIT_STATE, loadAccounts } from '../../substrate'
+import { AccountSelector } from '../AccountSelector'
 import DiscordLogo from './discord-logo.svg'
 import KappaSigmaMu from './kappa-sigma-mu-logo.svg'
 import TwitterLogo from './twitter-logo.svg'
 
 function Navbar() {
-  const [state, dispatch] = useReducer(reducer, INIT_STATE)
+  const [, setAccountAddress] = useState('')
 
   return (
     <BNavbar bg="dark" variant="dark">
@@ -36,9 +35,7 @@ function Navbar() {
           <BNavbar.Brand href="https://twitter.com/network" target="_blank">
             <img src={TwitterLogo} alt="Twitter Logo" />
           </BNavbar.Brand>
-          <Button onClick={() => loadAccounts(state, dispatch)}>
-            Connect Wallet
-          </Button>
+          <AccountSelector setAccountAddress={setAccountAddress} />
         </Nav>
       </Container>
     </BNavbar>
