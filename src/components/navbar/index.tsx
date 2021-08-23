@@ -4,11 +4,11 @@ import Nav from 'react-bootstrap/Nav'
 import { default as BNavbar } from 'react-bootstrap/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import DiscordLogo from '../../static/discord-logo.svg'
+import ElementLogo from '../../static/element-logo.svg'
+import KappaSigmaMu from '../../static/kappa-sigma-mu-logo.svg'
+import TwitterLogo from '../../static/twitter-logo.svg'
 import { AccountSelector } from '../AccountSelector'
-import DiscordLogo from './discord-logo.svg'
-import ElementLogo from './element-logo.svg'
-import KappaSigmaMu from './kappa-sigma-mu-logo.svg'
-import TwitterLogo from './twitter-logo.svg'
 
 type NavbarType = {
   showBrandIcon: boolean
@@ -64,12 +64,15 @@ const NavbarGallery = () => (
 )
 
 const NavbarAccount = () => {
-  const [, setAccountAddress] = useState('')
+  const [accountAddress, setAccountAddress] = useState('')
 
   return (
     <>
-      <AccountSelector setAccountAddress={setAccountAddress} />
-      <WalletButton>Connect Wallet</WalletButton>
+      {accountAddress ? (
+        <AccountSelector setAccountAddress={setAccountAddress} />
+      ) : (
+        <WalletButton>Connect Wallet</WalletButton>
+      )}
     </>
   )
 }
@@ -84,7 +87,7 @@ const StyledNavLink = styled(Nav.Link)`
   color: #e6007a;
 
   &:hover {
-    color: #e6007a;
+    color: white;
   }
 `
 
