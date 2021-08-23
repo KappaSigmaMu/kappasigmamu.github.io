@@ -20,7 +20,7 @@ function Main() {
 
   return (
     <Container>
-      <Navbar />
+      <Navbar showBrandIcon showSocialIcons showGalleryButton showAccount />
       <Switch>
         <Route exact path="/">
           <Home />
