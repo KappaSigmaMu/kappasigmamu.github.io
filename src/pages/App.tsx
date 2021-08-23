@@ -1,6 +1,5 @@
 import { Container } from 'react-bootstrap'
 import { Switch, Route } from 'react-router-dom'
-import { Navbar } from '../components/navbar'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
 import { About } from './About'
 import { Blog } from './Blog'
@@ -19,8 +18,7 @@ function Main() {
   if (apiState !== 'READY') return loader('Connecting')
 
   return (
-    <Container>
-      <Navbar showBrandIcon showSocialIcons showGalleryButton showAccount />
+    <Container fluid>
       <Switch>
         <Route exact path="/">
           <Home />
@@ -31,7 +29,7 @@ function Main() {
         <Route path="/blog">
           <Blog />
         </Route>
-        <Route path="/cyborg-journey">
+        <Route path="/cyborg-guide">
           <CyborgJourney />
         </Route>
       </Switch>
