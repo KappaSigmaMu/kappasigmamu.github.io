@@ -1,14 +1,14 @@
 import type { KeyringPair } from '@polkadot/keyring/types'
-import PropTypes from 'prop-types'
 import React, { useState, useEffect } from 'react'
 import { Dropdown, DropdownButton } from 'react-bootstrap'
+import styled from 'styled-components'
 import { useSubstrate } from '../substrate'
 
 type Props = {
   setAccountAddress: (address: string) => void
 }
 
-function Main({ setAccountAddress }: Props) {
+const Main = ({ setAccountAddress }: Props) => {
   const { keyring } = useSubstrate()
   const [accountSelected, setAccountSelected] = useState('')
 
@@ -37,22 +37,17 @@ function Main({ setAccountAddress }: Props) {
           fontSize: '12px',
         }}
       >
-        {accountSelected}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
+        <SelectedAccountDiv>{accountSelected}</SelectedAccountDiv>
+        <LevelStatusDiv>
           <label>JOURNEY: HUMAN</label>
           <label>WAITING BID</label>
-        </div>
+        </LevelStatusDiv>
       </label>
     )
   }
 
   return (
-    <DropdownButton
+    <AccountDropdownButton
       variant="gray-dark"
       onSelect={(
         eventKey: string | null,
@@ -70,21 +65,41 @@ function Main({ setAccountAddress }: Props) {
           {option.key}
         </Dropdown.Item>
       ))}
-    </DropdownButton>
+    </AccountDropdownButton>
   )
 }
 
-Main.propTypes = {
-  setAccountAddress: PropTypes.func.isRequired,
-}
-
-function AccountSelector(props: Props) {
+const AccountSelector = (props: Props) => {
   const { api } = useSubstrate()
   return api?.query ? <Main {...props} /> : null
 }
 
-AccountSelector.propTypes = {
-  setAccountAddress: PropTypes.func.isRequired,
-}
+const LevelStatusDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+
+  label {
+    color: #6c757d;
+    font-weight: 700;
+  }
+`
+
+const AccountDropdownButton = styled(DropdownButton)`
+  button {
+    border-color: #ced4da;
+    padding: 15px;
+  }
+  div {
+    background-color: black;
+  }
+  a {
+    color: #e6007a;
+  }
+`
+
+const SelectedAccountDiv = styled.div`
+  color: #e6007a;
+`
 
 export { AccountSelector }
