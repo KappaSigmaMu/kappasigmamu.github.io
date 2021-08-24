@@ -15,8 +15,12 @@ const Home = () => {
         <CentralizedCol xs={6}>
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-          <Button variant="primary" size="lg">Become a Cyborg</Button>
-          <GuideButton variant="link" href="/cyborg-guide">Cyborg Guide</GuideButton>
+          <Button variant="primary" size="lg">
+            Become a Cyborg
+          </Button>
+          <GuideButton variant="link" href="/cyborg-guide">
+            Cyborg Guide
+          </GuideButton>
         </CentralizedCol>
       </StyledRow>
     </>
