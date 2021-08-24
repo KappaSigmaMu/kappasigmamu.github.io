@@ -1,18 +1,34 @@
 // Override default variables before the import
-$body-bg: black;
-
 $theme-colors: (
   'primary': #e6007a,
-  'success': #0dd27f,
-  'cian': #00ffe1,
+  'secondary': #01FFFF,
   'dark': black,
-  'grey-dark': #2e2e2d,
-  'light': #ffff,
+  'grey-dark': #6c757d,
+  'light': white,
 );
 
 .dropdown-toggle::after {
   vertical-align: 36% !important;
   margin-left: 0.7em !important;
+}
+
+html * {
+  font-family: Roboto, sans-serif !important;
+  font-style: normal !important;
+}
+
+h1 {
+  font-weight: bold !important;
+  font-size: 36px !important;
+  color: white;
+}
+
+.btn-lg {
+  font-weight: bold !important;
+}
+
+.btn-link {
+  color: #01FFFF !important;
 }
 
 // Import Bootstrap and its default variables

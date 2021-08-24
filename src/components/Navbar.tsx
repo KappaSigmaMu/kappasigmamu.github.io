@@ -1,14 +1,15 @@
 import { useState } from 'react'
+import { Button } from 'react-bootstrap'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import { default as BNavbar } from 'react-bootstrap/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import DiscordLogo from '../../static/discord-logo.svg'
-import ElementLogo from '../../static/element-logo.svg'
-import KappaSigmaMu from '../../static/kappa-sigma-mu-logo.svg'
-import TwitterLogo from '../../static/twitter-logo.svg'
-import { AccountSelector } from '../AccountSelector'
+import DiscordLogo from '../static/discord-logo.svg'
+import ElementLogo from '../static/element-logo.svg'
+import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
+import TwitterLogo from '../static/twitter-logo.svg'
+import { AccountSelector } from './AccountSelector'
 
 type NavbarType = {
   showBrandIcon: boolean
@@ -24,7 +25,7 @@ const Navbar = ({
   showAccount,
 }: NavbarType) => {
   return (
-    <BNavbar bg="dark" variant="dark">
+    <BNavbar>
       <NavbarContainer>
         <Nav>{showBrandIcon ? <NavbarBrand /> : <></>}</Nav>
         <CenterNav>
@@ -58,9 +59,9 @@ const NavbarSocial = () => (
 )
 
 const NavbarGallery = () => (
-  <StyledNavLink as={Link} to="/gallery">
+  <Button variant="link" href="/gallery">
     Gallery
-  </StyledNavLink>
+  </Button>
 )
 
 const NavbarAccount = () => {
@@ -71,7 +72,7 @@ const NavbarAccount = () => {
       {accountAddress ? (
         <AccountSelector setAccountAddress={setAccountAddress} />
       ) : (
-        <WalletButton>Connect Wallet</WalletButton>
+        <Button variant="outline-secondary">Connect Wallet</Button>
       )}
     </>
   )
@@ -82,30 +83,8 @@ const NavbarContainer = styled(Container)`
   padding-top: 20px;
 `
 
-const StyledNavLink = styled(Nav.Link)`
-  margin-right: 20px;
-  color: #e6007a;
-
-  &:hover {
-    color: white;
-  }
-`
-
 const CenterNav = styled(Nav)`
   align-items: center;
-`
-
-const WalletButton = styled.button`
-  padding: 6px 12px;
-  background-color: transparent;
-  color: #01ffff;
-  border: 1px solid #01ffff;
-  border-radius: 4px;
-
-  &:hover {
-    background-color: #01ffff;
-    color: black;
-  }
 `
 
 Navbar.defaultProps = {
