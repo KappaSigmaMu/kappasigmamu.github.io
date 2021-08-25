@@ -1,9 +1,9 @@
 import { Container } from 'react-bootstrap'
 import { Switch, Route } from 'react-router-dom'
+import styled, { ThemeProvider } from 'styled-components'
+import { Theme } from '../styles/Theme'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
-import { About } from './About'
-import { Blog } from './Blog'
-import { CyborgJourney } from './CyborgJourney'
+import { CyborgGuide } from './CyborgGuide'
 import { Home } from './Home'
 
 function Main() {
@@ -18,31 +18,31 @@ function Main() {
   if (apiState !== 'READY') return loader('Connecting')
 
   return (
-    <Container fluid>
+    <StyledMain fluid>
       <Switch>
         <Route exact path="/">
           <Home />
         </Route>
-        <Route path="/about">
-          <About />
-        </Route>
-        <Route path="/blog">
-          <Blog />
-        </Route>
         <Route path="/cyborg-guide">
-          <CyborgJourney />
+          <CyborgGuide />
         </Route>
       </Switch>
-    </Container>
+    </StyledMain>
   )
 }
 
 function App() {
   return (
     <SubstrateContextProvider>
-      <Main />
+      <ThemeProvider theme={Theme}>
+        <Main />
+      </ThemeProvider>
     </SubstrateContextProvider>
   )
 }
+
+const StyledMain = styled(Container)`
+  background-color: ${(props) => props.theme.darkBg};
+`
 
 export { App }
