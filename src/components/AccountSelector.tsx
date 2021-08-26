@@ -35,7 +35,7 @@ const Main = ({ setAccountAddress, accounts, initialAddress }: Props) => {
 
   return (
     <AccountDropdownButton
-      variant="gray-dark"
+      variant="outline-grey-dark"
       onSelect={(
         eventKey: string | null,
         e?: React.SyntheticEvent<unknown, Event>,
@@ -67,26 +67,19 @@ const LevelStatusDiv = styled.div`
   padding-top: 10px;
 
   label {
-    color: #6c757d;
+    color: ${(props) => props.theme.colors.grey};
     font-weight: 700;
   }
 `
 
 const AccountDropdownButton = styled(DropdownButton)`
   button {
-    border-color: #ced4da;
     padding: 15px;
-  }
-  div {
-    background-color: black;
-  }
-  a {
-    color: #e6007a;
   }
 `
 
 const SelectedAccountDiv = styled.div`
-  color: #e6007a;
+  color: ${(props) => props.theme.colors.primary};
 `
 
 export { AccountSelector }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useBlockTime } from '../../hooks/useBlockTime'
-import { useSubstrate } from '../../substrate'
+import { useBlockTime } from '../hooks/useBlockTime'
+import { useSubstrate } from '../substrate'
 
 function Timer() {
   const { api } = useSubstrate()

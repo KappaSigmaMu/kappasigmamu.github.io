@@ -1,9 +1,8 @@
-import React from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Col, Row, Button } from 'react-bootstrap'
 import styled from 'styled-components'
-import { Navbar } from '../components/navbar'
+import { Navbar } from '../components/Navbar'
 import Canary from '../static/canary.svg'
-import KappaSigmaMuTitle from './kappa-sigma-mu-title.svg'
+import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
 const Home = ({ setAccount, account }: any) => {
   return (
@@ -19,36 +18,19 @@ const Home = ({ setAccount, account }: any) => {
           <CanaryImg src={Canary} alt="Canary" />
         </Col>
         <CentralizedCol xs={6}>
-          <JoinThe>Join the</JoinThe>
+          <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-          <HomeButton>Become a Cyborg</HomeButton>
-          <ButtomGuide href="/cyborg-guide">Cyborg Guide</ButtomGuide>
+          <Button variant="primary" size="lg">
+            Become a Cyborg
+          </Button>
+          <GuideButton variant="link" href="/cyborg-guide">
+            Cyborg Guide
+          </GuideButton>
         </CentralizedCol>
       </StyledRow>
     </>
   )
 }
-
-const HomeButton = styled.button`
-  background-color: #e6007a;
-  padding: 8px 16px;
-  color: white;
-  border: 1px solid #e6007a;
-  border-radius: 4px;
-  font-weight: 700;
-  font-size: 20px;
-
-  &:hover {
-    background-color: white;
-    color: #e6007a;
-    border-color: white;
-  }
-`
-
-const JoinThe = styled.h1`
-  color: white;
-  margin: 0;
-`
 
 const KappaSigmaMu = styled.img`
   margin: 50px 0;
@@ -62,7 +44,7 @@ const CanaryImg = styled.img`
 `
 
 const StyledRow = styled(Row)`
-  height: 90vh;
+  height: 91.7vh;
 `
 
 const CentralizedCol = styled(Col)`
@@ -72,16 +54,10 @@ const CentralizedCol = styled(Col)`
   z-index: 1;
 `
 
-const ButtomGuide = styled.a`
+const GuideButton = styled(Button)`
   position: absolute;
   bottom: 30px;
   display: flex;
-  color: #e6007a;
-  cursor: pointer;
-
-  &:hover {
-    color: white;
-  }
 `
 
 export { Home }
