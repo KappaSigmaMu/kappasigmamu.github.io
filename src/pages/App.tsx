@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { Switch, Route } from 'react-router-dom'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
@@ -8,6 +9,7 @@ import { Home } from './Home'
 
 function Main() {
   const { apiState, apiError } = useSubstrate()
+  const [account, setAccount] = useState('')
 
   const loader = (text: string) => {
     return <p>{text}</p>
@@ -21,7 +23,7 @@ function Main() {
     <Container fluid>
       <Switch>
         <Route exact path="/">
-          <Home />
+          <Home account={account} setAccount={setAccount} />
         </Route>
         <Route path="/about">
           <About />

@@ -1,15 +1,3 @@
-import {
-  useSubstrate,
-  SubstrateContextProvider,
-  reducer,
-  INIT_STATE,
-  loadAccounts,
-} from './SubstrateContext'
+import { useSubstrate, SubstrateContextProvider } from './SubstrateContext'
 
-export {
-  useSubstrate,
-  SubstrateContextProvider,
-  reducer,
-  INIT_STATE,
-  loadAccounts,
-}
+export { useSubstrate, SubstrateContextProvider }

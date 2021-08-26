@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav'
 import { default as BNavbar } from 'react-bootstrap/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { fetchAccounts } from '../../helpers/fetchAccounts'
 import DiscordLogo from '../../static/discord-logo.svg'
 import ElementLogo from '../../static/element-logo.svg'
 import KappaSigmaMu from '../../static/kappa-sigma-mu-logo.svg'
@@ -15,6 +16,8 @@ type NavbarType = {
   showSocialIcons: boolean
   showGalleryButton: boolean
   showAccount: boolean
+  setAccount: () => void
+  account: string
 }
 
 const Navbar = ({
@@ -22,6 +25,8 @@ const Navbar = ({
   showSocialIcons,
   showGalleryButton,
   showAccount,
+  setAccount,
+  account,
 }: NavbarType) => {
   return (
     <BNavbar bg="dark" variant="dark">
@@ -30,7 +35,11 @@ const Navbar = ({
         <CenterNav>
           {showGalleryButton ? <NavbarGallery /> : <></>}
           {showSocialIcons ? <NavbarSocial /> : <></>}
-          {showAccount ? <NavbarAccount /> : <></>}
+          {showAccount ? (
+            <NavbarAccount setAccount={setAccount} account={account} />
+          ) : (
+            <></>
+          )}
         </CenterNav>
       </NavbarContainer>
     </BNavbar>
@@ -63,15 +72,24 @@ const NavbarGallery = () => (
   </StyledNavLink>
 )
 
-const NavbarAccount = () => {
-  const [accountAddress, setAccountAddress] = useState('')
+const NavbarAccount = ({ setAccount, account }: any) => {
+  const [accounts, setAccounts] = useState<
+    { name: string | undefined; address: string }[]
+  >([])
 
   return (
     <>
-      {accountAddress ? (
-        <AccountSelector setAccountAddress={setAccountAddress} />
+      {accounts.length != 0 && account ? (
+        // @ts-ignore
+        <AccountSelector
+          accounts={accounts}
+          initialAddress={account}
+          setAccountAddress={setAccount}
+        />
       ) : (
-        <WalletButton>Connect Wallet</WalletButton>
+        <WalletButton onClick={() => fetchAccounts(setAccounts, setAccount)}>
+          Connect Wallet
+        </WalletButton>
       )}
     </>
   )

@@ -1,13 +1,19 @@
+import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { Navbar } from '../components/navbar'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from './kappa-sigma-mu-title.svg'
 
-const Home = () => {
+const Home = ({ setAccount, account }: any) => {
   return (
     <>
-      <Navbar showSocialIcons showAccount />
+      <Navbar
+        showSocialIcons
+        showAccount
+        setAccount={setAccount}
+        account={account}
+      />
       <StyledRow>
         <Col xs={6}>
           <CanaryImg src={Canary} alt="Canary" />
