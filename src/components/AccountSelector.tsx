@@ -6,11 +6,11 @@ import { useSubstrate } from '../substrate'
 type Props = {
   setAccountAddress: (address: string) => void
   accounts: { name: string | undefined; address: string }[]
-  initialAddress: string
+  activeAddress: string
 }
 
-const Main = ({ setAccountAddress, accounts, initialAddress }: Props) => {
-  const [accountSelected, setAccountSelected] = useState(initialAddress)
+const Main = ({ setAccountAddress, accounts, activeAddress }: Props) => {
+  const [accountSelected, setAccountSelected] = useState(activeAddress)
 
   const onChange = (account: HTMLInputElement) => {
     setAccountAddress(account.innerText)

@@ -37,7 +37,7 @@ const Navbar = ({
           {showGalleryButton ? <NavbarGallery /> : <></>}
           {showSocialIcons ? <NavbarSocial /> : <></>}
           {showAccount ? (
-            <NavbarAccount setActiveAccount={setAccount} account={account} />
+            <AccountNavbar setActiveAccount={setAccount} account={account} />
           ) : (
             <></>
           )}
@@ -73,7 +73,7 @@ const NavbarGallery = () => (
   </Button>
 )
 
-const NavbarAccount = ({
+const AccountNavbar = ({
   setActiveAccount,
   account,
 }: {
@@ -89,7 +89,7 @@ const NavbarAccount = ({
       {accounts.length != 0 && account ? (
         <AccountSelector
           accounts={accounts}
-          initialAddress={account}
+          activeAddress={account}
           setAccountAddress={setActiveAccount}
         />
       ) : (
