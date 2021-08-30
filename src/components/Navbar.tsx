@@ -17,8 +17,8 @@ type NavbarType = {
   showSocialIcons: boolean
   showGalleryButton: boolean
   showAccount: boolean
-  setAccount: (account: string) => void
-  account: string
+  setActiveAccount: (account: string) => void
+  activeAccount: string
 }
 
 const Navbar = ({
@@ -26,8 +26,8 @@ const Navbar = ({
   showSocialIcons,
   showGalleryButton,
   showAccount,
-  setAccount,
-  account,
+  setActiveAccount,
+  activeAccount,
 }: NavbarType) => {
   return (
     <BNavbar>
@@ -37,7 +37,10 @@ const Navbar = ({
           {showGalleryButton ? <NavbarGallery /> : <></>}
           {showSocialIcons ? <NavbarSocial /> : <></>}
           {showAccount ? (
-            <AccountNavbar setActiveAccount={setAccount} account={account} />
+            <AccountNavbar
+              setActiveAccount={setActiveAccount}
+              activeAccount={activeAccount}
+            />
           ) : (
             <></>
           )}
@@ -75,10 +78,10 @@ const NavbarGallery = () => (
 
 const AccountNavbar = ({
   setActiveAccount,
-  account,
+  activeAccount,
 }: {
-  setActiveAccount: (account: string) => void
-  account: string
+  setActiveAccount: (activeAccount: string) => void
+  activeAccount: string
 }) => {
   const [accounts, setAccounts] = useState<
     { name: string | undefined; address: string }[]
@@ -86,11 +89,11 @@ const AccountNavbar = ({
 
   return (
     <>
-      {accounts.length != 0 && account ? (
+      {accounts.length != 0 && activeAccount ? (
         <AccountSelector
           accounts={accounts}
-          activeAddress={account}
-          setAccountAddress={setActiveAccount}
+          activeAccount={activeAccount}
+          setActiveAccount={setActiveAccount}
         />
       ) : (
         <Button

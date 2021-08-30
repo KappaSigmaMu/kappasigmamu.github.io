@@ -6,7 +6,7 @@ const fetchAccounts = (
   setAccounts: (
     accounts: { name: string | undefined; address: string }[],
   ) => void,
-  setAccountAddress: (account: string) => void,
+  setActiveAccount: (activeAccount: string) => void,
 ) => {
   async function _fetchAccounts() {
     try {
@@ -25,7 +25,7 @@ const fetchAccounts = (
       }))
 
       setAccounts(accounts)
-      setAccountAddress(accounts[0].address)
+      setActiveAccount(accounts[0].address)
     } catch (e) {
       console.error(e)
     }

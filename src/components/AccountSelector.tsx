@@ -4,17 +4,17 @@ import styled from 'styled-components'
 import { useSubstrate } from '../substrate'
 
 type Props = {
-  setAccountAddress: (address: string) => void
+  setActiveAccount: (address: string) => void
   accounts: { name: string | undefined; address: string }[]
-  activeAddress: string
+  activeAccount: string
 }
 
-const Main = ({ setAccountAddress, accounts, activeAddress }: Props) => {
-  const [accountSelected, setAccountSelected] = useState(activeAddress)
+const Main = ({ setActiveAccount, accounts, activeAccount }: Props) => {
+  const [selectedAccount, setSelectedAccount] = useState(activeAccount)
 
   const onChange = (account: HTMLInputElement) => {
-    setAccountAddress(account.innerText)
-    setAccountSelected(account.innerText)
+    setActiveAccount(account.innerText)
+    setSelectedAccount(account.innerText)
   }
 
   const Title = () => {
@@ -24,7 +24,7 @@ const Main = ({ setAccountAddress, accounts, activeAddress }: Props) => {
           fontSize: '12px',
         }}
       >
-        <SelectedAccountDiv>{accountSelected}</SelectedAccountDiv>
+        <SelectedAccountDiv>{selectedAccount}</SelectedAccountDiv>
         <LevelStatusDiv>
           <label>JOURNEY: HUMAN</label>
           <label>WAITING BID</label>

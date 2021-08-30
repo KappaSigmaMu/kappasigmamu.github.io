@@ -9,7 +9,7 @@ import { Home } from './Home'
 
 function Main() {
   const { apiState, apiError } = useSubstrate()
-  const [account, setAccount] = useState<string>('')
+  const [activeAccount, setActiveAccount] = useState<string>('')
 
   const loader = (text: string) => {
     return <p>{text}</p>
@@ -23,7 +23,10 @@ function Main() {
     <StyledMain fluid>
       <Switch>
         <Route exact path="/">
-          <Home account={account} setAccount={setAccount} />
+          <Home
+            activeAccount={activeAccount}
+            setActiveAccount={setActiveAccount}
+          />
         </Route>
         <Route path="/cyborg-guide">
           <CyborgGuide />
