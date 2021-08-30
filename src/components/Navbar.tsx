@@ -5,19 +5,19 @@ import Nav from 'react-bootstrap/Nav'
 import { default as BNavbar } from 'react-bootstrap/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { fetchAccounts } from '../helpers/fetchAccounts'
 import DiscordLogo from '../static/discord-logo.svg'
 import ElementLogo from '../static/element-logo.svg'
 import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 import TwitterLogo from '../static/twitter-logo.svg'
 import { AccountSelector } from './AccountSelector'
-import { fetchAccounts } from '../helpers/fetchAccounts'
 
 type NavbarType = {
   showBrandIcon: boolean
   showSocialIcons: boolean
   showGalleryButton: boolean
   showAccount: boolean
-  setAccount: () => void
+  setAccount: (account: string) => void
   account: string
 }
 
@@ -37,7 +37,7 @@ const Navbar = ({
           {showGalleryButton ? <NavbarGallery /> : <></>}
           {showSocialIcons ? <NavbarSocial /> : <></>}
           {showAccount ? (
-            <NavbarAccount setAccount={setAccount} account={account} />
+            <NavbarAccount setActiveAccount={setAccount} account={account} />
           ) : (
             <></>
           )}
@@ -73,7 +73,13 @@ const NavbarGallery = () => (
   </Button>
 )
 
-const NavbarAccount = ({ setAccount, account }: any) => {
+const NavbarAccount = ({
+  setActiveAccount,
+  account,
+}: {
+  setActiveAccount: (account: string) => void
+  account: string
+}) => {
   const [accounts, setAccounts] = useState<
     { name: string | undefined; address: string }[]
   >([])
@@ -81,14 +87,16 @@ const NavbarAccount = ({ setAccount, account }: any) => {
   return (
     <>
       {accounts.length != 0 && account ? (
-        // @ts-ignore
         <AccountSelector
           accounts={accounts}
           initialAddress={account}
-          setAccountAddress={setAccount}
+          setAccountAddress={setActiveAccount}
         />
       ) : (
-        <Button variant="outline-secondary" onClick={() => fetchAccounts(setAccounts, setAccount)}>
+        <Button
+          variant="outline-secondary"
+          onClick={() => fetchAccounts(setAccounts, setActiveAccount)}
+        >
           Connect Wallet
         </Button>
       )}

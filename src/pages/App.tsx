@@ -9,7 +9,7 @@ import { Home } from './Home'
 
 function Main() {
   const { apiState, apiError } = useSubstrate()
-  const [account, setAccount] = useState('')
+  const [account, setAccount] = useState<string>('')
 
   const loader = (text: string) => {
     return <p>{text}</p>

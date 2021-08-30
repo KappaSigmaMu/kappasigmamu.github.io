@@ -4,7 +4,13 @@ import { Navbar } from '../components/Navbar'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
-const Home = ({ setAccount, account }: any) => {
+const Home = ({
+  setAccount,
+  account,
+}: {
+  setAccount: (account: string) => void
+  account: string
+}): JSX.Element => {
   return (
     <>
       <Navbar

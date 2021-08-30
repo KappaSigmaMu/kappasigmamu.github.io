@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Copied from: https://github.com/polkadot-js/apps/blob/d744e6bbea326219f2060665d858540ef8a23b53/packages/react-hooks/src/useBlockTime.ts
 
 import type { ApiPromise } from '@polkadot/api'

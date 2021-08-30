@@ -2,7 +2,12 @@ import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import keyring from '@polkadot/ui-keyring'
 import { config } from '../substrate/config'
 
-const fetchAccounts = (setAccounts: any, setAccountAddress: any) => {
+const fetchAccounts = (
+  setAccounts: (
+    accounts: { name: string | undefined; address: string }[],
+  ) => void,
+  setAccountAddress: (account: string) => void,
+) => {
   async function _fetchAccounts() {
     try {
       await web3Enable(config.APP_NAME)
