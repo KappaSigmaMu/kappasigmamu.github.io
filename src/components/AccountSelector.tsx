@@ -1,33 +1,20 @@
-import type { KeyringPair } from '@polkadot/keyring/types'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Dropdown, DropdownButton } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useSubstrate } from '../substrate'
 
 type Props = {
-  setAccountAddress: (address: string) => void
+  setActiveAccount: (address: string) => void
+  accounts: { name: string | undefined; address: string }[]
+  activeAccount: string
 }
 
-const Main = ({ setAccountAddress }: Props) => {
-  const { keyring } = useSubstrate()
-  const [accountSelected, setAccountSelected] = useState('')
-
-  const keyringOptions = keyring?.getPairs().map((account: KeyringPair) => {
-    return {
-      key: account?.address,
-    }
-  })
-
-  const initialAddress = keyringOptions?.length > 0 ? keyringOptions[0].key : ''
-
-  useEffect(() => {
-    setAccountAddress(initialAddress)
-    setAccountSelected(initialAddress)
-  }, [setAccountAddress, initialAddress])
+const Main = ({ setActiveAccount, accounts, activeAccount }: Props) => {
+  const [selectedAccount, setSelectedAccount] = useState(activeAccount)
 
   const onChange = (account: HTMLInputElement) => {
-    setAccountAddress(account.innerText)
-    setAccountSelected(account.innerText)
+    setActiveAccount(account.innerText)
+    setSelectedAccount(account.innerText)
   }
 
   const Title = () => {
@@ -37,7 +24,7 @@ const Main = ({ setAccountAddress }: Props) => {
           fontSize: '12px',
         }}
       >
-        <SelectedAccountDiv>{accountSelected}</SelectedAccountDiv>
+        <SelectedAccountDiv>{selectedAccount}</SelectedAccountDiv>
         <LevelStatusDiv>
           <label>JOURNEY: HUMAN</label>
           <label>WAITING BID</label>
@@ -55,14 +42,14 @@ const Main = ({ setAccountAddress }: Props) => {
       ) => onChange(e?.target as HTMLInputElement)}
       title={<Title />}
     >
-      {keyringOptions.map((option: { key: string }) => (
+      {accounts.map((option: { name: string | undefined; address: string }) => (
         <Dropdown.Item
           style={{ fontSize: '12px' }}
-          eventKey={option.key}
-          key={option.key}
+          eventKey={option.address}
+          key={option.address}
           href="#"
         >
-          {option.key}
+          {option.address}
         </Dropdown.Item>
       ))}
     </AccountDropdownButton>

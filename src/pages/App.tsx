@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { Switch, Route } from 'react-router-dom'
 import styled, { ThemeProvider } from 'styled-components'
@@ -8,6 +9,7 @@ import { Home } from './Home'
 
 function Main() {
   const { apiState, apiError } = useSubstrate()
+  const [activeAccount, setActiveAccount] = useState<string>('')
 
   const loader = (text: string) => {
     return <p>{text}</p>
@@ -21,7 +23,10 @@ function Main() {
     <StyledMain fluid>
       <Switch>
         <Route exact path="/">
-          <Home />
+          <Home
+            activeAccount={activeAccount}
+            setActiveAccount={setActiveAccount}
+          />
         </Route>
         <Route path="/cyborg-guide">
           <CyborgGuide />

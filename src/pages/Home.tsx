@@ -4,10 +4,21 @@ import { Navbar } from '../components/Navbar'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
-const Home = () => {
+const Home = ({
+  setActiveAccount,
+  activeAccount,
+}: {
+  setActiveAccount: (activeAccount: string) => void
+  activeAccount: string
+}): JSX.Element => {
   return (
     <>
-      <Navbar showSocialIcons showAccount />
+      <Navbar
+        showSocialIcons
+        showAccount
+        setActiveAccount={setActiveAccount}
+        activeAccount={activeAccount}
+      />
       <StyledRow>
         <Col xs={6}>
           <CanaryImg src={Canary} alt="Canary" />
