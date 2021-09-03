@@ -7,13 +7,16 @@ module.exports = {
     sourceType: 'module'
   },
   settings: { react: { version: 'detect' }},
-  plugins: ['@typescript-eslint/eslint-plugin', 'import'],
+  plugins: [
+    '@typescript-eslint/eslint-plugin',
+    'import'
+  ],
   extends: [
-    'plugin:react/recommended',
-    'plugin:import/typescript',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended'
+    'plugin:import/typescript',
+    'plugin:prettier/recommended',
+    'plugin:react/recommended'
   ],
   root: true,
   env: {
@@ -38,7 +41,8 @@ module.exports = {
     ],
     '@typescript-eslint/no-inferrable-types': 'warn',
     '@typescript-eslint/no-unused-vars': 'warn',
-    '@typescript-eslint/ban-ts-comment': 'warn',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/ban-ts-ignore': 'off',
     'import/newline-after-import': ['warn'],
     'import/no-default-export': ['warn'],
     'import/order': [
@@ -58,7 +62,10 @@ module.exports = {
     'no-multiple-empty-lines': ['warn', { max: 1 }],
     'no-useless-rename': 'warn',
     'object-shorthand': 'warn',
-    'prettier/prettier': 'warn',
+    'prettier/prettier': [
+      'warn',
+      { printWidth: 120 }
+    ],
     'react/react-in-jsx-scope': 'off',
     'semi': ['error', 'never'],
   },
