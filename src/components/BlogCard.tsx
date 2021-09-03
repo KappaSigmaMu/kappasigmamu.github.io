@@ -3,12 +3,7 @@ import { Card, Col } from 'react-bootstrap'
 function BlogCard() {
   return (
     <Col md={3} className="mx-2">
-      <Card
-        bg={'dark'}
-        text={'light'}
-        style={{ width: '18rem' }}
-        className="mb-2"
-      >
+      <Card bg={'dark'} text={'light'} style={{ width: '18rem' }} className="mb-2">
         <Card.Header>Header</Card.Header>
         <Card.Body>
           <Card.Title> Card Title </Card.Title>

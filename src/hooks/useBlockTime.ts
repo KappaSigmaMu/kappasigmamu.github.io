@@ -1,15 +1,8 @@
 // @ts-nocheck
-// Copied from: https://github.com/polkadot-js/apps/blob/d744e6bbea326219f2060665d858540ef8a23b53/packages/react-hooks/src/useBlockTime.ts
+// Copied from: https://github.com/polkadot-js/apps/blob/master/packages/react-hooks/src/useBlockTime.ts
 
 import type { ApiPromise } from '@polkadot/api'
-import {
-  BN,
-  BN_ONE,
-  BN_THOUSAND,
-  BN_TWO,
-  bnToBn,
-  extractTime,
-} from '@polkadot/util'
+import { BN, BN_ONE, BN_THOUSAND, BN_TWO, bnToBn, extractTime } from '@polkadot/util'
 import type { Time } from '@polkadot/util/types'
 import { useMemo } from 'react'
 import { useSubstrate } from '../substrate'
@@ -20,10 +13,7 @@ const DEFAULT_TIME = new BN(6_000)
 
 const THRESHOLD = BN_THOUSAND
 
-export function useBlockTime(
-  blocks: number | BN = BN_ONE,
-  apiOverride?: ApiPromise | null,
-): Result {
+export function useBlockTime(blocks: number | BN = BN_ONE, apiOverride?: ApiPromise | null): Result {
   const { api } = useSubstrate()
 
   return useMemo((): Result => {
