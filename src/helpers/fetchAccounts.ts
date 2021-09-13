@@ -3,9 +3,7 @@ import keyring from '@polkadot/ui-keyring'
 import { config } from '../substrate/config'
 
 const fetchAccounts = (
-  setAccounts: (
-    accounts: { name: string | undefined; address: string }[],
-  ) => void,
+  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void,
   setActiveAccount: (activeAccount: string) => void,
 ) => {
   async function _fetchAccounts() {

@@ -36,14 +36,7 @@ const Navbar = ({
         <CenterNav>
           {showGalleryButton ? <NavbarGallery /> : <></>}
           {showSocialIcons ? <NavbarSocial /> : <></>}
-          {showAccount ? (
-            <AccountNavbar
-              setActiveAccount={setActiveAccount}
-              activeAccount={activeAccount}
-            />
-          ) : (
-            <></>
-          )}
+          {showAccount ? <AccountNavbar setActiveAccount={setActiveAccount} activeAccount={activeAccount} /> : <></>}
         </CenterNav>
       </NavbarContainer>
     </BNavbar>
@@ -83,23 +76,14 @@ const AccountNavbar = ({
   setActiveAccount: (activeAccount: string) => void
   activeAccount: string
 }) => {
-  const [accounts, setAccounts] = useState<
-    { name: string | undefined; address: string }[]
-  >([])
+  const [accounts, setAccounts] = useState<{ name: string | undefined; address: string }[]>([])
 
   return (
     <>
       {accounts.length != 0 && activeAccount ? (
-        <AccountSelector
-          accounts={accounts}
-          activeAccount={activeAccount}
-          setActiveAccount={setActiveAccount}
-        />
+        <AccountSelector accounts={accounts} activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
       ) : (
-        <Button
-          variant="outline-secondary"
-          onClick={() => fetchAccounts(setAccounts, setActiveAccount)}
-        >
+        <Button variant="outline-secondary" onClick={() => fetchAccounts(setAccounts, setActiveAccount)}>
           Connect Wallet
         </Button>
       )}

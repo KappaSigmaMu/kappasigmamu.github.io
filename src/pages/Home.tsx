@@ -1,25 +1,14 @@
-import { Col, Row, Button } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { Navbar } from '../components/Navbar'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
-const Home = ({
-  setActiveAccount,
-  activeAccount,
-}: {
-  setActiveAccount: (activeAccount: string) => void
-  activeAccount: string
-}): JSX.Element => {
+const Home = ({ setActiveAccount, activeAccount }: HomeProps): JSX.Element => {
   return (
     <>
-      <Navbar
-        showSocialIcons
-        showAccount
-        setActiveAccount={setActiveAccount}
-        activeAccount={activeAccount}
-      />
-      <StyledRow>
+      <Navbar showSocialIcons showAccount setActiveAccount={setActiveAccount} activeAccount={activeAccount} />
+      <FullPageHeightRow>
         <Col xs={6}>
           <CanaryImg src={Canary} alt="Canary" />
         </Col>
@@ -33,9 +22,14 @@ const Home = ({
             Cyborg Guide
           </GuideButton>
         </CentralizedCol>
-      </StyledRow>
+      </FullPageHeightRow>
     </>
   )
+}
+
+type HomeProps = {
+  setActiveAccount: (activeAccount: string) => void
+  activeAccount: string
 }
 
 const KappaSigmaMu = styled.img`
@@ -49,7 +43,7 @@ const CanaryImg = styled.img`
   height: 90vh;
 `
 
-const StyledRow = styled(Row)`
+const FullPageHeightRow = styled(Row)`
   height: 91.7vh;
 `
 
