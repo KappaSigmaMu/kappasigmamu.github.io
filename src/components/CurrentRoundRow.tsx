@@ -61,17 +61,17 @@ const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element =>
   </div>
 )
 
-const CurrentRoundRow = (): JSX.Element => {
+const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
   const { api } = useSubstrate()
-  const [info, setInfo] = useState<DeriveSociety | any>()
   const [currentBlock, setCurrentBlock] = useState<number>(0)
+  const [info, setInfo] = useState<DeriveSociety | any>()
   const [rotationPeriod, setRotationPeriod] = useState<number>(0)
+  const [strikes, setStrikes] = useState<number | any>(10)
   const periodBlocksDone = currentBlock % rotationPeriod
   const periodBlocksLeft = rotationPeriod - periodBlocksDone
   const percentageDone = 100 - (periodBlocksLeft * 100) / rotationPeriod
   const [, , time] = useBlockTime(periodBlocksLeft, api)
   const { days, hours, minutes, seconds } = time
-  const strikes = 6 // TODO: get it from api
   const accountBid = '54,223' // TODO: get it from api
 
   useEffect(() => {
@@ -84,6 +84,11 @@ const CurrentRoundRow = (): JSX.Element => {
 
       api.derive.society.info().then((response) => {
         setInfo(response)
+      })
+
+      api.derive.society.members().then((members) => {
+        const account = members.find((member) => member.accountId.toString() === props.currentAccount)
+        setStrikes(account?.strikes.toNumber())
       })
     }
   }, [api])
@@ -134,6 +139,7 @@ const CurrentRoundRow = (): JSX.Element => {
           </Row>
           <Row className="mb-3">
             <Col>
+              <Value>{JSON.stringify(strikes)}</Value>
               <FormatedKSM>{accountBid}</FormatedKSM>
             </Col>
           </Row>
