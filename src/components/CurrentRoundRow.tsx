@@ -30,19 +30,36 @@ const Strikes = (props: { count: number }): JSX.Element => {
 
 const FormatedKSM = (props: { children: any }): JSX.Element => (
   <>
-    <WhiteSpan>{props.children}</WhiteSpan>
+    <Value>{props.children}</Value>
     &nbsp;&nbsp;
-    <GraySpan>KSM</GraySpan>
+    <Unit>KSM</Unit>
   </>
 )
 
-const GraySpan = styled.span`
+const Unit = styled.span`
   color: #6c757d;
 `
 
-const WhiteSpan = styled.span`
+const Value = styled.span`
   color: #fff;
 `
+
+const Title = styled.h4`
+  color: #fff;
+`
+
+const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element => (
+  <div style={{ width: 100, height: 100 }}>
+    <CircularProgressbar
+      value={props.percentageDone}
+      styles={buildStyles({
+        pathColor: '#E6007A',
+        trailColor: '#fff',
+        strokeLinecap: 'butt',
+      })}
+    />
+  </div>
+)
 
 const CurrentRoundRow = (): JSX.Element => {
   const { api } = useSubstrate()
@@ -77,45 +94,28 @@ const CurrentRoundRow = (): JSX.Element => {
         <Col>
           <Row className="mb-3">
             <Col>
-              <h4 style={{ color: 'white' }}>Current Round</h4>
+              <Title>Current Round</Title>
             </Col>
           </Row>
           <Row>
             <Col>
-              <div style={{ width: 100, height: 100 }}>
-                <CircularProgressbar
-                  value={percentageDone}
-                  styles={buildStyles({
-                    pathColor: '#E6007A',
-                    trailColor: '#fff',
-                    strokeLinecap: 'butt',
-                  })}
-                />
-              </div>
+              <CurrentRoundProgress percentageDone={percentageDone} />
             </Col>
             <Col style={{ paddingLeft: 0 }}>
-              <WhiteSpan>{days}</WhiteSpan>
-              &nbsp;
-              <GraySpan>day</GraySpan>
+              <Value>{days}</Value>&nbsp;<Unit>day</Unit>
               <br />
-              <WhiteSpan>{hours}</WhiteSpan>
-              &nbsp;
-              <GraySpan>hrs.</GraySpan>
+              <Value>{hours}</Value>&nbsp;<Unit>hrs.</Unit>
               <br />
-              <WhiteSpan>{minutes}</WhiteSpan>
-              &nbsp;
-              <GraySpan>mins.</GraySpan>
+              <Value>{minutes}</Value>&nbsp;<Unit>mins.</Unit>
               <br />
-              <WhiteSpan>{seconds}</WhiteSpan>
-              &nbsp;
-              <GraySpan>secs.</GraySpan>
+              <Value>{seconds}</Value>&nbsp;<Unit>secs.</Unit>
             </Col>
           </Row>
         </Col>
         <Col>
           <Row className="mb-3">
             <Col>
-              <h4 style={{ color: 'white' }}>Round Payout</h4>
+              <Title>Round Payout</Title>
             </Col>
           </Row>
           <Row>
@@ -129,7 +129,7 @@ const CurrentRoundRow = (): JSX.Element => {
         <Col>
           <Row className="mb-3">
             <Col>
-              <h4 style={{ color: 'white' }}>My Bid</h4>
+              <Title>My Bid</Title>
             </Col>
           </Row>
           <Row className="mb-3">
@@ -146,14 +146,12 @@ const CurrentRoundRow = (): JSX.Element => {
         <Col>
           <Row className="mb-3">
             <Col>
-              <h4 style={{ color: 'white' }}>Strikes</h4>
+              <Title>Strikes</Title>
             </Col>
           </Row>
           <Row className="mb-2">
             <Col>
-              <WhiteSpan>{strikes}</WhiteSpan>
-              &nbsp;
-              <GraySpan>/&nbsp;10</GraySpan>
+              <Value>{strikes}</Value>&nbsp;<Unit>/&nbsp;10</Unit>
             </Col>
           </Row>
           <Row>
