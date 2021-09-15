@@ -127,9 +127,7 @@ const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
           </Row>
           <Row>
             <Col>
-              <FormatedKSM>
-                {formatBalance(info?.pot.toString(), { decimals: 0 }).substring(0, 5).replace('.', ',')}
-              </FormatedKSM>
+              <FormatedKSM>{info?.pot.toHuman().substring(0, 5)}</FormatedKSM>
             </Col>
           </Row>
         </Col>
@@ -141,7 +139,6 @@ const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
           </Row>
           <Row className="mb-3">
             <Col>
-              <Value>{strikes}</Value>
               <FormatedKSM>{accountBid}</FormatedKSM>
             </Col>
           </Row>
