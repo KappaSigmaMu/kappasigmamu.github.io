@@ -5,6 +5,7 @@ import { Button, Container, Col, Row } from 'react-bootstrap'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import styled from 'styled-components'
 import { useBlockTime } from '../hooks/useBlockTime'
+import { useConsts } from '../hooks/useConsts'
 import { useSubstrate } from '../substrate'
 import 'react-circular-progressbar/dist/styles.css'
 
@@ -14,10 +15,10 @@ const Circle = ({ active = false }: { active?: boolean }): JSX.Element => (
   </svg>
 )
 
-const Strikes = (props: { count: number }): JSX.Element => {
+const Strikes = (props: { count: number; maxStrikes: number }): JSX.Element => {
   const strkesArray = Array(props.count)
     .fill(true)
-    .concat(Array(10 - props.count).fill(false))
+    .concat(Array(props.maxStrikes - props.count).fill(false))
 
   return (
     <>
@@ -63,10 +64,11 @@ const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element =>
 
 const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
   const { api } = useSubstrate()
+  const { maxStrikes } = useConsts()
   const [currentBlock, setCurrentBlock] = useState<number>(0)
   const [info, setInfo] = useState<DeriveSociety | any>()
   const [rotationPeriod, setRotationPeriod] = useState<number>(0)
-  const [strikes, setStrikes] = useState<number | any>(10)
+  const [strikes, setStrikes] = useState<number | any>(0)
   const periodBlocksDone = currentBlock % rotationPeriod
   const periodBlocksLeft = rotationPeriod - periodBlocksDone
   const percentageDone = 100 - (periodBlocksLeft * 100) / rotationPeriod
@@ -139,7 +141,7 @@ const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
           </Row>
           <Row className="mb-3">
             <Col>
-              <Value>{JSON.stringify(strikes)}</Value>
+              <Value>{strikes}</Value>
               <FormatedKSM>{accountBid}</FormatedKSM>
             </Col>
           </Row>
@@ -157,12 +159,12 @@ const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
           </Row>
           <Row className="mb-2">
             <Col>
-              <Value>{strikes}</Value>&nbsp;<Unit>/&nbsp;10</Unit>
+              <Value>{strikes}</Value>&nbsp;<Unit>/&nbsp;{maxStrikes.toNumber()}</Unit>
             </Col>
           </Row>
           <Row>
             <Col>
-              <Strikes count={strikes} />
+              <Strikes count={strikes} maxStrikes={maxStrikes.toNumber()} />
             </Col>
           </Row>
         </Col>
