@@ -47,8 +47,6 @@ const NavbarBrand = () => (
   </BNavbar.Brand>
 )
 
-
-
 const NavbarGallery = () => (
   <Button variant="link" href="/gallery">
     Gallery

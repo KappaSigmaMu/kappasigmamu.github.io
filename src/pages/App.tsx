@@ -29,10 +29,7 @@ function Main() {
           <CyborgGuide />
         </Route>
         <Route path="/welcome">
-          <Welcome
-            activeAccount={activeAccount}
-            setActiveAccount={setActiveAccount}
-          />
+          <Welcome activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
         </Route>
       </Switch>
     </StyledMain>
