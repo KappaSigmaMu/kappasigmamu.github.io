@@ -45,7 +45,7 @@ const Navbar = ({
 
 const NavbarBrand = () => (
   <BNavbar.Brand as={Link} to="/">
-    <img src={KappaSigmaMu} alt="KappaSigmaMu Logo" />
+    <img width={90} src={KappaSigmaMu} alt="KappaSigmaMu Logo" />
   </BNavbar.Brand>
 )
 
@@ -98,6 +98,7 @@ const NavbarContainer = styled(Container)`
 
 const CenterNav = styled(Nav)`
   align-items: center;
+  align-self: normal;
 `
 
 Navbar.defaultProps = {
