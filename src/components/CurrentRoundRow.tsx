@@ -16,20 +16,20 @@ const Circle = ({ active = false }: { active?: boolean }): JSX.Element => (
 )
 
 const Strikes = (props: { count: number; maxStrikes: number }): JSX.Element => {
-  const strkesArray = Array(props.count)
+  const strikesArray = Array(props.count)
     .fill(true)
     .concat(Array(props.maxStrikes - props.count).fill(false))
 
   return (
     <>
-      {strkesArray.map((active, key) => (
+      {strikesArray.map((active, key) => (
         <Circle key={key} active={active} />
       ))}
     </>
   )
 }
 
-const FormatedKSM = (props: { children: any }): JSX.Element => (
+const FormattedKSM = (props: { children: any }): JSX.Element => (
   <>
     <Value>{props.children}</Value>
     &nbsp;&nbsp;
@@ -127,7 +127,7 @@ const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
           </Row>
           <Row>
             <Col>
-              <FormatedKSM>{info?.pot.toHuman().substring(0, 5)}</FormatedKSM>
+              <FormattedKSM>{info?.pot.toHuman().substring(0, 5)}</FormattedKSM>
             </Col>
           </Row>
         </Col>
@@ -139,7 +139,7 @@ const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
           </Row>
           <Row className="mb-3">
             <Col>
-              <FormatedKSM>{accountBid}</FormatedKSM>
+              <FormattedKSM>{accountBid}</FormattedKSM>
             </Col>
           </Row>
           <Row>
