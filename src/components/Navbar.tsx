@@ -33,7 +33,7 @@ const Navbar = ({
         <Nav>{showBrandIcon ? <NavbarBrand /> : <></>}</Nav>
         <CenterNav>
           {showGalleryButton ? <NavbarGallery /> : <></>}
-          {showSocialIcons ? <NavbarSocial /> : <></>}
+          {showSocialIcons ? <SocialIcons /> : <></>}
           {showAccount ? <AccountNavbar setActiveAccount={setActiveAccount} activeAccount={activeAccount} /> : <></>}
         </CenterNav>
       </NavbarContainer>
