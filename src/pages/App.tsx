@@ -16,18 +16,14 @@ function Main() {
     return <p>{text}</p>
   }
 
-  if (apiState === 'ERROR')
-    return loader(`${JSON.stringify(apiError, null, 4)}`)
+  if (apiState === 'ERROR') return loader(`${JSON.stringify(apiError, null, 4)}`)
   if (apiState !== 'READY') return loader('Connecting')
 
   return (
     <StyledMain fluid>
       <Switch>
         <Route exact path="/">
-          <Home
-            activeAccount={activeAccount}
-            setActiveAccount={setActiveAccount}
-          />
+          <Home activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
         </Route>
         <Route path="/cyborg-guide">
           <CyborgGuide />

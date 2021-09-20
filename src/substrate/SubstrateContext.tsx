@@ -71,11 +71,7 @@ function SubstrateContextProvider(props: { children: JSX.Element }) {
 
   connect(state, dispatch)
 
-  return (
-    <SubstrateContext.Provider value={state}>
-      {props.children}
-    </SubstrateContext.Provider>
-  )
+  return <SubstrateContext.Provider value={state}>{props.children}</SubstrateContext.Provider>
 }
 
 const useSubstrate = () => ({ ...useContext(SubstrateContext) })

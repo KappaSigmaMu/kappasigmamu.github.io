@@ -36,19 +36,13 @@ const Main = ({ setActiveAccount, accounts, activeAccount }: Props) => {
   return (
     <AccountDropdownButton
       variant="outline-grey-dark"
-      onSelect={(
-        eventKey: string | null,
-        e?: React.SyntheticEvent<unknown, Event>,
-      ) => onChange(e?.target as HTMLInputElement)}
+      onSelect={(eventKey: string | null, e?: React.SyntheticEvent<unknown, Event>) =>
+        onChange(e?.target as HTMLInputElement)
+      }
       title={<Title />}
     >
       {accounts.map((option: { name: string | undefined; address: string }) => (
-        <Dropdown.Item
-          style={{ fontSize: '12px' }}
-          eventKey={option.address}
-          key={option.address}
-          href="#"
-        >
+        <Dropdown.Item style={{ fontSize: '12px' }} eventKey={option.address} key={option.address} href="#">
           {option.address}
         </Dropdown.Item>
       ))}
