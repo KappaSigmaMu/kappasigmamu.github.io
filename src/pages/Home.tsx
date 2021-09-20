@@ -1,5 +1,6 @@
 import { Button, Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
+import { CurrentRoundRow } from '../components/CurrentRoundRow'
 import { Navbar } from '../components/Navbar'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
@@ -23,6 +24,8 @@ const Home = ({ setActiveAccount, activeAccount }: HomeProps): JSX.Element => {
           </GuideButton>
         </CentralizedCol>
       </FullPageHeightRow>
+
+      <CurrentRoundRow currentAccount={'Dikw9VJqJ4fJFcXuKaSqu3eSwBQM6zC8ja9rdAP3RbfeK1Y'} />
     </>
   )
 }
