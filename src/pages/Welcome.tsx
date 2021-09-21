@@ -22,17 +22,17 @@ const Welcome = ({
       />
       <StyledDiv>
         <StyledContainer>
-          <WalletConnected>WALLET CONNECTED</WalletConnected>
-          <H1>Welcome, Human.</H1>
+          <WalletConnectedText>WALLET CONNECTED</WalletConnectedText>
+          <MarginH1>Welcome, Human.</MarginH1>
           <Row>
             <Col>
               <h4>JOIN THE LOUNGE</h4>
-              <StyledP>Meet other Cyborgs.</StyledP>
+              <SizeP>Meet other Cyborgs.</SizeP>
               <SocialIcons />
             </Col>
             <Col>
               <h4>CHECK THE GAME GUIDE</h4>
-              <StyledP>Learn how to become a Cyborg</StyledP>
+              <SizeP>Learn how to become a Cyborg</SizeP>
               <Button variant="outline-secondary">
                 Cyborg Guide
                 <PaddingMapIcon src={MapIcon} alt="Map Icon" />
@@ -47,11 +47,11 @@ const Welcome = ({
   )
 }
 
-const StyledP = styled.p`
+const SizeP = styled.p`
   font-size: 14px;
 `
 
-const H1 = styled.h1`
+const MarginH1 = styled.h1`
   margin-bottom: 45px;
 `
 
@@ -66,7 +66,7 @@ const StyledDiv = styled.div`
   position: relative;
 `
 
-const WalletConnected = styled.p`
+const WalletConnectedText = styled.p`
   background-color: ${(props) => props.theme.colors.primary};
   color: ${(props) => props.theme.colors.white};
   font-size: 12px;
