@@ -6,11 +6,9 @@ import { default as BNavbar } from 'react-bootstrap/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { fetchAccounts } from '../helpers/fetchAccounts'
-import DiscordLogo from '../static/discord-logo.svg'
-import ElementLogo from '../static/element-logo.svg'
 import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
-import TwitterLogo from '../static/twitter-logo.svg'
 import { AccountSelector } from './AccountSelector'
+import { SocialIcons } from './SocialIcons'
 
 type NavbarType = {
   showBrandIcon: boolean
@@ -35,7 +33,7 @@ const Navbar = ({
         <Nav>{showBrandIcon ? <NavbarBrand /> : <></>}</Nav>
         <CenterNav>
           {showGalleryButton ? <NavbarGallery /> : <></>}
-          {showSocialIcons ? <NavbarSocial /> : <></>}
+          {showSocialIcons ? <SocialIcons /> : <></>}
           {showAccount ? <AccountNavbar setActiveAccount={setActiveAccount} activeAccount={activeAccount} /> : <></>}
         </CenterNav>
       </NavbarContainer>
@@ -47,20 +45,6 @@ const NavbarBrand = () => (
   <BNavbar.Brand as={Link} to="/">
     <img width={90} src={KappaSigmaMu} alt="KappaSigmaMu Logo" />
   </BNavbar.Brand>
-)
-
-const NavbarSocial = () => (
-  <>
-    <BNavbar.Brand href="https://discord.gg/9AWjTf8wSk" target="_blank">
-      <img src={DiscordLogo} alt="Discord Logo" />
-    </BNavbar.Brand>
-    <BNavbar.Brand href="" target="_blank">
-      <img src={ElementLogo} alt="Discord Logo" />
-    </BNavbar.Brand>
-    <BNavbar.Brand href="https://twitter.com/network" target="_blank">
-      <img src={TwitterLogo} alt="Twitter Logo" />
-    </BNavbar.Brand>
-  </>
 )
 
 const NavbarGallery = () => (

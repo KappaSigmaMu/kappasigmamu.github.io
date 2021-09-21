@@ -6,6 +6,7 @@ import { Theme } from '../styles/Theme'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
 import { CyborgGuide } from './CyborgGuide'
 import { Home } from './Home'
+import { Welcome } from './Welcome'
 
 function Main() {
   const { apiState, apiError } = useSubstrate()
@@ -26,6 +27,9 @@ function Main() {
         </Route>
         <Route path="/cyborg-guide">
           <CyborgGuide />
+        </Route>
+        <Route path="/welcome">
+          <Welcome activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
         </Route>
       </Switch>
     </StyledMain>
