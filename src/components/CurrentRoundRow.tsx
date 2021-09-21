@@ -1,5 +1,4 @@
 import type { DeriveSociety } from '@polkadot/api-derive/types'
-import { formatBalance } from '@polkadot/util'
 import { useEffect, useState } from 'react'
 import { Button, Container, Col, Row } from 'react-bootstrap'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
@@ -7,7 +6,6 @@ import styled from 'styled-components'
 import { useBlockTime } from '../hooks/useBlockTime'
 import { useConsts } from '../hooks/useConsts'
 import { useSubstrate } from '../substrate'
-import 'react-circular-progressbar/dist/styles.css'
 
 const Circle = ({ active = false }: { active?: boolean }): JSX.Element => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
