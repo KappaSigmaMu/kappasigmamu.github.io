@@ -7,6 +7,7 @@ import { SubstrateContextProvider, useSubstrate } from '../substrate'
 import { CyborgGuide } from './CyborgGuide'
 import { Home } from './Home'
 import { Welcome } from './Welcome'
+import { Human } from './Human'
 
 function Main() {
   const { apiState, apiError } = useSubstrate()
@@ -30,6 +31,9 @@ function Main() {
         </Route>
         <Route path="/welcome">
           <Welcome activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
+        </Route>
+        <Route path="/human">
+          <Human activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
         </Route>
       </Switch>
     </StyledMain>
