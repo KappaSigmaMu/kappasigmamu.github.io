@@ -15,7 +15,6 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/typescript',
-    'plugin:prettier/recommended',
     'plugin:react/recommended'
   ],
   root: true,
@@ -63,10 +62,6 @@ module.exports = {
     'no-multiple-empty-lines': ['warn', { max: 1 }],
     'no-useless-rename': 'warn',
     'object-shorthand': 'warn',
-    'prettier/prettier': [
-      'warn',
-      { printWidth: 120 }
-    ],
     'react/react-in-jsx-scope': 'off',
     'semi': ['error', 'never'],
   },
