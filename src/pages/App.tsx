@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { Switch, Route } from 'react-router-dom'
 import styled, { ThemeProvider } from 'styled-components'
+import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
 import { CyborgGuide } from './CyborgGuide'
@@ -20,19 +21,22 @@ function Main() {
   if (apiState !== 'READY') return loader('Connecting')
 
   return (
-    <StyledMain fluid>
-      <Switch>
-        <Route exact path="/">
-          <Home activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
-        </Route>
-        <Route path="/cyborg-guide">
-          <CyborgGuide />
-        </Route>
-        <Route path="/welcome">
-          <Welcome activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
-        </Route>
-      </Switch>
-    </StyledMain>
+    <>
+      <GlobalStyle />
+      <StyledMain fluid>
+        <Switch>
+          <Route exact path="/">
+            <Home activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
+          </Route>
+          <Route path="/cyborg-guide">
+            <CyborgGuide />
+          </Route>
+          <Route path="/welcome">
+            <Welcome activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
+          </Route>
+        </Switch>
+      </StyledMain>
+    </>
   )
 }
 
