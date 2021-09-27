@@ -1,14 +1,28 @@
 import { Button, Col, Row } from 'react-bootstrap'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { CurrentRoundRow } from '../components/CurrentRoundRow'
 import { Navbar } from '../components/Navbar'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
-const Home = ({ setActiveAccount, activeAccount }: HomeProps): JSX.Element => {
+const Home = ({ setActiveAccount, activeAccount, accounts, setAccounts }: HomeProps): JSX.Element => {
+  const history = useHistory()
+
+  const handleClick = () => {
+    history.push("/welcome")
+  }
+
   return (
     <>
-      <Navbar showSocialIcons showAccount setActiveAccount={setActiveAccount} activeAccount={activeAccount} />
+      <Navbar
+        showSocialIcons
+        showAccount
+        setActiveAccount={setActiveAccount}
+        activeAccount={activeAccount}
+        accounts={accounts}
+        setAccounts={setAccounts}
+      />
       <FullPageHeightRow>
         <Col xs={6}>
           <CanaryImg src={Canary} alt="Canary" />
@@ -16,7 +30,7 @@ const Home = ({ setActiveAccount, activeAccount }: HomeProps): JSX.Element => {
         <CentralizedCol xs={6}>
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-          <Button variant="primary" size="lg" href="/welcome">
+          <Button disabled={!activeAccount} variant="primary" size="lg" onClick={handleClick}>
             Become a Cyborg
           </Button>
           <GuideButton variant="link" href="/cyborg-guide">
@@ -33,6 +47,8 @@ const Home = ({ setActiveAccount, activeAccount }: HomeProps): JSX.Element => {
 type HomeProps = {
   setActiveAccount: (activeAccount: string) => void
   activeAccount: string
+  accounts: { name: string | undefined; address: string }[]
+  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
 }
 
 const KappaSigmaMu = styled.img`

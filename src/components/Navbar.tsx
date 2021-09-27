@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
@@ -17,6 +16,8 @@ type NavbarType = {
   showAccount: boolean
   setActiveAccount: (account: string) => void
   activeAccount: string
+  accounts: { name: string | undefined; address: string }[]
+  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
 }
 
 const Navbar = ({
@@ -26,6 +27,8 @@ const Navbar = ({
   showAccount,
   setActiveAccount,
   activeAccount,
+  accounts,
+  setAccounts
 }: NavbarType) => {
   return (
     <BNavbar>
@@ -34,7 +37,13 @@ const Navbar = ({
         <CenterNav>
           {showGalleryButton ? <NavbarGallery /> : <></>}
           {showSocialIcons ? <SocialIcons /> : <></>}
-          {showAccount ? <AccountNavbar setActiveAccount={setActiveAccount} activeAccount={activeAccount} /> : <></>}
+          {showAccount ?
+           <AccountNavbar
+             setActiveAccount={setActiveAccount}
+             activeAccount={activeAccount}
+             accounts={accounts}
+             setAccounts={setAccounts}
+           /> : <></>}
         </CenterNav>
       </NavbarContainer>
     </BNavbar>
@@ -56,12 +65,14 @@ const NavbarGallery = () => (
 const AccountNavbar = ({
   setActiveAccount,
   activeAccount,
+  accounts,
+  setAccounts
 }: {
   setActiveAccount: (activeAccount: string) => void
   activeAccount: string
+  accounts: { name: string | undefined; address: string }[]
+  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
 }) => {
-  const [accounts, setAccounts] = useState<{ name: string | undefined; address: string }[]>([])
-
   return (
     <>
       {accounts.length != 0 && activeAccount ? (

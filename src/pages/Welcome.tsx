@@ -7,9 +7,13 @@ import MapIcon from '../static/map-icon.svg'
 const Welcome = ({
   setActiveAccount,
   activeAccount,
+  accounts,
+  setAccounts
 }: {
   setActiveAccount: (activeAccount: string) => void
   activeAccount: string
+  accounts: { name: string | undefined; address: string }[]
+  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
 }): JSX.Element => {
   return (
     <>
@@ -19,6 +23,8 @@ const Welcome = ({
         showAccount
         setActiveAccount={setActiveAccount}
         activeAccount={activeAccount}
+        accounts={accounts}
+        setAccounts={setAccounts}
       />
       <StyledDiv>
         <StyledContainer>

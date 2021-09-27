@@ -11,6 +11,7 @@ import { Welcome } from './Welcome'
 function Main() {
   const { apiState, apiError } = useSubstrate()
   const [activeAccount, setActiveAccount] = useState<string>('')
+  const [accounts, setAccounts] = useState<{ name: string | undefined; address: string }[]>([])
 
   const loader = (text: string) => {
     return <p>{text}</p>
@@ -23,13 +24,23 @@ function Main() {
     <StyledMain fluid>
       <Switch>
         <Route exact path="/">
-          <Home activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
+          <Home
+            activeAccount={activeAccount}
+            setActiveAccount={setActiveAccount}
+            accounts={accounts}
+            setAccounts={setAccounts}
+          />
         </Route>
         <Route path="/cyborg-guide">
           <CyborgGuide />
         </Route>
         <Route path="/welcome">
-          <Welcome activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
+          <Welcome
+            activeAccount={activeAccount}
+            setActiveAccount={setActiveAccount}
+            accounts={accounts}
+            setAccounts={setAccounts}
+          />
         </Route>
       </Switch>
     </StyledMain>
