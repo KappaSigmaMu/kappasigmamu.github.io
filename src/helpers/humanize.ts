@@ -21,7 +21,7 @@ function humanizeBidValue(bid: Partial<PalletSocietyBidKind>) {
     return bid.asDeposit?.toHuman()
   } else if (bid.isVouch) {
     return bid.asVouch?.[1].toHuman()
-  }else {
+  } else {
     return '<UNKNOWN VALUE>'
   }
 }
