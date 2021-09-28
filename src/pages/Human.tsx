@@ -1,5 +1,6 @@
 import { Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
+import { CurrentRoundRow } from '../components/CurrentRoundRow'
 import { Level } from '../components/Level'
 import { LevelNotification } from '../components/LevelNotification'
 import { Navbar } from '../components/Navbar'
@@ -36,6 +37,7 @@ const Human = ({
           </Row>
         </Container>
       </StyledDiv>
+      <CurrentRoundRow currentAccount={activeAccount} />
     </>
   )
 }
