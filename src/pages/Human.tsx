@@ -1,6 +1,9 @@
-import { Button, Container, Row, Col, Badge } from 'react-bootstrap'
+import { Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
+import { Level } from '../components/Level'
+import { LevelNotification } from '../components/LevelNotification'
 import { Navbar } from '../components/Navbar'
+import { NextStep } from '../components/NextStep'
 
 const Human = ({
   setActiveAccount,
@@ -21,48 +24,15 @@ const Human = ({
       <StyledDiv>
         <Container>
           <Row>
-            <Col sm={3}>
-              <Badge pill>
-                Level 1
-              </Badge>
-              <UnderlinedH1>Human</UnderlinedH1>
-            </Col>
-            <Col sm={4}>
-              <StyledP>Level Notification</StyledP>
-              <MarginH5>You are IN the society;<br/>
-                You are NOT a member;<br/>
-                You CAN&apos;T vote;<br/>
-                You CAN VIEW the gallery.
-              </MarginH5>
-            </Col>
-            <Col sm={5}>
-              <StyledP>Next Step</StyledP>
-              <MarginH5>To become a Candidate you need to level up;<br/>To level up you must first Submit a Bid.</MarginH5>
-              <MarginButton variant="outline-grey-dark">Bid Rules</MarginButton>
-              <Button>Submit a Bid</Button>
-            </Col>
+            <Level level='human' />
+            <LevelNotification level='human' />
+            <NextStep level='human' />
           </Row>
         </Container>
       </StyledDiv>
     </>
   )
 }
-
-const UnderlinedH1 = styled.h1`
-  text-decoration: underline;
-`
-
-const MarginH5 = styled.h5`
-  margin-bottom: 24px;
-`
-
-const StyledP = styled.p`
-  color: ${(props) => props.theme.colors.greyDark};
-`
-
-const MarginButton = styled(Button)`
-  margin-right: 16px;
-`
 
 const StyledDiv = styled.div`
   height: 88.1vh;

@@ -1,5 +1,6 @@
 import { Button, Container, Row, Col, Badge } from 'react-bootstrap'
 import styled from 'styled-components'
+import { Level } from '../components/Level'
 import { Navbar } from '../components/Navbar'
 import { SocialIcons } from '../components/SocialIcons'
 import MapIcon from '../static/map-icon.svg'
@@ -21,6 +22,11 @@ const Welcome = ({
         activeAccount={activeAccount}
       />
       <StyledDiv>
+        <LevelContainer>
+          <Row>
+            <Level level='human' />
+          </Row>
+        </LevelContainer>
         <StyledContainer>
           <MarginBadge pill>WALLET CONNECTED</MarginBadge>
           <MarginH1>Welcome, Human.</MarginH1>
@@ -62,7 +68,6 @@ const CenterButton = styled(Button)`
 
 const StyledDiv = styled.div`
   height: 88.1vh;
-  position: relative;
 `
 
 const MarginBadge = styled(Badge)`
@@ -82,6 +87,12 @@ const StyledContainer = styled(Container)`
   transform: translate(-50%, -50%);
 
   padding: 59px;
+`
+
+const LevelContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `
 
 const PaddingMapIcon = styled.img`

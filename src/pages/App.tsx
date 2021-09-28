@@ -2,13 +2,12 @@ import React, { useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { Switch, Route } from 'react-router-dom'
 import styled, { ThemeProvider } from 'styled-components'
-import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
 import { CyborgGuide } from './CyborgGuide'
 import { Home } from './Home'
-import { Welcome } from './Welcome'
 import { Human } from './Human'
+import { Welcome } from './Welcome'
 
 function Main() {
   const { apiState, apiError } = useSubstrate()
