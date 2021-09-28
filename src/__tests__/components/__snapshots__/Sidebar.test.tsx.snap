@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Sidebar with bids selected 1`] = `
+<li
+  className="sc-bdnxRM eXPXqY"
+>
+  <li>
+    <a
+      aria-current="page"
+      className="active"
+      href="/human/bids"
+      onClick={[Function]}
+      style={
+        Object {
+          "color": "white",
+          "fontSize": 20,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
+        }
+      }
+    >
+      Bids
+    </a>
+  </li>
+  <li>
+    <a
+      aria-current={null}
+      href="/human/members"
+      onClick={[Function]}
+      style={
+        Object {
+          "color": "#707070",
+          "fontSize": 16,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
+        }
+      }
+    >
+      Members
+    </a>
+  </li>
+  <li>
+    <a
+      aria-current={null}
+      href="/human/candidates"
+      onClick={[Function]}
+      style={
+        Object {
+          "color": "#707070",
+          "fontSize": 16,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
+        }
+      }
+    >
+      Candidates
+    </a>
+  </li>
+  <li>
+    <a
+      aria-current={null}
+      href="/human/suspended"
+      onClick={[Function]}
+      style={
+        Object {
+          "color": "#707070",
+          "fontSize": 16,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
+        }
+      }
+    >
+      Suspended
+    </a>
+  </li>
+</li>
+`;
