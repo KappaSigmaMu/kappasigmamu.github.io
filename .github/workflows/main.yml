@@ -32,17 +32,3 @@ jobs:
 
     - name: Run linter
       run: yarn linter
-
-  # cypress-run:
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #     - name: Increase File Watchers
-  #       run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-  #     - name: Cypress run
-  #       uses: cypress-io/github-action@v2
-  #       with:
-  #         build: yarn build
-  #         start: yarn start
