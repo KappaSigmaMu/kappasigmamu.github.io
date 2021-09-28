@@ -1,0 +1,383 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders BidsList 1`] = `
+Array [
+  <div
+    className="row"
+    style={
+      Object {
+        "color": "#fff",
+        "lineHeight": 3,
+      }
+    }
+  >
+    <div
+      className="text-center col-1"
+    >
+      #
+    </div>
+    <div
+      className="text-start col-4"
+    >
+      Wallet Hash
+    </div>
+    <div
+      className="text-start col-5"
+    >
+      Bid Kind
+    </div>
+    <div
+      className="text-end col-2"
+      style={
+        Object {
+          "paddingRight": 36,
+        }
+      }
+    >
+      Value
+    </div>
+  </div>,
+  <div
+    className="row"
+    style={
+      Object {
+        "backgroundColor": "#343A40",
+        "borderRadius": 6,
+        "color": "#fff",
+        "lineHeight": 3,
+        "marginTop": 5,
+      }
+    }
+  >
+    <div
+      className="text-center col-1"
+    >
+      <div
+        className="Identicon__Wrapper-sc-1gm2vek-0 iULmUS ui--IdentityIcon  "
+        onClick={[Function]}
+      >
+        <svg
+          className=""
+          height={32}
+          id="5CSbZ7wG456oty4WoiX6a1J88VUbrCXLhrKVJ9q95BsYH4TZ"
+          name="5CSbZ7wG456oty4WoiX6a1J88VUbrCXLhrKVJ9q95BsYH4TZ"
+          viewBox="0 0 64 64"
+          width={32}
+        >
+          <circle
+            cx={32}
+            cy={32}
+            fill="#eee"
+            r={32}
+          />
+          <circle
+            cx={32}
+            cy={8}
+            fill="hsl(90, 94%, 35%)"
+            r={5}
+          />
+          <circle
+            cx={32}
+            cy={20}
+            fill="hsl(253, 94%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={21.607695154586736}
+            cy={14}
+            fill="hsl(286, 94%, 53%)"
+            r={5}
+          />
+          <circle
+            cx={11.215390309173472}
+            cy={20}
+            fill="hsl(84, 94%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={21.607695154586736}
+            cy={26}
+            fill="hsl(275, 94%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={11.215390309173472}
+            cy={32}
+            fill="hsl(286, 94%, 53%)"
+            r={5}
+          />
+          <circle
+            cx={11.215390309173472}
+            cy={44}
+            fill="hsl(90, 94%, 35%)"
+            r={5}
+          />
+          <circle
+            cx={21.607695154586736}
+            cy={38}
+            fill="hsl(253, 94%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={21.607695154586736}
+            cy={50}
+            fill="hsl(292, 94%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={32}
+            cy={56}
+            fill="hsl(163, 94%, 35%)"
+            r={5}
+          />
+          <circle
+            cx={32}
+            cy={44}
+            fill="hsl(61, 94%, 53%)"
+            r={5}
+          />
+          <circle
+            cx={42.392304845413264}
+            cy={50}
+            fill="hsl(225, 94%, 35%)"
+            r={5}
+          />
+          <circle
+            cx={52.78460969082653}
+            cy={44}
+            fill="hsl(253, 94%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={42.392304845413264}
+            cy={38}
+            fill="hsl(309, 94%, 75%)"
+            r={5}
+          />
+          <circle
+            cx={52.78460969082653}
+            cy={32}
+            fill="hsl(225, 94%, 35%)"
+            r={5}
+          />
+          <circle
+            cx={52.78460969082653}
+            cy={20}
+            fill="hsl(163, 94%, 35%)"
+            r={5}
+          />
+          <circle
+            cx={42.392304845413264}
+            cy={26}
+            fill="hsl(61, 94%, 53%)"
+            r={5}
+          />
+          <circle
+            cx={42.392304845413264}
+            cy={14}
+            fill="hsl(292, 94%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={32}
+            cy={32}
+            fill="hsl(298, 94%, 15%)"
+            r={5}
+          />
+        </svg>
+      </div>
+    </div>
+    <div
+      className="text-start text-truncate col-4"
+    >
+      5CSbZ7w...
+    </div>
+    <div
+      className="text-start text-truncate col-5"
+    >
+      Deposit
+    </div>
+    <div
+      className="text-end col-2"
+      style={
+        Object {
+          "paddingRight": 36,
+        }
+      }
+    >
+      10
+    </div>
+  </div>,
+  <div
+    className="row"
+    style={
+      Object {
+        "backgroundColor": "#343A40",
+        "borderRadius": 6,
+        "color": "#fff",
+        "lineHeight": 3,
+        "marginTop": 5,
+      }
+    }
+  >
+    <div
+      className="text-center col-1"
+    >
+      <div
+        className="Identicon__Wrapper-sc-1gm2vek-0 iULmUS ui--IdentityIcon  "
+        onClick={[Function]}
+      >
+        <svg
+          className=""
+          height={32}
+          id="5GrpknVvGGrGH3EFuURXeMrWHvbpj3VfER1oX5jFtuGbfzCE"
+          name="5GrpknVvGGrGH3EFuURXeMrWHvbpj3VfER1oX5jFtuGbfzCE"
+          viewBox="0 0 64 64"
+          width={32}
+        >
+          <circle
+            cx={32}
+            cy={32}
+            fill="#eee"
+            r={32}
+          />
+          <circle
+            cx={32}
+            cy={8}
+            fill="hsl(118, 36%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={32}
+            cy={20}
+            fill="hsl(258, 36%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={21.607695154586736}
+            cy={14}
+            fill="hsl(135, 36%, 75%)"
+            r={5}
+          />
+          <circle
+            cx={11.215390309173472}
+            cy={20}
+            fill="hsl(354, 36%, 35%)"
+            r={5}
+          />
+          <circle
+            cx={21.607695154586736}
+            cy={26}
+            fill="hsl(140, 36%, 75%)"
+            r={5}
+          />
+          <circle
+            cx={11.215390309173472}
+            cy={32}
+            fill="hsl(258, 36%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={11.215390309173472}
+            cy={44}
+            fill="hsl(354, 36%, 35%)"
+            r={5}
+          />
+          <circle
+            cx={21.607695154586736}
+            cy={38}
+            fill="hsl(140, 36%, 75%)"
+            r={5}
+          />
+          <circle
+            cx={21.607695154586736}
+            cy={50}
+            fill="hsl(135, 36%, 75%)"
+            r={5}
+          />
+          <circle
+            cx={32}
+            cy={56}
+            fill="hsl(118, 36%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={32}
+            cy={44}
+            fill="hsl(258, 36%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={42.392304845413264}
+            cy={50}
+            fill="hsl(22, 36%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={52.78460969082653}
+            cy={44}
+            fill="hsl(208, 36%, 75%)"
+            r={5}
+          />
+          <circle
+            cx={42.392304845413264}
+            cy={38}
+            fill="hsl(286, 36%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={52.78460969082653}
+            cy={32}
+            fill="hsl(337, 36%, 75%)"
+            r={5}
+          />
+          <circle
+            cx={52.78460969082653}
+            cy={20}
+            fill="hsl(208, 36%, 75%)"
+            r={5}
+          />
+          <circle
+            cx={42.392304845413264}
+            cy={26}
+            fill="hsl(286, 36%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={42.392304845413264}
+            cy={14}
+            fill="hsl(22, 36%, 15%)"
+            r={5}
+          />
+          <circle
+            cx={32}
+            cy={32}
+            fill="hsl(16, 36%, 75%)"
+            r={5}
+          />
+        </svg>
+      </div>
+    </div>
+    <div
+      className="text-start text-truncate col-4"
+    >
+      5GrpknV...
+    </div>
+    <div
+      className="text-start text-truncate col-5"
+    >
+      Deposit
+    </div>
+    <div
+      className="text-end col-2"
+      style={
+        Object {
+          "paddingRight": 36,
+        }
+      }
+    >
+      20
+    </div>
+  </div>,
+]
+`;
