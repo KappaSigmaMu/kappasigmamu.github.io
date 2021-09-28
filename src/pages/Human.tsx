@@ -6,20 +6,26 @@ import { Navbar } from '../components/Navbar'
 import { NextStep } from '../components/NextStep'
 
 const Human = ({
-  setActiveAccount,
+  accounts,
   activeAccount,
+  setAccounts,
+  setActiveAccount,
 }: {
   setActiveAccount: (activeAccount: string) => void
   activeAccount: string
+  accounts: { name: string | undefined; address: string }[]
+  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
 }): JSX.Element => {
   return (
     <>
       <Navbar
+        accounts={accounts}
+        activeAccount={activeAccount}
+        setAccounts={setAccounts}
+        setActiveAccount={setActiveAccount}
+        showAccount
         showBrandIcon
         showGalleryButton
-        showAccount
-        setActiveAccount={setActiveAccount}
-        activeAccount={activeAccount}
       />
       <StyledDiv>
         <Container>

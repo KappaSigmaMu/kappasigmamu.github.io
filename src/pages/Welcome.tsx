@@ -6,20 +6,26 @@ import { SocialIcons } from '../components/SocialIcons'
 import MapIcon from '../static/map-icon.svg'
 
 const Welcome = ({
-  setActiveAccount,
+  accounts,
   activeAccount,
+  setAccounts,
+  setActiveAccount,
 }: {
   setActiveAccount: (activeAccount: string) => void
   activeAccount: string
+  accounts: { name: string | undefined; address: string }[]
+  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
 }): JSX.Element => {
   return (
     <>
       <Navbar
+        accounts={accounts}
+        activeAccount={activeAccount}
+        setAccounts={setAccounts}
+        setActiveAccount={setActiveAccount}
+        showAccount
         showBrandIcon
         showGalleryButton
-        showAccount
-        setActiveAccount={setActiveAccount}
-        activeAccount={activeAccount}
       />
       <StyledDiv>
         <LevelContainer>
