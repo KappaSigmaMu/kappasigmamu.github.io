@@ -3,6 +3,19 @@ import styled from 'styled-components'
 import { Navbar } from '../components/Navbar'
 import Canary from '../static/mock-canary.svg'
 
+// eslint-disable-next-line max-len
+const SOCIETY_RULES_URL = 'https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17'
+
+const TattooRulesLink = (props: { children: string }) => (
+  <a
+    target="_blank"
+    href={SOCIETY_RULES_URL}
+    rel="noreferrer"
+  >
+    {props.children}
+  </a>
+)
+
 const CyborgGuide = ({
   accounts,
   activeAccount,
@@ -43,14 +56,9 @@ const CyborgGuide = ({
               </a>
             </p>
             <p>
-              <a
-                target="_blank"
-                // eslint-disable-next-line max-len
-                href="https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17"
-                rel="noreferrer"
-              >
+              <TattooRulesLink>
                 Tattoo rules
-              </a>
+              </TattooRulesLink>
             </p>
           </Col>
         </GuideRow>
@@ -163,14 +171,9 @@ const CyborgGuide = ({
               to get tattoed!
             </p>
             <p>
-              <a
-                target="_blank"
-                // eslint-disable-next-line max-len
-                href="https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17"
-                rel="noreferrer"
-              >
+              <TattooRulesLink>
                 See the rules for your PoI here.
-              </a>
+              </TattooRulesLink>
             </p>
             <strong>
               <p className="mb-1">Your tattoo, the Proof of Ink (PoI)</p>
