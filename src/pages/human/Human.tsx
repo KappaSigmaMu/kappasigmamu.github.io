@@ -1,10 +1,10 @@
 import { Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { CurrentRoundRow } from '../components/CurrentRoundRow'
-import { Level } from '../components/Level'
-import { LevelNotification } from '../components/LevelNotification'
-import { Navbar } from '../components/Navbar'
-import { NextStep } from '../components/NextStep'
+import { CurrentRoundRow } from '../../components/CurrentRoundRow'
+import { Level } from '../../components/Level'
+import { LevelNotification } from '../../components/LevelNotification'
+import { Navbar } from '../../components/Navbar'
+import { NextStep } from '../../components/NextStep'
 
 const Human = ({
   accounts,
