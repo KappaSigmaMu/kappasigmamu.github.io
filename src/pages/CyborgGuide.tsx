@@ -1,6 +1,5 @@
 import { Col, Container } from 'react-bootstrap'
 import styled from 'styled-components'
-import { Navbar } from '../components/Navbar'
 import Canary from '../static/mock-canary.svg'
 
 // eslint-disable-next-line max-len
@@ -16,30 +15,9 @@ const TattooRulesLink = (props: { children: string }) => (
   </a>
 )
 
-const CyborgGuide = ({
-  accounts,
-  activeAccount,
-  setAccounts,
-  setActiveAccount,
-}: {
-  setActiveAccount: (activeAccount: string) => void
-  activeAccount: string
-  accounts: { name: string | undefined; address: string }[]
-  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
-}): JSX.Element => {
+const CyborgGuide = (): JSX.Element => {
   return (
     <>
-      <Container>
-        <Navbar
-          accounts={accounts}
-          activeAccount={activeAccount}
-          setAccounts={setAccounts}
-          setActiveAccount={setActiveAccount}
-          showAccount
-          showBrandIcon
-          showGalleryButton
-        />
-      </Container>
       <Container>
         <GuideRow>
           <GuideTitle xs lg="6" className="display-1 text-uppercase pt-5">

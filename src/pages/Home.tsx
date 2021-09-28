@@ -2,11 +2,10 @@ import { Button, Col, Row } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { CurrentRoundRow } from '../components/CurrentRoundRow'
-import { Navbar } from '../components/Navbar'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
-const Home = ({ setActiveAccount, activeAccount, accounts, setAccounts }: HomeProps): JSX.Element => {
+const Home = ({ activeAccount }: { activeAccount: string }): JSX.Element => {
   const history = useHistory()
 
   const handleClick = () => {
@@ -15,14 +14,6 @@ const Home = ({ setActiveAccount, activeAccount, accounts, setAccounts }: HomePr
 
   return (
     <>
-      <Navbar
-        accounts={accounts}
-        activeAccount={activeAccount}
-        setAccounts={setAccounts}
-        setActiveAccount={setActiveAccount}
-        showAccount
-        showSocialIcons
-      />
       <FullPageHeightRow>
         <Col xs={6}>
           <CanaryImg src={Canary} alt="Canary" />
@@ -42,13 +33,6 @@ const Home = ({ setActiveAccount, activeAccount, accounts, setAccounts }: HomePr
       <CurrentRoundRow currentAccount={'Dikw9VJqJ4fJFcXuKaSqu3eSwBQM6zC8ja9rdAP3RbfeK1Y'} />
     </>
   )
-}
-
-type HomeProps = {
-  setActiveAccount: (activeAccount: string) => void
-  activeAccount: string
-  accounts: { name: string | undefined; address: string }[]
-  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
 }
 
 const KappaSigmaMu = styled.img`
