@@ -26,7 +26,7 @@ const LEVELS: LevelsType = {
   cyborg: { badge: "Level 4", name: "Cyborg", canary: CANARY_LEVEL_4 }
 }
 
-const Level = ({ level }: {level: string}) => {
+const Level = ({ level }: { level: string }) => {
   return (
     <Col sm={3}>
       <StyledBadge pill>

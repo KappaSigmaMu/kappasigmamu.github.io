@@ -59,7 +59,7 @@ const LEVELS: LevelsType = {
   cyborg: CYBORG
 }
 
-const LevelNotification = ({ level }: {level: string}) => {
+const LevelNotification = ({ level }: { level: string }) => {
   return (
     <Col sm={4}>
       <StyledP>Level Notification</StyledP>

@@ -45,7 +45,7 @@ const LEVELS: LevelsType = {
   cyborg: CYBORG
 }
 
-const NextStep = ({ level }: {level: string}) => {
+const NextStep = ({ level }: { level: string }) => {
   return (
     <Col sm={5}>
       <StyledP>Next Step</StyledP>
