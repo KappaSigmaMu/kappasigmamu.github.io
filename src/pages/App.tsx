@@ -36,7 +36,12 @@ function Main() {
             />
           </Route>
           <Route path="/cyborg-guide">
-            <CyborgGuide />
+            <CyborgGuide
+              accounts={accounts}
+              activeAccount={activeAccount}
+              setAccounts={setAccounts}
+              setActiveAccount={setActiveAccount}
+            />
           </Route>
           <Route path="/welcome">
             <Welcome
