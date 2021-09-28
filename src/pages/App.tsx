@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import styled, { ThemeProvider } from 'styled-components'
+import { ThemeProvider } from 'styled-components'
 import { Navbar } from '../components/Navbar'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
 import { CyborgGuide } from './CyborgGuide'
+import { Bids } from './home/Bids'
 import { Home } from './home/Home'
 import { LandingPage } from './LandingPage'
 import { Welcome } from './Welcome'
@@ -59,6 +60,12 @@ const Main = () => {
             <Home activeAccount={activeAccount} />
           </>
         }/>
+        <Route path="/home/bids" element={
+          <>
+            <Navbar showBrandIcon showGalleryButton {...defaultNavbarProps} />
+            <Bids />
+          </>
+        }/>
       </Routes>
     </BrowserRouter>
   )
@@ -69,15 +76,12 @@ const App = () => {
     <SubstrateContextProvider>
       <ThemeProvider theme={Theme}>
         <GlobalStyle />
-          <StyledMain fluid>
+          <Container fluid>
             <Main />
-        </StyledMain>
+        </Container>
       </ThemeProvider>
     </SubstrateContextProvider>
   )
 }
-
-const StyledMain = styled(Container)`
-`
 
 export { App }
