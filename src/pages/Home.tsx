@@ -16,12 +16,12 @@ const Home = ({ setActiveAccount, activeAccount, accounts, setAccounts }: HomePr
   return (
     <>
       <Navbar
-        showSocialIcons
-        showAccount
-        setActiveAccount={setActiveAccount}
-        activeAccount={activeAccount}
         accounts={accounts}
+        activeAccount={activeAccount}
         setAccounts={setAccounts}
+        setActiveAccount={setActiveAccount}
+        showAccount
+        showSocialIcons
       />
       <FullPageHeightRow>
         <Col xs={6}>

@@ -21,14 +21,14 @@ type NavbarType = {
 }
 
 const Navbar = ({
-  showBrandIcon,
-  showSocialIcons,
-  showGalleryButton,
-  showAccount,
-  setActiveAccount,
-  activeAccount,
   accounts,
-  setAccounts
+  activeAccount,
+  setAccounts,
+  setActiveAccount,
+  showAccount,
+  showBrandIcon,
+  showGalleryButton,
+  showSocialIcons,
 }: NavbarType) => {
   return (
     <BNavbar>

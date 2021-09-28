@@ -1,14 +1,15 @@
-import { Button, Container, Row, Col } from 'react-bootstrap'
+import { Button, Container, Row, Col, Badge } from 'react-bootstrap'
 import styled from 'styled-components'
+import { Level } from '../components/Level'
 import { Navbar } from '../components/Navbar'
 import { SocialIcons } from '../components/SocialIcons'
 import MapIcon from '../static/map-icon.svg'
 
 const Welcome = ({
-  setActiveAccount,
-  activeAccount,
   accounts,
-  setAccounts
+  activeAccount,
+  setAccounts,
+  setActiveAccount,
 }: {
   setActiveAccount: (activeAccount: string) => void
   activeAccount: string
@@ -18,17 +19,22 @@ const Welcome = ({
   return (
     <>
       <Navbar
+        accounts={accounts}
+        activeAccount={activeAccount}
+        setAccounts={setAccounts}
+        setActiveAccount={setActiveAccount}
+        showAccount
         showBrandIcon
         showGalleryButton
-        showAccount
-        setActiveAccount={setActiveAccount}
-        activeAccount={activeAccount}
-        accounts={accounts}
-        setAccounts={setAccounts}
       />
       <StyledDiv>
+        <LevelContainer>
+          <Row>
+            <Level level='human' />
+          </Row>
+        </LevelContainer>
         <StyledContainer>
-          <WalletConnectedText>WALLET CONNECTED</WalletConnectedText>
+          <MarginBadge pill>WALLET CONNECTED</MarginBadge>
           <MarginH1>Welcome, Human.</MarginH1>
           <Row>
             <Col>
@@ -46,7 +52,7 @@ const Welcome = ({
             </Col>
           </Row>
 
-          <CenterButton variant="primary">Begin Journey</CenterButton>
+          <CenterButton variant="primary" href="/human">Begin Journey</CenterButton>
         </StyledContainer>
       </StyledDiv>
     </>
@@ -62,36 +68,22 @@ const MarginH1 = styled.h1`
 `
 
 const CenterButton = styled(Button)`
-  display: flex;
   margin: auto;
   margin-top: 80px;
 `
 
 const StyledDiv = styled.div`
   height: 88.1vh;
-  position: relative;
 `
 
-const WalletConnectedText = styled.p`
-  background-color: ${(props) => props.theme.colors.primary};
-  color: ${(props) => props.theme.colors.white};
-  font-size: 12px;
-  border-radius: 40px;
-  padding: 3px 5px;
-  width: 137px;
-  line-height: 12px;
-  margin: auto;
-
+const MarginBadge = styled(Badge)`
   margin-bottom: 45px;
 `
 
 const StyledContainer = styled(Container)`
-  background-color: red;
   position: absolute;
   width: 564px;
   height: 492px;
-  left: 50%;
-  top: 50%;
   border-radius: 12px;
   background: rgba(52, 58, 64, 0.5);
   text-align: center;
@@ -101,6 +93,12 @@ const StyledContainer = styled(Container)`
   transform: translate(-50%, -50%);
 
   padding: 59px;
+`
+
+const LevelContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `
 
 const PaddingMapIcon = styled.img`
