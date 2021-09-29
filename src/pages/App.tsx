@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Container } from 'react-bootstrap'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, RouteProps } from 'react-router-dom'
 import styled, { ThemeProvider } from 'styled-components'
+import { Navbar } from '../components/Navbar'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
@@ -10,7 +11,37 @@ import { Home } from './Home'
 import { Human } from './human/Human'
 import { Welcome } from './Welcome'
 
-function Main() {
+const NavRoute = ({
+  accounts,
+  activeAccount,
+  setAccounts,
+  setActiveAccount,
+  showAccount,
+  showBrandIcon,
+  showGalleryButton,
+  showSocialIcons,
+  exact,
+  path,
+  children,
+}: NavRouteProps & RouteProps) => (
+  <Route exact={exact} path={path} render={() => (
+    <>
+      <Navbar
+        accounts={accounts}
+        activeAccount={activeAccount}
+        setAccounts={setAccounts}
+        setActiveAccount={setActiveAccount}
+        showAccount={showAccount}
+        showSocialIcons={showSocialIcons}
+        showBrandIcon={showBrandIcon}
+        showGalleryButton={showGalleryButton}
+      />
+      {children}
+    </>
+  )}/>
+)
+
+const Main = () => {
   const { apiState, apiError } = useSubstrate()
   const [activeAccount, setActiveAccount] = useState<string>('')
   const [accounts, setAccounts] = useState<{ name: string | undefined; address: string }[]>([])
@@ -19,6 +50,7 @@ function Main() {
     return <p>{text}</p>
   }
 
+  if (apiState === 'CONNECTING') return loader('Connecting')
   if (apiState === 'ERROR') return loader(`${JSON.stringify(apiError, null, 4)}`)
   if (apiState !== 'READY') return loader('Connecting')
 
@@ -27,45 +59,66 @@ function Main() {
       <GlobalStyle />
       <StyledMain fluid>
         <Switch>
-          <Route exact path="/">
-            <Home
-              accounts={accounts}
-              activeAccount={activeAccount}
-              setAccounts={setAccounts}
-              setActiveAccount={setActiveAccount}
-            />
-          </Route>
-          <Route path="/cyborg-guide">
-            <CyborgGuide
-              accounts={accounts}
-              activeAccount={activeAccount}
-              setAccounts={setAccounts}
-              setActiveAccount={setActiveAccount}
-            />
-          </Route>
-          <Route path="/welcome">
-            <Welcome
-              accounts={accounts}
-              activeAccount={activeAccount}
-              setAccounts={setAccounts}
-              setActiveAccount={setActiveAccount}
-            />
-          </Route>
-          <Route path="/human">
-            <Human
-              accounts={accounts}
-              activeAccount={activeAccount}
-              setAccounts={setAccounts}
-              setActiveAccount={setActiveAccount}
-            />
-          </Route>
+          <NavRoute
+            accounts={accounts}
+            activeAccount={activeAccount}
+            exact
+            path="/"
+            setAccounts={setAccounts}
+            setActiveAccount={setActiveAccount}
+            showAccount
+            showSocialIcons
+            showBrandIcon={false}
+            showGalleryButton={false}
+          >
+            <Home activeAccount={activeAccount} />
+          </NavRoute>
+          <NavRoute
+            accounts={accounts}
+            activeAccount={activeAccount}
+            path="/cyborg-guide"
+            setAccounts={setAccounts}
+            setActiveAccount={setActiveAccount}
+            showAccount
+            showBrandIcon
+            showGalleryButton
+            showSocialIcons={false}
+          >
+            <CyborgGuide />
+          </NavRoute>
+          <NavRoute
+            accounts={accounts}
+            activeAccount={activeAccount}
+            path="/welcome"
+            setAccounts={setAccounts}
+            setActiveAccount={setActiveAccount}
+            showAccount
+            showBrandIcon
+            showGalleryButton
+            showSocialIcons={false}
+          >
+            <Welcome />
+          </NavRoute>
+          <NavRoute
+            path="/human"
+            accounts={accounts}
+            activeAccount={activeAccount}
+            setAccounts={setAccounts}
+            setActiveAccount={setActiveAccount}
+            showAccount
+            showBrandIcon
+            showGalleryButton
+            showSocialIcons={false}
+          >
+            <Human activeAccount={activeAccount} />
+          </NavRoute>
         </Switch>
       </StyledMain>
     </>
   )
 }
 
-function App() {
+const App = () => {
   return (
     <SubstrateContextProvider>
       <ThemeProvider theme={Theme}>
@@ -76,7 +129,6 @@ function App() {
 }
 
 const StyledMain = styled(Container)`
-  background-color: ${(props) => props.theme.darkBg};
 `
 
 export { App }

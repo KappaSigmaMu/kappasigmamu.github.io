@@ -1,32 +1,12 @@
 import { Button, Container, Row, Col, Badge } from 'react-bootstrap'
 import styled from 'styled-components'
 import { Level } from '../components/Level'
-import { Navbar } from '../components/Navbar'
 import { SocialIcons } from '../components/SocialIcons'
 import MapIcon from '../static/map-icon.svg'
 
-const Welcome = ({
-  accounts,
-  activeAccount,
-  setAccounts,
-  setActiveAccount,
-}: {
-  setActiveAccount: (activeAccount: string) => void
-  activeAccount: string
-  accounts: { name: string | undefined; address: string }[]
-  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
-}): JSX.Element => {
+const Welcome = (): JSX.Element => {
   return (
     <>
-      <Navbar
-        accounts={accounts}
-        activeAccount={activeAccount}
-        setAccounts={setAccounts}
-        setActiveAccount={setActiveAccount}
-        showAccount
-        showBrandIcon
-        showGalleryButton
-      />
       <StyledDiv>
         <LevelContainer>
           <Row>
