@@ -8,7 +8,7 @@ import { Theme } from '../styles/Theme'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
 import { CyborgGuide } from './CyborgGuide'
 import { Home } from './Home'
-import { Human } from './Human'
+import { Human } from './human/Human'
 import { Welcome } from './Welcome'
 
 const NavRoute = ({
@@ -110,7 +110,7 @@ const Main = () => {
             showGalleryButton
             showSocialIcons={false}
           >
-            <Human />
+            <Human activeAccount={activeAccount} />
           </NavRoute>
         </Switch>
       </StyledMain>

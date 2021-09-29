@@ -88,6 +88,8 @@ const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
 
       api.derive.society.members().then((members) => {
         const account = members.find((member) => member.accountId.toString() === props.currentAccount)
+        if (!account) return setStrikes(0)
+
         setStrikes(account?.strikes.toNumber())
       })
     }

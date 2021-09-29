@@ -1,10 +1,11 @@
 import { Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { Level } from '../components/Level'
-import { LevelNotification } from '../components/LevelNotification'
-import { NextStep } from '../components/NextStep'
+import { CurrentRoundRow } from '../../components/CurrentRoundRow'
+import { Level } from '../../components/Level'
+import { LevelNotification } from '../../components/LevelNotification'
+import { NextStep } from '../../components/NextStep'
 
-const Human = (): JSX.Element => {
+const Human = ({ activeAccount }: { activeAccount: string }): JSX.Element => {
   return (
     <>
       <StyledDiv>
@@ -16,6 +17,7 @@ const Human = (): JSX.Element => {
           </Row>
         </Container>
       </StyledDiv>
+      <CurrentRoundRow currentAccount={activeAccount} />
     </>
   )
 }
