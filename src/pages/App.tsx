@@ -7,7 +7,7 @@ import { Theme } from '../styles/Theme'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
 import { CyborgGuide } from './CyborgGuide'
 import { Home } from './Home'
-import { Human } from './Human'
+import { Human } from './human/Human'
 import { Welcome } from './Welcome'
 
 function Main() {
