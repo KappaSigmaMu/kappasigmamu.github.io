@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Container } from 'react-bootstrap'
-import { Switch, Route, RouteProps } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import styled, { ThemeProvider } from 'styled-components'
 import { Navbar } from '../components/Navbar'
 import { GlobalStyle } from '../styles/globalStyle'
@@ -10,36 +10,6 @@ import { CyborgGuide } from './CyborgGuide'
 import { Home } from './home/Home'
 import { LandingPage } from './LandingPage'
 import { Welcome } from './Welcome'
-
-const NavRoute = ({
-  accounts,
-  activeAccount,
-  setAccounts,
-  setActiveAccount,
-  showAccount,
-  showBrandIcon,
-  showGalleryButton,
-  showSocialIcons,
-  exact,
-  path,
-  children,
-}: NavRouteProps & RouteProps) => (
-  <Route exact={exact} path={path} render={() => (
-    <>
-      <Navbar
-        accounts={accounts}
-        activeAccount={activeAccount}
-        setAccounts={setAccounts}
-        setActiveAccount={setActiveAccount}
-        showAccount={showAccount}
-        showSocialIcons={showSocialIcons}
-        showBrandIcon={showBrandIcon}
-        showGalleryButton={showGalleryButton}
-      />
-      {children}
-    </>
-  )}/>
-)
 
 const Main = () => {
   const { apiState, apiError } = useSubstrate()
@@ -54,67 +24,43 @@ const Main = () => {
   if (apiState === 'ERROR') return loader(`${JSON.stringify(apiError, null, 4)}`)
   if (apiState !== 'READY') return loader('Connecting')
 
+  const defaultNavbarProps = {
+    accounts,
+    activeAccount,
+    setAccounts,
+    setActiveAccount,
+    showAccount: true,
+  }
+
   return (
-    <>
-      <GlobalStyle />
-      <StyledMain fluid>
-        <Switch>
-          <NavRoute
-            accounts={accounts}
-            activeAccount={activeAccount}
-            exact
-            path="/"
-            setAccounts={setAccounts}
-            setActiveAccount={setActiveAccount}
-            showAccount
-            showSocialIcons
-            showBrandIcon={false}
-            showGalleryButton={false}
-          >
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={
+          <>
+            <Navbar showSocialIcons {...defaultNavbarProps} />
             <LandingPage activeAccount={activeAccount} />
-          </NavRoute>
-          <NavRoute
-            accounts={accounts}
-            activeAccount={activeAccount}
-            path="/cyborg-guide"
-            setAccounts={setAccounts}
-            setActiveAccount={setActiveAccount}
-            showAccount
-            showBrandIcon
-            showGalleryButton
-            showSocialIcons={false}
-          >
+          </>
+        }/>
+        <Route path="/cyborg-guide" element={
+          <>
+            <Navbar showSocialIcons showGalleryButton {...defaultNavbarProps} />
             <CyborgGuide />
-          </NavRoute>
-          <NavRoute
-            accounts={accounts}
-            activeAccount={activeAccount}
-            path="/welcome"
-            setAccounts={setAccounts}
-            setActiveAccount={setActiveAccount}
-            showAccount
-            showBrandIcon
-            showGalleryButton
-            showSocialIcons={false}
-          >
+          </>
+        }/>
+        <Route path="/welcome" element={
+          <>
+            <Navbar showBrandIcon showGalleryButton {...defaultNavbarProps} />
             <Welcome />
-          </NavRoute>
-          <NavRoute
-            path="/home"
-            accounts={accounts}
-            activeAccount={activeAccount}
-            setAccounts={setAccounts}
-            setActiveAccount={setActiveAccount}
-            showAccount
-            showBrandIcon
-            showGalleryButton
-            showSocialIcons={false}
-          >
+          </>
+        }/>
+        <Route path="/home" element={
+          <>
+            <Navbar showBrandIcon showGalleryButton {...defaultNavbarProps} />
             <Home activeAccount={activeAccount} />
-          </NavRoute>
-        </Switch>
-      </StyledMain>
-    </>
+          </>
+        }/>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
@@ -122,7 +68,10 @@ const App = () => {
   return (
     <SubstrateContextProvider>
       <ThemeProvider theme={Theme}>
-        <Main />
+        <GlobalStyle />
+          <StyledMain fluid>
+            <Main />
+        </StyledMain>
       </ThemeProvider>
     </SubstrateContextProvider>
   )

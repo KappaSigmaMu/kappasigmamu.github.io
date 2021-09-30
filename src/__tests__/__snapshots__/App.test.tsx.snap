@@ -2,21 +2,31 @@
 
 exports[`renders App 1`] = `
 <Router
-  history={
+  action="POP"
+  location={
+    Object {
+      "hash": "",
+      "key": "default",
+      "pathname": "/",
+      "search": "",
+      "state": null,
+    }
+  }
+  navigator={
     Object {
       "action": "POP",
+      "back": [Function],
       "block": [Function],
       "createHref": [Function],
+      "forward": [Function],
       "go": [Function],
-      "goBack": [Function],
-      "goForward": [Function],
-      "length": 1,
       "listen": [Function],
       "location": Object {
         "hash": "",
+        "key": "default",
         "pathname": "/",
         "search": "",
-        "state": undefined,
+        "state": null,
       },
       "push": [Function],
       "replace": [Function],

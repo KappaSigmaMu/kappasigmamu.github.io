@@ -1,14 +1,14 @@
 import { Button, Col, Row } from 'react-bootstrap'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
 const LandingPage = ({ activeAccount }: { activeAccount: string }): JSX.Element => {
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const handleClick = () => {
-    history.push("/welcome")
+    navigate('/welcome')
   }
 
   return (
