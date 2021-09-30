@@ -3,13 +3,7 @@
 exports[`renders BidsList 1`] = `
 Array [
   <div
-    className="row"
-    style={
-      Object {
-        "color": "#fff",
-        "lineHeight": 3,
-      }
-    }
+    className="sc-bdnxRM getsvQ row"
   >
     <div
       className="text-center col-1"
@@ -28,26 +22,12 @@ Array [
     </div>
     <div
       className="text-end col-2"
-      style={
-        Object {
-          "paddingRight": 36,
-        }
-      }
     >
       Value
     </div>
   </div>,
   <div
-    className="row"
-    style={
-      Object {
-        "backgroundColor": "#343A40",
-        "borderRadius": 6,
-        "color": "#fff",
-        "lineHeight": 3,
-        "marginTop": 5,
-      }
-    }
+    className="sc-bdnxRM sc-gtsrHT getsvQ eBJaGY row"
   >
     <div
       className="text-center col-1"
@@ -199,26 +179,12 @@ Array [
     </div>
     <div
       className="text-end col-2"
-      style={
-        Object {
-          "paddingRight": 36,
-        }
-      }
     >
       10
     </div>
   </div>,
   <div
-    className="row"
-    style={
-      Object {
-        "backgroundColor": "#343A40",
-        "borderRadius": 6,
-        "color": "#fff",
-        "lineHeight": 3,
-        "marginTop": 5,
-      }
-    }
+    className="sc-bdnxRM sc-gtsrHT getsvQ eBJaGY row"
   >
     <div
       className="text-center col-1"
@@ -370,11 +336,6 @@ Array [
     </div>
     <div
       className="text-end col-2"
-      style={
-        Object {
-          "paddingRight": 36,
-        }
-      }
     >
       20
     </div>

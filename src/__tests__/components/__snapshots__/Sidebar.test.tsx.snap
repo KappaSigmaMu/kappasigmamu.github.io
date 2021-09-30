@@ -7,16 +7,13 @@ exports[`renders Sidebar with bids selected 1`] = `
   <li>
     <a
       aria-current="page"
-      className="active"
+      className="sc-gtsrHT TAQUZ active"
       href="/human/bids"
       onClick={[Function]}
       style={
         Object {
           "color": "white",
           "fontSize": 20,
-          "fontWeight": 700,
-          "lineHeight": 2,
-          "textDecoration": "none",
         }
       }
     >
@@ -26,17 +23,9 @@ exports[`renders Sidebar with bids selected 1`] = `
   <li>
     <a
       aria-current={null}
+      className="sc-gtsrHT TAQUZ"
       href="/human/members"
       onClick={[Function]}
-      style={
-        Object {
-          "color": "#707070",
-          "fontSize": 16,
-          "fontWeight": 700,
-          "lineHeight": 2,
-          "textDecoration": "none",
-        }
-      }
     >
       Members
     </a>
@@ -44,17 +33,9 @@ exports[`renders Sidebar with bids selected 1`] = `
   <li>
     <a
       aria-current={null}
+      className="sc-gtsrHT TAQUZ"
       href="/human/candidates"
       onClick={[Function]}
-      style={
-        Object {
-          "color": "#707070",
-          "fontSize": 16,
-          "fontWeight": 700,
-          "lineHeight": 2,
-          "textDecoration": "none",
-        }
-      }
     >
       Candidates
     </a>
@@ -62,17 +43,9 @@ exports[`renders Sidebar with bids selected 1`] = `
   <li>
     <a
       aria-current={null}
+      className="sc-gtsrHT TAQUZ"
       href="/human/suspended"
       onClick={[Function]}
-      style={
-        Object {
-          "color": "#707070",
-          "fontSize": 16,
-          "fontWeight": 700,
-          "lineHeight": 2,
-          "textDecoration": "none",
-        }
-      }
     >
       Suspended
     </a>

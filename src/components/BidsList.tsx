@@ -30,16 +30,14 @@ const DataRow = ({ bid }: { bid: any }) => (
   </StyledDataRow>
 )
 
-const BidsList = ({ bids }: { bids: any }): JSX.Element => {
-  return (
-    <>
-      <Header />
-      {bids.map((bid: any) => (
-        <DataRow key={bid.who} bid={bid} />
-      ))}
-    </>
-  )
-}
+const BidsList = ({ bids }: { bids: any }): JSX.Element => (
+  <>
+    <Header />
+    {bids.map((bid: any) => (
+      <DataRow key={bid.who} bid={bid} />
+    ))}
+  </>
+)
 
 const StyledHeaderRow = styled(Row)`
   color: #fff;

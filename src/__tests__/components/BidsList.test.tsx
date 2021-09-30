@@ -8,7 +8,7 @@ const bids = [bidVouch, bidDeposit]
 
 test('renders BidsList', () => {
     const tree = TestRenderer.create(
-      <BidsList data={bids} />
+      <BidsList bids={bids} />
     )
 
   expect(tree).toMatchSnapshot()
