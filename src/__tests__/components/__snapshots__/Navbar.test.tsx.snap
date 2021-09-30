@@ -1,0 +1,140 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavBar renders it with showAccount 1`] = `
+<nav
+  className="navbar navbar-expand navbar-light"
+>
+  <div
+    className="sc-hKFxyN hEOcyT container"
+  >
+    <div
+      className="navbar-nav"
+      onKeyDown={[Function]}
+    />
+    <div
+      className="sc-eCApnc jZrrMe navbar-nav"
+      onKeyDown={[Function]}
+    >
+      <button
+        className="btn btn-outline-secondary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        Connect Wallet
+      </button>
+    </div>
+  </div>
+</nav>
+`;
+
+exports[`NavBar renders it with showBrandIcon 1`] = `
+<nav
+  className="navbar navbar-expand navbar-light"
+>
+  <div
+    className="sc-hKFxyN hEOcyT container"
+  >
+    <div
+      className="navbar-nav"
+      onKeyDown={[Function]}
+    >
+      <a
+        className="navbar-brand"
+        href="/"
+        onClick={[Function]}
+      >
+        <img
+          alt="KappaSigmaMu Logo"
+          src="kappa-sigma-mu-logo.svg"
+          width={90}
+        />
+      </a>
+    </div>
+    <div
+      className="sc-eCApnc jZrrMe navbar-nav"
+      onKeyDown={[Function]}
+    />
+  </div>
+</nav>
+`;
+
+exports[`NavBar renders it with showGalleryButton 1`] = `
+<nav
+  className="navbar navbar-expand navbar-light"
+>
+  <div
+    className="sc-hKFxyN hEOcyT container"
+  >
+    <div
+      className="navbar-nav"
+      onKeyDown={[Function]}
+    />
+    <div
+      className="sc-eCApnc jZrrMe navbar-nav"
+      onKeyDown={[Function]}
+    >
+      <a
+        className="btn btn-link"
+        href="/gallery"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        role="button"
+        tabIndex={0}
+      >
+        Gallery
+      </a>
+    </div>
+  </div>
+</nav>
+`;
+
+exports[`NavBar renders it with showSocialIcons 1`] = `
+<nav
+  className="navbar navbar-expand navbar-light"
+>
+  <div
+    className="sc-hKFxyN hEOcyT container"
+  >
+    <div
+      className="navbar-nav"
+      onKeyDown={[Function]}
+    />
+    <div
+      className="sc-eCApnc jZrrMe navbar-nav"
+      onKeyDown={[Function]}
+    >
+      <a
+        className="navbar-brand"
+        href="https://discord.gg/9AWjTf8wSk"
+        target="_blank"
+      >
+        <img
+          alt="Discord Logo"
+          src="discord-logo.svg"
+        />
+      </a>
+      <span
+        className="navbar-brand"
+        href=""
+        target="_blank"
+      >
+        <img
+          alt="Discord Logo"
+          src="element-logo.svg"
+        />
+      </span>
+      <a
+        className="navbar-brand"
+        href="https://twitter.com/network"
+        target="_blank"
+      >
+        <img
+          alt="Twitter Logo"
+          src="twitter-logo.svg"
+        />
+      </a>
+    </div>
+  </div>
+</nav>
+`;

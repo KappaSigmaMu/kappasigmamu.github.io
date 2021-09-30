@@ -9,46 +9,33 @@ import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 import { AccountSelector } from './AccountSelector'
 import { SocialIcons } from './SocialIcons'
 
-type NavbarType = {
-  showBrandIcon: boolean
-  showSocialIcons: boolean
-  showGalleryButton: boolean
-  showAccount: boolean
-  setActiveAccount: (account: string) => void
-  activeAccount: string
-  accounts: { name: string | undefined; address: string }[]
-  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
-}
-
 const Navbar = ({
   accounts,
   activeAccount,
   setAccounts,
   setActiveAccount,
-  showAccount,
-  showBrandIcon,
-  showGalleryButton,
-  showSocialIcons,
-}: NavbarType) => {
-  return (
-    <BNavbar>
-      <NavbarContainer>
-        <Nav>{showBrandIcon ? <NavbarBrand /> : <></>}</Nav>
-        <CenterNav>
-          {showGalleryButton ? <NavbarGallery /> : <></>}
-          {showSocialIcons ? <SocialIcons /> : <></>}
-          {showAccount ?
-           <AccountNavbar
-             setActiveAccount={setActiveAccount}
-             activeAccount={activeAccount}
-             accounts={accounts}
-             setAccounts={setAccounts}
-           /> : <></>}
-        </CenterNav>
-      </NavbarContainer>
-    </BNavbar>
-  )
-}
+  showAccount=false,
+  showBrandIcon=false,
+  showGalleryButton=false,
+  showSocialIcons=false,
+}: NavRouteProps) => (
+  <BNavbar>
+    <NavbarContainer>
+      <Nav>{showBrandIcon ? <NavbarBrand /> : <></>}</Nav>
+      <CenterNav>
+        {showGalleryButton ? <NavbarGallery /> : <></>}
+        {showSocialIcons ? <SocialIcons /> : <></>}
+        {showAccount ?
+          <AccountNavbar
+            setActiveAccount={setActiveAccount}
+            activeAccount={activeAccount}
+            accounts={accounts}
+            setAccounts={setAccounts}
+          /> : <></>}
+      </CenterNav>
+    </NavbarContainer>
+  </BNavbar>
+)
 
 const NavbarBrand = () => (
   <BNavbar.Brand as={Link} to="/">
@@ -57,34 +44,18 @@ const NavbarBrand = () => (
 )
 
 const NavbarGallery = () => (
-  <Button variant="link" href="/gallery">
-    Gallery
-  </Button>
+  <Button variant="link" href="/gallery">Gallery</Button>
 )
 
-const AccountNavbar = ({
-  setActiveAccount,
-  activeAccount,
-  accounts,
-  setAccounts
-}: {
-  setActiveAccount: (activeAccount: string) => void
-  activeAccount: string
-  accounts: { name: string | undefined; address: string }[]
-  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
-}) => {
-  return (
-    <>
-      {accounts.length != 0 && activeAccount ? (
-        <AccountSelector accounts={accounts} activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
-      ) : (
-        <Button variant="outline-secondary" onClick={() => fetchAccounts(setAccounts, setActiveAccount)}>
-          Connect Wallet
-        </Button>
-      )}
-    </>
+const AccountNavbar = ({ accounts, activeAccount, setAccounts, setActiveAccount }: NavRouteProps) => (
+  accounts.length != 0 && activeAccount ? (
+    <AccountSelector accounts={accounts} activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
+  ) : (
+    <Button variant="outline-secondary" onClick={() => fetchAccounts(setAccounts, setActiveAccount)}>
+      Connect Wallet
+    </Button>
   )
-}
+)
 
 const NavbarContainer = styled(Container)`
   align-items: end !important;
@@ -95,12 +66,5 @@ const CenterNav = styled(Nav)`
   align-items: center;
   align-self: normal;
 `
-
-Navbar.defaultProps = {
-  showBrandIcon: false,
-  showSocialIcons: false,
-  showGalleryButton: false,
-  showAccount: false,
-}
 
 export { Navbar }
