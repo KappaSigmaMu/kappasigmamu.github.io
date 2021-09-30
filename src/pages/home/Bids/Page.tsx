@@ -22,10 +22,11 @@ const Page = ({
   const [bids, setBids] = useState<Vec<PalletSocietyBid> | []>([])
 
   useEffect(() => {
-    if (!api) { return }
-    api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
-      setBids(response)
-    })
+    if (api) {
+      api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
+        setBids(response)
+      })
+    }
   }, [api])
 
   return (
