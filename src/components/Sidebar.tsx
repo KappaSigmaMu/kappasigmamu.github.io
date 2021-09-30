@@ -2,28 +2,32 @@ import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
 const Sidebar = () => (
-  <Menu>
+  <StyledMenu>
     <MenuItem to="/human/bids">Bids</MenuItem>
     <MenuItem to="/human/members">Members</MenuItem>
     <MenuItem to="/human/candidates">Candidates</MenuItem>
     <MenuItem to="/human/suspended">Suspended</MenuItem>
-  </Menu>
+  </StyledMenu>
 )
-
-const Menu = styled.li`
-  list-style: none;
-`
 
 const MenuItem = ({ to, children }: { to: string; children: string }): JSX.Element => (
   <li>
-    <NavLink
-      to={to}
-      activeStyle={{ color: 'white', fontSize: 20 }}
-      style={{ color: '#707070', fontSize: 16, lineHeight: 2, fontWeight: 700, textDecoration: 'none' }}
-    >
+    <StyledNavLink to={to} activeStyle={{ color: 'white', fontSize: 20 }} >
       {children}
-    </NavLink>
+    </StyledNavLink>
   </li>
 )
+
+const StyledMenu = styled.li`
+  list-style: none;
+`
+
+const StyledNavLink = styled(NavLink)`
+  color: #707070;
+  fontSize: 16px;
+  lineHeight: 2px;
+  fontWeight: 700;
+  textDecoration: none;
+`
 
 export { Sidebar }

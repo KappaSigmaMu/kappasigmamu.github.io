@@ -1,5 +1,6 @@
 import Identicon from '@polkadot/react-identicon'
 import { Button, ButtonToolbar, Col, Row } from 'react-bootstrap'
+import styled from 'styled-components'
 import { truncateAccountId } from '../helpers/accountId'
 import { humanizeBidKind, humanizeBidValue } from '../helpers/humanize'
 // import { CanaryIcon, GridIcon, ListIcon } from './assets'
@@ -45,45 +46,56 @@ const Filters = () => {
 }
 
 const Header = () => (
-  <Row style={{ color: '#fff', lineHeight: 3 }}>
+  <StyledHeaderRow>
     <Col xs={1} className="text-center">#</Col>
     <Col xs={4} className="text-start">Wallet Hash</Col>
     <Col xs={5} className="text-start">Bid Kind</Col>
-    <Col xs={2} className="text-end" style={{ paddingRight: 36 }}>Value</Col>
-  </Row>
+    <Col xs={2} className="text-end">Value</Col>
+  </StyledHeaderRow>
 )
 
-const DataRow = ({ item }: { item: any }) => (
-  <Row
-    key={item.who?.toString()}
-    style={{ color: '#fff', lineHeight: 3, marginTop: 5, backgroundColor: '#343A40', borderRadius: 6 }}
-  >
+const DataRow = ({ bid }: { bid: any }) => (
+  <StyledDataRow key={bid.who?.toString()}>
     <Col xs={1} className="text-center">
-      <Identicon value={item.who} size={32} theme={'polkadot'} />
+      <Identicon value={bid.who} size={32} theme={'polkadot'} />
     </Col>
     <Col xs={4} className="text-start text-truncate">
-      {truncateAccountId(item.who?.toString())}
+      {truncateAccountId(bid.who?.toString())}
     </Col>
     <Col xs={5} className="text-start text-truncate">
-      {humanizeBidKind(item.kind)}
+      {humanizeBidKind(bid.kind)}
     </Col>
-    <Col xs={2} className="text-end" style={{ paddingRight: 36 }}>
-    {humanizeBidValue(item.kind)}
+    <Col xs={2} className="text-end">
+      {humanizeBidValue(bid.kind)}
     </Col>
-  </Row>
-
+  </StyledDataRow>
 )
 
-const BidsList = ({ data }: { data: any }): JSX.Element => {
+const BidsList = ({ bids }: { bids: any }): JSX.Element => {
   return (
     <>
       <Filters />
       <Header />
-      {data.map((item: any) => (
-        <DataRow key={item.who} item={item} />
+      {bids.map((bid: any) => (
+        <DataRow key={bid.who} bid={bid} />
       ))}
     </>
   )
 }
+
+const StyledHeaderRow = styled(Row)`
+  color: #fff;
+  lineHeight: 3;
+
+  .text-end {
+    padding-right: 36;
+  }
+`
+
+const StyledDataRow = styled(StyledHeaderRow)`
+  backgroundColor: #343A40;
+  borderRadius: 6px;
+  marginTop: 5px;
+`
 
 export { BidsList }
