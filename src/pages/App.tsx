@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Container } from 'react-bootstrap'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import styled, { ThemeProvider } from 'styled-components'
 import { Navbar } from '../components/Navbar'
 import { GlobalStyle } from '../styles/globalStyle'
@@ -24,71 +24,43 @@ const Main = () => {
   if (apiState === 'ERROR') return loader(`${JSON.stringify(apiError, null, 4)}`)
   if (apiState !== 'READY') return loader('Connecting')
 
+  const defaultNavbarProps = {
+    accounts,
+    activeAccount,
+    setAccounts,
+    setActiveAccount,
+    showAccount: true,
+  }
+
   return (
-    <>
-      <GlobalStyle />
-      <StyledMain fluid>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={
-              <>
-                <Navbar
-                  accounts={accounts}
-                  activeAccount={activeAccount}
-                  setAccounts={setAccounts}
-                  setActiveAccount={setActiveAccount}
-                  showAccount
-                  showSocialIcons
-                />
-                <LandingPage activeAccount={activeAccount} />
-              </>
-            }/>
-            <Route path="/cyborg-guide" element={
-              <>
-                <Navbar
-                  accounts={accounts}
-                  activeAccount={activeAccount}
-                  setAccounts={setAccounts}
-                  setActiveAccount={setActiveAccount}
-                  showAccount
-                  showSocialIcons
-                  showGalleryButton
-                />
-                <CyborgGuide />
-              </>
-            }/>
-            <Route path="/welcome" element={
-              <>
-                <Navbar
-                  accounts={accounts}
-                  activeAccount={activeAccount}
-                  setAccounts={setAccounts}
-                  setActiveAccount={setActiveAccount}
-                  showAccount
-                  showBrandIcon
-                  showGalleryButton
-                />
-                <Welcome />
-              </>
-            }/>
-            <Route path="/home" element={
-              <>
-                <Navbar
-                  accounts={accounts}
-                  activeAccount={activeAccount}
-                  setAccounts={setAccounts}
-                  setActiveAccount={setActiveAccount}
-                  showAccount
-                  showBrandIcon
-                  showGalleryButton
-                />
-                <Home activeAccount={activeAccount} />
-              </>
-            }/>
-          </Routes>
-        </BrowserRouter>
-      </StyledMain>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={
+          <>
+            <Navbar showSocialIcons {...defaultNavbarProps} />
+            <LandingPage activeAccount={activeAccount} />
+          </>
+        }/>
+        <Route path="/cyborg-guide" element={
+          <>
+            <Navbar showSocialIcons showGalleryButton {...defaultNavbarProps} />
+            <CyborgGuide />
+          </>
+        }/>
+        <Route path="/welcome" element={
+          <>
+            <Navbar showBrandIcon showGalleryButton {...defaultNavbarProps} />
+            <Welcome />
+          </>
+        }/>
+        <Route path="/home" element={
+          <>
+            <Navbar showBrandIcon showGalleryButton {...defaultNavbarProps} />
+            <Home activeAccount={activeAccount} />
+          </>
+        }/>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
@@ -96,7 +68,10 @@ const App = () => {
   return (
     <SubstrateContextProvider>
       <ThemeProvider theme={Theme}>
-        <Main />
+        <GlobalStyle />
+          <StyledMain fluid>
+            <Main />
+        </StyledMain>
       </ThemeProvider>
     </SubstrateContextProvider>
   )
