@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
-const Home = ({ activeAccount }: { activeAccount: string }): JSX.Element => {
+const LandingPage = ({ activeAccount }: { activeAccount: string }): JSX.Element => {
   const history = useHistory()
 
   const handleClick = () => {
@@ -60,4 +60,4 @@ const GuideButton = styled(Button)`
   display: flex;
 `
 
-export { Home }
+export { LandingPage }

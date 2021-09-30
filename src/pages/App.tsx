@@ -7,8 +7,8 @@ import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
 import { CyborgGuide } from './CyborgGuide'
-import { Home } from './Home'
-import { Human } from './human/Human'
+import { Home } from './home/Home'
+import { LandingPage } from './LandingPage'
 import { Welcome } from './Welcome'
 
 const NavRoute = ({
@@ -71,7 +71,7 @@ const Main = () => {
             showBrandIcon={false}
             showGalleryButton={false}
           >
-            <Home activeAccount={activeAccount} />
+            <LandingPage activeAccount={activeAccount} />
           </NavRoute>
           <NavRoute
             accounts={accounts}
@@ -100,7 +100,7 @@ const Main = () => {
             <Welcome />
           </NavRoute>
           <NavRoute
-            path="/human"
+            path="/home"
             accounts={accounts}
             activeAccount={activeAccount}
             setAccounts={setAccounts}
@@ -110,7 +110,7 @@ const Main = () => {
             showGalleryButton
             showSocialIcons={false}
           >
-            <Human activeAccount={activeAccount} />
+            <Home activeAccount={activeAccount} />
           </NavRoute>
         </Switch>
       </StyledMain>
