@@ -71,17 +71,17 @@ const Main = () => {
   )
 }
 
-const App = () => {
-  return (
+const App = () => (
+  <>
+    <GlobalStyle />
     <SubstrateContextProvider>
       <ThemeProvider theme={Theme}>
-        <GlobalStyle />
-          <Container fluid>
-            <Main />
+        <Container fluid>
+          <Main />
         </Container>
       </ThemeProvider>
     </SubstrateContextProvider>
-  )
-}
+  </>
+)
 
 export { App }
