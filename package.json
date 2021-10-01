@@ -107,6 +107,9 @@
     "webpack-manifest-plugin": "2.2.0",
     "workbox-webpack-plugin": "5.1.4"
   },
+  "resolutions": {
+    "styled-components": "^5.3.0"
+  },
   "scripts": {
     "build": "node scripts/build.js",
     "ci": "yarn install --frozen-lockfile",
