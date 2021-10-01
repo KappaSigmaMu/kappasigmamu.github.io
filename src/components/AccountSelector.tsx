@@ -70,6 +70,11 @@ const AccountDropdownButton = styled(DropdownButton)`
   button {
     padding: 15px;
   }
+
+  .dropdown-toggle::after {
+    vertical-align: 36%;
+    margin-left: 0.7em;
+  }
 `
 
 const SelectedAccountDiv = styled.div`

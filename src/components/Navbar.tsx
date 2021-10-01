@@ -44,7 +44,7 @@ const NavbarBrand = () => (
 )
 
 const NavbarGallery = () => (
-  <Button variant="link" href="/gallery">Gallery</Button>
+  <Button variant="link" href="/gallery" style={{ color: '#01ffff' }}>Gallery</Button>
 )
 
 const AccountNavbar = ({ accounts, activeAccount, setAccounts, setActiveAccount }: NavRouteProps) => (
