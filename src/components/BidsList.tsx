@@ -41,17 +41,17 @@ const BidsList = ({ bids }: { bids: any }): JSX.Element => (
 
 const StyledHeaderRow = styled(Row)`
   color: #fff;
-  lineHeight: 3;
+  line-height: 3;
 
-  .text-end {
-    padding-right: 36;
+  & .text-end {
+    padding-right: 36px;
   }
 `
 
 const StyledDataRow = styled(StyledHeaderRow)`
-  backgroundColor: #343A40;
-  borderRadius: 6px;
-  marginTop: 5px;
+  background-color: #343A40;
+  border-radius: 6px;
+  margin-top: 10px;
 `
 
 export { BidsList }

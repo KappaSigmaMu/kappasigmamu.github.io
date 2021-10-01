@@ -3,31 +3,26 @@ import styled from 'styled-components'
 
 const Sidebar = () => (
   <StyledMenu>
-    <MenuItem to="/human/bids">Bids</MenuItem>
-    <MenuItem to="/human/members">Members</MenuItem>
-    <MenuItem to="/human/candidates">Candidates</MenuItem>
-    <MenuItem to="/human/suspended">Suspended</MenuItem>
+    <MenuItem to="/home/bids">Bids</MenuItem>
+    <MenuItem to="/home/members">Members</MenuItem>
+    <MenuItem to="/home/candidates">Candidates</MenuItem>
+    <MenuItem to="/home/suspended">Suspended</MenuItem>
   </StyledMenu>
 )
 
+const defaultStyle = { color: '#707070', fontSize: 16, lineHeight: 2, fontWeight: 700, textDecoration: 'none' }
+const activeStyle = { ...defaultStyle, color: 'white', fontSize: 20 }
+
 const MenuItem = ({ to, children }: { to: string; children: string }): JSX.Element => (
   <li>
-    <StyledNavLink to={to} activeStyle={{ color: 'white', fontSize: 20 }} >
+    <NavLink to={to} style={({ isActive }) => isActive ? activeStyle : defaultStyle }>
       {children}
-    </StyledNavLink>
+    </NavLink>
   </li>
 )
 
-const StyledMenu = styled.li`
+const StyledMenu = styled.ul`
   list-style: none;
-`
-
-const StyledNavLink = styled(NavLink)`
-  color: #707070;
-  fontSize: 16px;
-  lineHeight: 2px;
-  fontWeight: 700;
-  textDecoration: none;
 `
 
 export { Sidebar }
