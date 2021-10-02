@@ -4,8 +4,10 @@ import { PalletSocietyBid } from '@polkadot/types/lookup'
 import React, { useContext, useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate'
 
+const storedActiveAccount = localStorage.getItem("activeAccount") || ''
+
 const INIT_STATE = {
-  activeAccount: '',
+  activeAccount: storedActiveAccount,
   setActiveAccount: () => ({}),
   accounts: [],
   setAccounts: () => ({}),
@@ -24,7 +26,7 @@ const AccountContext = React.createContext<StateType>(INIT_STATE)
 
 const AccountContextProvider = ({ children } : any) => {
   const { api } = useSubstrate()
-  const [activeAccount, setActiveAccount] = useState<string>('')
+  const [activeAccount, setActiveAccount] = useState<string>(storedActiveAccount)
   const [accounts, setAccounts] = useState<{ name: string | undefined; address: string }[]>([])
   const [level, setLevel] = useState("human")
 
