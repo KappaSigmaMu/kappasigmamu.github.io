@@ -3,7 +3,7 @@
 exports[`renders BidsList 1`] = `
 Array [
   <div
-    className="sc-bdnxRM getsvQ row"
+    className="sc-bdnxRM iHtJtH row"
   >
     <div
       className="text-center col-1"
@@ -27,13 +27,13 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-bdnxRM sc-gtsrHT getsvQ eBJaGY row"
+    className="sc-bdnxRM sc-gtsrHT iHtJtH kBOZst row"
   >
     <div
       className="text-center col-1"
     >
       <div
-        className="Identicon__Wrapper-sc-1gm2vek-0 iULmUS ui--IdentityIcon  "
+        className="Identicon__Wrapper-sc-1gm2vek-0 eMppvX ui--IdentityIcon  "
         onClick={[Function]}
       >
         <svg
@@ -184,13 +184,13 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-bdnxRM sc-gtsrHT getsvQ eBJaGY row"
+    className="sc-bdnxRM sc-gtsrHT iHtJtH kBOZst row"
   >
     <div
       className="text-center col-1"
     >
       <div
-        className="Identicon__Wrapper-sc-1gm2vek-0 iULmUS ui--IdentityIcon  "
+        className="Identicon__Wrapper-sc-1gm2vek-0 eMppvX ui--IdentityIcon  "
         onClick={[Function]}
       >
         <svg

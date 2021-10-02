@@ -1,69 +1,80 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders Sidebar with bids selected 1`] = `
-<li
+<ul
   className="sc-bdnxRM eXPXqY"
 >
   <li>
     <a
-      activeStyle={
+      className=""
+      href="/home/bids"
+      onClick={[Function]}
+      style={
         Object {
-          "color": "white",
-          "fontSize": 20,
+          "color": "#707070",
+          "fontSize": 16,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
         }
       }
-      aria-current="page"
-      className="sc-gtsrHT TAQUZ active"
-      href="/human/bids"
-      onClick={[Function]}
     >
       Bids
     </a>
   </li>
   <li>
     <a
-      activeStyle={
+      className=""
+      href="/home/members"
+      onClick={[Function]}
+      style={
         Object {
-          "color": "white",
-          "fontSize": 20,
+          "color": "#707070",
+          "fontSize": 16,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
         }
       }
-      className="sc-gtsrHT TAQUZ"
-      href="/human/members"
-      onClick={[Function]}
     >
       Members
     </a>
   </li>
   <li>
     <a
-      activeStyle={
+      className=""
+      href="/home/candidates"
+      onClick={[Function]}
+      style={
         Object {
-          "color": "white",
-          "fontSize": 20,
+          "color": "#707070",
+          "fontSize": 16,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
         }
       }
-      className="sc-gtsrHT TAQUZ"
-      href="/human/candidates"
-      onClick={[Function]}
     >
       Candidates
     </a>
   </li>
   <li>
     <a
-      activeStyle={
+      className=""
+      href="/home/suspended"
+      onClick={[Function]}
+      style={
         Object {
-          "color": "white",
-          "fontSize": 20,
+          "color": "#707070",
+          "fontSize": 16,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
         }
       }
-      className="sc-gtsrHT TAQUZ"
-      href="/human/suspended"
-      onClick={[Function]}
     >
       Suspended
     </a>
   </li>
-</li>
+</ul>
 `;
