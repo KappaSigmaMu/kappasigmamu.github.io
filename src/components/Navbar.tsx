@@ -4,11 +4,11 @@ import Nav from 'react-bootstrap/Nav'
 import { default as BNavbar } from 'react-bootstrap/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { useAccount } from '../account/AccountContext'
 import { fetchAccounts } from '../helpers/fetchAccounts'
 import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 import { AccountSelector } from './AccountSelector'
 import { SocialIcons } from './SocialIcons'
-import { useAccount } from '../account/AccountContext'
 
 const Navbar = ({
   showAccount=false,

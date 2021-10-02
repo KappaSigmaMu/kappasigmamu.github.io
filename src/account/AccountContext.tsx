@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
 
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
-
+import React, { useContext, useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate'
 
 const INIT_STATE = {
@@ -33,9 +32,8 @@ const AccountContextProvider = ({ children } : any) => {
   useEffect(() => {
     const setLevelCheckingAccounts = (accounts: AccountId32[], level: string) => {
       accounts.forEach((account: AccountId32) => {
-        /* if (account.toString() === activeAccount) { */
-        if (true) {
-          setLevel('cyborg')
+        if (account.toString() === activeAccount) {
+          setLevel(level)
         }
       })
     }

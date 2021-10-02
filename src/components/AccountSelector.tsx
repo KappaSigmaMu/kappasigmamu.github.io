@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Dropdown, DropdownButton } from 'react-bootstrap'
 import styled from 'styled-components'
-import { useSubstrate } from '../substrate'
-
 import { useAccount } from '../account/AccountContext'
+import { useSubstrate } from '../substrate'
 
 const Main = () => {
   const { activeAccount, setActiveAccount, accounts } = useAccount()
@@ -12,10 +11,9 @@ const Main = () => {
     setActiveAccount(account.innerText)
   }
 
-  /* debugger */
-  console.log(activeAccount)
-
   const Title = () => {
+    const { level } = useAccount()
+
     return (
       <label
         style={{
@@ -24,7 +22,7 @@ const Main = () => {
       >
         <SelectedAccountDiv>{activeAccount}</SelectedAccountDiv>
         <LevelStatusDiv>
-          <label>JOURNEY: HUMAN</label>
+          <label>JOURNEY: {level.toUpperCase()}</label>
           <label>WAITING BID</label>
         </LevelStatusDiv>
       </label>
