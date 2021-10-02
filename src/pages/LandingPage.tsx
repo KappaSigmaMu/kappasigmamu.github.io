@@ -1,11 +1,13 @@
 import { Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { useAccount } from '../account/AccountContext'
 import { PrimaryLgButton } from '../components/base'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
-const LandingPage = ({ activeAccount }: { activeAccount: string }): JSX.Element => {
+const LandingPage = () => {
+  const { activeAccount } = useAccount()
   const navigate = useNavigate()
 
   return (

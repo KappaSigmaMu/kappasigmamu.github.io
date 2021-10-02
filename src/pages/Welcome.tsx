@@ -10,7 +10,7 @@ const Welcome = (): JSX.Element => {
     <>
       <LevelContainer>
         <Row>
-          <Col><Level level='human' /></Col>
+          <Col><Level /></Col>
         </Row>
       </LevelContainer>
       <StyledContainer>

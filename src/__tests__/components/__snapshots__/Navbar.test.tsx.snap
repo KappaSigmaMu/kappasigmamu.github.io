@@ -95,7 +95,7 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
     >
        
       <a
-        className="sc-hKFxyN"
+        className="sc-dlnjwi"
         href="https://discord.gg/9AWjTf8wSk"
         rel="noreferrer"
         target="_blank"
@@ -107,7 +107,7 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
       </a>
        
       <a
-        className="sc-hKFxyN"
+        className="sc-dlnjwi"
         href="https://matrix.to/#/!BUmiAAnAYSRGarqwOt:matrix.parity.io?via=matrix.parity.io"
         rel="noreferrer"
         target="_blank"
@@ -119,7 +119,7 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
       </a>
        
       <a
-        className="sc-hKFxyN"
+        className="sc-dlnjwi"
         href="https://twitter.com/network"
         rel="noreferrer"
         target="_blank"

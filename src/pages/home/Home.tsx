@@ -12,7 +12,7 @@ import { useSubstrate } from '../../substrate'
 
 const Home = ({ activeAccount }: { activeAccount: string }): JSX.Element => {
   const { api } = useSubstrate()
-  const [level, setLevel] = useState("human")
+  const [, setLevel] = useState('human')
 
   useEffect(() => {
     const setLevelCheckingAccounts = (accounts: AccountId32[], level: string) => {
@@ -44,13 +44,13 @@ const Home = ({ activeAccount }: { activeAccount: string }): JSX.Element => {
         <Container>
           <Row>
             <Col sm={3}>
-              <Level level={level} />
+              <Level />
             </Col>
             <Col sm={4}>
-              <LevelNotification level={level} />
+              <LevelNotification />
             </Col>
             <Col sm={5}>
-              <NextStep level={level} />
+              <NextStep />
             </Col>
           </Row>
         </Container>

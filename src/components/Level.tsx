@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 import { Badge } from 'react-bootstrap'
 import styled from 'styled-components'
+import { useAccount } from '../account/AccountContext'
 import CanaryLevel1 from '../static/canary-level-1.svg'
 
 interface LevelsType {
@@ -26,14 +27,18 @@ const LEVELS: LevelsType = {
   cyborg: { badge: "Level 4", name: "Cyborg", canary: CANARY_LEVEL_4 }
 }
 
-const Level = ({ level }: { level: string }) => (
-  <>
-    <p>
-      <Badge pill>{LEVELS[level].badge}</Badge>
-    </p>
-    {LEVELS[level].canary}
-    <h1><u>{LEVELS[level].name}</u></h1>
-  </>
-)
+const Level = () => {
+  const { level } = useAccount()
+
+  return (
+    <>
+      <p>
+        <Badge pill>{LEVELS[level].badge}</Badge>
+      </p>
+      {LEVELS[level].canary}
+      <h1><u>{LEVELS[level].name}</u></h1>
+    </>
+  )
+}
 
 export { Level }

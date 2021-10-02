@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { useAccount } from '../account/AccountContext'
 
 interface LevelsType {
   [key: string]: ReactElement
@@ -42,7 +43,9 @@ const LEVELS: LevelsType = {
   cyborg: CYBORG
 }
 
-const NextStep = ({ level }: { level: string }) => {
+const NextStep = () => {
+  const { level } = useAccount()
+
   return (
     <>
       <StyledP>Next Step</StyledP>
