@@ -9,47 +9,24 @@ import { Level } from '../../components/Level'
 import { LevelNotification } from '../../components/LevelNotification'
 import { NextStep } from '../../components/NextStep'
 import { useSubstrate } from '../../substrate'
+import { useAccount } from '../../account/AccountContext'
 
-const Home = ({ activeAccount }: { activeAccount: string }): JSX.Element => {
+const Home = () => {
   const { api } = useSubstrate()
-  const [level, setLevel] = useState("human")
-
-  useEffect(() => {
-    const setLevelCheckingAccounts = (accounts: AccountId32[], level: string) => {
-      accounts.forEach((account: AccountId32) => {
-        if (account.toString() === activeAccount) {
-          setLevel(level)
-        }
-      })
-    }
-
-    if (api) {
-      api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
-        setLevelCheckingAccounts(response.map(account => account.who), "bidder")
-      })
-
-      api.query.society.candidates().then((response: Vec<PalletSocietyBid>) => {
-        setLevelCheckingAccounts(response.map(account => account.who), "candidate")
-      })
-
-      api.query.society.members().then((response: Vec<AccountId32>) => {
-        setLevelCheckingAccounts(response, "cyborg")
-      })
-    }
-  }, [activeAccount])
+  const { activeAccount, level } = useAccount()
 
   return (
     <>
       <StyledDiv>
         <Container>
           <Row>
-            <Level level={level} />
-            <LevelNotification level={level} />
-            <NextStep level={level} />
+            <Level />
+            <LevelNotification />
+            <NextStep />
           </Row>
         </Container>
       </StyledDiv>
-      <CurrentRoundRow currentAccount={activeAccount} />
+      <CurrentRoundRow />
     </>
   )
 }

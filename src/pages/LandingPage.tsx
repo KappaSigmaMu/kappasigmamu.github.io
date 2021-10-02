@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
+import { useAccount } from '../account/AccountContext'
 
-const LandingPage = ({ activeAccount }: { activeAccount: string }): JSX.Element => {
+const LandingPage = () => {
+  const { activeAccount } = useAccount()
+
   const navigate = useNavigate()
-
   const handleClick = () => {
     navigate('/welcome')
   }

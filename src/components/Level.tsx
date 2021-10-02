@@ -2,6 +2,7 @@ import { ReactElement } from 'react'
 import { Col, Badge } from 'react-bootstrap'
 import styled from 'styled-components'
 import CanaryLevel1 from '../static/canary-level-1.svg'
+import { useAccount } from '../account/AccountContext'
 
 interface LevelsType {
   [key: string]: {badge: string, name: string, canary: ReactElement},
@@ -26,7 +27,9 @@ const LEVELS: LevelsType = {
   cyborg: { badge: "Level 4", name: "Cyborg", canary: CANARY_LEVEL_4 }
 }
 
-const Level = ({ level }: { level: string }) => {
+const Level = () => {
+  const { level } = useAccount()
+
   return (
     <Col sm={3}>
       <StyledBadge pill>

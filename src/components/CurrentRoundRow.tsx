@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { useBlockTime } from '../hooks/useBlockTime'
 import { useConsts } from '../hooks/useConsts'
 import { useSubstrate } from '../substrate'
+import { useAccount } from '../account/AccountContext'
 
 const Circle = ({ active = false }: { active?: boolean }): JSX.Element => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,8 +61,9 @@ const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element =>
   </div>
 )
 
-const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
+const CurrentRoundRow = () => {
   const { api } = useSubstrate()
+  const { activeAccount } = useAccount()
   const { maxStrikes } = useConsts()
   const [currentBlock, setCurrentBlock] = useState<number>(0)
   const [info, setInfo] = useState<DeriveSociety | any>()
@@ -87,7 +89,7 @@ const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
       })
 
       api.derive.society.members().then((members) => {
-        const account = members.find((member) => member.accountId.toString() === props.currentAccount)
+        const account = members.find((member) => member.accountId.toString() === activeAccount)
         if (!account) return setStrikes(0)
 
         setStrikes(account?.strikes.toNumber())

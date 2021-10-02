@@ -6,6 +6,7 @@ import { Navbar } from '../components/Navbar'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { SubstrateContextProvider, useSubstrate } from '../substrate'
+import { AccountContextProvider } from '../account/AccountContext'
 import { CyborgGuide } from './CyborgGuide'
 import { Home } from './home/Home'
 import { LandingPage } from './LandingPage'
@@ -13,8 +14,6 @@ import { Welcome } from './Welcome'
 
 const Main = () => {
   const { apiState, apiError } = useSubstrate()
-  const [activeAccount, setActiveAccount] = useState<string>('')
-  const [accounts, setAccounts] = useState<{ name: string | undefined; address: string }[]>([])
 
   const loader = (text: string) => {
     return <p>{text}</p>
@@ -25,10 +24,6 @@ const Main = () => {
   if (apiState !== 'READY') return loader('Connecting')
 
   const defaultNavbarProps = {
-    accounts,
-    activeAccount,
-    setAccounts,
-    setActiveAccount,
     showAccount: true,
   }
 
@@ -38,7 +33,7 @@ const Main = () => {
         <Route path="/" element={
           <>
             <Navbar showSocialIcons {...defaultNavbarProps} />
-            <LandingPage activeAccount={activeAccount} />
+            <LandingPage />
           </>
         }/>
         <Route path="/cyborg-guide" element={
@@ -56,7 +51,7 @@ const Main = () => {
         <Route path="/home" element={
           <>
             <Navbar showBrandIcon showGalleryButton {...defaultNavbarProps} />
-            <Home activeAccount={activeAccount} />
+            <Home />
           </>
         }/>
       </Routes>
@@ -67,12 +62,14 @@ const Main = () => {
 const App = () => {
   return (
     <SubstrateContextProvider>
-      <ThemeProvider theme={Theme}>
-        <GlobalStyle />
-          <StyledMain fluid>
-            <Main />
-        </StyledMain>
-      </ThemeProvider>
+      <AccountContextProvider>
+        <ThemeProvider theme={Theme}>
+          <GlobalStyle />
+            <StyledMain fluid>
+              <Main />
+          </StyledMain>
+        </ThemeProvider>
+      </AccountContextProvider>
     </SubstrateContextProvider>
   )
 }
