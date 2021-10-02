@@ -7,9 +7,9 @@ const bidVouch = PalletSocietyBidFixture.createDeposit('CxDDSH8gS7jecsxaRL9Txf8H
 const bids = [bidVouch, bidDeposit]
 
 test('renders BidsList', () => {
-    const tree = TestRenderer.create(
-      <BidsList bids={bids} />
-    )
+  const tree = TestRenderer.create(
+    <BidsList bids={bids} />
+  )
 
   expect(tree).toMatchSnapshot()
 })

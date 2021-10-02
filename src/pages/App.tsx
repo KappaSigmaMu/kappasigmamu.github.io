@@ -24,7 +24,7 @@ const Main = () => {
         }/>
         <Route path="/guide" element={
           <>
-            <Navbar showBrandIcon showGalleryButton showSocialIcons showAccount />
+            <Navbar showBrandIcon showSocialIcons showAccount />
             <CyborgGuide />
           </>
         }/>
