@@ -1,19 +1,15 @@
 import { Col, Container } from 'react-bootstrap'
 import styled from 'styled-components'
+import { ExternalLink } from '../components/base'
 import Canary from '../static/mock-canary.svg'
 
-// eslint-disable-next-line max-len
-const SOCIETY_RULES_URL = 'https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17'
+const TattooRulesLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17',
+}))``
 
-const TattooRulesLink = (props: { children: string }) => (
-  <a
-    target="_blank"
-    href={SOCIETY_RULES_URL}
-    rel="noreferrer"
-  >
-    {props.children}
-  </a>
-)
+const SocietyGuideLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://wiki.polkadot.network/docs/maintain-guides-society-kusama',
+}))``
 
 const CyborgGuide = (): JSX.Element => {
   return (
@@ -25,18 +21,10 @@ const CyborgGuide = (): JSX.Element => {
           </GuideTitle>
           <Col className="text-uppercase text-end ms-auto mt-4">
             <p>
-              <a
-                target="_blank"
-                href="https://wiki.polkadot.network/docs/maintain-guides-society-kusama"
-                rel="noreferrer"
-              >
-                Kusama society guide
-              </a>
+              <SocietyGuideLink>Kusama society guide</SocietyGuideLink>
             </p>
             <p>
-              <TattooRulesLink>
-                Tattoo rules
-              </TattooRulesLink>
+              <TattooRulesLink>Tattoo rules</TattooRulesLink>
             </p>
           </Col>
         </GuideRow>
@@ -52,13 +40,7 @@ const CyborgGuide = (): JSX.Element => {
               Society.
             </p>
             <div className="mb-5">
-              <a
-                target="_blank"
-                href="https://wiki.polkadot.network/docs/maintain-guides-society-kusama"
-                rel="noreferrer"
-              >
-                You can learn more about it here.
-              </a>
+              <SocietyGuideLink>You can learn more about it here.</SocietyGuideLink>
             </div>
             <CanaryImg src={Canary} className="float-end" alt="Canary" />
           </Col>
@@ -149,9 +131,7 @@ const CyborgGuide = (): JSX.Element => {
               to get tattoed!
             </p>
             <p>
-              <TattooRulesLink>
-                See the rules for your PoI here.
-              </TattooRulesLink>
+              <TattooRulesLink>See the rules for your PoI here.</TattooRulesLink>
             </p>
             <strong>
               <p className="mb-1">Your tattoo, the Proof of Ink (PoI)</p>

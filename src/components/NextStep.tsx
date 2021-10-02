@@ -1,19 +1,6 @@
 import { ReactElement } from 'react'
-import { Col, Button } from 'react-bootstrap'
-import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-
-const MarginH5 = styled.h5`
-  margin-bottom: 24px;
-`
-
-const StyledP = styled.p`
-  color: ${(props) => props.theme.colors.greyDark};
-`
-
-const MarginButton = styled(Button)`
-  margin-right: 16px;
-`
+import styled from 'styled-components'
 
 interface LevelsType {
   [key: string]: ReactElement
@@ -21,7 +8,11 @@ interface LevelsType {
 
 const HUMAN = (
   <>
-    <MarginH5>To become a Candidate you need to level up;<br/>To level up you must first Submit a Bid.</MarginH5>
+    <h5 className="mb-4">
+      To become a Candidate you need to level up;
+      <br/>
+      To level up you must first Submit a Bid.
+    </h5>
     <Link to="/guide" className="btn btn-outline-grey-dark">
       Bid Rules
     </Link>
@@ -53,11 +44,15 @@ const LEVELS: LevelsType = {
 
 const NextStep = ({ level }: { level: string }) => {
   return (
-    <Col sm={5}>
+    <>
       <StyledP>Next Step</StyledP>
       {LEVELS[level]}
-    </Col>
+    </>
   )
 }
+
+const StyledP = styled.p`
+  color: ${(props) => props.theme.colors.greyDark};
+`
 
 export { NextStep }

@@ -1,4 +1,4 @@
-import { Button, Col, Row } from 'react-bootstrap'
+import { Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { PrimaryLgButton } from '../components/base'
@@ -17,10 +17,14 @@ const LandingPage = ({ activeAccount }: { activeAccount: string }): JSX.Element 
         <CentralizedCol xs={6}>
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-          <PrimaryLgButton disabled={!activeAccount} onClick={() => { navigate('/welcome') }}>
-            Become a Cyborg
-          </PrimaryLgButton>
-          <Link to="/guide">Cyborg Guide</Link>
+          <p>
+            <PrimaryLgButton disabled={!activeAccount} onClick={() => { navigate('/welcome') }}>
+              Become a Cyborg
+            </PrimaryLgButton>
+          </p>
+          <p>
+            <Link to="/guide">Cyborg Guide</Link>
+          </p>
         </CentralizedCol>
       </FullPageHeightRow>
     </>
@@ -39,7 +43,7 @@ const CanaryImg = styled.img`
 `
 
 const FullPageHeightRow = styled(Row)`
-  height: 91.7vh;
+  height: 92vh;
 `
 
 const CentralizedCol = styled(Col)`

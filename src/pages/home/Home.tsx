@@ -2,7 +2,7 @@ import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState } from 'react'
-import { Container, Row } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CurrentRoundRow } from '../../components/CurrentRoundRow'
 import { Level } from '../../components/Level'
@@ -43,9 +43,15 @@ const Home = ({ activeAccount }: { activeAccount: string }): JSX.Element => {
       <StyledDiv>
         <Container>
           <Row>
-            <Level level={level} />
-            <LevelNotification level={level} />
-            <NextStep level={level} />
+            <Col sm={3}>
+              <Level level={level} />
+            </Col>
+            <Col sm={4}>
+              <LevelNotification level={level} />
+            </Col>
+            <Col sm={5}>
+              <NextStep level={level} />
+            </Col>
           </Row>
         </Container>
       </StyledDiv>

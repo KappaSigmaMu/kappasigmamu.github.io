@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Col, Badge } from 'react-bootstrap'
+import { Badge } from 'react-bootstrap'
 import styled from 'styled-components'
 import CanaryLevel1 from '../static/canary-level-1.svg'
 
@@ -26,24 +26,14 @@ const LEVELS: LevelsType = {
   cyborg: { badge: "Level 4", name: "Cyborg", canary: CANARY_LEVEL_4 }
 }
 
-const Level = ({ level }: { level: string }) => {
-  return (
-    <Col sm={3}>
-      <StyledBadge pill>
-        {LEVELS[level].badge}
-      </StyledBadge>
-      {LEVELS[level].canary}
-      <UnderlinedH1>{LEVELS[level].name}</UnderlinedH1>
-    </Col>
-  )
-}
-
-const StyledBadge = styled(Badge)`
-  margin-bottom: 16px;
-`
-
-const UnderlinedH1 = styled.h1`
-  text-decoration: underline;
-`
+const Level = ({ level }: { level: string }) => (
+  <>
+    <p>
+      <Badge pill>{LEVELS[level].badge}</Badge>
+    </p>
+    {LEVELS[level].canary}
+    <h1><u>{LEVELS[level].name}</u></h1>
+  </>
+)
 
 export { Level }

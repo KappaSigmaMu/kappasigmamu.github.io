@@ -1,9 +1,5 @@
-import { Button } from 'react-bootstrap'
-import Container from 'react-bootstrap/Container'
-import Nav from 'react-bootstrap/Nav'
-import { default as BNavbar } from 'react-bootstrap/Navbar'
+import { Button, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
 import { fetchAccounts } from '../helpers/fetchAccounts'
 import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 import { AccountSelector } from './AccountSelector'
@@ -19,12 +15,14 @@ const Navbar = ({
   showGalleryButton=false,
   showSocialIcons=false,
 }: NavRouteProps) => (
-  <BNavbar>
-    <NavbarContainer>
-      <Nav>{showBrandIcon ? <NavbarBrand /> : <></>}</Nav>
-      <CenterNav>
+  <RBNavbar className="mt-4">
+    <Container>
+      {showBrandIcon ? <NavbarBrand /> : <></>}
+      <Nav className="align-items-center align-self-center">
         {showGalleryButton ? <Nav.Link to="/home/bids" as={Link}>Gallery</Nav.Link> : <></>}
+        &nbsp;
         {showSocialIcons ? <SocialIcons /> : <></>}
+        &nbsp;
         {showAccount ?
           <AccountNavbar
             setActiveAccount={setActiveAccount}
@@ -32,15 +30,15 @@ const Navbar = ({
             accounts={accounts}
             setAccounts={setAccounts}
           /> : <></>}
-      </CenterNav>
-    </NavbarContainer>
-  </BNavbar>
+      </Nav>
+    </Container>
+  </RBNavbar>
 )
 
 const NavbarBrand = () => (
-  <BNavbar.Brand as={Link} to="/">
+  <RBNavbar.Brand as={Link} to="/">
     <img width={90} src={KappaSigmaMu} alt="KappaSigmaMu Logo" />
-  </BNavbar.Brand>
+  </RBNavbar.Brand>
 )
 
 const AccountNavbar = ({ accounts, activeAccount, setAccounts, setActiveAccount }: NavRouteProps) => (
@@ -52,15 +50,5 @@ const AccountNavbar = ({ accounts, activeAccount, setAccounts, setActiveAccount 
     </Button>
   )
 )
-
-const NavbarContainer = styled(Container)`
-  align-items: end !important;
-  padding-top: 20px;
-`
-
-const CenterNav = styled(Nav)`
-  align-items: center;
-  align-self: normal;
-`
 
 export { Navbar }

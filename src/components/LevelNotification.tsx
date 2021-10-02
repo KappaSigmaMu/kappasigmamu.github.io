@@ -1,13 +1,9 @@
 import { ReactElement } from 'react'
-import { Button, Col } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import styled from 'styled-components'
 
 const NoFocus = styled.h5`
   color: ${(props) => props.theme.colors.greyDark};
-`
-
-const MarginH5 = styled.h5`
-  margin-bottom: 24px;
 `
 
 const StyledP = styled.p`
@@ -59,13 +55,11 @@ const LEVELS: LevelsType = {
   cyborg: CYBORG
 }
 
-const LevelNotification = ({ level }: { level: string }) => {
-  return (
-    <Col sm={4}>
-      <StyledP>Level Notification</StyledP>
-      <MarginH5>{LEVELS[level]}</MarginH5>
-    </Col>
-  )
-}
+const LevelNotification = ({ level }: { level: string }) => (
+  <>
+    <StyledP>Level Notification</StyledP>
+    <h5>{LEVELS[level]}</h5>
+  </>
+)
 
 export { LevelNotification }
