@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Button, Container, Col, Row } from 'react-bootstrap'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import styled from 'styled-components'
+import { useAccount } from '../account/AccountContext'
 import { useBlockTime } from '../hooks/useBlockTime'
 import { useConsts } from '../hooks/useConsts'
 import { useSubstrate } from '../substrate'
@@ -60,8 +61,9 @@ const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element =>
   </div>
 )
 
-const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
+const CurrentRoundRow = () => {
   const { api } = useSubstrate()
+  const { activeAccount } = useAccount()
   const { maxStrikes } = useConsts()
   const [currentBlock, setCurrentBlock] = useState<number>(0)
   const [info, setInfo] = useState<DeriveSociety | any>()
@@ -87,7 +89,7 @@ const CurrentRoundRow = (props: { currentAccount: string }): JSX.Element => {
       })
 
       api.derive.society.members().then((members) => {
-        const account = members.find((member) => member.accountId.toString() === props.currentAccount)
+        const account = members.find((member) => member.accountId.toString() === activeAccount)
         if (!account) return setStrikes(0)
 
         setStrikes(account?.strikes.toNumber())

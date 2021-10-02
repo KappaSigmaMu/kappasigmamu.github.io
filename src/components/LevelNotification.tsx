@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 import { Button, Col } from 'react-bootstrap'
 import styled from 'styled-components'
+import { useAccount } from '../account/AccountContext'
 
 const NoFocus = styled.h5`
   color: ${(props) => props.theme.colors.greyDark};
@@ -59,7 +60,9 @@ const LEVELS: LevelsType = {
   cyborg: CYBORG
 }
 
-const LevelNotification = ({ level }: { level: string }) => {
+const LevelNotification = () => {
+  const { level } = useAccount()
+
   return (
     <Col sm={4}>
       <StyledP>Level Notification</StyledP>

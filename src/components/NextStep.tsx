@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 import { Col, Button } from 'react-bootstrap'
 import styled from 'styled-components'
+import { useAccount } from '../account/AccountContext'
 
 const MarginH5 = styled.h5`
   margin-bottom: 24px;
@@ -45,7 +46,9 @@ const LEVELS: LevelsType = {
   cyborg: CYBORG
 }
 
-const NextStep = ({ level }: { level: string }) => {
+const NextStep = () => {
+  const { level } = useAccount()
+
   return (
     <Col sm={5}>
       <StyledP>Next Step</StyledP>

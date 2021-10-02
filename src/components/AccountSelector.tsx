@@ -1,32 +1,28 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Dropdown, DropdownButton } from 'react-bootstrap'
 import styled from 'styled-components'
+import { useAccount } from '../account/AccountContext'
 import { useSubstrate } from '../substrate'
 
-type Props = {
-  setActiveAccount: (address: string) => void
-  accounts: { name: string | undefined; address: string }[]
-  activeAccount: string
-}
-
-const Main = ({ setActiveAccount, accounts, activeAccount }: Props) => {
-  const [selectedAccount, setSelectedAccount] = useState(activeAccount)
+const Main = () => {
+  const { activeAccount, setActiveAccount, accounts } = useAccount()
 
   const onChange = (account: HTMLInputElement) => {
     setActiveAccount(account.innerText)
-    setSelectedAccount(account.innerText)
   }
 
   const Title = () => {
+    const { level } = useAccount()
+
     return (
       <label
         style={{
           fontSize: '12px',
         }}
       >
-        <SelectedAccountDiv>{selectedAccount}</SelectedAccountDiv>
+        <SelectedAccountDiv>{activeAccount}</SelectedAccountDiv>
         <LevelStatusDiv>
-          <label>JOURNEY: HUMAN</label>
+          <label>JOURNEY: {level.toUpperCase()}</label>
           <label>WAITING BID</label>
         </LevelStatusDiv>
       </label>
@@ -34,7 +30,7 @@ const Main = ({ setActiveAccount, accounts, activeAccount }: Props) => {
   }
 
   return (
-    <AccountDropdownButton
+    <DropdownButton
       variant="outline-grey-dark"
       onSelect={(eventKey: string | null, e?: React.SyntheticEvent<unknown, Event>) =>
         onChange(e?.target as HTMLInputElement)
@@ -46,34 +42,22 @@ const Main = ({ setActiveAccount, accounts, activeAccount }: Props) => {
           {option.address}
         </Dropdown.Item>
       ))}
-    </AccountDropdownButton>
+    </DropdownButton>
   )
 }
 
-const AccountSelector = (props: Props) => {
+const AccountSelector = () => {
   const { api } = useSubstrate()
-  return api?.query ? <Main {...props} /> : null
+  return api?.query ? <Main /> : null
 }
 
 const LevelStatusDiv = styled.div`
   display: flex;
   justify-content: space-between;
-  padding-top: 10px;
 
   label {
     color: ${(props) => props.theme.colors.grey};
     font-weight: 700;
-  }
-`
-
-const AccountDropdownButton = styled(DropdownButton)`
-  button {
-    padding: 15px;
-  }
-
-  .dropdown-toggle::after {
-    vertical-align: 36%;
-    margin-left: 0.7em;
   }
 `
 
