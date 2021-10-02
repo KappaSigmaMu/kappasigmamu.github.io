@@ -4,16 +4,13 @@ import Nav from 'react-bootstrap/Nav'
 import { default as BNavbar } from 'react-bootstrap/Navbar'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { useAccount } from '../account/AccountContext'
 import { fetchAccounts } from '../helpers/fetchAccounts'
 import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 import { AccountSelector } from './AccountSelector'
 import { SocialIcons } from './SocialIcons'
 
 const Navbar = ({
-  accounts,
-  activeAccount,
-  setAccounts,
-  setActiveAccount,
   showAccount=false,
   showBrandIcon=false,
   showGalleryButton=false,
@@ -25,13 +22,7 @@ const Navbar = ({
       <CenterNav>
         {showGalleryButton ? <Nav.Link to="/home/bids" as={Link}>Gallery</Nav.Link> : <></>}
         {showSocialIcons ? <SocialIcons /> : <></>}
-        {showAccount ?
-          <AccountNavbar
-            setActiveAccount={setActiveAccount}
-            activeAccount={activeAccount}
-            accounts={accounts}
-            setAccounts={setAccounts}
-          /> : <></>}
+        {showAccount ? <AccountNavbar /> : <></>}
       </CenterNav>
     </NavbarContainer>
   </BNavbar>
@@ -43,15 +34,17 @@ const NavbarBrand = () => (
   </BNavbar.Brand>
 )
 
-const AccountNavbar = ({ accounts, activeAccount, setAccounts, setActiveAccount }: NavRouteProps) => (
-  accounts.length != 0 && activeAccount ? (
-    <AccountSelector accounts={accounts} activeAccount={activeAccount} setActiveAccount={setActiveAccount} />
-  ) : (
-    <Button variant="outline-secondary" onClick={() => fetchAccounts(setAccounts, setActiveAccount)}>
-      Connect Wallet
-    </Button>
-  )
-)
+const AccountNavbar = () => {
+  const { activeAccount, setActiveAccount, accounts, setAccounts } = useAccount()
+
+  return accounts.length != 0 && activeAccount
+    ? <AccountSelector />
+    : (
+      <Button variant="outline-secondary" onClick={() => fetchAccounts(setAccounts, setActiveAccount)}>
+        Connect Wallet
+      </Button>
+    )
+}
 
 const NavbarContainer = styled(Container)`
   align-items: end !important;

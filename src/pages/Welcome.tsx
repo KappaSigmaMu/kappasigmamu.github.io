@@ -11,7 +11,7 @@ const Welcome = (): JSX.Element => {
       <StyledDiv>
         <LevelContainer>
           <Row>
-            <Level level='human' />
+            <Level />
           </Row>
         </LevelContainer>
         <StyledContainer>

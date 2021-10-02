@@ -1,7 +1,8 @@
 import { ReactElement } from 'react'
-import { Col, Button } from 'react-bootstrap'
-import styled from 'styled-components'
+import { Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+import { useAccount } from '../account/AccountContext'
 
 const MarginH5 = styled.h5`
   margin-bottom: 24px;
@@ -9,10 +10,6 @@ const MarginH5 = styled.h5`
 
 const StyledP = styled.p`
   color: ${(props) => props.theme.colors.greyDark};
-`
-
-const MarginButton = styled(Button)`
-  margin-right: 16px;
 `
 
 interface LevelsType {
@@ -51,7 +48,9 @@ const LEVELS: LevelsType = {
   cyborg: CYBORG
 }
 
-const NextStep = ({ level }: { level: string }) => {
+const NextStep = () => {
+  const { level } = useAccount()
+
   return (
     <Col sm={5}>
       <StyledP>Next Step</StyledP>
