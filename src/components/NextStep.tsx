@@ -1,5 +1,4 @@
 import { ReactElement } from 'react'
-import { Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
