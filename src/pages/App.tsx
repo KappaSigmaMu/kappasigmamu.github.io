@@ -33,7 +33,7 @@ const Main = () => {
         }/>
         <Route path="/guide" element={
           <>
-            <Navbar showSocialIcons showGalleryButton showAccount />
+            <Navbar showBrandIcon showSocialIcons showAccount />
             <CyborgGuide />
           </>
         }/>
