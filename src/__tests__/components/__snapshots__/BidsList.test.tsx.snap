@@ -2,8 +2,17 @@
 
 exports[`renders BidsList 1`] = `
 Array [
-  <div
-    className="sc-bdnxRM iHtJtH row"
+  .c0 {
+  color: #fff;
+  line-height: 3;
+}
+
+.c0 .text-end {
+  padding-right: 36px;
+}
+
+<div
+    className="c0 row"
   >
     <div
       className="text-center col-1"
@@ -26,14 +35,55 @@ Array [
       Value
     </div>
   </div>,
-  <div
-    className="sc-bdnxRM sc-gtsrHT iHtJtH kBOZst row"
+  .c2 {
+  cursor: copy;
+  display: inline-block;
+  line-height: 0;
+}
+
+.c2 > .container {
+  position: relative;
+}
+
+.c2 > .container > div,
+.c2 > .container > svg {
+  position: relative;
+}
+
+.c2 > .container.highlight:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 5px 2px #aaa;
+  content: '';
+}
+
+.c0 {
+  color: #fff;
+  line-height: 3;
+}
+
+.c0 .text-end {
+  padding-right: 36px;
+}
+
+.c1 {
+  background-color: #343A40;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+<div
+    className="c0 c1 row"
   >
     <div
       className="text-center col-1"
     >
       <div
-        className="Identicon__Wrapper-sc-1gm2vek-0 eMppvX ui--IdentityIcon  "
+        className="c2 ui--IdentityIcon  "
         onClick={[Function]}
       >
         <svg
@@ -183,14 +233,55 @@ Array [
       10
     </div>
   </div>,
-  <div
-    className="sc-bdnxRM sc-gtsrHT iHtJtH kBOZst row"
+  .c2 {
+  cursor: copy;
+  display: inline-block;
+  line-height: 0;
+}
+
+.c2 > .container {
+  position: relative;
+}
+
+.c2 > .container > div,
+.c2 > .container > svg {
+  position: relative;
+}
+
+.c2 > .container.highlight:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 5px 2px #aaa;
+  content: '';
+}
+
+.c0 {
+  color: #fff;
+  line-height: 3;
+}
+
+.c0 .text-end {
+  padding-right: 36px;
+}
+
+.c1 {
+  background-color: #343A40;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+<div
+    className="c0 c1 row"
   >
     <div
       className="text-center col-1"
     >
       <div
-        className="Identicon__Wrapper-sc-1gm2vek-0 eMppvX ui--IdentityIcon  "
+        className="c2 ui--IdentityIcon  "
         onClick={[Function]}
       >
         <svg

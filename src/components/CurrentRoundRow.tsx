@@ -37,15 +37,20 @@ const FormattedKSM = (props: { children: any }): JSX.Element => (
 )
 
 const Unit = styled.span`
-  color: #6c757d;
+  color: ${(props) => props.theme.colors.lightGrey};
 `
 
 const Value = styled.span`
-  color: #fff;
+  color: ${(props) => props.theme.colors.white};
 `
 
 const Title = styled.h4`
-  color: #fff;
+  color: ${(props) => props.theme.colors.white};
+`
+
+const StyledDiv = styled.div`
+  background-color: ${(props) => props.theme.colors.darkGrey};
+  padding: 30px 0;
 `
 
 const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element => (
@@ -98,77 +103,79 @@ const CurrentRoundRow = () => {
   }, [api])
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <Row className="mb-3">
-            <Col>
-              <Title>Current Round</Title>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <CurrentRoundProgress percentageDone={percentageDone} />
-            </Col>
-            <Col style={{ paddingLeft: 0 }}>
-              <Value>{days}</Value>&nbsp;<Unit>day</Unit>
-              <br />
-              <Value>{hours}</Value>&nbsp;<Unit>hrs.</Unit>
-              <br />
-              <Value>{minutes}</Value>&nbsp;<Unit>mins.</Unit>
-              <br />
-              <Value>{seconds}</Value>&nbsp;<Unit>secs.</Unit>
-            </Col>
-          </Row>
-        </Col>
-        <Col>
-          <Row className="mb-3">
-            <Col>
-              <Title>Round Payout</Title>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <FormattedKSM>{info?.pot.toHuman().substring(0, 5)}</FormattedKSM>
-            </Col>
-          </Row>
-        </Col>
-        <Col>
-          <Row className="mb-3">
-            <Col>
-              <Title>My Bid</Title>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Col>
-              <FormattedKSM>{accountBid}</FormattedKSM>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Button>Update</Button>
-            </Col>
-          </Row>
-        </Col>
-        <Col>
-          <Row className="mb-3">
-            <Col>
-              <Title>Strikes</Title>
-            </Col>
-          </Row>
-          <Row className="mb-2">
-            <Col>
-              <Value>{strikes}</Value>&nbsp;<Unit>/&nbsp;{maxStrikes.toNumber()}</Unit>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Strikes count={strikes} maxStrikes={maxStrikes.toNumber()} />
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </Container>
+    <StyledDiv>
+      <Container>
+        <Row>
+          <Col>
+            <Row className="mb-3">
+              <Col>
+                <Title>Current Round</Title>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <CurrentRoundProgress percentageDone={percentageDone} />
+              </Col>
+              <Col style={{ paddingLeft: 0 }}>
+                <Value>{days}</Value>&nbsp;<Unit>day</Unit>
+                <br />
+                <Value>{hours}</Value>&nbsp;<Unit>hrs.</Unit>
+                <br />
+                <Value>{minutes}</Value>&nbsp;<Unit>mins.</Unit>
+                <br />
+                <Value>{seconds}</Value>&nbsp;<Unit>secs.</Unit>
+              </Col>
+            </Row>
+          </Col>
+          <Col>
+            <Row className="mb-3">
+              <Col>
+                <Title>Round Payout</Title>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FormattedKSM>{info?.pot.toHuman().substring(0, 5)}</FormattedKSM>
+              </Col>
+            </Row>
+          </Col>
+          <Col>
+            <Row className="mb-3">
+              <Col>
+                <Title>My Bid</Title>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Col>
+                <FormattedKSM>{accountBid}</FormattedKSM>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Button>Update</Button>
+              </Col>
+            </Row>
+          </Col>
+          <Col>
+            <Row className="mb-3">
+              <Col>
+                <Title>Strikes</Title>
+              </Col>
+            </Row>
+            <Row className="mb-2">
+              <Col>
+                <Value>{strikes}</Value>&nbsp;<Unit>/&nbsp;{maxStrikes.toNumber()}</Unit>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Strikes count={strikes} maxStrikes={maxStrikes.toNumber()} />
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Container>
+    </StyledDiv>
   )
 }
 

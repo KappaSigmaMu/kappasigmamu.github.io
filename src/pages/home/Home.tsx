@@ -21,7 +21,7 @@ const Home = () => (
 )
 
 const StyledDiv = styled.div`
-  height: 88.1vh;
+  height: 67.5vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
