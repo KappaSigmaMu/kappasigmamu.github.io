@@ -20,7 +20,7 @@ const Navbar = ({
     <NavbarContainer>
       <Nav>{showBrandIcon ? <NavbarBrand /> : <></>}</Nav>
       <CenterNav>
-        {showGalleryButton ? <NavbarGallery /> : <></>}
+        {showGalleryButton ? <Nav.Link to="/home/bids" as={Link}>Gallery</Nav.Link> : <></>}
         {showSocialIcons ? <SocialIcons /> : <></>}
         {showAccount ? <AccountNavbar /> : <></>}
       </CenterNav>
@@ -34,20 +34,16 @@ const NavbarBrand = () => (
   </BNavbar.Brand>
 )
 
-const NavbarGallery = () => (
-  <Button variant="link" href="/gallery" style={{ color: '#01ffff' }}>Gallery</Button>
-)
-
 const AccountNavbar = () => {
   const { activeAccount, setActiveAccount, accounts, setAccounts } = useAccount()
 
-  return accounts.length != 0 && activeAccount ? (
-    <AccountSelector />
-  ) : (
-    <Button variant="outline-secondary" onClick={() => fetchAccounts(setAccounts, setActiveAccount)}>
-      Connect Wallet
-    </Button>
-  )
+  return accounts.length != 0 && activeAccount
+    ? <AccountSelector />
+    : (
+      <Button variant="outline-secondary" onClick={() => fetchAccounts(setAccounts, setActiveAccount)}>
+        Connect Wallet
+      </Button>
+    )
 }
 
 const NavbarContainer = styled(Container)`

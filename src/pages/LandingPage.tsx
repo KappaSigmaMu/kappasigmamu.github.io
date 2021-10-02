@@ -1,17 +1,14 @@
-import { Button, Col, Row } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
+import { Col, Row } from 'react-bootstrap'
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
+import { PrimaryLgButton } from '../components/base'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
 const LandingPage = () => {
   const { activeAccount } = useAccount()
-
   const navigate = useNavigate()
-  const handleClick = () => {
-    navigate('/welcome')
-  }
 
   return (
     <>
@@ -22,12 +19,10 @@ const LandingPage = () => {
         <CentralizedCol xs={6}>
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-          <Button disabled={!activeAccount} variant="primary" size="lg" onClick={handleClick}>
+          <PrimaryLgButton disabled={!activeAccount} onClick={() => { navigate('/welcome') }}>
             Become a Cyborg
-          </Button>
-          <GuideButton variant="link" href="/cyborg-guide">
-            Cyborg Guide
-          </GuideButton>
+          </PrimaryLgButton>
+          <Link to="/guide">Cyborg Guide</Link>
         </CentralizedCol>
       </FullPageHeightRow>
     </>
@@ -54,12 +49,6 @@ const CentralizedCol = styled(Col)`
   margin-bottom: auto;
   margin-top: auto;
   z-index: 1;
-`
-
-const GuideButton = styled(Button)`
-  position: absolute;
-  bottom: 30px;
-  display: flex;
 `
 
 export { LandingPage }

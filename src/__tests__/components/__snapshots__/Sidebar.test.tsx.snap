@@ -6,13 +6,14 @@ exports[`renders Sidebar with bids selected 1`] = `
 >
   <li>
     <a
-      className=""
+      aria-current="page"
+      className="active"
       href="/home/bids"
       onClick={[Function]}
       style={
         Object {
-          "color": "#707070",
-          "fontSize": 16,
+          "color": "white",
+          "fontSize": 20,
           "fontWeight": 700,
           "lineHeight": 2,
           "textDecoration": "none",
