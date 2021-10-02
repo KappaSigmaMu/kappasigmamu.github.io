@@ -137,7 +137,7 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
        
       <a
         className="sc-dlnjwi"
-        href="https://twitter.com/network"
+        href="https://twitter.com/kusamanetwork"
         rel="noreferrer"
         target="_blank"
       >
