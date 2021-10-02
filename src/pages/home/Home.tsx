@@ -1,5 +1,3 @@
-import { Vec } from '@polkadot/types'
-import { AccountId32 } from '@polkadot/types/interfaces'
 import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CurrentRoundRow } from '../../components/CurrentRoundRow'
