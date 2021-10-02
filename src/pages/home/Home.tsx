@@ -29,7 +29,7 @@ const Home = (): JSX.Element => (
 )
 
 const StyledDiv = styled.div`
-  height: 67.5vh;
+  height: 67.1vh;
   display: flex;
   flex-direction: column;
   justify-content: center;

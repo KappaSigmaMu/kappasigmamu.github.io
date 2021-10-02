@@ -45,7 +45,7 @@ const CanaryImg = styled.img`
 `
 
 const FullPageHeightRow = styled(Row)`
-  height: 92vh;
+  height: 89vh;
 `
 
 const CentralizedCol = styled(Col)`
