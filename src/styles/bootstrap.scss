@@ -7,7 +7,8 @@ $theme-colors: (
   // 'danger': rgb(204, 193, 193),
   'light': white,
   'dark': black,
-  'grey-dark': #6c757d,
+  'light-grey': #6c757d,
+  'dark-grey': #343A40,
 );
 
 @import '~bootstrap/scss/bootstrap.scss';

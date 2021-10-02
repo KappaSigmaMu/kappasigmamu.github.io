@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 import { Badge } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
-import CanaryLevel1 from '../static/canary-level-1.svg'
+import CanarySvgLevel1 from '../static/canary-level-1.svg'
 
 interface LevelsType {
   [key: string]: {badge: string, name: string, canary: ReactElement},
@@ -15,16 +15,16 @@ const CanaryImg = styled.img`
   left: 11%;
 `
 
-const CANARY_LEVEL_1 = <CanaryImg src={CanaryLevel1} alt="Canary Level 1" />
-const CANARY_LEVEL_2 = <CanaryImg src={CanaryLevel1} alt="Canary Level 2" />
-const CANARY_LEVEL_3 = <CanaryImg src={CanaryLevel1} alt="Canary Level 3" />
-const CANARY_LEVEL_4 = <CanaryImg src={CanaryLevel1} alt="Canary Level 4" />
+const CanaryLevel1 = <CanaryImg src={CanarySvgLevel1} alt="Canary Level 1" />
+const CanaryLevel2 = <CanaryImg src={CanarySvgLevel1} alt="Canary Level 2" />
+const CanaryLevel3 = <CanaryImg src={CanarySvgLevel1} alt="Canary Level 3" />
+const CanaryLevel4 = <CanaryImg src={CanarySvgLevel1} alt="Canary Level 4" />
 
 const LEVELS: LevelsType = {
-  human: { badge: "Level 1", name: "Human", canary: CANARY_LEVEL_1 },
-  bidder: { badge: "Level 2", name: "Bidder", canary: CANARY_LEVEL_2 },
-  candidate: { badge: "Level 3", name: "Candidate", canary: CANARY_LEVEL_3 },
-  cyborg: { badge: "Level 4", name: "Cyborg", canary: CANARY_LEVEL_4 }
+  human: { badge: "Level 1", name: "Human", canary: CanaryLevel1 },
+  bidder: { badge: "Level 2", name: "Bidder", canary: CanaryLevel2 },
+  candidate: { badge: "Level 3", name: "Candidate", canary: CanaryLevel3 },
+  cyborg: { badge: "Level 4", name: "Cyborg", canary: CanaryLevel4 }
 }
 
 const Level = () => {

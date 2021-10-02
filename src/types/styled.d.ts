@@ -11,7 +11,8 @@ declare module 'styled-components' {
       white: string
       black: string
       grey: string
-      greyDark: string
+      lightGrey: string
+      darkGrey: string
     }
   }
 }

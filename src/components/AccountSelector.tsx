@@ -4,6 +4,17 @@ import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { useSubstrate } from '../substrate'
 
+interface LevelStatusType {
+  [key: string]: string
+}
+
+const LEVELSTATUS: LevelStatusType = {
+  human: 'WAITING BID',
+  bidder: 'BID SUBMITTED',
+  candidate: 'WAITING POI',
+  cyborg: ''
+}
+
 const Main = () => {
   const { activeAccount, setActiveAccount, accounts } = useAccount()
 
@@ -23,7 +34,7 @@ const Main = () => {
         <SelectedAccountDiv>{activeAccount}</SelectedAccountDiv>
         <LevelStatusDiv>
           <label>JOURNEY: {level.toUpperCase()}</label>
-          <label>WAITING BID</label>
+          <label>{LEVELSTATUS[level]}</label>
         </LevelStatusDiv>
       </label>
     )
@@ -31,7 +42,7 @@ const Main = () => {
 
   return (
     <DropdownButton
-      variant="outline-grey-dark"
+      variant="outline-light-grey"
       onSelect={(eventKey: string | null, e?: React.SyntheticEvent<unknown, Event>) =>
         onChange(e?.target as HTMLInputElement)
       }

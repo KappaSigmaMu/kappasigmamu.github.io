@@ -10,7 +10,8 @@ const Theme: DefaultTheme = {
     white: '#FFFFFF',
     black: '#212529',
     grey: '#ced4da',
-    greyDark: '#6c757d',
+    lightGrey: '#6c757d',
+    darkGrey: '#343A40',
   },
 }
 
