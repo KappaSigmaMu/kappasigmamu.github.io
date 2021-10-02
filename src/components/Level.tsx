@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Col, Badge } from 'react-bootstrap'
+import { Badge } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import CanarySvgLevel1 from '../static/canary-level-1.svg'
@@ -31,22 +31,14 @@ const Level = () => {
   const { level } = useAccount()
 
   return (
-    <Col sm={3}>
-      <StyledBadge pill>
-        {LEVELS[level].badge}
-      </StyledBadge>
+    <>
+      <p>
+        <Badge pill>{LEVELS[level].badge}</Badge>
+      </p>
       {LEVELS[level].canary}
-      <UnderlinedH1>{LEVELS[level].name}</UnderlinedH1>
-    </Col>
+      <h1><u>{LEVELS[level].name}</u></h1>
+    </>
   )
 }
-
-const StyledBadge = styled(Badge)`
-  margin-bottom: 16px;
-`
-
-const UnderlinedH1 = styled.h1`
-  text-decoration: underline;
-`
 
 export { Level }

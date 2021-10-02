@@ -1,15 +1,10 @@
 import { ReactElement } from 'react'
-import { Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 
 const NoFocus = styled.h5`
   color: ${(props) => props.theme.colors.lightGrey};
-`
-
-const MarginH5 = styled.h5`
-  margin-bottom: 24px;
 `
 
 const StyledP = styled.p`
@@ -30,34 +25,34 @@ const DefaultLevelNotification  = (
 )
 
 const HumanLevelNotification = (
-  <MarginH5>
+  <h5>
     {DefaultLevelNotification}
-  </MarginH5>
+  </h5>
 )
 
 const BidderLevelNotification = (
-  <MarginH5>
+  <h5>
     Your bid NEEDS to get accepted;<br/>
     <NoFocus>{DefaultLevelNotification}</NoFocus>
-  </MarginH5>
+  </h5>
 )
 
 const CandidateLevelNotification = (
-  <MarginH5>
+  <h5>
     You need to SUBMIT your Proof of Ink;<br/>
     Your Proof of Ink needs to be VOTED;<br/>
     <NoFocus>
       Your bid should be low enough to get accepted;<br/>
       {DefaultLevelNotification}
     </NoFocus>
-  </MarginH5>
+  </h5>
 )
 
 const CyborgLevelNotification = (
   <>
-    <MarginH5>
+    <h5>
       You can enjoy, now.
-    </MarginH5>
+    </h5>
     <Link to="/guide" className="ml-5 btn btn-primary">
       What&apos;s next?
     </Link>
@@ -75,10 +70,10 @@ const LevelNotification = () => {
   const { level } = useAccount()
 
   return (
-    <Col sm={4}>
+    <>
       <StyledP>Level Notification</StyledP>
       {LEVELS[level]}
-    </Col>
+    </>
   )
 }
 

@@ -33,6 +33,10 @@ const GlobalStyle = createGlobalStyle`
     color: #01ffff;
   }
 
+  .navbar-light .navbar-nav .nav-link {
+    color: #01ffff;
+  }
+
   p {
     color: #c4c4c4;
   }
