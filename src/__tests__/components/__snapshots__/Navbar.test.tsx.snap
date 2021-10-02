@@ -5,14 +5,14 @@ exports[`NavBar renders it with showAccount 1`] = `
   className="navbar navbar-expand navbar-light"
 >
   <div
-    className="sc-hKFxyN hEOcyT container"
+    className="sc-gKAaRy cgJggO container"
   >
     <div
       className="navbar-nav"
       onKeyDown={[Function]}
     />
     <div
-      className="sc-eCApnc jZrrMe navbar-nav"
+      className="sc-iCoGMd jjTJr navbar-nav"
       onKeyDown={[Function]}
     >
       <button
@@ -33,7 +33,7 @@ exports[`NavBar renders it with showBrandIcon 1`] = `
   className="navbar navbar-expand navbar-light"
 >
   <div
-    className="sc-hKFxyN hEOcyT container"
+    className="sc-gKAaRy cgJggO container"
   >
     <div
       className="navbar-nav"
@@ -52,7 +52,7 @@ exports[`NavBar renders it with showBrandIcon 1`] = `
       </a>
     </div>
     <div
-      className="sc-eCApnc jZrrMe navbar-nav"
+      className="sc-iCoGMd jjTJr navbar-nav"
       onKeyDown={[Function]}
     />
   </div>
@@ -64,28 +64,22 @@ exports[`NavBar renders it with showGalleryButton 1`] = `
   className="navbar navbar-expand navbar-light"
 >
   <div
-    className="sc-hKFxyN hEOcyT container"
+    className="sc-gKAaRy cgJggO container"
   >
     <div
       className="navbar-nav"
       onKeyDown={[Function]}
     />
     <div
-      className="sc-eCApnc jZrrMe navbar-nav"
+      className="sc-iCoGMd jjTJr navbar-nav"
       onKeyDown={[Function]}
     >
       <a
-        className="btn btn-link"
-        href="/gallery"
+        className="nav-link"
+        data-rr-ui-event-key={null}
+        disabled={false}
+        href="/home/bids"
         onClick={[Function]}
-        onKeyDown={[Function]}
-        role="button"
-        style={
-          Object {
-            "color": "#01ffff",
-          }
-        }
-        tabIndex={0}
       >
         Gallery
       </a>
@@ -99,19 +93,20 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
   className="navbar navbar-expand navbar-light"
 >
   <div
-    className="sc-hKFxyN hEOcyT container"
+    className="sc-gKAaRy cgJggO container"
   >
     <div
       className="navbar-nav"
       onKeyDown={[Function]}
     />
     <div
-      className="sc-eCApnc jZrrMe navbar-nav"
+      className="sc-iCoGMd jjTJr navbar-nav"
       onKeyDown={[Function]}
     >
       <a
-        className="navbar-brand"
+        className="sc-hKFxyN"
         href="https://discord.gg/9AWjTf8wSk"
+        rel="noreferrer"
         target="_blank"
       >
         <img
@@ -119,24 +114,33 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
           src="discord-logo.svg"
         />
       </a>
-      <span
-        className="navbar-brand"
-        href=""
+       
+      <a
+        className="sc-hKFxyN"
+        href="https://matrix.to/#/!BUmiAAnAYSRGarqwOt:matrix.parity.io?via=matrix.parity.io"
+        rel="noreferrer"
         target="_blank"
       >
         <img
-          alt="Discord Logo"
+          alt="Element Logo"
           src="element-logo.svg"
         />
-      </span>
+      </a>
+       
       <a
-        className="navbar-brand"
+        className="sc-hKFxyN"
         href="https://twitter.com/network"
+        rel="noreferrer"
         target="_blank"
       >
         <img
           alt="Twitter Logo"
           src="twitter-logo.svg"
+          style={
+            Object {
+              "color": "red",
+            }
+          }
         />
       </a>
     </div>

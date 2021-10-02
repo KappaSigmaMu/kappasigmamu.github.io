@@ -42,7 +42,7 @@ const Main = () => {
             <LandingPage activeAccount={activeAccount} />
           </>
         }/>
-        <Route path="/cyborg-guide" element={
+        <Route path="/guide" element={
           <>
             <Navbar showSocialIcons showGalleryButton {...defaultNavbarProps} />
             <CyborgGuide />
