@@ -14,7 +14,7 @@ const Navbar = ({
 }: NavRouteProps) => (
   <RBNavbar className="mt-4">
     <Container>
-      {showBrandIcon ? <NavbarBrand /> : <></>}
+      <Nav>{showBrandIcon ? <NavbarBrand /> : <></>}</Nav>
       <Nav className="align-items-center align-self-center">
         {showGalleryButton ? <Nav.Link to="/home/bids" as={Link}>Gallery</Nav.Link> : <></>}
         &nbsp;

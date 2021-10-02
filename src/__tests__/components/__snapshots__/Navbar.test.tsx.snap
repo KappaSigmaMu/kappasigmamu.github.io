@@ -8,6 +8,10 @@ exports[`NavBar renders it with showAccount 1`] = `
     className="container"
   >
     <div
+      className="navbar-nav"
+      onKeyDown={[Function]}
+    />
+    <div
       className="align-items-center align-self-center navbar-nav"
       onKeyDown={[Function]}
     >
@@ -33,17 +37,22 @@ exports[`NavBar renders it with showBrandIcon 1`] = `
   <div
     className="container"
   >
-    <a
-      className="navbar-brand"
-      href="/"
-      onClick={[Function]}
+    <div
+      className="navbar-nav"
+      onKeyDown={[Function]}
     >
-      <img
-        alt="KappaSigmaMu Logo"
-        src="kappa-sigma-mu-logo.svg"
-        width={90}
-      />
-    </a>
+      <a
+        className="navbar-brand"
+        href="/"
+        onClick={[Function]}
+      >
+        <img
+          alt="KappaSigmaMu Logo"
+          src="kappa-sigma-mu-logo.svg"
+          width={90}
+        />
+      </a>
+    </div>
     <div
       className="align-items-center align-self-center navbar-nav"
       onKeyDown={[Function]}
@@ -62,6 +71,10 @@ exports[`NavBar renders it with showGalleryButton 1`] = `
   <div
     className="container"
   >
+    <div
+      className="navbar-nav"
+      onKeyDown={[Function]}
+    />
     <div
       className="align-items-center align-self-center navbar-nav"
       onKeyDown={[Function]}
@@ -89,6 +102,10 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
   <div
     className="container"
   >
+    <div
+      className="navbar-nav"
+      onKeyDown={[Function]}
+    />
     <div
       className="align-items-center align-self-center navbar-nav"
       onKeyDown={[Function]}
