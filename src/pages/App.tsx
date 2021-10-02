@@ -22,40 +22,36 @@ const Main = () => {
   if (apiState === 'ERROR') return loader(`${JSON.stringify(apiError, null, 4)}`)
   if (apiState !== 'READY') return loader('Connecting')
 
-  const defaultNavbarProps = {
-    showAccount: true,
-  }
-
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={
           <>
-            <Navbar showSocialIcons {...defaultNavbarProps} />
+            <Navbar showSocialIcons showAccount />
             <LandingPage />
           </>
         }/>
         <Route path="/cyborg-guide" element={
           <>
-            <Navbar showSocialIcons showGalleryButton {...defaultNavbarProps} />
+            <Navbar showSocialIcons showGalleryButton showAccount />
             <CyborgGuide />
           </>
         }/>
         <Route path="/welcome" element={
           <>
-            <Navbar showBrandIcon showGalleryButton {...defaultNavbarProps} />
+            <Navbar showBrandIcon showGalleryButton showAccount />
             <Welcome />
           </>
         }/>
         <Route path="/home" element={
           <>
-            <Navbar showBrandIcon showGalleryButton {...defaultNavbarProps} />
+            <Navbar showBrandIcon showGalleryButton showAccount />
             <Home />
           </>
         }/>
         <Route path="/home/bids" element={
           <>
-            <Navbar showBrandIcon showGalleryButton {...defaultNavbarProps} />
+            <Navbar showBrandIcon showGalleryButton showAccount />
             <Bids />
           </>
         }/>
