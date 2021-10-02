@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 import { Col, Button } from 'react-bootstrap'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 const MarginH5 = styled.h5`
   margin-bottom: 24px;
@@ -21,8 +22,13 @@ interface LevelsType {
 const HUMAN = (
   <>
     <MarginH5>To become a Candidate you need to level up;<br/>To level up you must first Submit a Bid.</MarginH5>
-    <MarginButton variant="outline-grey-dark">Bid Rules</MarginButton>
-    <Button>Submit a Bid</Button>
+    <Link to="/guide" className="btn btn-outline-grey-dark">
+      Bid Rules
+    </Link>
+    &nbsp;&nbsp;
+    <Link to="/guide" className="ml-5 btn btn-primary">
+      Submit a Bid
+    </Link>
   </>
 )
 

@@ -23,7 +23,7 @@ const Navbar = ({
     <NavbarContainer>
       <Nav>{showBrandIcon ? <NavbarBrand /> : <></>}</Nav>
       <CenterNav>
-        {showGalleryButton ? <NavbarGallery /> : <></>}
+        {showGalleryButton ? <Nav.Link to="/home/bids" as={Link}>Gallery</Nav.Link> : <></>}
         {showSocialIcons ? <SocialIcons /> : <></>}
         {showAccount ?
           <AccountNavbar
@@ -41,10 +41,6 @@ const NavbarBrand = () => (
   <BNavbar.Brand as={Link} to="/">
     <img width={90} src={KappaSigmaMu} alt="KappaSigmaMu Logo" />
   </BNavbar.Brand>
-)
-
-const NavbarGallery = () => (
-  <Button variant="link" href="/gallery" style={{ color: '#01ffff' }}>Gallery</Button>
 )
 
 const AccountNavbar = ({ accounts, activeAccount, setAccounts, setActiveAccount }: NavRouteProps) => (
