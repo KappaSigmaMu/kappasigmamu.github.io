@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Sidebar with bids selected 1`] = `
+<ul
+  className="sc-bdnxRM eXPXqY"
+>
+  <li>
+    <a
+      className=""
+      href="/home/bids"
+      onClick={[Function]}
+      style={
+        Object {
+          "color": "#707070",
+          "fontSize": 16,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
+        }
+      }
+    >
+      Bids
+    </a>
+  </li>
+  <li>
+    <a
+      className=""
+      href="/home/members"
+      onClick={[Function]}
+      style={
+        Object {
+          "color": "#707070",
+          "fontSize": 16,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
+        }
+      }
+    >
+      Members
+    </a>
+  </li>
+  <li>
+    <a
+      className=""
+      href="/home/candidates"
+      onClick={[Function]}
+      style={
+        Object {
+          "color": "#707070",
+          "fontSize": 16,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
+        }
+      }
+    >
+      Candidates
+    </a>
+  </li>
+  <li>
+    <a
+      className=""
+      href="/home/suspended"
+      onClick={[Function]}
+      style={
+        Object {
+          "color": "#707070",
+          "fontSize": 16,
+          "fontWeight": 700,
+          "lineHeight": 2,
+          "textDecoration": "none",
+        }
+      }
+    >
+      Suspended
+    </a>
+  </li>
+</ul>
+`;

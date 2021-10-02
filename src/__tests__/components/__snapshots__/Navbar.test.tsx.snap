@@ -80,6 +80,11 @@ exports[`NavBar renders it with showGalleryButton 1`] = `
         onClick={[Function]}
         onKeyDown={[Function]}
         role="button"
+        style={
+          Object {
+            "color": "#01ffff",
+          }
+        }
         tabIndex={0}
       >
         Gallery
