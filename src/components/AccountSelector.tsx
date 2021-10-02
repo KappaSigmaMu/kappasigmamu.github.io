@@ -26,11 +26,7 @@ const Main = () => {
     const { level } = useAccount()
 
     return (
-      <label
-        style={{
-          fontSize: '12px',
-        }}
-      >
+      <label style={{ fontSize: '12px' }}>
         <SelectedAccountDiv>{activeAccount}</SelectedAccountDiv>
         <LevelStatusDiv>
           <label>JOURNEY: {level.toUpperCase()}</label>
@@ -41,7 +37,7 @@ const Main = () => {
   }
 
   return (
-    <DropdownButton
+    <StyledDropdownButton
       variant="outline-light-grey"
       onSelect={(eventKey: string | null, e?: React.SyntheticEvent<unknown, Event>) =>
         onChange(e?.target as HTMLInputElement)
@@ -53,7 +49,7 @@ const Main = () => {
           {option.address}
         </Dropdown.Item>
       ))}
-    </DropdownButton>
+    </StyledDropdownButton>
   )
 }
 
@@ -74,6 +70,12 @@ const LevelStatusDiv = styled.div`
 
 const SelectedAccountDiv = styled.div`
   color: ${(props) => props.theme.colors.primary};
+`
+
+const StyledDropdownButton = styled(DropdownButton)`
+  & ::after {
+    margin-bottom: 16px;
+  }
 `
 
 export { AccountSelector }
