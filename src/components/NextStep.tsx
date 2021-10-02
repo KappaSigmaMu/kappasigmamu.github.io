@@ -1,16 +1,7 @@
 import { ReactElement } from 'react'
-import { Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
-
-const MarginH5 = styled.h5`
-  margin-bottom: 24px;
-`
-
-const StyledP = styled.p`
-  color: ${(props) => props.theme.colors.greyDark};
-`
 
 interface LevelsType {
   [key: string]: ReactElement
@@ -18,7 +9,11 @@ interface LevelsType {
 
 const HUMAN = (
   <>
-    <MarginH5>To become a Candidate you need to level up;<br/>To level up you must first Submit a Bid.</MarginH5>
+    <h5 className="mb-4">
+      To become a Candidate you need to level up;
+      <br/>
+      To level up you must first Submit a Bid.
+    </h5>
     <Link to="/guide" className="btn btn-outline-grey-dark">
       Bid Rules
     </Link>
@@ -52,11 +47,15 @@ const NextStep = () => {
   const { level } = useAccount()
 
   return (
-    <Col sm={5}>
+    <>
       <StyledP>Next Step</StyledP>
       {LEVELS[level]}
-    </Col>
+    </>
   )
 }
+
+const StyledP = styled.p`
+  color: ${(props) => props.theme.colors.greyDark};
+`
 
 export { NextStep }

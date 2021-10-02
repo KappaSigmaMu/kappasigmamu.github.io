@@ -1,14 +1,10 @@
 import { ReactElement } from 'react'
-import { Button, Col } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 
 const NoFocus = styled.h5`
   color: ${(props) => props.theme.colors.greyDark};
-`
-
-const MarginH5 = styled.h5`
-  margin-bottom: 24px;
 `
 
 const StyledP = styled.p`
@@ -64,10 +60,10 @@ const LevelNotification = () => {
   const { level } = useAccount()
 
   return (
-    <Col sm={4}>
+    <>
       <StyledP>Level Notification</StyledP>
-      <MarginH5>{LEVELS[level]}</MarginH5>
-    </Col>
+      <h5>{LEVELS[level]}</h5>
+    </>
   )
 }
 
