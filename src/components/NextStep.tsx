@@ -32,25 +32,43 @@ const HumanNextStep = (
 const BidderNextStep = (
   <>
     <MarginH5>To become a Candidate your bid must fit the parameters.</MarginH5>
-    <MarginButton variant="outline-light-grey">Bid Rules</MarginButton>
-    <Button>Check Bids</Button>
+    <Link to="/guide" className="btn btn-outline-grey-dark">
+      Bid Rules
+    </Link>
+    &nbsp;&nbsp;
+    <Link to="/home/bids" className="ml-5 btn btn-primary">
+      Check Bids
+    </Link>
   </>
 )
 
 const CandidateNextStep = (
   <>
     <MarginH5>To become a Cyborg you need to submit the Proof of Ink.</MarginH5>
-    <MarginButton variant="outline-light-grey" disabled>Proof of Ink (PoI) Rules</MarginButton>
-    <MarginButton variant="outline-light-grey" disabled>Ink Art</MarginButton>
-    <Button>Submit Proof of Ink</Button>
+    <Link to="/guide" className="btn btn-outline-grey-dark">
+      Proof of Ink (PoI) Rules
+    </Link>
+    &nbsp;&nbsp;
+    <Link to="/guide" className="btn btn-outline-grey-dark">
+      Ink Art
+    </Link>
+    &nbsp;&nbsp;
+    <Link to="/home/bids" className="ml-5 btn btn-primary">
+      Submit Proof of Ink
+    </Link>
   </>
 )
 
 const CyborgNextStep = (
   <>
     <MarginH5>Enjoy</MarginH5>
-    <MarginButton variant="outline-light-grey" disabled>Vouch Bid</MarginButton>
-    <Button disabled>Vote on Candiadates</Button>
+    <Link to="/home/bids" className="btn btn-outline-grey-dark">
+      Vouch Bid
+    </Link>
+    &nbsp;&nbsp;
+    <Link to="/home/bids" className="ml-5 btn btn-primary">
+      Vote on Candiadates
+    </Link>
   </>
 )
 

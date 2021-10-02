@@ -1,5 +1,6 @@
 import { ReactElement } from 'react'
-import { Button, Col } from 'react-bootstrap'
+import { Col } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 
@@ -57,7 +58,9 @@ const CyborgLevelNotification = (
     <MarginH5>
       You can enjoy, now.
     </MarginH5>
-    <Button disabled>What&apos;s next?</Button>
+    <Link to="/guide" className="ml-5 btn btn-primary">
+      What&apos;s next?
+    </Link>
   </>
 )
 
