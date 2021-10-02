@@ -31,7 +31,7 @@ const Main = () => {
             <LandingPage />
           </>
         }/>
-        <Route path="/cyborg-guide" element={
+        <Route path="/guide" element={
           <>
             <Navbar showSocialIcons showGalleryButton showAccount />
             <CyborgGuide />

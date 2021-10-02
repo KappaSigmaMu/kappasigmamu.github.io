@@ -4,7 +4,7 @@ import { Sidebar } from '../../components/Sidebar'
 
 test('renders Sidebar with bids selected', () => {
     const tree = TestRenderer.create(
-      <MemoryRouter initialEntries={["/human/bids"]}>
+      <MemoryRouter initialEntries={["/home/bids"]}>
         <Sidebar />
       </MemoryRouter>
     )

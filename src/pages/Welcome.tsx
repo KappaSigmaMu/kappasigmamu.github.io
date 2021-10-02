@@ -1,4 +1,5 @@
-import { Button, Container, Row, Col, Badge } from 'react-bootstrap'
+import { Container, Row, Col, Badge } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Level } from '../components/Level'
 import { SocialIcons } from '../components/SocialIcons'
@@ -25,14 +26,19 @@ const Welcome = (): JSX.Element => {
             <Col>
               <h4>CHECK THE GAME GUIDE</h4>
               <SizeP>Learn how to become a Cyborg</SizeP>
-              <Button variant="outline-secondary">
+              <Link to="/guide" className="btn btn-outline-secondary" role="button">
                 Cyborg Guide
-                <PaddingMapIcon src={MapIcon} alt="Map Icon" />
-              </Button>
+                &nbsp;&nbsp;
+                <span className="btn-label">
+                  <img src={MapIcon} alt="Map Icon" />
+                </span>
+              </Link>
             </Col>
           </Row>
 
-          <CenterButton variant="primary" href="/human">Begin Journey</CenterButton>
+          <Link to="/home" className="btn btn-primary" role="button">
+            Begin Journey
+          </Link>
         </StyledContainer>
       </StyledDiv>
     </>
@@ -45,11 +51,6 @@ const SizeP = styled.p`
 
 const MarginH1 = styled.h1`
   margin-bottom: 45px;
-`
-
-const CenterButton = styled(Button)`
-  margin: auto;
-  margin-top: 80px;
 `
 
 const StyledDiv = styled.div`
@@ -79,10 +80,6 @@ const LevelContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-`
-
-const PaddingMapIcon = styled.img`
-  padding-left: 5px;
 `
 
 export { Welcome }
