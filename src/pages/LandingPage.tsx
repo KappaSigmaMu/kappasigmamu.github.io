@@ -42,7 +42,7 @@ const LandingPage = () => {
       <FullPageHeightRow>
         <Col xs={6}>
           <ThreeCanary
-              objectUrl={`../static/canary.glb`}
+              objectUrl={`./static/canary.glb`}
               nodes={nodesData}
           />
         </Col>
