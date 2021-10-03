@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dropdown, DropdownButton } from 'react-bootstrap'
+import { Dropdown, DropdownButton, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { useSubstrate } from '../substrate'
@@ -56,7 +56,8 @@ const Main = () => {
 
 const AccountSelector = () => {
   const { api } = useSubstrate()
-  return api?.query ? <Main /> : null
+  const loading = !api?.query
+  return loading ? <Spinner animation="border" variant="primary" /> : <Main />
 }
 
 const LevelStatusDiv = styled.div`

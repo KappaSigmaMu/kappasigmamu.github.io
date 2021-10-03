@@ -5,13 +5,15 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate'
 
 const storedActiveAccount = localStorage.getItem("activeAccount") || ''
+// eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+const storedAccounts = JSON.parse(localStorage.getItem("accounts")!) || []
 
 const INIT_STATE = {
   activeAccount: storedActiveAccount,
   setActiveAccount: () => ({}),
-  accounts: [],
+  accounts: storedAccounts,
   setAccounts: () => ({}),
-  level: 'human',
+  level: 'human'
 }
 
 type StateType = {
@@ -27,7 +29,7 @@ const AccountContext = React.createContext<StateType>(INIT_STATE)
 const AccountContextProvider = ({ children } : any) => {
   const { api } = useSubstrate()
   const [activeAccount, setActiveAccount] = useState<string>(storedActiveAccount)
-  const [accounts, setAccounts] = useState<{ name: string | undefined; address: string }[]>([])
+  const [accounts, setAccounts] = useState<{ name: string | undefined; address: string }[]>(storedAccounts)
   const [level, setLevel] = useState("human")
 
   useEffect(() => {
