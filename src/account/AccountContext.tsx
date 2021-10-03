@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useSubstrate } from '../substrate'
 
 const storedActiveAccount = localStorage.getItem("activeAccount") || ''
+// eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
 const storedAccounts = JSON.parse(localStorage.getItem("accounts")!) || []
 
 const INIT_STATE = {

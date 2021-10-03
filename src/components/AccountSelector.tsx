@@ -1,9 +1,8 @@
 import React from 'react'
-import { Dropdown, DropdownButton } from 'react-bootstrap'
+import { Dropdown, DropdownButton, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { useSubstrate } from '../substrate'
-import Spinner from 'react-bootstrap/Spinner'
 
 interface LevelStatusType {
   [key: string]: string
