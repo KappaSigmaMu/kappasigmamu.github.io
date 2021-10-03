@@ -24,6 +24,8 @@ const fetchAccounts = (
 
       setAccounts(accounts)
       setActiveAccount(accounts[0].address)
+
+      localStorage.setItem("accounts", JSON.stringify(accounts))
       localStorage.setItem("activeAccount", accounts[0].address)
     } catch (e) {
       console.error(e)
