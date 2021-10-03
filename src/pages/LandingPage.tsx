@@ -15,7 +15,7 @@ const LandingPage = () => {
     if (!activeAccount) {
       fetchAccounts(setAccounts, setActiveAccount)
     }
-    navigate('/welcome')
+    navigate('/cyborg-guide')
   }
 
   return (
