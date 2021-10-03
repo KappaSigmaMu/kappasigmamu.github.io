@@ -5,10 +5,18 @@ import { useAccount } from '../account/AccountContext'
 import { PrimaryLgButton } from '../components/base'
 import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
+import { fetchAccounts } from '../helpers/fetchAccounts'
 
 const LandingPage = () => {
-  const { activeAccount } = useAccount()
   const navigate = useNavigate()
+  const { activeAccount, setActiveAccount, setAccounts } = useAccount()
+
+  const handlePrimaryButtonClick = () => {
+    if (!activeAccount) {
+      fetchAccounts(setAccounts, setActiveAccount)
+    }
+    navigate('/welcome')
+  }
 
   return (
     <>
@@ -20,7 +28,7 @@ const LandingPage = () => {
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <p>
-            <PrimaryLgButton disabled={!activeAccount} onClick={() => { navigate('/welcome') }}>
+            <PrimaryLgButton onClick={handlePrimaryButtonClick}>
               Become a Cyborg
             </PrimaryLgButton>
           </p>
