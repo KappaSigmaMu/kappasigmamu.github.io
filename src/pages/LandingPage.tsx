@@ -4,8 +4,8 @@ import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { PrimaryLgButton } from '../components/base'
 import Canary from '../static/canary.svg'
-import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 import { fetchAccounts } from '../helpers/fetchAccounts'
+import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
 const LandingPage = () => {
   const navigate = useNavigate()
