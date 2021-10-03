@@ -20,6 +20,7 @@ const Main = () => {
 
   const onChange = (account: HTMLInputElement) => {
     setActiveAccount(account.innerText)
+    localStorage.setItem("activeAccount", account.innerText)
   }
 
   const Title = () => {
