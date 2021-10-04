@@ -30,7 +30,7 @@ const Main = () => {
       <label style={{ fontSize: '12px' }}>
         <SelectedAccountDiv className="text-start mb-1">{activeAccount}</SelectedAccountDiv>
         <LevelStatusDiv>
-          <label className="pr-4">JOURNEY: {level.toUpperCase()}</label>
+          <label style={{ paddingRight: '20px' }}>JOURNEY: {level.toUpperCase()}</label>
           <label>{LEVELSTATUS[level]}</label>
         </LevelStatusDiv>
       </label>
