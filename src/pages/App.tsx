@@ -3,9 +3,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { AccountContextProvider } from '../account/AccountContext'
 import { Navbar } from '../components/Navbar'
+import { KusamaContextProvider } from '../kusama'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
-import { SubstrateContextProvider } from '../substrate'
 import { CyborgGuide } from './CyborgGuide'
 import { Bids } from './home/Bids'
 import { Home } from './home/Home'
@@ -54,7 +54,7 @@ const Main = () => {
 const App = () => (
   <>
     <GlobalStyle />
-    <SubstrateContextProvider>
+    <KusamaContextProvider>
       <AccountContextProvider>
         <ThemeProvider theme={Theme}>
           <GlobalStyle />
@@ -63,7 +63,7 @@ const App = () => (
             </Suspense>
         </ThemeProvider>
       </AccountContextProvider>
-    </SubstrateContextProvider>
+    </KusamaContextProvider>
   </>
 )
 

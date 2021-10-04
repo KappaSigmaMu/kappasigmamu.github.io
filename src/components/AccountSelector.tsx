@@ -2,7 +2,7 @@ import React from 'react'
 import { Dropdown, DropdownButton, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
-import { useSubstrate } from '../substrate'
+import { useKusama } from '../kusama'
 
 interface LevelStatusType {
   [key: string]: string
@@ -28,9 +28,9 @@ const Main = () => {
 
     return (
       <label style={{ fontSize: '12px' }}>
-        <SelectedAccountDiv>{activeAccount}</SelectedAccountDiv>
+        <SelectedAccountDiv className="text-start mb-1">{activeAccount}</SelectedAccountDiv>
         <LevelStatusDiv>
-          <label>JOURNEY: {level.toUpperCase()}</label>
+          <label className="pe-3">JOURNEY: {level.toUpperCase()}</label>
           <label>{LEVELSTATUS[level]}</label>
         </LevelStatusDiv>
       </label>
@@ -47,7 +47,7 @@ const Main = () => {
     >
       {accounts.map((option: { name: string | undefined; address: string }) => (
         <Dropdown.Item style={{ fontSize: '12px' }} eventKey={option.address} key={option.address} href="#">
-          {option.address}
+          {option.name ? option.name : option.address}
         </Dropdown.Item>
       ))}
     </StyledDropdownButton>
@@ -55,7 +55,7 @@ const Main = () => {
 }
 
 const AccountSelector = () => {
-  const { api } = useSubstrate()
+  const { api } = useKusama()
   const loading = !api?.query
   return loading ? <Spinner animation="border" variant="primary" /> : <Main />
 }
@@ -75,6 +75,7 @@ const SelectedAccountDiv = styled.div`
 `
 
 const StyledDropdownButton = styled(DropdownButton)`
+  background-color: ${(props) => props.theme.colors.darkGrey};
   & ::after {
     margin-bottom: 16px;
   }

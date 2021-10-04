@@ -64,16 +64,16 @@ function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
   api.on('ready', () => dispatch({ type: 'READY' }))
 }
 
-const SubstrateContext = React.createContext<StateType>(INIT_STATE)
+const KusamaContext = React.createContext<StateType>(INIT_STATE)
 
-function SubstrateContextProvider(props: { children: JSX.Element }) {
+function KusamaContextProvider(props: { children: JSX.Element }) {
   const [state, dispatch] = useReducer(reducer, INIT_STATE)
 
   connect(state, dispatch)
 
-  return <SubstrateContext.Provider value={state}>{props.children}</SubstrateContext.Provider>
+  return <KusamaContext.Provider value={state}>{props.children}</KusamaContext.Provider>
 }
 
-const useSubstrate = () => ({ ...useContext(SubstrateContext) })
+const useKusama = () => ({ ...useContext(KusamaContext) })
 
-export { SubstrateContextProvider, useSubstrate }
+export { KusamaContextProvider, useKusama }
