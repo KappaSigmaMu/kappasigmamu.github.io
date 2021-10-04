@@ -1,8 +1,8 @@
 import Identicon from '@polkadot/react-identicon'
 import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { truncateAccountId } from '../helpers/accountId'
 import { humanizeBidKind, humanizeBidValue } from '../helpers/humanize'
+import { truncateMiddle } from '../helpers/truncate'
 
 const Header = () => (
   <StyledHeaderRow>
@@ -19,7 +19,7 @@ const DataRow = ({ bid }: { bid: any }) => (
       <Identicon value={bid.who} size={32} theme={'polkadot'} />
     </Col>
     <Col xs={4} className="text-start text-truncate">
-      {truncateAccountId(bid.who?.toString())}
+      {truncateMiddle(bid.who?.toString())}
     </Col>
     <Col xs={5} className="text-start text-truncate">
       {humanizeBidKind(bid.kind)}
