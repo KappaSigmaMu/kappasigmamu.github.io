@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { useBlockTime } from '../hooks/useBlockTime'
 import { useConsts } from '../hooks/useConsts'
-import { useSubstrate } from '../substrate'
+import { useKusama } from '../kusama'
 
 const Circle = ({ active = false }: { active?: boolean }): JSX.Element => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -67,7 +67,7 @@ const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element =>
 )
 
 const CurrentRoundRow = () => {
-  const { api } = useSubstrate()
+  const { api } = useKusama()
   const { activeAccount } = useAccount()
   const { maxStrikes } = useConsts()
   const [currentBlock, setCurrentBlock] = useState<number>(0)

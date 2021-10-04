@@ -3,7 +3,7 @@
 
 import type { BalanceOf, BlockNumber, u32, PalletId } from '@polkadot/api'
 import { useMemo } from 'react'
-import { useSubstrate } from '../substrate'
+import { useKusama } from '../kusama'
 
 type SocietyConsts = {
   candidateDeposit: BalanceOf
@@ -17,7 +17,7 @@ type SocietyConsts = {
 }
 
 export function useConsts(): SocietyConsts {
-  const { api } = useSubstrate()
+  const { api } = useKusama()
 
   return useMemo((): SocietyConsts => {
     const candidateDeposit: BalanceOf = api.consts.society.candidateDeposit

@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react'
 import { Container, Col, Row } from 'react-bootstrap'
 import { BidsList } from '../../../components/BidsList'
 import { Sidebar } from '../../../components/Sidebar'
-import { useSubstrate } from '../../../substrate'
+import { useKusama } from '../../../kusama'
 
 const Page = (): JSX.Element => {
-  const { api } = useSubstrate()
+  const { api } = useKusama()
   const [bids, setBids] = useState<Vec<PalletSocietyBid> | []>([])
 
   useEffect(() => {

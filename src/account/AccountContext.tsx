@@ -2,11 +2,11 @@ import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
 import React, { useContext, useEffect, useState } from 'react'
-import { useSubstrate } from '../substrate'
+import { useKusama } from '../kusama'
 
-const storedActiveAccount = localStorage.getItem("activeAccount") || ''
+const storedActiveAccount = localStorage.getItem('activeAccount') || ''
 // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-const storedAccounts = JSON.parse(localStorage.getItem("accounts")!) || []
+const storedAccounts = JSON.parse(localStorage.getItem('accounts')!) || []
 
 const INIT_STATE = {
   activeAccount: storedActiveAccount,
@@ -27,10 +27,10 @@ type StateType = {
 const AccountContext = React.createContext<StateType>(INIT_STATE)
 
 const AccountContextProvider = ({ children } : any) => {
-  const { api } = useSubstrate()
+  const { api } = useKusama()
   const [activeAccount, setActiveAccount] = useState<string>(storedActiveAccount)
   const [accounts, setAccounts] = useState<{ name: string | undefined; address: string }[]>(storedAccounts)
-  const [level, setLevel] = useState("human")
+  const [level, setLevel] = useState('human')
 
   useEffect(() => {
     const setLevelCheckingAccounts = (accounts: AccountId32[], level: string) => {
@@ -43,15 +43,15 @@ const AccountContextProvider = ({ children } : any) => {
 
     if (api) {
       api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
-        setLevelCheckingAccounts(response.map(account => account.who), "bidder")
+        setLevelCheckingAccounts(response.map(account => account.who), 'bidder')
       })
 
       api.query.society.candidates().then((response: Vec<PalletSocietyBid>) => {
-        setLevelCheckingAccounts(response.map(account => account.who), "candidate")
+        setLevelCheckingAccounts(response.map(account => account.who), 'candidate')
       })
 
       api.query.society.members().then((response: Vec<AccountId32>) => {
-        setLevelCheckingAccounts(response, "cyborg")
+        setLevelCheckingAccounts(response, 'cyborg')
       })
     }
   }, [activeAccount])

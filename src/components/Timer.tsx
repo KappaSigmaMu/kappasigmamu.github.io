@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useBlockTime } from '../hooks/useBlockTime'
-import { useSubstrate } from '../substrate'
+import { useKusama } from '../kusama'
 
 function Timer() {
-  const { api } = useSubstrate()
+  const { api } = useKusama()
   const [currentBlock, setCurrentBlock] = useState<number>(0)
   const [rotationPeriod, setRotationPeriod] = useState<number>(0)
 

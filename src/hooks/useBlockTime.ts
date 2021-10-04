@@ -5,7 +5,7 @@ import type { ApiPromise } from '@polkadot/api'
 import { BN, BN_ONE, BN_THOUSAND, BN_TWO, bnToBn, extractTime } from '@polkadot/util'
 import type { Time } from '@polkadot/util/types'
 import { useMemo } from 'react'
-import { useSubstrate } from '../substrate'
+import { useKusama } from '../kusama'
 
 type Result = [number, string, Time]
 
@@ -14,7 +14,7 @@ const DEFAULT_TIME = new BN(6_000)
 const THRESHOLD = BN_THOUSAND
 
 export function useBlockTime(blocks: number | BN = BN_ONE, apiOverride?: ApiPromise | null): Result {
-  const { api } = useSubstrate()
+  const { api } = useKusama()
 
   return useMemo((): Result => {
     const a = apiOverride || api

@@ -2,7 +2,7 @@ import React from 'react'
 import { Dropdown, DropdownButton, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
-import { useSubstrate } from '../substrate'
+import { useKusama } from '../kusama'
 
 interface LevelStatusType {
   [key: string]: string
@@ -55,7 +55,7 @@ const Main = () => {
 }
 
 const AccountSelector = () => {
-  const { api } = useSubstrate()
+  const { api } = useKusama()
   const loading = !api?.query
   return loading ? <Spinner animation="border" variant="primary" /> : <Main />
 }
