@@ -30,7 +30,7 @@ const Main = () => {
       <label style={{ fontSize: '12px' }}>
         <SelectedAccountDiv>{activeAccount}</SelectedAccountDiv>
         <LevelStatusDiv>
-          <label>JOURNEY: {level.toUpperCase()}</label>
+          <StyledLevel>JOURNEY: {level.toUpperCase()}</StyledLevel>
           <label>{LEVELSTATUS[level]}</label>
         </LevelStatusDiv>
       </label>
@@ -47,7 +47,7 @@ const Main = () => {
     >
       {accounts.map((option: { name: string | undefined; address: string }) => (
         <Dropdown.Item style={{ fontSize: '12px' }} eventKey={option.address} key={option.address} href="#">
-          {option.address}
+          {option.name ? option.name : option.address}
         </Dropdown.Item>
       ))}
     </StyledDropdownButton>
@@ -59,6 +59,10 @@ const AccountSelector = () => {
   const loading = !api?.query
   return loading ? <Spinner animation="border" variant="primary" /> : <Main />
 }
+
+const StyledLevel = styled.label`
+  padding-right: 20px;
+`
 
 const LevelStatusDiv = styled.div`
   display: flex;
@@ -72,9 +76,12 @@ const LevelStatusDiv = styled.div`
 
 const SelectedAccountDiv = styled.div`
   color: ${(props) => props.theme.colors.primary};
+  margin-bottom: 5px;
+  text-align: start;
 `
 
 const StyledDropdownButton = styled(DropdownButton)`
+  background-color: ${(props) => props.theme.colors.darkGrey};
   & ::after {
     margin-bottom: 16px;
   }
