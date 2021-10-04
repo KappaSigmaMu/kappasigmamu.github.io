@@ -28,9 +28,9 @@ const Main = () => {
 
     return (
       <label style={{ fontSize: '12px' }}>
-        <SelectedAccountDiv>{activeAccount}</SelectedAccountDiv>
+        <SelectedAccountDiv className="text-start mb-1">{activeAccount}</SelectedAccountDiv>
         <LevelStatusDiv>
-          <StyledLevel>JOURNEY: {level.toUpperCase()}</StyledLevel>
+          <label className="pr-4">JOURNEY: {level.toUpperCase()}</label>
           <label>{LEVELSTATUS[level]}</label>
         </LevelStatusDiv>
       </label>
@@ -60,10 +60,6 @@ const AccountSelector = () => {
   return loading ? <Spinner animation="border" variant="primary" /> : <Main />
 }
 
-const StyledLevel = styled.label`
-  padding-right: 20px;
-`
-
 const LevelStatusDiv = styled.div`
   display: flex;
   justify-content: space-between;
@@ -76,8 +72,6 @@ const LevelStatusDiv = styled.div`
 
 const SelectedAccountDiv = styled.div`
   color: ${(props) => props.theme.colors.primary};
-  margin-bottom: 5px;
-  text-align: start;
 `
 
 const StyledDropdownButton = styled(DropdownButton)`
