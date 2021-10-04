@@ -1538,6 +1538,13 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
+"@kappasigmamu/canary-component@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@kappasigmamu/canary-component/-/canary-component-0.1.1.tgz#678e5ea94971a06f9e096d9288adef7a97628bdc"
+  integrity sha512-YLOBD0JmsfzOQnxJKBI2Xed+KI8tcKVBFjxyikkog6O7BarPOgiApMfK/TQQXi/aCPgADJphGCKNEGzbKS3cIQ==
+  dependencies:
+    three "0.132.2"
+
 "@ledgerhq/devices@^6.7.0":
   version "6.7.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-6.7.0.tgz#90e8fef16e6d039dec64e8a7f1874031578e1973"
@@ -4023,12 +4030,6 @@ camelize@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/camelize/-/camelize-1.0.0.tgz#164a5483e630fa4321e5af07020e531831b2609b"
   integrity sha1-FkpUg+Yw+kMh5a8HAg5TGDGyYJs=
-
-"canary-component@github:KappaSigmaMu/canary-component":
-  version "1.0.0"
-  resolved "https://codeload.github.com/KappaSigmaMu/canary-component/tar.gz/a0fe8df3113ed8a2a5c08f876199d89dfa7d6b56"
-  dependencies:
-    three "0.132.2"
 
 caniuse-api@^3.0.0:
   version "3.0.0"

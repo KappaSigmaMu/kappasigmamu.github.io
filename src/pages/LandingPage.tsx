@@ -1,4 +1,4 @@
-import ThreeCanary from "canary-component"
+import ThreeCanary from "@kappasigmamu/canary-component"
 import { Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
