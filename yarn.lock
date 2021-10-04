@@ -4026,7 +4026,7 @@ camelize@^1.0.0:
 
 "canary-component@github:KappaSigmaMu/canary-component":
   version "1.0.0"
-  resolved "https://codeload.github.com/KappaSigmaMu/canary-component/tar.gz/ad2f5d269f89fd36b5f3cfbcadcc44df10293ea3"
+  resolved "https://codeload.github.com/KappaSigmaMu/canary-component/tar.gz/c52ed5c68a4caaeff1764bf8a561d299823d00c4"
   dependencies:
     three "0.132.2"
 
