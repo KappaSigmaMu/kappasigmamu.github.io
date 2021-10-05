@@ -2,6 +2,7 @@ import React from 'react'
 import { Dropdown, DropdownButton, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
+import { truncateMiddle } from '../helpers/truncate'
 import { useKusama } from '../kusama'
 
 interface LevelStatusType {
@@ -29,7 +30,9 @@ const Main = () => {
 
     return (
       <label style={{ fontSize: '12px' }}>
-        <SelectedAccountDiv className="text-start mb-1">{activeAccount[0].name}</SelectedAccountDiv>
+        <SelectedAccountDiv className="text-start mb-1">
+          {truncateMiddle(activeAccount[0].name || '')}
+        </SelectedAccountDiv>
         <LevelStatusDiv>
           <label className="pe-3">JOURNEY: {level.toUpperCase()}</label>
           <label>{LEVELSTATUS[level]}</label>
@@ -73,6 +76,8 @@ const LevelStatusDiv = styled.div`
 
 const SelectedAccountDiv = styled.div`
   color: ${(props) => props.theme.colors.primary};
+  font-weight: 700;
+  font-size: 14px;
 `
 
 const StyledDropdownButton = styled(DropdownButton)`
