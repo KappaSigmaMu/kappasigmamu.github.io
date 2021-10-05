@@ -1,11 +1,30 @@
+import ThreeCanary from "@kappasigmamu/canary-component"
 import { Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { PrimaryLgButton } from '../components/base'
 import { fetchAccounts } from '../helpers/fetchAccounts'
-import Canary from '../static/canary.svg'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
+
+const choose = (choices: Array<string>) => {
+  const index = Math.floor(Math.random() * choices.length)
+  return choices[index]
+}
+
+const nodesDataFactory = (n: number) => {
+  const data = []
+  for (let i=0; i<n; i+=1) {
+    data.push({
+      "id": Math.floor(Math.random()*100),
+      "name": choose(["Arthur C. Clarke", "Douglas Adams", "Isaac Asimov"]),
+      "color": choose(["#e6007a"])
+    })
+  }
+  return data
+}
+
+const nodesData = nodesDataFactory(1500)
 
 const LandingPage = () => {
   const navigate = useNavigate()
@@ -22,7 +41,10 @@ const LandingPage = () => {
     <>
       <FullPageHeightRow>
         <Col xs={6}>
-          <CanaryImg src={Canary} alt="Canary" />
+          <ThreeCanary
+              objectUrl={`./static/canary.glb`}
+              nodes={nodesData}
+          />
         </Col>
         <CentralizedCol xs={6}>
           <h1>Join the</h1>
@@ -44,12 +66,6 @@ const LandingPage = () => {
 const KappaSigmaMu = styled.img`
   margin: 50px 0;
   display: block;
-`
-
-const CanaryImg = styled.img`
-  position: absolute;
-  bottom: 30px;
-  height: 90vh;
 `
 
 const FullPageHeightRow = styled(Row)`
