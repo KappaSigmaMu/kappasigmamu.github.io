@@ -4,6 +4,9 @@ import { PalletSocietyBid } from '@polkadot/types/lookup'
 import React, { useContext, useEffect, useState } from 'react'
 import { useKusama } from '../kusama'
 
+type accountType = { name: string | undefined; address: string }[]
+
+// eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
 const storedActiveAccount = JSON.parse(localStorage.getItem('activeAccount')!) || []
 // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
 const storedAccounts = JSON.parse(localStorage.getItem('accounts')!) || []
@@ -18,18 +21,18 @@ const INIT_STATE = {
 
 type StateType = {
   level: string,
-  setActiveAccount: (account: { name: string | undefined; address: string }[]) => void
-  activeAccount: { name: string | undefined; address: string }[]
-  accounts: { name: string | undefined; address: string }[]
-  setAccounts: (accounts: { name: string | undefined; address: string }[]) => void
+  setActiveAccount: (account: accountType) => void
+  activeAccount: accountType
+  accounts: accountType
+  setAccounts: (accounts: accountType) => void
 }
 
 const AccountContext = React.createContext<StateType>(INIT_STATE)
 
 const AccountContextProvider = ({ children } : any) => {
   const { api } = useKusama()
-  const [activeAccount, setActiveAccount] = useState<{ name: string | undefined; address: string }[]>(storedActiveAccount)
-  const [accounts, setAccounts] = useState<{ name: string | undefined; address: string }[]>(storedAccounts)
+  const [activeAccount, setActiveAccount] = useState<accountType>(storedActiveAccount)
+  const [accounts, setAccounts] = useState<accountType>(storedAccounts)
   const [level, setLevel] = useState('human')
 
   useEffect(() => {

@@ -94,7 +94,9 @@ const CurrentRoundRow = () => {
       })
 
       api.derive.society.members().then((members) => {
-        const account = members.find((member) => activeAccount && member.accountId.toString() === activeAccount[0].address)
+        const account = members.find((member) => {
+          activeAccount && member.accountId.toString() === activeAccount[0].address
+        })
         if (!account) return setStrikes(0)
 
         setStrikes(account?.strikes.toNumber())

@@ -27,11 +27,12 @@ const Main = () => {
 
   const Title = () => {
     const { level } = useAccount()
+    const account = activeAccount[0].name && activeAccount[0].name.replace(' (polkadot-js)','')
 
     return (
       <label style={{ fontSize: '12px' }}>
         <SelectedAccountDiv className="text-start mb-1">
-          {truncateMiddle(activeAccount[0].name || '')}
+          {truncateMiddle(account || '')}
         </SelectedAccountDiv>
         <LevelStatusDiv>
           <label className="pe-3">JOURNEY: {level.toUpperCase()}</label>
