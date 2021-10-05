@@ -19,8 +19,9 @@ const Main = () => {
   const { activeAccount, setActiveAccount, accounts } = useAccount()
 
   const onChange = (account: HTMLInputElement) => {
-    setActiveAccount(account.innerText)
-    localStorage.setItem("activeAccount", account.innerText)
+    const activeAccount = accounts.filter(acc => acc.name && acc.name.includes(account.innerText))
+    setActiveAccount(activeAccount)
+    localStorage.setItem("activeAccount", JSON.stringify(activeAccount))
   }
 
   const Title = () => {
@@ -28,7 +29,7 @@ const Main = () => {
 
     return (
       <label style={{ fontSize: '12px' }}>
-        <SelectedAccountDiv className="text-start mb-1">{activeAccount}</SelectedAccountDiv>
+        <SelectedAccountDiv className="text-start mb-1">{activeAccount[0].name}</SelectedAccountDiv>
         <LevelStatusDiv>
           <label className="pe-3">JOURNEY: {level.toUpperCase()}</label>
           <label>{LEVELSTATUS[level]}</label>

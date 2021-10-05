@@ -12,7 +12,7 @@ const LandingPage = () => {
   const { activeAccount, setActiveAccount, setAccounts } = useAccount()
 
   const handlePrimaryButtonClick = () => {
-    if (!activeAccount) {
+    if (!activeAccount[0]) {
       fetchAccounts(setAccounts, setActiveAccount)
     }
     navigate('/cyborg-guide')
