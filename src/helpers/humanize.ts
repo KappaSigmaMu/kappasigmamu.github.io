@@ -1,5 +1,5 @@
 import type { PalletSocietyBidKind } from '@polkadot/types/lookup'
-import { truncateAccountId } from './accountId'
+import { truncate } from './truncate'
 
 function humanizeBidKind(bid: Partial<PalletSocietyBidKind>) {
   if (!bid) { return '<UNKNOWN KIND>' }
@@ -8,7 +8,7 @@ function humanizeBidKind(bid: Partial<PalletSocietyBidKind>) {
     return 'Deposit'
   } else if (bid.isVouch) {
     const accountId = bid.asVouch?.[0] || ''
-    return `Vouch: ${truncateAccountId(accountId.toString())}`
+    return `Vouch: ${truncate(accountId.toString())}`
   } else {
     return '<UNKNOWN KIND>'
   }

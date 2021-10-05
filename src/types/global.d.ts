@@ -5,3 +5,5 @@ declare interface NavRouteProps {
   showGalleryButton?: boolean
   showSocialIcons?: boolean
 }
+
+declare module '@kappasigmamu/canary-component'

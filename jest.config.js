@@ -25,7 +25,7 @@ module.exports = {
   },
   transformIgnorePatterns: [
     // "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
-    "/node_modules/(?!canary-component|@babel|@polkadot)",
+    "/node_modules/(?!@kappasigmamu|@babel|@polkadot)",
     "^.+\\.module\\.(css|sass|scss)$"
   ],
   modulePaths: [],
