@@ -221,11 +221,6 @@ const VerticalLine = styled.div`
   z-index: 3;
 `
 
-const BulletPoint = styled.span`
-  color: grey;
-  font-size: 1.5rem;
-`
-
 const CanaryImg = styled.img`
   bottom: 30px;
   width: 50%;
