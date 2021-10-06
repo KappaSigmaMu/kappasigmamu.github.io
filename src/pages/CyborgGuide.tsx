@@ -53,7 +53,6 @@ const CyborgGuide = () => (
     <Container>
       <GuideRow>
         <Col xs lg="2">
-          <BulletPoint className="pr-5">• </BulletPoint>
           <span className="badge rounded-pill bg-primary text-uppercase">
             Level 1
           </span>
@@ -78,7 +77,6 @@ const CyborgGuide = () => (
     <Container>
       <GuideRow>
         <Col xs lg="2">
-          <BulletPoint className="pr-5">• </BulletPoint>
           <span className="badge rounded-pill bg-primary text-uppercase">
             Level 2
           </span>
@@ -113,7 +111,6 @@ const CyborgGuide = () => (
     <Container>
       <GuideRow>
         <Col xs lg="2">
-          <BulletPoint className="pr-5">• </BulletPoint>
           <span className="badge rounded-pill bg-primary text-uppercase">
             Level 3
           </span>
@@ -158,7 +155,6 @@ const CyborgGuide = () => (
     <Container>
       <GuideRow>
         <Col xs lg="2">
-          <BulletPoint className="pr-5">• </BulletPoint>
           <span className="badge rounded-pill bg-primary text-uppercase">
             Level 4
           </span>
