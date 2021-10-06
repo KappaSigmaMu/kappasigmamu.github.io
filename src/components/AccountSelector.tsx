@@ -19,18 +19,20 @@ const LEVELSTATUS: LevelStatusType = {
 const Main = () => {
   const { activeAccount, setActiveAccount, accounts } = useAccount()
 
-  const onChange = (account: HTMLInputElement) => {
-    setActiveAccount(account.innerText)
-    localStorage.setItem("activeAccount", account.innerText)
+  const onChange = (account: string) => {
+    const activeAccount = accounts.filter(acc => acc.address.includes(account))[0]
+    setActiveAccount(activeAccount)
+    localStorage.setItem("activeAccount", JSON.stringify(activeAccount))
   }
 
   const Title = () => {
     const { level } = useAccount()
+    const account = activeAccount.name && activeAccount.name.replace(' (polkadot-js)','')
 
     return (
       <label style={{ fontSize: '12px' }}>
         <SelectedAccountDiv className="text-start mb-1">
-          {truncateMiddle(activeAccount || '')}
+          {truncateMiddle(account || '')}
         </SelectedAccountDiv>
         <LevelStatusDiv>
           <label className="pe-3">JOURNEY: {level.toUpperCase()}</label>
@@ -43,9 +45,7 @@ const Main = () => {
   return (
     <StyledDropdownButton
       variant="outline-light-grey"
-      onSelect={(eventKey: string | null, e?: React.SyntheticEvent<unknown, Event>) =>
-        onChange(e?.target as HTMLInputElement)
-      }
+      onSelect={(eventKey: string) => onChange(eventKey)}
       title={<Title />}
     >
       {accounts.map((option: { name: string | undefined; address: string }) => (

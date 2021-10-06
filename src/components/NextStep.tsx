@@ -66,7 +66,7 @@ const CyborgNextStep = (
     </Link>
     &nbsp;&nbsp;
     <Link to="/home/bids" className="ml-5 btn btn-primary">
-      Vote on Candiadates
+      Vote on Candidates
     </Link>
   </>
 )
