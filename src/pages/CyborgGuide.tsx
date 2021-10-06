@@ -11,6 +11,10 @@ const SocietyGuideLink = styled(ExternalLink).attrs(() => ({
   href: 'https://wiki.polkadot.network/docs/maintain-guides-society-kusama',
 }))``
 
+const SocietyElementLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://riot.im/app/#/room/#kappasigmamulounge:matrix.parity.io',
+}))``
+
 const CyborgGuide = () => (
   <>
     <Container>
@@ -44,12 +48,11 @@ const CyborgGuide = () => (
           <CanaryImg src={Canary} className="float-end" alt="Canary" />
         </Col>
       </GuideRow>
+      <VerticalLine />
     </Container>
-    <VerticalLine />
     <Container>
       <GuideRow>
         <Col xs lg="2">
-          <BulletPoint className="pr-5">• </BulletPoint>
           <span className="badge rounded-pill bg-primary text-uppercase">
             Level 1
           </span>
@@ -74,7 +77,6 @@ const CyborgGuide = () => (
     <Container>
       <GuideRow>
         <Col xs lg="2">
-          <BulletPoint className="pr-5">• </BulletPoint>
           <span className="badge rounded-pill bg-primary text-uppercase">
             Level 2
           </span>
@@ -109,7 +111,6 @@ const CyborgGuide = () => (
     <Container>
       <GuideRow>
         <Col xs lg="2">
-          <BulletPoint className="pr-5">• </BulletPoint>
           <span className="badge rounded-pill bg-primary text-uppercase">
             Level 3
           </span>
@@ -137,7 +138,8 @@ const CyborgGuide = () => (
           </strong>
           <p>
             After getting your PoI, it’s time to show it to the world! You can
-            submit a photo or video of it via Discord.
+            submit a photo or video of it&nbsp;
+            <SocietyElementLink>here on our Kappa Sigma Mu Lounge.</SocietyElementLink>
           </p>
           <strong>
             <p className="mb-1">Getting votes on your Proof of Ink</p>
@@ -153,7 +155,6 @@ const CyborgGuide = () => (
     <Container>
       <GuideRow>
         <Col xs lg="2">
-          <BulletPoint className="pr-5">• </BulletPoint>
           <span className="badge rounded-pill bg-primary text-uppercase">
             Level 4
           </span>
@@ -184,16 +185,16 @@ const CyborgGuide = () => (
             As a Cyborg, you can now vote on new Candidates. If you are a
             Skeptic in the Round, you must vote, otherwise you get a strike.
             10 strikes eliminate you from the Society. Cyborgs also can be
-            requested to show their PoI again, as Defenders, to proove they
+            requested to show their PoI again, as Defenders, to prove they
             still have their PoI.
           </p>
           <strong>
             <p className="mb-1">Request a Payout</p>
           </strong>
           <p>
-            Once the round is up, one random vote will decide if you are a
-            Cyborg or not. It’s not the majority of votes! Still, the most you
-            get approved, the better are your chances.
+          Once you become a Cyborg, there is a period to wait until you 
+          can request your payout, the bid you placed. Once this period 
+          is up, you can request it here on this website.
           </p>
         </Col>
       </GuideRow>
@@ -214,18 +215,13 @@ const GuideTitle = styled(Col)`
 
 const VerticalLine = styled.div`
   border-left: 2px solid grey;
-  height: 1500px;
+  margin-left: -10px;
+  height: 1600px;
   position: absolute;
-  left: 8vw;
-`
-
-const BulletPoint = styled.span`
-  color: grey;
-  font-size: 1.5rem;
+  z-index: 3;
 `
 
 const CanaryImg = styled.img`
-  position: relative;
   bottom: 30px;
   width: 50%;
 `
