@@ -4,7 +4,7 @@ import { config } from '../kusama/config'
 
 const fetchAccounts = (
   setAccounts: (accounts: { name: string | undefined; address: string }[]) => void,
-  setActiveAccount: (account: { name: string | undefined; address: string }[]) => void,
+  setActiveAccount: (account: { name: string | undefined; address: string }) => void,
 ) => {
   async function _fetchAccounts() {
     try {
@@ -25,8 +25,8 @@ const fetchAccounts = (
       setAccounts(accounts)
       localStorage.setItem("accounts", JSON.stringify(accounts))
 
-      setActiveAccount([accounts[0]])
-      localStorage.setItem("activeAccount", JSON.stringify(accounts[0].name))
+      setActiveAccount(accounts[0])
+      localStorage.setItem("activeAccount", JSON.stringify(accounts[0]))
     } catch (e) {
       console.error(e)
     }

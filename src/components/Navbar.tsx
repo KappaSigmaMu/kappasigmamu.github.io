@@ -35,7 +35,7 @@ const NavbarBrand = () => (
 const AccountNavbar = () => {
   const { activeAccount, setActiveAccount, setAccounts } = useAccount()
 
-  return activeAccount[0]
+  return activeAccount
     ? <AccountSelector />
     : (
       <Button variant="outline-secondary" onClick={() => fetchAccounts(setAccounts, setActiveAccount)}>

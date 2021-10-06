@@ -20,14 +20,14 @@ const Main = () => {
   const { activeAccount, setActiveAccount, accounts } = useAccount()
 
   const onChange = (account: HTMLInputElement) => {
-    const activeAccount = accounts.filter(acc => acc.name && acc.name.includes(account.innerText))
+    const activeAccount = accounts.filter(acc => acc.name && acc.name.includes(account.innerText))[0]
     setActiveAccount(activeAccount)
     localStorage.setItem("activeAccount", JSON.stringify(activeAccount))
   }
 
   const Title = () => {
     const { level } = useAccount()
-    const account = activeAccount[0].name && activeAccount[0].name.replace(' (polkadot-js)','')
+    const account = activeAccount.name && activeAccount.name.replace(' (polkadot-js)','')
 
     return (
       <label style={{ fontSize: '12px' }}>

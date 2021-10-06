@@ -31,7 +31,7 @@ const LandingPage = () => {
   const { activeAccount, setActiveAccount, setAccounts } = useAccount()
 
   const handlePrimaryButtonClick = () => {
-    if (!activeAccount[0]) {
+    if (!activeAccount) {
       fetchAccounts(setAccounts, setActiveAccount)
     }
     navigate('/guide')
