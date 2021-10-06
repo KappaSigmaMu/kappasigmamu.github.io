@@ -19,8 +19,8 @@ const LEVELSTATUS: LevelStatusType = {
 const Main = () => {
   const { activeAccount, setActiveAccount, accounts } = useAccount()
 
-  const onChange = (account: HTMLInputElement) => {
-    const activeAccount = accounts.filter(acc => acc.name && acc.name.includes(account.innerText))[0]
+  const onChange = (account: string) => {
+    const activeAccount = accounts.filter(acc => acc.address.includes(account))[0]
     setActiveAccount(activeAccount)
     localStorage.setItem("activeAccount", JSON.stringify(activeAccount))
   }
@@ -45,9 +45,7 @@ const Main = () => {
   return (
     <StyledDropdownButton
       variant="outline-light-grey"
-      onSelect={(eventKey: string | null, e?: React.SyntheticEvent<unknown, Event>) =>
-        onChange(e?.target as HTMLInputElement)
-      }
+      onSelect={(eventKey: string) => onChange(eventKey)}
       title={<Title />}
     >
       {accounts.map((option: { name: string | undefined; address: string }) => (
