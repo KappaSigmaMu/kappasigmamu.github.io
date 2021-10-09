@@ -49,7 +49,7 @@ const CurrentRound = () => {
         <Col sm="auto">
           <CurrentRoundProgress percentageDone={percentageDone} />
         </Col>
-        <Col style={{ paddingLeft: 0 }}>
+        <Col className="ps-0">
           <Value>{days}</Value>&nbsp;<Unit>day</Unit>
           <br />
           <Value>{hours}</Value>&nbsp;<Unit>hrs.</Unit>
