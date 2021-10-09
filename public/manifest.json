@@ -1,10 +1,11 @@
 {
   "short_name": "KSM Society",
-  "name": "Kappa Sigma Mu Kusama Society",
+  "name": "Kappa Sigma Mu Society",
+  "description": "Kappa Sigma Mu is a membership club using the the Substrate Society pallet on Kusama Network.",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "128x128",
       "type": "image/x-icon"
     },
     {
