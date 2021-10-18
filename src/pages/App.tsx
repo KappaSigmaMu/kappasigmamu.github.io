@@ -40,7 +40,7 @@ const Main = () => {
             <Home />
           </>
         }/>
-        <Route path="/home/bids" element={
+        <Route path="/galery" element={
           <>
             <Navbar showBrandIcon showGalleryButton showAccount />
             <Bids />

@@ -1,9 +1,9 @@
 import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { CurrentRoundRow } from '../../components/CurrentRoundRow'
 import { Level } from '../../components/Level'
 import { LevelNotification } from '../../components/LevelNotification'
 import { NextStep } from '../../components/NextStep'
+import { RotationBar } from '../../components/rotation-bar/RotationBar'
 
 const Home = (): JSX.Element => (
   <>
@@ -22,7 +22,7 @@ const Home = (): JSX.Element => (
         </Row>
       </Container>
     </StyledDiv>
-    <CurrentRoundRow />
+    <RotationBar />
   </>
 )
 

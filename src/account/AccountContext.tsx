@@ -35,6 +35,8 @@ const AccountContextProvider = ({ children } : any) => {
   const [accounts, setAccounts] = useState<accountType[]>(storedAccounts)
   const [level, setLevel] = useState('human')
 
+  const loading = !api?.query?.society
+
   useEffect(() => {
     const setLevelCheckingAccounts = (accounts: AccountId32[], level: string) => {
       accounts.forEach((account: AccountId32) => {
@@ -57,13 +59,15 @@ const AccountContextProvider = ({ children } : any) => {
         setLevelCheckingAccounts(response, 'cyborg')
       })
     }
-  }, [activeAccount])
+  }, [api?.query?.society, activeAccount])
 
-  return (
-    <AccountContext.Provider value={{ level, activeAccount, setActiveAccount, accounts, setAccounts }}>
-      {children}
-    </AccountContext.Provider>
-  )
+  const content = loading
+    ? <></>
+    : <AccountContext.Provider value={{ level, activeAccount, setActiveAccount, accounts, setAccounts }}>
+        {children}
+      </AccountContext.Provider>
+
+  return content
 }
 
 const useAccount = () => ({ ...useContext(AccountContext) })
