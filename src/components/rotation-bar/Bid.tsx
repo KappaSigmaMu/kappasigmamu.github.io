@@ -25,7 +25,7 @@ const Bid = () => {
   }, [api])
 
   return (
-    <Col>
+    <>
       <Row className="mb-3">
         <Col>
           <h4>My Bid</h4>
@@ -41,7 +41,7 @@ const Bid = () => {
           <Button>Update</Button>
         </Col>
       </Row>
-    </Col>
+    </>
   )
 }
 

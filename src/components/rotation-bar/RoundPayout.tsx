@@ -17,7 +17,7 @@ const RoundPayout = () => {
   }, [api])
 
   return (
-    <Col>
+    <>
       <Row className="mb-3">
         <Col>
           <h4>Round Payout</h4>
@@ -28,7 +28,7 @@ const RoundPayout = () => {
           <FormattedKSM>{info?.pot.toHuman().substring(0, 5)}</FormattedKSM>
         </Col>
       </Row>
-    </Col>
+    </>
   )
 }
 

@@ -45,7 +45,7 @@ const Strikes = () => {
   }, [api])
 
   return (
-    <Col>
+    <>
       <Row className="mb-3">
         <Col>
           <h4>Strikes</h4>
@@ -61,7 +61,7 @@ const Strikes = () => {
           <StrikesCounter count={strikes} maxStrikes={maxStrikes.toNumber()} />
         </Col>
       </Row>
-    </Col>
+    </>
   )
 }
 

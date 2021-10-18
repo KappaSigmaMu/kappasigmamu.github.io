@@ -39,7 +39,7 @@ const CurrentRound = () => {
   }, [api])
 
   return (
-    <Col>
+    <>
       <Row className="mb-3">
         <Col>
           <h4>Current Round</h4>
@@ -59,7 +59,7 @@ const CurrentRound = () => {
           <Value>{seconds}</Value>&nbsp;<Unit>secs.</Unit>
         </Col>
       </Row>
-    </Col>
+    </>
   )
 }
 

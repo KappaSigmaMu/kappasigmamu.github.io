@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Container, Row } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../../account/AccountContext'
 import { Bid } from './Bid'
@@ -9,29 +9,51 @@ import { Strikes } from './Strikes'
 
 const HumanCurrentRound = (
   <>
-    <CurrentRound />
-    <RoundPayout />
+    <Col>
+      <CurrentRound />
+    </Col>
+    <Col>
+      <RoundPayout />
+    </Col>
   </>
 )
 const BidderCurrentRound = (
   <>
-    <CurrentRound />
-    <RoundPayout />
-    <Bid />
+    <Col>
+      <CurrentRound />
+    </Col>
+    <Col>
+      <RoundPayout />
+    </Col>
+    <Col>
+      <Bid />
+    </Col>
   </>
 )
 const CandidateCurrentRound = (
   <>
-    <CurrentRound />
-    <RoundPayout />
-    <Bid />
+    <Col>
+      <CurrentRound />
+    </Col>
+    <Col>
+      <RoundPayout />
+    </Col>
+    <Col>
+      <Bid />
+    </Col>
   </>
 )
 const CyborgCurrentRound = (
   <>
-    <CurrentRound />
-    <RoundPayout />
-    <Strikes />
+    <Col>
+      <CurrentRound />
+    </Col>
+    <Col>
+      <RoundPayout />
+    </Col>
+    <Col>
+      <Strikes />
+    </Col>
   </>
 )
 
@@ -49,7 +71,7 @@ const LEVELS: LevelsType = {
 const RotationBar = () => {
   const { level } = useAccount()
   return (
-    <StyledDiv>
+    <StyledDiv className="py-4">
       <Container>
         <Row sm={4}>
           {LEVELS[level]}
@@ -61,7 +83,6 @@ const RotationBar = () => {
 
 const StyledDiv = styled.div`
   background-color: ${(props) => props.theme.colors.darkGrey};
-  padding: 30px 0;
 `
 
 export { RotationBar }
