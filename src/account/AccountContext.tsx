@@ -1,4 +1,3 @@
-import { waitingInfo } from '@polkadot/api-derive/staking'
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
