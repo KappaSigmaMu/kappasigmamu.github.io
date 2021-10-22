@@ -1,5 +1,5 @@
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
-import keyring from '@polkadot/ui-keyring'
+import Keyring from '@polkadot/keyring'
 import { config } from '../kusama/config'
 
 const fetchAccounts = (
@@ -15,11 +15,12 @@ const fetchAccounts = (
         meta: { ...meta, name: `${meta.name} (${meta.source})` },
       }))
 
-      keyring.loadAll({ ss58Format: 42, type: 'sr25519' })
+      const kusamaPrefix = 2
+      const keyring = new Keyring({ ss58Format: kusamaPrefix, type: 'ed25519' })
 
       const accounts = allAccounts.map((account) => ({
         name: account.meta.name,
-        address: account.address,
+        address: keyring.encodeAddress(account.address),
       }))
 
       setAccounts(accounts)

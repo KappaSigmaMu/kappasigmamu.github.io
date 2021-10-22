@@ -42,8 +42,11 @@ const AccountContextProvider = ({ children } : any) => {
       accounts.forEach((account: AccountId32) => {
         if (account.toString() === activeAccount.address) {
           setLevel(level)
+          return
         }
       })
+
+      setLevel('human')
     }
 
     if (api) {
