@@ -1,3 +1,4 @@
+import { waitingInfo } from '@polkadot/api-derive/staking'
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
@@ -42,8 +43,11 @@ const AccountContextProvider = ({ children } : any) => {
       accounts.forEach((account: AccountId32) => {
         if (account.toString() === activeAccount.address) {
           setLevel(level)
+          return
         }
       })
+
+      setLevel('human')
     }
 
     if (api) {
