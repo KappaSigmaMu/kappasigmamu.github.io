@@ -23,7 +23,6 @@ const fetchAccounts = (
         address: keyring.encodeAddress(account.address),
       }))
 
-      console.info(accounts)
       setAccounts(accounts)
       localStorage.setItem("accounts", JSON.stringify(accounts))
 
