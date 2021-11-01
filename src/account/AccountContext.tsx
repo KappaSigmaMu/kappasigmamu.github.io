@@ -39,14 +39,12 @@ const AccountContextProvider = ({ children } : any) => {
 
   useEffect(() => {
     const setLevelCheckingAccounts = (accounts: AccountId32[], level: string) => {
+      setLevel('human')
       accounts.forEach((account: AccountId32) => {
         if (account.toString() === activeAccount.address) {
           setLevel(level)
-          return
         }
       })
-
-      setLevel('human')
     }
 
     if (api) {
