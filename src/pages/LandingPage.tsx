@@ -42,7 +42,7 @@ const LandingPage = () => {
   return (
     <>
       <FullPageHeightRow>
-        <div style={{ position: "absolute", height: "100%" }}>
+        <div className="position-absolute h-100">
           <ThreeCanary
               objectUrl={`./static/canary.glb`}
               nodes={nodesData}
