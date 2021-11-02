@@ -5,7 +5,7 @@
   "private": false,
   "types": "src/types.d.ts",
   "dependencies": {
-    "@kappasigmamu/canary-component": "^0.2.2",
+    "@kappasigmamu/canary-component": "^0.2.3",
     "@polkadot/api": "^6.1.1",
     "@polkadot/api-derive": "^6.1.1",
     "@polkadot/extension-dapp": "^0.40.3",

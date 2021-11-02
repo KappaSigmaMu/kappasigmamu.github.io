@@ -1563,16 +1563,19 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@kappasigmamu/canary-component@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@kappasigmamu/canary-component/-/canary-component-0.2.2.tgz#746be26aeda2a49c280c737f6a639398fa1ce579"
-  integrity sha512-DcI3Tz3dbVUxwBlM1j2S30XCSfrHnhPe58Md9S6diweOGZDes+9Yj/nBfBeMqpwqXG7Szs1uKds/AEDLyfZBJg==
+"@kappasigmamu/canary-component@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@kappasigmamu/canary-component/-/canary-component-0.2.3.tgz#8e81aab1892617e262a2e9d93acf324ab0dfacc2"
+  integrity sha512-nn6+FU+jMa/GKW90YNkZcveJcE2C6X7L4RZxgb1p7AaO4VwaKlDEAEWGSQNmnTtsoRpZCL0aLN6tec5FlbWoJw==
   dependencies:
     "@babel/polyfill" "^7.12.1"
     "@react-three/drei" "^7.16.8"
     "@react-three/fiber" "^7.0.17"
     "@react-three/postprocessing" "^2.0.5"
     "@types/three" "^0.133.1"
+    core-js "^3.19.0"
+    react "^17.0.2"
+    react-dom "^17.0.2"
     styled-components "^5.3.3"
     three "0.132.2"
 
@@ -4637,6 +4640,11 @@ core-js@^2.4.0, core-js@^2.6.5:
   version "2.6.12"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
+
+core-js@^3.19.0:
+  version "3.19.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.19.0.tgz#9e40098a9bc326c7e81b486abbd5e12b9d275176"
+  integrity sha512-L1TpFRWXZ76vH1yLM+z6KssLZrP8Z6GxxW4auoCj+XiViOzNPJCAuTIkn03BGdFe6Z5clX5t64wRIRypsZQrUg==
 
 core-js@^3.6.5:
   version "3.18.1"
