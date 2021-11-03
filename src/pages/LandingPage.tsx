@@ -40,13 +40,13 @@ const LandingPage = () => {
   return (
     <>
       <FullPageHeightRow>
-        <Col xs={6}>
+        <Col xs={7}>
           <ThreeCanary
               objectUrl={`./static/canary.glb`}
               nodes={nodesData}
           />
         </Col>
-        <CentralizedCol xs={6}>
+        <CentralizedCol xs={5}>
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <p>

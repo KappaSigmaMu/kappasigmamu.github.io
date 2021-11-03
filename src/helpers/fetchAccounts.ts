@@ -12,7 +12,7 @@ const fetchAccounts = (
       let allAccounts = await web3Accounts()
       allAccounts = allAccounts.map(({ address, meta }) => ({
         address,
-        meta: { ...meta, name: `${meta.name} (${meta.source})` },
+        meta: { ...meta, name: meta.name },
       }))
 
       const kusamaPrefix = 2

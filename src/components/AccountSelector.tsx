@@ -27,7 +27,7 @@ const Main = () => {
 
   const Title = () => {
     const { level } = useAccount()
-    const account = activeAccount.name && activeAccount.name.replace(' (polkadot-js)','')
+    const account = activeAccount.name
 
     return (
       <label style={{ fontSize: '12px' }}>
