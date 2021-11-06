@@ -4,8 +4,6 @@ import { PalletSocietyBid } from '@polkadot/types/lookup'
 import React, { useContext, useEffect, useState } from 'react'
 import { useKusama } from '../kusama'
 
-type accountType = { name: string | undefined; address: string }
-
 // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
 const storedActiveAccount = JSON.parse(localStorage.getItem('activeAccount')!) || ''
 // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
