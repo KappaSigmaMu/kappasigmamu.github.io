@@ -7,7 +7,7 @@ import { KusamaContextProvider } from '../kusama'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { CyborgGuide } from './CyborgGuide'
-import { Bids } from './galery/Bids'
+import { Bids } from './gallery/Bids'
 import { Home } from './home/Home'
 import { LandingPage } from './LandingPage'
 import { Welcome } from './Welcome'
@@ -40,7 +40,7 @@ const Main = () => {
             <Home />
           </>
         }/>
-        <Route path="/galery" element={
+        <Route path="/gallery" element={
           <>
             <Navbar showBrandIcon showGalleryButton showAccount />
             <Bids />
