@@ -1,4 +1,4 @@
-import React from 'react'
+import Identicon from '@polkadot/react-identicon'
 import { Dropdown, DropdownButton, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
@@ -16,20 +16,20 @@ const LEVELSTATUS: LevelStatusType = {
   cyborg: ''
 }
 
-const Main = () => {
-  const { activeAccount, setActiveAccount, accounts } = useAccount()
+const Title = ({ activeAccount }: { activeAccount: accountType }) => {
+  const { level } = useAccount()
+  const account = activeAccount.name
 
-  const onChange = (account: string) => {
-    const activeAccount = accounts.filter(acc => acc.address.includes(account))[0]
-    setActiveAccount(activeAccount)
-    localStorage.setItem("activeAccount", JSON.stringify(activeAccount))
-  }
+  return (
+    <>
+      <div className='align-top d-inline-block me-3' style={{ marginTop: 6 }}>
+        <Identicon
+          value={activeAccount.address}
+          size={32}
+          theme={'polkadot'}
+        />
+      </div>
 
-  const Title = () => {
-    const { level } = useAccount()
-    const account = activeAccount.name
-
-    return (
       <label style={{ fontSize: '12px' }}>
         <SelectedAccountDiv className="text-start mb-1">
           {truncateMiddle(account || '')}
@@ -39,14 +39,24 @@ const Main = () => {
           <label>{LEVELSTATUS[level]}</label>
         </LevelStatusDiv>
       </label>
-    )
+    </>
+  )
+}
+
+const Main = () => {
+  const { activeAccount, setActiveAccount, accounts } = useAccount()
+
+  const onChange = (account: string) => {
+    const activeAccount = accounts.filter(acc => acc.address.includes(account))[0]
+    setActiveAccount(activeAccount)
+    localStorage.setItem("activeAccount", JSON.stringify(activeAccount))
   }
 
   return (
     <StyledDropdownButton
       variant="outline-light-grey"
       onSelect={(eventKey: string) => onChange(eventKey)}
-      title={<Title />}
+      title={<Title activeAccount={activeAccount} />}
     >
       {accounts.map((option: { name: string | undefined; address: string }) => (
         <Dropdown.Item style={{ fontSize: '12px' }} eventKey={option.address} key={option.address} href="#">
@@ -82,7 +92,7 @@ const SelectedAccountDiv = styled.div`
 const StyledDropdownButton = styled(DropdownButton)`
   background-color: ${(props) => props.theme.colors.darkGrey};
   & ::after {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
   }
 `
 
