@@ -3,37 +3,55 @@ import styled from 'styled-components'
 import { ExternalLink } from '../components/base'
 import Canary from '../static/mock-canary.svg'
 
-const TattooRulesLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17',
-}))``
-
 const SocietyGuideLink = styled(ExternalLink).attrs(() => ({
   href: 'https://wiki.polkadot.network/docs/maintain-guides-society-kusama',
-}))``
+}))`
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+`
+
+const TattooRulesLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17',
+}))`
+  text-decoration: none;
+`
 
 const SocietyElementLink = styled(ExternalLink).attrs(() => ({
   href: 'https://riot.im/app/#/room/#kappasigmamulounge:matrix.parity.io',
-}))``
+}))`
+  text-decoration: none;
+`
 
 const Motion186Link = styled(ExternalLink).attrs(() => ({
   href: 'https://kusama.polkassembly.io/motion/186',
-}))``
+}))`
+  text-decoration: none;
+`
 
 const ThirdGenerationLink = styled(ExternalLink).attrs(() => ({
   href: 'https://www.youtube.com/watch?v=-JfQ2vCipWU',
-}))``
+}))`
+  text-decoration: none;
+`
 
 const BrandingDriveLink = styled(ExternalLink).attrs(() => ({
   href: 'https://drive.google.com/drive/u/1/folders/1ReG63yRvPgIRRyryDTbrACHELcZoMkA3',
-}))``
+}))`
+  text-decoration: none;
+`
 
 const CodeRepositoryLink = styled(ExternalLink).attrs(() => ({
   href: 'https://github.com/KappaSigmaMu',
-}))``
+}))`
+  text-decoration: none;
+`
 
 const TrelloLink = styled(ExternalLink).attrs(() => ({
   href: 'https://trello.com/b/aqOYaoD0/ksm-society-website',
-}))``
+}))`
+  text-decoration: none;
+`
 
 const CyborgGuide = () => (
   <>
