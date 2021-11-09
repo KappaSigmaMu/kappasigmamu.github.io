@@ -13,6 +13,14 @@ cd ksm-app
 yarn install
 ```
 
+## Society node
+To run a local node, download [this binary on IPFS](https://gateway.pinata.cloud/ipfs/QmPbk5Xx3kHdWw4gDBiNTp6dSnzW8d2PAofE1TAh2Tpc9J), and run as:
+
+`./substrate --tmp --dev`
+
+This binary has a initial state with some members and short rotation times.
+
+
 ## Development
 
 `yarn start`
