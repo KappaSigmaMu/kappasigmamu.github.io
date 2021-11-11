@@ -1,0 +1,16 @@
+version: '3'
+services:
+  frontend:
+    build: .
+    ports:
+    - "3000:3000"
+
+  substrate:
+    image: ubuntu:20.04
+    privileged: true
+    # command: [ "/bin/bash", "./substrate", "--tmp", "--dev" ]
+    command: [ "/bin/bash" ]
+    volumes:
+      - .:/substrate
+    ports:
+    - "9944:9944"

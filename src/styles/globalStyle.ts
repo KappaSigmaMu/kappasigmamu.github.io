@@ -3,6 +3,9 @@ import { createGlobalStyle } from 'styled-components'
 const GlobalStyle = createGlobalStyle`
   * {
     color: white;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
   html {
@@ -12,6 +15,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    height:33vh;
     background-color: #212529;
   }
 

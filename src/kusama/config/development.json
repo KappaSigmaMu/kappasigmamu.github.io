@@ -1,6 +1,6 @@
 {
   "APP_NAME": "[DEVELOPMENT] Kusama Society",
-  "PROVIDER_SOCKET": "wss://kusama-rpc.polkadot.io",
+  "PROVIDER_SOCKET": "ws://127.0.0.1:9944",
   "DEVELOPMENT_KEYRING": true,
   "RPC": {}
 }
