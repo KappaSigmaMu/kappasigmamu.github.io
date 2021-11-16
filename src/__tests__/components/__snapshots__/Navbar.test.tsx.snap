@@ -64,7 +64,7 @@ exports[`NavBar renders it with showBrandIcon 1`] = `
 </nav>
 `;
 
-exports[`NavBar renders it with showGalleryButton 1`] = `
+exports[`NavBar renders it with showExploreButton 1`] = `
 <nav
   className="mt-4 navbar navbar-expand navbar-light"
 >
@@ -86,7 +86,7 @@ exports[`NavBar renders it with showGalleryButton 1`] = `
         href="/home/bids"
         onClick={[Function]}
       >
-        Gallery
+        Explore
       </a>
        
        

@@ -20,7 +20,7 @@ const DefaultLevelNotification  = (
     You are IN the society;<br/>
     You are NOT a member;<br/>
     You CAN&apos;T vote;<br/>
-    You CAN VIEW the gallery.
+    You CAN EXPLORE the chain data.
   </>
 )
 

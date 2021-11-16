@@ -6,7 +6,7 @@ import { BidsList } from '../../../components/BidsList'
 import { Sidebar } from '../../../components/Sidebar'
 import { useKusama } from '../../../kusama'
 
-const Page = (): JSX.Element => {
+const Bids = (): JSX.Element => {
   const { api } = useKusama()
   const [bids, setBids] = useState<Vec<PalletSocietyBid> | []>([])
 
@@ -36,4 +36,4 @@ const Page = (): JSX.Element => {
   )
 }
 
-export { Page }
+export { Bids }

@@ -23,10 +23,10 @@ describe('NavBar', () => {
     expect(tree).toMatchSnapshot()
   })
 
-  it('renders it with showGalleryButton', () => {
+  it('renders it with showExploreButton', () => {
     const tree = TestRenderer.create(
       <BrowserRouter>
-        <Navbar showGalleryButton />
+        <Navbar showExploreButton />
       </BrowserRouter>
     )
 
