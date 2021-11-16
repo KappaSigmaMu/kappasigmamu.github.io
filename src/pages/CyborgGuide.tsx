@@ -3,34 +3,87 @@ import styled from 'styled-components'
 import { ExternalLink } from '../components/base'
 import Canary from '../static/mock-canary.svg'
 
-const TattooRulesLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17',
-}))``
-
 const SocietyGuideLink = styled(ExternalLink).attrs(() => ({
   href: 'https://wiki.polkadot.network/docs/maintain-guides-society-kusama',
-}))``
+}))`
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+`
+
+const TattooRulesLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17',
+}))`
+  text-decoration: none;
+`
 
 const SocietyElementLink = styled(ExternalLink).attrs(() => ({
   href: 'https://riot.im/app/#/room/#kappasigmamulounge:matrix.parity.io',
-}))``
+}))`
+  text-decoration: none;
+`
+
+const Motion186Link = styled(ExternalLink).attrs(() => ({
+  href: 'https://kusama.polkassembly.io/motion/186',
+}))`
+  text-decoration: none;
+`
+
+const ThirdGenerationLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://www.youtube.com/watch?v=-JfQ2vCipWU',
+}))`
+  text-decoration: none;
+`
+
+const BrandingDriveLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://drive.google.com/drive/u/1/folders/1ReG63yRvPgIRRyryDTbrACHELcZoMkA3',
+}))`
+  text-decoration: none;
+`
+
+const CodeRepositoryLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://github.com/KappaSigmaMu',
+}))`
+  text-decoration: none;
+`
+
+const TrelloLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://trello.com/b/aqOYaoD0/ksm-society-website',
+}))`
+  text-decoration: none;
+`
 
 const CyborgGuide = () => (
   <>
     <Container>
-      <GuideRow>
+      <GuideTitleRow>
         <GuideTitle xs lg="6" className="display-1 text-uppercase pt-5">
           Cyborg Guide
         </GuideTitle>
-        <Col className="text-uppercase text-end ms-auto mt-4">
+        <Col className="text-uppercase text-end ms-auto pt-5 d-inline-block">
           <p>
             <SocietyGuideLink>Kusama society guide</SocietyGuideLink>
           </p>
           <p>
             <TattooRulesLink>Tattoo rules</TattooRulesLink>
           </p>
+          <p>
+            <Motion186Link>Motion 186</Motion186Link>
+          </p>
+          <p>
+            <ThirdGenerationLink>The Third Generation</ThirdGenerationLink>
+          </p>
+          <p>
+            <BrandingDriveLink>Branding Drive</BrandingDriveLink>
+          </p>
+          <p>
+            <CodeRepositoryLink>Code Repository</CodeRepositoryLink>
+          </p>
+          <p>
+            <TrelloLink>Trello</TrelloLink>
+          </p>
         </Col>
-      </GuideRow>
+      </GuideTitleRow>
     </Container>
     <Container>
       <GuideRow>
@@ -207,10 +260,18 @@ const GuideRow = styled(Container)`
   padding-bottom: 20px;
 `
 
+const GuideTitleRow = styled(Container)`
+  display: flex;
+  justify-content: space-between;
+  padding-left: 12px;
+  padding-bottom: 20px;
+`
+
 const GuideTitle = styled(Col)`
   font-size: 450%;
   color: white;
   font-weight: bolder;
+  display: inline-block;
 `
 
 const VerticalLine = styled.div`
