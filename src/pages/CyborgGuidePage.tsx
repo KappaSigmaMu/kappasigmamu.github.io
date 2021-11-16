@@ -53,7 +53,7 @@ const TrelloLink = styled(ExternalLink).attrs(() => ({
   text-decoration: none;
 `
 
-const CyborgGuide = () => (
+const CyborgGuidePage = () => (
   <>
     <Container>
       <GuideTitleRow>
@@ -245,8 +245,8 @@ const CyborgGuide = () => (
             <p className="mb-1">Request a Payout</p>
           </strong>
           <p>
-          Once you become a Cyborg, there is a period to wait until you 
-          can request your payout, the bid you placed. Once this period 
+          Once you become a Cyborg, there is a period to wait until you
+          can request your payout, the bid you placed. Once this period
           is up, you can request it here on this website.
           </p>
         </Col>
@@ -287,4 +287,4 @@ const CanaryImg = styled.img`
   width: 50%;
 `
 
-export { CyborgGuide }
+export { CyborgGuidePage }

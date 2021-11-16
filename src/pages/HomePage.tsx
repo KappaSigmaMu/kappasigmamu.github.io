@@ -1,11 +1,11 @@
 import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { Level } from '../../components/Level'
-import { LevelNotification } from '../../components/LevelNotification'
-import { NextStep } from '../../components/NextStep'
-import { RotationBar } from '../../components/rotation-bar/RotationBar'
+import { Level } from '../components/Level'
+import { LevelNotification } from '../components/LevelNotification'
+import { NextStep } from '../components/NextStep'
+import { RotationBar } from '../components/rotation-bar/RotationBar'
 
-const Home = (): JSX.Element => (
+const HomePage = (): JSX.Element => (
   <>
     <StyledDiv>
       <Container>
@@ -33,4 +33,4 @@ const StyledDiv = styled.div`
   justify-content: center;
 `
 
-export { Home }
+export { HomePage }

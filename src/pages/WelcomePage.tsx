@@ -5,7 +5,7 @@ import { Level } from '../components/Level'
 import { SocialIcons } from '../components/SocialIcons'
 import MapIcon from '../static/map-icon.svg'
 
-const Welcome = (): JSX.Element => {
+const WelcomePage = (): JSX.Element => {
   return (
     <>
       <LevelContainer>
@@ -75,4 +75,4 @@ const LevelContainer = styled(Container)`
   justify-content: center;
 `
 
-export { Welcome }
+export { WelcomePage }

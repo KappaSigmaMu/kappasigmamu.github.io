@@ -6,11 +6,11 @@ import { Navbar } from '../components/Navbar'
 import { KusamaContextProvider } from '../kusama'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
-import { CyborgGuide } from './CyborgGuide'
-import { Bids } from './explore/Bids'
-import { Home } from './home/Home'
+import { CyborgGuidePage } from './CyborgGuidePage'
+import { BiddersPage } from './explore/BiddersPage'
+import { HomePage } from './HomePage'
 import { LandingPage } from './LandingPage'
-import { Welcome } from './Welcome'
+import { WelcomePage } from './WelcomePage'
 
 const Main = () => {
   return (
@@ -25,25 +25,25 @@ const Main = () => {
         <Route path="/guide" element={
           <>
             <Navbar showBrandIcon showSocialIcons showAccount />
-            <CyborgGuide />
+            <CyborgGuidePage />
           </>
         }/>
         <Route path="/welcome" element={
           <>
             <Navbar showBrandIcon showExploreButton showAccount />
-            <Welcome />
+            <WelcomePage />
           </>
         }/>
         <Route path="/home" element={
           <>
             <Navbar showBrandIcon showExploreButton showAccount />
-            <Home />
+            <HomePage />
           </>
         }/>
         <Route path="/explore" element={
           <>
             <Navbar showBrandIcon showExploreButton showAccount />
-            <Bids />
+            <BiddersPage />
           </>
         }/>
       </Routes>
