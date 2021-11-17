@@ -3,7 +3,7 @@ import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState } from 'react'
 import { Spinner } from 'react-bootstrap'
 import { useKusama } from '../../../kusama'
-import { BidsList } from './BidsList'
+import { BiddersList } from './BiddersList'
 
 const BiddersPage = (): JSX.Element => {
   const { api } = useKusama()
@@ -19,7 +19,7 @@ const BiddersPage = (): JSX.Element => {
     }
   }, [api?.query?.society])
 
-  const content = loading ? <Spinner animation="border" variant="primary" /> : <BidsList bids={bids} />
+  const content = loading ? <Spinner animation="border" variant="primary" /> : <BiddersList bids={bids} />
 
   return (content)
 }
