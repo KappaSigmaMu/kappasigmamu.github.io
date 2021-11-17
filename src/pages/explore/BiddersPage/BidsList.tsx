@@ -1,8 +1,8 @@
 import Identicon from '@polkadot/react-identicon'
 import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { humanizeBidKind, humanizeBidValue } from '../helpers/humanize'
-import { truncateMiddle } from '../helpers/truncate'
+import { humanizeBidKind, humanizeBidValue } from '../../../helpers/humanize'
+import { truncateMiddle } from '../../../helpers/truncate'
 
 const Header = () => (
   <StyledHeaderRow>

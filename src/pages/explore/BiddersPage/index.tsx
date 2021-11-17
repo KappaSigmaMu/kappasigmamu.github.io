@@ -2,8 +2,8 @@ import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState } from 'react'
 import { Container, Col, Row, Spinner } from 'react-bootstrap'
-import { BidsList } from '../../../components/BidsList'
-import { Sidebar } from '../../../components/Sidebar'
+import { BidsList } from './BidsList'
+import { Sidebar } from '../components/Sidebar'
 import { useKusama } from '../../../kusama'
 
 const BiddersPage = (): JSX.Element => {
