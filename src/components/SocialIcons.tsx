@@ -4,7 +4,7 @@ import TwitterLogo from '../static/twitter-logo.svg'
 import { ExternalLink } from './base'
 
 const SocialIcons = () => (
-  <>
+  <div className='me-2'>
     <ExternalLink href="https://discord.gg/9AWjTf8wSk">
       <img src={DiscordLogo} alt="Discord Logo" />
     </ExternalLink>
@@ -16,7 +16,7 @@ const SocialIcons = () => (
     <ExternalLink href="https://twitter.com/kusamanetwork">
       <img src={TwitterLogo} alt="Twitter Logo" style={{color: 'red'}} />
     </ExternalLink>
-  </>
+  </div>
 )
 
 export { SocialIcons }

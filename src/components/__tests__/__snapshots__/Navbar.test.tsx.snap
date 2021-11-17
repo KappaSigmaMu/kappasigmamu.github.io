@@ -83,7 +83,7 @@ exports[`NavBar renders it with showExploreButton 1`] = `
         className="nav-link"
         data-rr-ui-event-key={null}
         disabled={false}
-        href="/home/bids"
+        href="/explore"
         onClick={[Function]}
       >
         Explore
@@ -111,46 +111,50 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
       onKeyDown={[Function]}
     >
        
-      <a
-        className="sc-hKgJUU"
-        href="https://discord.gg/9AWjTf8wSk"
-        rel="noreferrer"
-        target="_blank"
+      <div
+        className="me-2"
       >
-        <img
-          alt="Discord Logo"
-          src="discord-logo.svg"
-        />
-      </a>
-       
-      <a
-        className="sc-hKgJUU"
-        href="https://matrix.to/#/!BUmiAAnAYSRGarqwOt:matrix.parity.io?via=matrix.parity.io"
-        rel="noreferrer"
-        target="_blank"
-      >
-        <img
-          alt="Element Logo"
-          src="element-logo.svg"
-        />
-      </a>
-       
-      <a
-        className="sc-hKgJUU"
-        href="https://twitter.com/kusamanetwork"
-        rel="noreferrer"
-        target="_blank"
-      >
-        <img
-          alt="Twitter Logo"
-          src="twitter-logo.svg"
-          style={
-            Object {
-              "color": "red",
+        <a
+          className="sc-hKgJUU"
+          href="https://discord.gg/9AWjTf8wSk"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <img
+            alt="Discord Logo"
+            src="discord-logo.svg"
+          />
+        </a>
+         
+        <a
+          className="sc-hKgJUU"
+          href="https://matrix.to/#/!BUmiAAnAYSRGarqwOt:matrix.parity.io?via=matrix.parity.io"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <img
+            alt="Element Logo"
+            src="element-logo.svg"
+          />
+        </a>
+         
+        <a
+          className="sc-hKgJUU"
+          href="https://twitter.com/kusamanetwork"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <img
+            alt="Twitter Logo"
+            src="twitter-logo.svg"
+            style={
+              Object {
+                "color": "red",
+              }
             }
-          }
-        />
-      </a>
+          />
+        </a>
+      </div>
        
     </div>
   </div>
