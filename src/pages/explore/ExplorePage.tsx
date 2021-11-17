@@ -1,6 +1,6 @@
 import { Col, Container, Row } from 'react-bootstrap'
 import { Route, Routes } from 'react-router-dom'
-import { MembersPage } from './ MembersPage'
+import { MembersPage } from './MembersPage'
 import { BiddersPage } from './BiddersPage'
 import { NavigationBar } from './components/NavigationBar'
 
