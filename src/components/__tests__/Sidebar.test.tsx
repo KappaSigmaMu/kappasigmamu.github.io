@@ -1,6 +1,6 @@
 import { MemoryRouter } from 'react-router-dom'
 import TestRenderer from 'react-test-renderer'
-import { Sidebar } from '../../components/Sidebar'
+import { Sidebar } from '../Sidebar'
 
 test('renders Sidebar with bids selected', () => {
     const tree = TestRenderer.create(

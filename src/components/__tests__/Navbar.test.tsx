@@ -1,6 +1,6 @@
 import { BrowserRouter } from 'react-router-dom'
 import TestRenderer from 'react-test-renderer'
-import { Navbar } from '../../components/Navbar'
+import { Navbar } from '../Navbar'
 
 describe('NavBar', () => {
   it('renders it with showAccount', () => {

@@ -1,5 +1,5 @@
-import { humanizeBidKind, humanizeBidValue } from '../../helpers/humanize'
-import { PalletSocietyBidKindFixture } from '../fixtures/PalletSocietyBidKindFixture'
+import { PalletSocietyBidKindFixture } from '../../__tests__/fixtures/PalletSocietyBidKindFixture'
+import { humanizeBidKind, humanizeBidValue } from '../humanize'
 
 const deposit = PalletSocietyBidKindFixture.createDeposit(20)
 const vouch = PalletSocietyBidKindFixture.createVouch('5DcN2feEKzC23toLBu63N7Q9E2Tc3HE44oyd992WY31iZee4', 20)

@@ -1,4 +1,4 @@
-import { truncate, truncateMiddle } from '../../helpers/truncate'
+import { truncate, truncateMiddle } from '../truncate'
 
 const HASH = '5DcN2feEKzC23toLBu63N7Q9E2Tc3HE44oyd992WY31iZee4'
 
