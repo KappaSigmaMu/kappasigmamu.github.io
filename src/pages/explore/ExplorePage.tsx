@@ -1,16 +1,18 @@
-import { Container, Col, Row } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import { Route, Routes } from 'react-router-dom'
 import { BiddersPage } from './BiddersPage'
-import { Sidebar } from './components/Sidebar'
+import { NavigationBar } from './components/NavigationBar'
 
 const ExplorePage = (): JSX.Element => {
   return (
     <Container>
       <Row>
-        <Col xs={2}>
-          <Sidebar />
+        <Col>
+          <NavigationBar />
         </Col>
-        <Col xs={10}>
+      </Row>
+      <Row>
+        <Col>
           <Routes>
             <Route path="/" element={<>TODO EXPLORE PAGE</>}/>
             <Route path="/bidders" element={<BiddersPage />}/>
