@@ -16,7 +16,7 @@ const Navbar = ({
     <Container>
       <Nav>{showBrandIcon ? <NavbarBrand /> : <></>}</Nav>
       <Nav className="align-items-center align-self-center">
-        {showExploreButton ? <Nav.Link to="/home/bids" as={Link}>Explore</Nav.Link> : <></>}
+        {showExploreButton ? <Nav.Link to="/explore" as={Link}>Explore</Nav.Link> : <></>}
         &nbsp;
         {showSocialIcons ? <SocialIcons /> : <></>}
         &nbsp;
