@@ -40,7 +40,7 @@ const Main = () => {
             <HomePage />
           </>
         }/>
-        <Route path="/explore" element={
+        <Route path="/explore/*" element={
           <>
             <Navbar showBrandIcon showExploreButton showAccount />
             <ExplorePage />

@@ -3,10 +3,10 @@ import styled from 'styled-components'
 
 const Sidebar = () => (
   <StyledMenu>
-    <MenuItem to="/home/bids">Bids</MenuItem>
-    <MenuItem to="/home/members">Members</MenuItem>
-    <MenuItem to="/home/candidates">Candidates</MenuItem>
-    <MenuItem to="/home/suspended">Suspended</MenuItem>
+    <MenuItem to="/explore/bidders">Bidders</MenuItem>
+    <MenuItem to="/explore/members">Members</MenuItem>
+    <MenuItem to="/explore/candidates">Candidates</MenuItem>
+    <MenuItem to="/explore/suspended">Suspended</MenuItem>
   </StyledMenu>
 )
 

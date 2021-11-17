@@ -1,4 +1,6 @@
 import { Container, Col, Row } from 'react-bootstrap'
+import { Route, Routes } from 'react-router-dom'
+import { BiddersPage } from './BiddersPage'
 import { Sidebar } from './components/Sidebar'
 
 const ExplorePage = (): JSX.Element => {
@@ -9,7 +11,13 @@ const ExplorePage = (): JSX.Element => {
           <Sidebar />
         </Col>
         <Col xs={10}>
-          {'CONTENT'}
+          <Routes>
+            <Route path="/" element={<>TODO EXPLORE PAGE</>}/>
+            <Route path="/bidders" element={<BiddersPage />}/>
+            <Route path="/members" element={<>TODO MEMBERS PAGE</>}/>
+            <Route path="/candidates" element={<>TODO CANDIDATES PAGE</>}/>
+            <Route path="/suspended" element={<>TODO SUSPENDED PAGE</>}/>
+          </Routes>
         </Col>
       </Row>
     </Container>

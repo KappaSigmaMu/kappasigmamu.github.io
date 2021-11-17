@@ -2,9 +2,8 @@ import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState } from 'react'
 import { Container, Col, Row, Spinner } from 'react-bootstrap'
-import { BidsList } from './BidsList'
-import { Sidebar } from '../components/Sidebar'
 import { useKusama } from '../../../kusama'
+import { BidsList } from './BidsList'
 
 const BiddersPage = (): JSX.Element => {
   const { api } = useKusama()
@@ -25,10 +24,7 @@ const BiddersPage = (): JSX.Element => {
   return (
     <Container>
       <Row>
-        <Col xs={2}>
-          <Sidebar />
-        </Col>
-        <Col xs={10}>
+        <Col xs={12}>
           {content}
         </Col>
       </Row>
