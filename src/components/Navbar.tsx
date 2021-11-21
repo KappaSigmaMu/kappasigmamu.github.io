@@ -14,7 +14,7 @@ const Navbar = ({
 }: NavRouteProps) => (
   <RBNavbar className="mt-4">
     <Container>
-      <Nav>{showBrandIcon ? <NavbarBrand /> : <div style={{ height: 82, width: 106 }}></div>}</Nav>
+      <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
       <Nav className="align-items-center align-self-center">
         {showExploreButton ? <Nav.Link to="/explore" as={Link}>Explore</Nav.Link> : <></>}
         &nbsp;
@@ -24,6 +24,10 @@ const Navbar = ({
       </Nav>
     </Container>
   </RBNavbar>
+)
+
+const BrandPlaceholder = () => (
+  <div style={{ height: 82, width: 106 }}></div>
 )
 
 const NavbarBrand = () => (
