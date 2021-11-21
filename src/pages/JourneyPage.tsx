@@ -5,7 +5,7 @@ import { LevelNotification } from '../components/LevelNotification'
 import { NextStep } from '../components/NextStep'
 import { RotationBar } from '../components/rotation-bar/RotationBar'
 
-const HomePage = (): JSX.Element => (
+const JourneyPage = (): JSX.Element => (
   <>
     <StyledDiv>
       <Container>
@@ -33,4 +33,4 @@ const StyledDiv = styled.div`
   justify-content: center;
 `
 
-export { HomePage }
+export { JourneyPage }

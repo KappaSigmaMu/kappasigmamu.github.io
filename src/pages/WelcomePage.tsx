@@ -44,7 +44,7 @@ const WelcomePage = (): JSX.Element => {
         </Row>
         <Row>
           <Col>
-            <Link to="/home" className="btn btn-primary" role="button">
+            <Link to="/journey" className="btn btn-primary" role="button">
               Begin Journey
             </Link>
           </Col>

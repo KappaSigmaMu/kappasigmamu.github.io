@@ -8,7 +8,7 @@ import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { CyborgGuidePage } from './CyborgGuidePage'
 import { ExplorePage } from './explore/ExplorePage'
-import { HomePage } from './HomePage'
+import { JourneyPage } from './JourneyPage'
 import { LandingPage } from './LandingPage'
 import { WelcomePage } from './WelcomePage'
 
@@ -37,7 +37,7 @@ const AppRouter = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/guide" element={<CyborgGuidePage />} />
           <Route path="/welcome" element={<WelcomePage />} />
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/journey" element={<JourneyPage />} />
           <Route path="/explore/*" element={<ExplorePage />} />
           <Route path="*" element={<>NOT FOUND</>} />
         </Route>
