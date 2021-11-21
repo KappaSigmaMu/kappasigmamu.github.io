@@ -35,7 +35,7 @@ const BidderNextStep = (
       Bid Rules
     </Link>
     &nbsp;&nbsp;
-    <Link to="/home/bids" className="ml-5 btn btn-primary">
+    <Link to="/explore/bidders" className="ml-5 btn btn-primary">
       Check Bids
     </Link>
   </>
@@ -52,7 +52,7 @@ const CandidateNextStep = (
       Ink Art
     </Link>
     &nbsp;&nbsp;
-    <Link to="/home/bids" className="ml-5 btn btn-primary">
+    <Link to="/explore/bidders" className="ml-5 btn btn-primary">
       Submit Proof of Ink
     </Link>
   </>
@@ -61,11 +61,11 @@ const CandidateNextStep = (
 const CyborgNextStep = (
   <>
     <h5>Enjoy</h5>
-    <Link to="/home/bids" className="btn btn-outline-light-grey">
+    <Link to="/explore/bidders" className="btn btn-outline-light-grey">
       Vouch Bid
     </Link>
     &nbsp;&nbsp;
-    <Link to="/home/bids" className="ml-5 btn btn-primary">
+    <Link to="/explore/bidders" className="ml-5 btn btn-primary">
       Vote on Candidates
     </Link>
   </>
