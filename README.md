@@ -13,42 +13,52 @@ This is a dedicated interface for Kusama Society.
 
 - Download [this binary](https://gateway.pinata.cloud/ipfs/QmPbk5Xx3kHdWw4gDBiNTp6dSnzW8d2PAofE1TAh2Tpc9J), rename it to `substrate` and place it on the root folder. This binary has a initial state with some members and short rotation times.
 
-### Installation
+## Installation
 
 ```bash
 yarn install
 ```
 
-## Run with Docker
+## Running with Docker
 
-Run:
 ```bash
 docker-compose up
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-The page will reload if you make edits. You will also see any lint errors in the console.
+- Open [http://localhost:3000](http://localhost:3000) to view it in the browser. The container share the sources files with your machine. The application compiles automatically after editing.
 
-You can also access [Polkadotjs pointing to your development node](https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A9944#/society) to interact with it.
+- You can also access [Polkadotjs pointing to your development node](https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A9944#/society) to interact with it.
 
-## Run locally
+## Running locally
 
-### Society node
-`./substrate --tmp --dev`
+### Society node:
+```
+./substrate --tmp --dev
+```
 
-### Development
+### Application:
+```
+yarn start
+```
 
-`yarn start`
+## Linter
 
-### Tests
+```
+yarn eslint
+```
+## Tests
 
-`yarn test`
+```
+yarn test
+```
 
 Launches the test runner in the interactive watch mode.
 
-### Production bundle
+## Production bundle
 
-`yarn build`
+```
+yarn build
+```
 
 Builds the app for production to the `build` folder.
 
