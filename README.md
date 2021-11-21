@@ -46,6 +46,10 @@ yarn start
 ```
 yarn eslint
 ```
+
+You can automatically fix some issues with `yarn eslint:fix`
+
+
 ## Tests
 
 ```
