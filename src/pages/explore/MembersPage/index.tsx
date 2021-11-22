@@ -1,16 +1,18 @@
 import { DeriveSociety, DeriveSocietyMember } from '@polkadot/api-derive/types'
 import Identicon from '@polkadot/react-identicon'
 import type { AccountId, Balance, BlockNumber, StrikeCount } from '@polkadot/types/interfaces'
-import { BN } from '@polkadot/util'
+import { BN, formatNumber } from '@polkadot/util'
 import { useEffect, useState } from 'react'
 import { Badge, Col, Spinner } from 'react-bootstrap'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { truncateMiddle } from '../../../helpers/truncate'
 import { useConsts } from '../../../hooks/useConsts'
 import { useKusama } from '../../../kusama'
+import { FormatBalance } from './FormatBalance'
 
 export interface SocietyMember {
   accountId: AccountId
+  hasPayouts: boolean
   hasStrikes: boolean
   isDefenderVoter: boolean
   isFounder: boolean
@@ -18,7 +20,7 @@ export interface SocietyMember {
   isSkeptic: boolean
   isSuspended: boolean
   isWarned: boolean
-  payouts?: [BlockNumber, Balance][]
+  payouts: [BlockNumber, Balance][]
   strikes: StrikeCount
   strikesCount: number
 }
@@ -31,6 +33,7 @@ const buildSocietyMember = (
   return members.map((member) => {
     return {
       accountId: member.accountId,
+      hasPayouts: member.payouts.length > 0,
       hasStrikes: !member.strikes.isEmpty,
       isDefenderVoter: !!member.isDefenderVoter,
       isFounder: !!info?.founder?.eq(member.accountId),
@@ -38,14 +41,15 @@ const buildSocietyMember = (
       isSkeptic: !!member.vote?.isSkeptic,
       isSuspended: member.isSuspended,
       isWarned: !member.isSuspended && member.strikes.gt(maxStrikes),
+      payouts: member.payouts,
       strikes: member.strikes,
-      strikesCount: member.strikes.isEmpty ? 0 : member.strikes.toNumber()
+      strikesCount: member.strikes.isEmpty ? 0 : member.strikes.toNumber(),
     }
   })
 }
 
-const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => (
-  <>
+const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => {
+  return (<>
     <DataHeaderRow>
       <Col xs={1} className="text-center">#</Col>
       <Col xs={2} className="text-start">Wallet Hash</Col>
@@ -61,7 +65,18 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
           {truncateMiddle(member.accountId?.toString())}
         </Col>
         <Col xs={2} className="text-start text-truncate">
-
+          {member.hasPayouts
+            ? member.payouts.map((payout: [BlockNumber, Balance], index: number) => {
+              const [block, balance] = payout
+              return(
+                <span key={index}>
+                  <FormatBalance balance={balance} />< br/>
+                  block #{formatNumber(block)}<br />
+                </span>
+              )
+            })
+            : <></>
+          }
         </Col>
         <Col xs={7} className="text-end">
           {member.isFounder ? <Badge pill bg="primary" className="me-2">Founder</Badge> : <></>}
@@ -72,8 +87,8 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
         </Col>
       </DataRow>
     ))}
-  </>
-)
+  </>)
+}
 
 const MembersPage = (): JSX.Element => {
   const { api } = useKusama()
