@@ -16,7 +16,11 @@ const fetchAccounts = (
       }))
 
       const kusamaPrefix = 2
-      const keyring = new Keyring({ ss58Format: kusamaPrefix, type: 'ed25519' })
+      const genericPrefix = 42
+
+      const prefix = config.DEVELOPMENT_KEYRING ? genericPrefix : kusamaPrefix
+
+      const keyring = new Keyring({ ss58Format: prefix, type: 'ed25519' })
 
       const accounts = allAccounts.map((account) => ({
         name: account.meta.name,

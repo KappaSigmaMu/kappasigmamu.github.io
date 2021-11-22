@@ -11,6 +11,9 @@
 # production
 /build
 
+# development node binary
+substrate
+
 # misc
 .DS_Store
 .env.local

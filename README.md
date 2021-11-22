@@ -1,42 +1,68 @@
 # KappaSigmaMu App
 
+This is a dedicated interface for Kusama Society.
+
 ## Dependencies
 
-* [Node v14.13.1](#)
+* [Node v16.13.0](#)
 * [yarn](https://yarnpkg.com)
+
+## Setup
+
+- Clone this repository.
+
+- Download [this binary](https://gateway.pinata.cloud/ipfs/QmPbk5Xx3kHdWw4gDBiNTp6dSnzW8d2PAofE1TAh2Tpc9J), rename it to `substrate` and place it on the root folder. This binary has a initial state with some members and short rotation times.
 
 ## Installation
 
 ```bash
-git clone https://github.com/KappaSigmaMu/ksm-app.git
-cd ksm-app
 yarn install
 ```
 
-## Society node
-To run a local node, download [this binary on IPFS](https://gateway.pinata.cloud/ipfs/QmPbk5Xx3kHdWw4gDBiNTp6dSnzW8d2PAofE1TAh2Tpc9J), and run as:
+## Running with Docker
 
-`./substrate --tmp --dev`
+```bash
+docker-compose up
+```
 
-This binary has a initial state with some members and short rotation times.
+- Open [http://localhost:3000](http://localhost:3000) to view it in the browser. The container share the sources files with your machine. The application compiles automatically after editing.
 
+- You can also access [Polkadotjs pointing to your development node](https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A9944#/society) to interact with it.
 
-## Development
+## Running locally
 
-`yarn start`
+### Society node:
+```
+./substrate --tmp --dev
+```
 
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-The page will reload if you make edits. You will also see any lint errors in the console.
+### Application:
+```
+yarn start
+```
+
+## Linter
+
+```
+yarn eslint
+```
+
+You can automatically fix some issues with `yarn eslint:fix`
+
 
 ## Tests
 
-`yarn test`
+```
+yarn test
+```
 
 Launches the test runner in the interactive watch mode.
 
 ## Production bundle
 
-`yarn build`
+```
+yarn build
+```
 
 Builds the app for production to the `build` folder.
 
