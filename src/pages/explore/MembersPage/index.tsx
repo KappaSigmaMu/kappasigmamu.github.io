@@ -3,7 +3,8 @@ import Identicon from '@polkadot/react-identicon'
 import type { AccountId, Balance, BlockNumber, StrikeCount } from '@polkadot/types/interfaces'
 import { BN, formatNumber } from '@polkadot/util'
 import { useEffect, useState } from 'react'
-import { Badge, Col, Spinner } from 'react-bootstrap'
+import { Accordion, Badge, Card, Col, Spinner, useAccordionButton } from 'react-bootstrap'
+import styled from 'styled-components'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { truncateMiddle } from '../../../helpers/truncate'
 import { useBlockTime } from '../../../hooks/useBlockTime'
@@ -59,7 +60,6 @@ const societyMembersArrayBuilder = (
     strikesCount: member.strikes.isEmpty ? 0 : member.strikes.toNumber(),
   }))
 
-
   return membersArray.sort(societyMembersArraySorter)
 }
 
@@ -74,12 +74,45 @@ const BlockTime = ({ block }: { block: BlockNumber }) => {
   </>)
 }
 
+const StyledAccordion = styled(Accordion)`
+
+`
+
+const PayoutsAccordionToggle = ({ children, eventKey }: { children: any, eventKey: any }) => (
+  <a href="javascript:void(0)" onClick={useAccordionButton(eventKey)} >
+    {children}
+  </a>
+)
+
+const PayoutsAccordion = ({ payouts }: { payouts: [BlockNumber, Balance][] }) => (
+  <StyledAccordion>
+    <PayoutsAccordionToggle eventKey="0">{payouts.length} payouts</PayoutsAccordionToggle>
+    <Accordion.Collapse eventKey="0">
+      <Card.Body>
+        {payouts.map((payout: [BlockNumber, Balance], index: number) => {
+          const [block, balance] = payout
+          return(
+            <div key={index}>
+              <p className="mb-0">
+                <FormatBalance balance={balance} />
+              </p>
+              <p className="mb-0">
+                <BlockTime block={block} />
+              </p>
+            </div>
+          )
+        })}
+      </Card.Body>
+    </Accordion.Collapse>
+  </StyledAccordion>
+)
+
 const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => {
   return (<>
     <DataHeaderRow>
       <Col xs={1} className="text-center">#</Col>
       <Col xs={2} className="text-start">Wallet Hash</Col>
-      <Col xs={3} className="text-end">Payouts</Col>
+      <Col xs={3} className="text-start">Payouts</Col>
       <Col xs={6} className="text-end"></Col>
     </DataHeaderRow>
     {members.map((member: SocietyMember) => (
@@ -90,20 +123,8 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
         <Col xs={2} className="text-start text-truncate">
           {truncateMiddle(member.accountId?.toString())}
         </Col>
-        <Col xs={3} className="text-end">
-          {member.hasPayouts
-            ? member.payouts.map((payout: [BlockNumber, Balance], index: number) => {
-              const [block, balance] = payout
-              return(
-                <p key={index}>
-                  <FormatBalance balance={balance} />
-                  < br/>
-                  <BlockTime block={block} />
-                </p>
-              )
-            })
-            : <></>
-          }
+        <Col xs={3} className="text-start">
+          {member.hasPayouts ? <PayoutsAccordion payouts={member.payouts} /> : <></>}
         </Col>
         <Col xs={6} className="text-end">
           {member.isFounder ? <Badge pill bg="primary" className="me-2">Founder</Badge> : <></>}
