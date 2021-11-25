@@ -10,7 +10,7 @@ const K_LENGTH = 3 + 1
 
 type ValueType = Compact<any> | BN | string
 
-const applyBalanceFormat = (value: ValueType, withCurrency = true, isShort = false): React.ReactNode => {
+const applyFormatBalance = (value: ValueType, withCurrency = true, isShort = false): React.ReactNode => {
   const [decimals, token] = DEFAULT_KSM_PROPERTIES
   const [prefix, postfix] = formatBalance(value, { decimals, forceUnit: '-', withSi: false }).split('.')
   const _isShort = isShort || (prefix.length >= K_LENGTH)
@@ -38,7 +38,7 @@ const applyBalanceFormat = (value: ValueType, withCurrency = true, isShort = fal
 type FormatBalanceProps = { balance: Balance, withCurrency?: boolean, isShort?: boolean}
 
 const FormatBalance = ({ balance, withCurrency = true, isShort = false }: FormatBalanceProps): JSX.Element => (
-  <>{applyBalanceFormat(balance, withCurrency, isShort)}</>
+  <>{applyFormatBalance(balance, withCurrency, isShort)}</>
 )
 
-export { applyBalanceFormat, FormatBalance }
+export { applyFormatBalance, FormatBalance }
