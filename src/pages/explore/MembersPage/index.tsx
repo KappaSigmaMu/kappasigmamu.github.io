@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { Badge, Col, Spinner } from 'react-bootstrap'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { truncateMiddle } from '../../../helpers/truncate'
+import { useBlockTime } from '../../../hooks/useBlockTime'
 import { useConsts } from '../../../hooks/useConsts'
 import { useKusama } from '../../../kusama'
 import { FormatBalance } from './FormatBalance'
@@ -78,8 +79,8 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
     <DataHeaderRow>
       <Col xs={1} className="text-center">#</Col>
       <Col xs={2} className="text-start">Wallet Hash</Col>
-      <Col xs={2} className="text-end">Payouts</Col>
-      <Col xs={7} className="text-end"></Col>
+      <Col xs={3} className="text-end">Payouts</Col>
+      <Col xs={6} className="text-end"></Col>
     </DataHeaderRow>
     {members.map((member: SocietyMember) => (
       <DataRow key={member.accountId.toString()}>
@@ -89,21 +90,22 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
         <Col xs={2} className="text-start text-truncate">
           {truncateMiddle(member.accountId?.toString())}
         </Col>
-        <Col xs={2} className="text-start text-truncate">
+        <Col xs={3} className="text-end">
           {member.hasPayouts
             ? member.payouts.map((payout: [BlockNumber, Balance], index: number) => {
               const [block, balance] = payout
               return(
-                <span key={index}>
-                  <FormatBalance balance={balance} />< br/>
-                  block #{formatNumber(block)}<br />
-                </span>
+                <p key={index}>
+                  <FormatBalance balance={balance} />
+                  < br/>
+                  <BlockTime block={block} />
+                </p>
               )
             })
             : <></>
           }
         </Col>
-        <Col xs={7} className="text-end">
+        <Col xs={6} className="text-end">
           {member.isFounder ? <Badge pill bg="primary" className="me-2">Founder</Badge> : <></>}
           {member.isHead ? <Badge pill bg="primary" className="me-2">Head</Badge> : <></>}
           {member.isDefenderVoter ? <Badge pill bg="primary" className="me-2">Defender</Badge> : <></>}
