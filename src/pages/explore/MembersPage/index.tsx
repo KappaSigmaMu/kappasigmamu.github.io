@@ -25,27 +25,52 @@ export interface SocietyMember {
   strikesCount: number
 }
 
-const buildSocietyMember = (
+const societyMembersArraySorter = (a: SocietyMember, b: SocietyMember): number => (
+  a.isHead !== b.isHead
+    ? (a.isHead ? -1 : 1)
+    : a.isFounder !== b.isFounder
+      ? (a.isFounder ? -1 : 1)
+      : a.isSkeptic !== b.isSkeptic
+        ? (a.isSkeptic ? -1 : 1)
+        : a.isDefenderVoter !== (b.isDefenderVoter)
+          ? (a.isDefenderVoter ? -1 : 1)
+          : 1
+)
+
+const societyMembersArrayBuilder = (
   members: DeriveSocietyMember[],
   info: DeriveSociety | null,
   maxStrikes: BN,
   ): SocietyMember[] => {
-  return members.map((member) => {
-    return {
-      accountId: member.accountId,
-      hasPayouts: member.payouts.length > 0,
-      hasStrikes: !member.strikes.isEmpty,
-      isDefenderVoter: !!member.isDefenderVoter,
-      isFounder: !!info?.founder?.eq(member.accountId),
-      isHead: !!info?.head?.eq(member.accountId),
-      isSkeptic: !!member.vote?.isSkeptic,
-      isSuspended: member.isSuspended,
-      isWarned: !member.isSuspended && member.strikes.gt(maxStrikes),
-      payouts: member.payouts,
-      strikes: member.strikes,
-      strikesCount: member.strikes.isEmpty ? 0 : member.strikes.toNumber(),
-    }
-  })
+
+  const membersArray = members.map((member) => ({
+    accountId: member.accountId,
+    hasPayouts: member.payouts.length > 0,
+    hasStrikes: !member.strikes.isEmpty,
+    isDefenderVoter: !!member.isDefenderVoter,
+    isFounder: !!info?.founder?.eq(member.accountId),
+    isHead: !!info?.head?.eq(member.accountId),
+    isSkeptic: !!member.vote?.isSkeptic,
+    isSuspended: member.isSuspended,
+    isWarned: !member.isSuspended && member.strikes.gt(maxStrikes),
+    payouts: member.payouts,
+    strikes: member.strikes,
+    strikesCount: member.strikes.isEmpty ? 0 : member.strikes.toNumber(),
+  }))
+
+
+  return membersArray.sort(societyMembersArraySorter)
+}
+
+const BlockTime = ({ block }: { block: BlockNumber }) => {
+  const { api } = useKusama()
+  const [, time] = useBlockTime(block, api)
+
+  return (<>
+    <span>{time}</span>
+    &nbsp;
+    <span>(#{formatNumber(block)})</span>
+  </>)
 }
 
 const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => {
@@ -113,7 +138,7 @@ const MembersPage = (): JSX.Element => {
 
   const content = loading
     ? <Spinner animation="border" variant="primary" />
-    : <MembersList members={buildSocietyMember(members, info, maxStrikes)} />
+    : <MembersList members={societyMembersArrayBuilder(members, info, maxStrikes)} />
 
   return (content)
 }
