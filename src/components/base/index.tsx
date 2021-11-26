@@ -2,11 +2,14 @@ import { Button, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 
 const DataHeaderRow = styled(Row)`
-  color: #fff;
   line-height: 3;
 
   & .text-end {
     padding-right: 36px;
+  }
+
+  * {
+    color: ${(props) => props.theme.colors.lightGrey};
   }
 `
 

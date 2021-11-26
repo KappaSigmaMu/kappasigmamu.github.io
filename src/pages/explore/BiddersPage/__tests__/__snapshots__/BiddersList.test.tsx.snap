@@ -3,7 +3,7 @@
 exports[`renders BiddersList 1`] = `
 Array [
   <div
-    className="sc-bdfBQB UPEiY row"
+    className="sc-bdfBQB DMQmf row"
   >
     <div
       className="text-center col-1"
@@ -27,7 +27,7 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-bdfBQB sc-gsTEea UPEiY bmxeDH row"
+    className="sc-bdfBQB sc-gsTEea DMQmf bmxeDH row"
   >
     <div
       className="text-center col-1"
@@ -184,7 +184,7 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-bdfBQB sc-gsTEea UPEiY bmxeDH row"
+    className="sc-bdfBQB sc-gsTEea DMQmf bmxeDH row"
   >
     <div
       className="text-center col-1"

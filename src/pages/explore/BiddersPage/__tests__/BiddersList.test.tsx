@@ -1,5 +1,7 @@
 import TestRenderer from 'react-test-renderer'
+import { ThemeProvider } from 'styled-components'
 import { PalletSocietyBidFixture } from '../../../../__tests__/fixtures/PalletSocietyBidFixture'
+import { Theme } from '../../../../styles/Theme'
 import { BiddersList } from '../BiddersList'
 
 const bidDeposit = PalletSocietyBidFixture.createDeposit('5GrpknVvGGrGH3EFuURXeMrWHvbpj3VfER1oX5jFtuGbfzCE', 20)
@@ -8,7 +10,9 @@ const bids = [bidVouch, bidDeposit]
 
 test('renders BiddersList', () => {
   const tree = TestRenderer.create(
-    <BiddersList bids={bids} />
+    <ThemeProvider theme={Theme}>
+      <BiddersList bids={bids} />
+    </ThemeProvider>
   )
 
   expect(tree).toMatchSnapshot()
