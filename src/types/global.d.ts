@@ -18,6 +18,7 @@ declare interface SocietyMember {
   accountId: AccountId
   hasPayouts: boolean
   hasStrikes: boolean
+  isDefender: boolean
   isDefenderVoter: boolean
   isFounder: boolean
   isHead: boolean

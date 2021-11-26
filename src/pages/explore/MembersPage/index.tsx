@@ -7,15 +7,17 @@ import { useKusama } from '../../../kusama'
 import { MembersList } from './MembersList'
 
 const societyMembersArraySorter = (a: SocietyMember, b: SocietyMember): number => (
-  a.isHead !== b.isHead
-    ? (a.isHead ? -1 : 1)
-    : a.isFounder !== b.isFounder
-      ? (a.isFounder ? -1 : 1)
-      : a.isSkeptic !== b.isSkeptic
-        ? (a.isSkeptic ? -1 : 1)
-        : a.isDefenderVoter !== (b.isDefenderVoter)
-          ? (a.isDefenderVoter ? -1 : 1)
-          : 1
+  a.isDefender !== b.isDefender
+    ? a.isDefender ? -1 : 1
+    : a.isHead !== b.isHead
+      ? (a.isHead ? -1 : 1)
+      : a.isFounder !== b.isFounder
+        ? (a.isFounder ? -1 : 1)
+        : a.isSkeptic !== b.isSkeptic
+          ? (a.isSkeptic ? -1 : 1)
+          : a.isDefenderVoter !== (b.isDefenderVoter)
+            ? (a.isDefenderVoter ? -1 : 1)
+            : 1
 )
 
 const societyMembersArrayBuilder = (
@@ -28,6 +30,7 @@ const societyMembersArrayBuilder = (
     accountId: member.accountId,
     hasPayouts: member.payouts.length > 0,
     hasStrikes: !member.strikes.isEmpty,
+    isDefender: !!info?.defender?.eq(member.accountId),
     isDefenderVoter: !!member.isDefenderVoter,
     isFounder: !!info?.founder?.eq(member.accountId),
     isHead: !!info?.head?.eq(member.accountId),
