@@ -1,7 +1,6 @@
 import Identicon from '@polkadot/react-identicon'
 import { Badge, Col } from 'react-bootstrap'
 import { DataHeaderRow, DataRow } from '../../../components/base'
-import { truncateMiddle } from '../../../helpers/truncate'
 
 const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => {
   return (<>
@@ -16,7 +15,7 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
           <Identicon value={member.accountId} size={32} theme={'polkadot'} />
         </Col>
         <Col xs={3} className="text-start text-truncate">
-          {truncateMiddle(member.accountId?.toString())}
+          {member.accountId?.toString()}
         </Col>
         <Col xs={8} className="text-end">
           {member.isFounder
