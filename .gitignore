@@ -24,3 +24,5 @@ substrate
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+src/kusama/config/development.json

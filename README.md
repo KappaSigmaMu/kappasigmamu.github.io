@@ -11,6 +11,13 @@ This is a dedicated interface for Kusama Society.
 
 - Clone this repository.
 
+- Copy the development sample config file:
+```bash
+cp ./src/kusama/config/development.json.sample ./src/kusama/config/development.json
+```
+
+> Use `"PROVIDER_SOCKET": "wss://kusama-rpc.polkadot.io"` if you want to connect to production RPC
+
 - Download [this binary](https://gateway.pinata.cloud/ipfs/QmPbk5Xx3kHdWw4gDBiNTp6dSnzW8d2PAofE1TAh2Tpc9J), rename it to `substrate` and place it on the root folder. This binary has a initial state with some members and short rotation times.
 
 ## Installation
@@ -32,11 +39,13 @@ docker-compose up
 ## Running locally
 
 ### Society node:
+
 ```
 ./substrate --tmp --dev
 ```
 
 ### Application:
+
 ```
 yarn start
 ```
