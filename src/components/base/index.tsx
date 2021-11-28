@@ -14,9 +14,13 @@ const DataHeaderRow = styled(Row)`
 `
 
 const DataRow = styled(DataHeaderRow)`
-  background-color: #343A40;
+  background-color: ${(props) => props.theme.colors.darkGrey};
   border-radius: 6px;
   margin-top: 10px;
+
+  * {
+  color: ${(props) => props.theme.colors.white};
+}
 `
 
 const ExternalLink = styled.a.attrs(() => ({
