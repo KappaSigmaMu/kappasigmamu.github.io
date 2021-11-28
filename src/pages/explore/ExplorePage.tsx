@@ -1,8 +1,8 @@
 import { Col, Container, Row } from 'react-bootstrap'
 import { Route, Routes } from 'react-router-dom'
-import { MembersPage } from './MembersPage'
 import { BiddersPage } from './BiddersPage'
 import { NavigationBar } from './components/NavigationBar'
+import { MembersPage } from './MembersPage'
 
 const ExplorePage = (): JSX.Element => {
   return (
