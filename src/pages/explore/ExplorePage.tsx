@@ -1,5 +1,4 @@
 import { DeriveSociety, DeriveSocietyCandidate, DeriveSocietyMember } from '@polkadot/api-derive/types'
-import { BN } from '@polkadot/util'
 import { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Route, Routes } from 'react-router-dom'
