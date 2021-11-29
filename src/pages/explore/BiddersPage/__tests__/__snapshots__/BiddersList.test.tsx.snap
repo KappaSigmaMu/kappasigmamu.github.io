@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders BidsList 1`] = `
+exports[`renders BiddersList 1`] = `
 Array [
   <div
-    className="sc-bdfBQB UPEiY row"
+    className="sc-bdfBQB DMQmf row"
   >
     <div
       className="text-center col-1"
@@ -27,7 +27,7 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-bdfBQB sc-gsTEea UPEiY bmxeDH row"
+    className="sc-bdfBQB sc-gsTEea DMQmf frwqlw row"
   >
     <div
       className="text-center col-1"
@@ -170,7 +170,7 @@ Array [
     <div
       className="text-start text-truncate col-4"
     >
-      5CSbZ7wG45...q95BsYH4TZ
+      5CSbZ7...sYH4TZ
     </div>
     <div
       className="text-start text-truncate col-5"
@@ -184,7 +184,7 @@ Array [
     </div>
   </div>,
   <div
-    className="sc-bdfBQB sc-gsTEea UPEiY bmxeDH row"
+    className="sc-bdfBQB sc-gsTEea DMQmf frwqlw row"
   >
     <div
       className="text-center col-1"
@@ -327,7 +327,7 @@ Array [
     <div
       className="text-start text-truncate col-4"
     >
-      5GrpknVvGG...jFtuGbfzCE
+      5Grpkn...GbfzCE
     </div>
     <div
       className="text-start text-truncate col-5"
