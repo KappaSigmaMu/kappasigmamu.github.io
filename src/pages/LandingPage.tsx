@@ -29,37 +29,35 @@ const LandingPage = () => {
     if (!activeAccount) {
       fetchAccounts(setAccounts, setActiveAccount)
     }
-    navigate('/guide')
+    navigate('/journey')
   }
 
   return (
-    <>
-      <FullPageHeightRow>
-        <div className="position-absolute h-100">
-          <ThreeCanary
-              objectUrl={`./static/canary.glb`}
-              nodes={
-                members.map((id : string) => ({
-                  "hash": id.toString()
-                }))
-              }
-          />
-        </div>
-        <CentralizedCol xs={6} />
-        <CentralizedCol xs={6}>
-          <h1>Join the</h1>
-          <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-          <p>
-            <PrimaryLgButton onClick={handlePrimaryButtonClick}>
-              Become a Cyborg
-            </PrimaryLgButton>
-          </p>
-          <p>
-            <Link to="/guide">Cyborg Guide</Link>
-          </p>
-        </CentralizedCol>
-      </FullPageHeightRow>
-    </>
+    <FullPageHeightRow>
+      <div className="position-absolute" style={{height: '85vh'}}>
+        <ThreeCanary
+            objectUrl={`./static/canary.glb`}
+            nodes={
+              members.map((id : string) => ({
+                "hash": id.toString()
+              }))
+            }
+        />
+      </div>
+      <CentralizedCol span={6} />
+      <CentralizedCol span={6}>
+        <h1>Join the</h1>
+        <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
+        <p>
+          <PrimaryLgButton onClick={handlePrimaryButtonClick}>
+            Become a Cyborg
+          </PrimaryLgButton>
+        </p>
+        <p>
+          <Link to="/guide">Cyborg Guide</Link>
+        </p>
+      </CentralizedCol>
+    </FullPageHeightRow>
   )
 }
 
@@ -69,7 +67,8 @@ const KappaSigmaMu = styled.img`
 `
 
 const FullPageHeightRow = styled(Row)`
-  height: 89vh;
+  height: 85vh;
+  width: 100%;
 `
 
 const CentralizedCol = styled(Col)`
