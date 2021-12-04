@@ -1,6 +1,6 @@
 import { BrowserRouter } from 'react-router-dom'
 import TestRenderer from 'react-test-renderer'
-import { Navbar } from '../../components/Navbar'
+import { Navbar } from '../Navbar'
 
 describe('NavBar', () => {
   it('renders it with showAccount', () => {
@@ -23,10 +23,10 @@ describe('NavBar', () => {
     expect(tree).toMatchSnapshot()
   })
 
-  it('renders it with showGalleryButton', () => {
+  it('renders it with showExploreButton', () => {
     const tree = TestRenderer.create(
       <BrowserRouter>
-        <Navbar showGalleryButton />
+        <Navbar showExploreButton />
       </BrowserRouter>
     )
 

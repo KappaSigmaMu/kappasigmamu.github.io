@@ -2,7 +2,6 @@
 
 exports[`renders App 1`] = `
 <Router
-  action="POP"
   location={
     Object {
       "hash": "",
@@ -12,6 +11,7 @@ exports[`renders App 1`] = `
       "state": null,
     }
   }
+  navigationType="POP"
   navigator={
     Object {
       "action": "POP",

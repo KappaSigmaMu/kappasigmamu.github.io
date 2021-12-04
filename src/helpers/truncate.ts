@@ -3,7 +3,7 @@ function truncate(str: string, strLength = 7) {
   return str.length > 10 ? str.substring(0, strLength) + '...' : str
 }
 
-function truncateMiddle(str: string, strLength = 23, separator = '...') {
+function truncateMiddle(str: string, strLength = 15, separator = '...') {
   if (str.length <= strLength) return str
 
   const separatorLength = separator.length

@@ -9,14 +9,14 @@ import { SocialIcons } from './SocialIcons'
 const Navbar = ({
   showAccount=false,
   showBrandIcon=false,
-  showGalleryButton=false,
+  showExploreButton=false,
   showSocialIcons=false,
 }: NavRouteProps) => (
   <RBNavbar className="pt-4" fixed="top">
     <Container>
-      <Nav>{showBrandIcon ? <NavbarBrand /> : <></>}</Nav>
+      <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
       <Nav className="align-items-center align-self-center">
-        {showGalleryButton ? <Nav.Link to="/home/bids" as={Link}>Gallery</Nav.Link> : <></>}
+        {showExploreButton ? <Nav.Link to="/explore" as={Link}>Explore</Nav.Link> : <></>}
         &nbsp;
         {showSocialIcons ? <SocialIcons /> : <></>}
         &nbsp;
@@ -24,6 +24,10 @@ const Navbar = ({
       </Nav>
     </Container>
   </RBNavbar>
+)
+
+const BrandPlaceholder = () => (
+  <div style={{ height: 82, width: 106 }}></div>
 )
 
 const NavbarBrand = () => (

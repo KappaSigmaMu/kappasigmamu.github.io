@@ -1,54 +1,52 @@
 import ThreeCanary from "@kappasigmamu/canary-component"
+import { Vec } from '@polkadot/types'
+import { AccountId32 } from '@polkadot/types/interfaces'
+import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { PrimaryLgButton } from '../components/base'
 import { fetchAccounts } from '../helpers/fetchAccounts'
+import { useKusama } from '../kusama'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
-
-const choose = (choices: Array<string>) => {
-  const index = Math.floor(Math.random() * choices.length)
-  return choices[index]
-}
-
-const nodesDataFactory = (n: number) => {
-  const data = []
-  for (let i=0; i<n; i+=1) {
-    data.push({
-      "id": Math.floor(Math.random()*100),
-      "name": choose(["Arthur C. Clarke", "Douglas Adams", "Isaac Asimov"]),
-      "level": choose(["human", "cyborg"]),
-      "hash": choose(["0x08eded6a76d84e309e3f09705ea2853f", "0xdeadbeefe6a76d84e309e3f09705ea28589"]),
-      // "img": choose(["/assets/t1.jpg", "/assets/t2.jpg"])
-    })
-  }
-  return data
-}
-
-const nodesData = nodesDataFactory(1500)
 
 const LandingPage = () => {
   const navigate = useNavigate()
   const { activeAccount, setActiveAccount, setAccounts } = useAccount()
+  const { api } = useKusama()
+  const [members, setMembers] = useState<Array<string>>([""])
+
+  useEffect(() => {
+    if (api) {
+      api.query.society.members().then((response: Vec<AccountId32>) => {
+        setMembers(response.map((account) => account.toString()))
+      })
+    }
+  }, [api])
 
   const handlePrimaryButtonClick = () => {
     if (!activeAccount) {
       fetchAccounts(setAccounts, setActiveAccount)
     }
-    navigate('/home')
+    navigate('/guide')
   }
 
   return (
     <>
-      <div className="position-absolute h-100 g-0">
-        <ThreeCanary
-            objectUrl={`./static/canary.glb`}
-            nodes={nodesData}
-        />
-      </div>
-      <CentralizedRow>
-        <Col md={{ span: 3, offset: 6 }}>
+      <FullPageHeightRow>
+        <div className="position-absolute h-100">
+          <ThreeCanary
+              objectUrl={`./static/canary.glb`}
+              nodes={
+                members.map((id : string) => ({
+                  "hash": id.toString()
+                }))
+              }
+          />
+        </div>
+        <CentralizedCol xs={6} />
+        <CentralizedCol xs={6}>
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <p>
@@ -59,8 +57,8 @@ const LandingPage = () => {
           <p>
             <Link to="/guide">Cyborg Guide</Link>
           </p>
-        </Col>
-      </CentralizedRow>
+        </CentralizedCol>
+      </FullPageHeightRow>
     </>
   )
 }
@@ -70,8 +68,14 @@ const KappaSigmaMu = styled.img`
   display: block;
 `
 
-const CentralizedRow = styled(Row)`;
-  transform: translateY(25%);
+const FullPageHeightRow = styled(Row)`
+  height: 89vh;
+`
+
+const CentralizedCol = styled(Col)`
+  align-items: center;
+  margin-bottom: auto;
+  margin-top: auto;
   z-index: 1;
 `
 

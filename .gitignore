@@ -11,6 +11,9 @@
 # production
 /build
 
+# development node binary
+substrate
+
 # misc
 .DS_Store
 .env.local
@@ -21,3 +24,5 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+src/kusama/config/development.json

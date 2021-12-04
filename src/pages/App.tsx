@@ -1,51 +1,46 @@
 import { Suspense } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { AccountContextProvider } from '../account/AccountContext'
 import { Navbar } from '../components/Navbar'
 import { KusamaContextProvider } from '../kusama'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
-import { CyborgGuide } from './CyborgGuide'
-import { Bids } from './gallery/Bids'
-import { Home } from './home/Home'
+import { CyborgGuidePage } from './CyborgGuidePage'
+import { ExplorePage } from './explore/ExplorePage'
+import { JourneyPage } from './JourneyPage'
 import { LandingPage } from './LandingPage'
-import { Welcome } from './Welcome'
+import { WelcomePage } from './WelcomePage'
 
-const Main = () => {
+const AppNavigation = () => {
+  const { pathname } = useLocation()
+  const isRoot = !!pathname.match("[/]$")
+
+  return (
+    <>
+      <Navbar
+        showAccount
+        showExploreButton
+        showBrandIcon={!isRoot}
+        showSocialIcons={isRoot || pathname.includes("guide")}
+      />
+      <Outlet />
+    </>
+  )
+}
+
+const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={
-          <>
-            <Navbar showSocialIcons showAccount />
-            <LandingPage />
-          </>
-        }/>
-        <Route path="/guide" element={
-          <>
-            <Navbar showBrandIcon showSocialIcons showAccount />
-            <CyborgGuide />
-          </>
-        }/>
-        <Route path="/welcome" element={
-          <>
-            <Navbar showBrandIcon showGalleryButton showAccount />
-            <Welcome />
-          </>
-        }/>
-        <Route path="/home" element={
-          <>
-            <Navbar showBrandIcon showGalleryButton showAccount />
-            <Home />
-          </>
-        }/>
-        <Route path="/gallery" element={
-          <>
-            <Navbar showBrandIcon showGalleryButton showAccount />
-            <Bids />
-          </>
-        }/>
+        <Route path="" element={<AppNavigation />}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/guide" element={<CyborgGuidePage />} />
+          <Route path="/welcome" element={<WelcomePage />} />
+          <Route path="/journey" element={<JourneyPage />} />
+          <Route path="/explore/*" element={<ExplorePage />} />
+          <Route path="*" element={<>NOT FOUND</>} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )
@@ -59,7 +54,7 @@ const App = () => (
         <ThemeProvider theme={Theme}>
           <GlobalStyle />
             <Suspense fallback={<p>ERROR/LOADING...</p>}>
-              <Main />
+              <AppRouter />
             </Suspense>
         </ThemeProvider>
       </AccountContextProvider>
