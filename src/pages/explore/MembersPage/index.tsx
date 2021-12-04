@@ -1,4 +1,7 @@
-import { DeriveSociety, DeriveSocietyMember } from '@polkadot/api-derive/types'
+import { accountId } from '@polkadot/api-derive/accounts'
+import { DeriveAccountInfo, DeriveSociety, DeriveSocietyMember } from '@polkadot/api-derive/types'
+import { ApiPromise } from '@polkadot/api/promise'
+import { AccountId } from '@polkadot/types/interfaces'
 import { BN } from '@polkadot/util'
 import { useEffect, useState } from 'react'
 import { Spinner } from 'react-bootstrap'
@@ -22,6 +25,7 @@ const societyMembersArraySorter = (a: SocietyMember, b: SocietyMember): number =
 
 const societyMembersArrayBuilder = (
   members: DeriveSocietyMember[],
+  indices: Record<string, string>,
   info: DeriveSociety | null,
   maxStrikes: BN,
   ): SocietyMember[] => {
@@ -40,17 +44,18 @@ const societyMembersArrayBuilder = (
     payouts: member.payouts,
     strikes: member.strikes,
     strikesCount: member.strikes.isEmpty ? 0 : member.strikes.toNumber(),
+    index: indices[member.accountId.toString()]
   }))
 
   return membersArray.sort(societyMembersArraySorter)
 }
-
 const MembersPage = (): JSX.Element => {
   const { api } = useKusama()
   const { maxStrikes } = useConsts()
 
   const [members, setMembers] = useState<DeriveSocietyMember[] | []>([])
   const [info, setInfo] = useState<DeriveSociety | null>(null)
+  const [indices, setIndices] = useState<Record<string, string>>({})
 
   const loading = !api?.query?.society
 
@@ -66,9 +71,25 @@ const MembersPage = (): JSX.Element => {
     }
   }, [api?.query?.society])
 
+  useEffect(() => {
+    if (!loading) {
+      members.map(
+        member => {
+          api.derive.accounts.info(member.accountId).then((accountInfo: DeriveAccountInfo) => {
+            const newIndices = Object.assign(
+              indices,
+              { [member.accountId.toString()]: accountInfo.accountIndex?.toString() }
+            )
+            setIndices(newIndices)
+          })
+        }
+      )
+    }
+  }, [members])
+
   const content = loading
     ? <Spinner animation="border" variant="primary" />
-    : <MembersList members={societyMembersArrayBuilder(members, info, maxStrikes)} />
+    : <MembersList members={societyMembersArrayBuilder(members, indices, info, maxStrikes)} />
 
   return (content)
 }

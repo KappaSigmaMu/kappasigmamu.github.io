@@ -15,7 +15,8 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
     <DataHeaderRow>
       <Col xs={1} className="text-center">#</Col>
       <Col xs={3} className="text-start">Wallet Hash</Col>
-      <Col xs={8} className="text-end"></Col>
+      <Col xs={2} className="text-start">Index</Col>
+      <Col xs={7} className="text-end"></Col>
     </DataHeaderRow>
     {members.map((member: SocietyMember) => (
       <StyledDataRow key={member.accountId.toString()} isDefender={member.isDefender}>
@@ -25,7 +26,10 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
         <Col xs={3} className="text-start text-truncate">
           {truncateMiddle(member.accountId?.toString())}
         </Col>
-        <Col xs={8} className="text-end">
+        <Col xs={1} className="text-start text-truncate">
+          {member.index ?? "(not set)"}
+        </Col>
+        <Col xs={7} className="text-end">
           {member.isDefender
             ? <Badge pill bg="primary" className="me-2 p-2">Defender</Badge>
             : <></>

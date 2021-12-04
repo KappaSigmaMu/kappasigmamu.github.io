@@ -28,4 +28,5 @@ declare interface SocietyMember {
   payouts: [BlockNumber, Balance][]
   strikes: StrikeCount
   strikesCount: number
+  index: string
 }
