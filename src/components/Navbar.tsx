@@ -27,7 +27,7 @@ const Navbar = ({
 )
 
 const BrandPlaceholder = () => (
-  <div style={{ height: 82, width: 106 }}></div>
+  <div style={{ height: '5%', width: '8%' }}></div>
 )
 
 const NavbarBrand = () => (

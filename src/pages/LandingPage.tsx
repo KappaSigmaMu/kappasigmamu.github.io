@@ -35,7 +35,7 @@ const LandingPage = () => {
   return (
     <>
       <FullPageHeightRow>
-        <div className="position-absolute h-100">
+        <CanaryDiv className="position-absolute">
           <ThreeCanary
               objectUrl={`./static/canary.glb`}
               nodes={
@@ -44,7 +44,7 @@ const LandingPage = () => {
                 }))
               }
           />
-        </div>
+        </CanaryDiv>
         <CentralizedCol xs={6} />
         <CentralizedCol xs={6}>
           <h1>Join the</h1>
@@ -68,7 +68,12 @@ const KappaSigmaMu = styled.img`
   display: block;
 `
 
+const CanaryDiv = styled.div`
+  height: 91%;
+`
+
 const FullPageHeightRow = styled(Row)`
+  --bs-gutter-x: 0px;
   height: 89vh;
 `
 
