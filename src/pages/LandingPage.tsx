@@ -36,20 +36,19 @@ const LandingPage = () => {
     if (!activeAccount) {
       fetchAccounts(setAccounts, setActiveAccount)
     }
-    navigate('/guide')
+    navigate('/home')
   }
 
   return (
     <>
-      <FullPageHeightRow>
-        <div className="position-absolute h-100">
-          <ThreeCanary
-              objectUrl={`./static/canary.glb`}
-              nodes={nodesData}
-          />
-        </div>
-        <CentralizedCol xs={6} />
-        <CentralizedCol xs={6}>
+      <div className="position-absolute h-100 g-0">
+        <ThreeCanary
+            objectUrl={`./static/canary.glb`}
+            nodes={nodesData}
+        />
+      </div>
+      <CentralizedRow>
+        <Col md={{ span: 3, offset: 6 }}>
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <p>
@@ -60,8 +59,8 @@ const LandingPage = () => {
           <p>
             <Link to="/guide">Cyborg Guide</Link>
           </p>
-        </CentralizedCol>
-      </FullPageHeightRow>
+        </Col>
+      </CentralizedRow>
     </>
   )
 }
@@ -71,14 +70,8 @@ const KappaSigmaMu = styled.img`
   display: block;
 `
 
-const FullPageHeightRow = styled(Row)`
-  height: 89vh;
-`
-
-const CentralizedCol = styled(Col)`
-  align-items: center;
-  margin-bottom: auto;
-  margin-top: auto;
+const CentralizedRow = styled(Row)`;
+  transform: translateY(25%);
   z-index: 1;
 `
 
