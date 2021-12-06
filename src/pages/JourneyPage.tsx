@@ -10,15 +10,15 @@ const JourneyPage = (): JSX.Element => (
     <StyledDiv>
       <Container>
         <Row>
-          <Col sm={3}>
+          <StyledCol sm={3}>
             <Level />
-          </Col>
-          <Col sm={4}>
+          </StyledCol>
+          <StyledCol sm={4}>
             <LevelNotification />
-          </Col>
-          <Col sm={5}>
+          </StyledCol>
+          <StyledCol sm={5}>
             <NextStep />
-          </Col>
+          </StyledCol>
         </Row>
       </Container>
     </StyledDiv>
@@ -31,6 +31,10 @@ const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`
+
+const StyledCol = styled(Col)`
+  z-index: 10;
 `
 
 export { JourneyPage }

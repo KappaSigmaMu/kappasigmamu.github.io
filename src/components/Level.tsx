@@ -13,6 +13,7 @@ const CanaryImg = styled.img`
   position: absolute;
   top: 23%;
   left: 11%;
+  z-index: -1;
 `
 
 const CanaryLevel1 = <CanaryImg src={CanarySvgLevel1} alt="Canary Level 1" />
