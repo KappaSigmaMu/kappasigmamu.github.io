@@ -2,7 +2,7 @@ import ThreeCanary from "@kappasigmamu/canary-component"
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from "react"
-import { Col, Row } from 'react-bootstrap'
+import { Col, Row, Offcanvas } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
@@ -16,6 +16,16 @@ const LandingPage = () => {
   const { activeAccount, setActiveAccount, setAccounts } = useAccount()
   const { api } = useKusama()
   const [members, setMembers] = useState<Array<string>>([""])
+  const [show, setShow] = useState(true)
+  const [selectedMember, setSelectedMember] = useState<string>("")
+
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+
+  const handleCanaryNodeClick = (nodeId : string) => {
+    setShow(true)
+    setSelectedMember(nodeId)
+  }
 
   useEffect(() => {
     if (api) {
@@ -33,31 +43,43 @@ const LandingPage = () => {
   }
 
   return (
-    <FullPageHeightRow>
-      <div className="position-absolute" style={{height: '85vh'}}>
-        <ThreeCanary
-            objectUrl={`./static/canary.glb`}
-            nodes={
-              members.map((id : string) => ({
-                "hash": id.toString()
-              }))
-            }
-        />
-      </div>
-      <CentralizedCol span={6} />
-      <CentralizedCol span={6}>
-        <h1>Join the</h1>
-        <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-        <p>
-          <PrimaryLgButton onClick={handlePrimaryButtonClick}>
-            Become a Cyborg
-          </PrimaryLgButton>
-        </p>
-        <p>
-          <Link to="/guide">Cyborg Guide</Link>
-        </p>
-      </CentralizedCol>
-    </FullPageHeightRow>
+    <>
+      <Offcanvas show={show} onHide={handleClose} placement="end">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>{selectedMember}</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          {members} - {selectedMember}
+        </Offcanvas.Body>
+      </Offcanvas>
+
+      <FullPageHeightRow>
+        <div className="position-absolute h-100">
+          <ThreeCanary
+              objectUrl={`./static/canary.glb`}
+              nodes={
+                members.map((id : string) => ({
+                  "hash": id.toString()
+                }))
+              }
+              onNodeClick={handleCanaryNodeClick}
+          />
+        </div>
+        <CentralizedCol xs={6} />
+        <CentralizedCol xs={6}>
+          <h1>Join the</h1>
+          <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
+          <p>
+            <PrimaryLgButton onClick={handlePrimaryButtonClick}>
+              Become a Cyborg
+            </PrimaryLgButton>
+          </p>
+          <p>
+            <Link to="/guide">Cyborg Guide</Link>
+          </p>
+        </CentralizedCol>
+      </FullPageHeightRow>
+    </>
   )
 }
 
