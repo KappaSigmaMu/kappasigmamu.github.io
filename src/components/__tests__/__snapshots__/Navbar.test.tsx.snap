@@ -14,8 +14,8 @@ exports[`NavBar renders it with showAccount 1`] = `
       <div
         style={
           Object {
-            "height": 82,
-            "width": 106,
+            "height": "5%",
+            "width": "8%",
           }
         }
       />
@@ -87,8 +87,8 @@ exports[`NavBar renders it with showExploreButton 1`] = `
       <div
         style={
           Object {
-            "height": 82,
-            "width": 106,
+            "height": "5%",
+            "width": "8%",
           }
         }
       />
@@ -127,8 +127,8 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
       <div
         style={
           Object {
-            "height": 82,
-            "width": 106,
+            "height": "5%",
+            "width": "8%",
           }
         }
       />
