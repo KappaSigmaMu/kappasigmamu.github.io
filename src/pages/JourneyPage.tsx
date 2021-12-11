@@ -27,7 +27,7 @@ const JourneyPage = (): JSX.Element => (
 )
 
 const StyledDiv = styled.div`
-  height: 67.1vh;
+  height: 69.1vh;
   display: flex;
   flex-direction: column;
   justify-content: center;

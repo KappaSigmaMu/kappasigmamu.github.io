@@ -12,7 +12,7 @@ const Navbar = ({
   showExploreButton=false,
   showSocialIcons=false,
 }: NavRouteProps) => (
-  <RBNavbar className="mt-4">
+  <RBNavbar className="pt-4">
     <Container>
       <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
       <Nav className="align-items-center align-self-center">

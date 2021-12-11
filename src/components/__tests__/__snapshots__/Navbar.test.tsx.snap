@@ -2,7 +2,7 @@
 
 exports[`NavBar renders it with showAccount 1`] = `
 <nav
-  className="mt-4 navbar navbar-expand navbar-light"
+  className="pt-4 navbar navbar-expand navbar-light"
 >
   <div
     className="container"
@@ -41,7 +41,7 @@ exports[`NavBar renders it with showAccount 1`] = `
 
 exports[`NavBar renders it with showBrandIcon 1`] = `
 <nav
-  className="mt-4 navbar navbar-expand navbar-light"
+  className="pt-4 navbar navbar-expand navbar-light"
 >
   <div
     className="container"
@@ -75,7 +75,7 @@ exports[`NavBar renders it with showBrandIcon 1`] = `
 
 exports[`NavBar renders it with showExploreButton 1`] = `
 <nav
-  className="mt-4 navbar navbar-expand navbar-light"
+  className="pt-4 navbar navbar-expand navbar-light"
 >
   <div
     className="container"
@@ -115,7 +115,7 @@ exports[`NavBar renders it with showExploreButton 1`] = `
 
 exports[`NavBar renders it with showSocialIcons 1`] = `
 <nav
-  className="mt-4 navbar navbar-expand navbar-light"
+  className="pt-4 navbar navbar-expand navbar-light"
 >
   <div
     className="container"
