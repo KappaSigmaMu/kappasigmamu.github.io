@@ -1,37 +1,90 @@
 import ThreeCanary from "@kappasigmamu/canary-component"
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
+import { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState } from "react"
-import { Col, Row, Offcanvas } from 'react-bootstrap'
+import { Col, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { PrimaryLgButton } from '../components/base'
+import { MemberOffcanvas } from "../components/MemberOffcanvas"
 import { fetchAccounts } from '../helpers/fetchAccounts'
 import { useKusama } from '../kusama'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
+
+interface MemberData {
+  [key: string]: string
+}
+
+interface MembersData {
+  [key: string]: MemberData
+}
 
 const LandingPage = () => {
   const navigate = useNavigate()
   const { activeAccount, setActiveAccount, setAccounts } = useAccount()
   const { api } = useKusama()
   const [members, setMembers] = useState<Array<string>>([""])
-  const [show, setShow] = useState(true)
-  const [selectedMember, setSelectedMember] = useState<string>("")
+  const [show, setShow] = useState(false)
+
+  const [selectedMember, setSelectedMember] = useState<MemberData>({})
+  const [allMembers, setAllMembers] = useState<MembersData>({})
 
   const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
 
   const handleCanaryNodeClick = (nodeId : string) => {
-    setShow(true)
-    setSelectedMember(nodeId)
+    if (allMembers) {
+      setShow(true)
+      setSelectedMember(allMembers[nodeId])
+    }
+  }
+
+  const setLevelCheckingAccounts = (accounts: AccountId32[], targetAccount: string, level: string) => {
+    accounts.forEach((account: AccountId32) => {
+      if (account.toString() === targetAccount) {
+        const m = allMembers
+        m[targetAccount].level = level
+        setAllMembers(m)
+      }
+    })
   }
 
   useEffect(() => {
+
     if (api) {
-      api.query.society.members().then((response: Vec<AccountId32>) => {
-        setMembers(response.map((account) => account.toString()))
+      api.derive.society.members().then((members) => {
+        members.forEach((member) => {
+          const id = member.accountId.toString()
+          const m = allMembers
+          m[id] = {
+            "hash": id,
+            "name": "unknown",
+            "level": "human",
+            "strikes": member.strikes.toString() 
+          }
+          setAllMembers(m)
+
+          api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
+            setLevelCheckingAccounts(response.map(account => account.who), id, 'bidder')
+          })
+    
+          api.query.society.candidates().then((response: Vec<PalletSocietyBid>) => {
+            setLevelCheckingAccounts(response.map(account => account.who), id, 'candidate')
+          })
+    
+          api.query.society.members().then((response: Vec<AccountId32>) => {
+            setLevelCheckingAccounts(response, id, 'cyborg')
+          })
+
+        })
       })
+
+      api.query.society.members().then((response: Vec<AccountId32>) => {
+        const ids = response.map((account) => account.toString())
+        setMembers(ids)
+      })
+
     }
   }, [api])
 
@@ -44,26 +97,26 @@ const LandingPage = () => {
 
   return (
     <>
-      <Offcanvas show={show} onHide={handleClose} placement="end">
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>{selectedMember}</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          {members} - {selectedMember}
-        </Offcanvas.Body>
-      </Offcanvas>
+      <MemberOffcanvas
+        show={show}
+        handleClose={handleClose}
+        member={selectedMember}
+        />
 
       <FullPageHeightRow>
         <div className="position-absolute h-100">
-          <ThreeCanary
-              objectUrl={`./static/canary.glb`}
-              nodes={
-                members.map((id : string) => ({
-                  "hash": id.toString()
-                }))
-              }
-              onNodeClick={handleCanaryNodeClick}
-          />
+          { allMembers ?
+            <ThreeCanary
+                objectUrl={`./static/canary.glb`}
+                nodes={
+                  members.map((id : string) => ({
+                    "hash": id,
+                    "name": "Unknown",
+                    "level": allMembers[id]?.level
+                  }))
+                }
+                onNodeClick={handleCanaryNodeClick}
+            /> : null }
         </div>
         <CentralizedCol xs={6} />
         <CentralizedCol xs={6}>
