@@ -14,6 +14,15 @@ declare class ThreeCanary {
   constructor(objectUrl?: string)
 }
 
+declare interface SocietyCandidate {
+  accountId: AccountId
+  kind: BidKind
+  value: Balance
+  isSuspended: boolean
+  voters: string[]
+  skeptics: string[]
+}
+
 declare interface SocietyMember {
   accountId: AccountId
   hasPayouts: boolean
