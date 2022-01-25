@@ -1,20 +1,56 @@
+import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
+import { Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
+
+
 import styled from 'styled-components'
-import { Tab, Nav } from 'react-bootstrap'
 
 
-const BidVouch = () => (
-  <Tab.Container defaultActiveKey="bid">
-    <StyledNav variant='tabs'>
-      <Nav.Item>
-        <Nav.Link eventKey="bid">Place Bid</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="vouch">Vouch</Nav.Link>
-      </Nav.Item>
-    </StyledNav>
-    <StyledTabContent>
-      <Tab.Pane eventKey="bid">
-        Place Bid
+const BidVouch = () => {
+  const handleBidSubmit = (e : React.FormEvent<HTMLFormElement>) => {
+    console.log(e.target[0].value)
+    e.preventDefault()
+  }
+
+  return (
+    <Tab.Container defaultActiveKey="bid">
+      <StyledNav variant='tabs'>
+        <Nav.Item>
+          <Nav.Link eventKey="bid">Place Bid</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="vouch">Vouch</Nav.Link>
+        </Nav.Item>
+      </StyledNav>
+      <StyledTabContent>
+        <Tab.Pane eventKey="bid">
+          <Form onSubmit={handleBidSubmit}>
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Label style={{ color: '#6c757d' }}>Bid amount</Form.Label>
+              <StyleFormInput className="mb-3">
+                <FormControl
+                  type="number"
+                  step="any"
+                  style={{ borderColor: '#495057 transparent #495057 #495057', backgroundColor: 'black', color: '#6c757d' }}
+                  placeholder="0.0000"
+                  aria-label="Bid amount"
+                />
+
+              <InputGroup.Text style={{ borderColor: '#495057 #495057 #495057 transparent', backgroundColor: 'black', color: '#6c757d'}}>KSM</InputGroup.Text>
+            </StyleFormInput>
+          </Form.Group>
+          <Button variant="primary" type="submit" className="w-100">
+            Submit
+          </Button>
+          <Form.Text className="text-muted" style={{ fontStyle: 'italic', fontSize: '12px' }}>
+            *Plus 0.0045 KSM fee
+          </Form.Text>
+        </Form>
+
+        <hr />
+
+        <div className="align-self-center">
+          <CurrentRound />
+        </div>
       </Tab.Pane>
       <Tab.Pane eventKey="vouch">
         Vouch
@@ -22,6 +58,21 @@ const BidVouch = () => (
     </StyledTabContent>
   </Tab.Container>
 )
+}
+
+const StyleFormInput = styled(InputGroup)`
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+`
 
 const StyledNav = styled(Nav)`
   border-top-right-radius: 6px;
