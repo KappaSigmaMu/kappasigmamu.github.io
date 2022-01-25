@@ -1,9 +1,10 @@
 import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState } from 'react'
-import { Spinner } from 'react-bootstrap'
+import { Spinner, Row, Col } from 'react-bootstrap'
 import { useKusama } from '../../../kusama'
 import { BiddersList } from './BiddersList'
+import { BidVouch } from './BidVouch'
 
 const BiddersPage = (): JSX.Element => {
   const { api } = useKusama()
@@ -21,7 +22,16 @@ const BiddersPage = (): JSX.Element => {
 
   const content = loading ? <Spinner animation="border" variant="primary" /> : <BiddersList bids={bids} />
 
-  return (content)
+  return (
+    <Row>
+      <Col>
+        <BidVouch /> 
+      </Col>
+      <Col xs={9}>
+        {content}
+      </Col>
+    </Row>
+  )
 }
 
 export { BiddersPage }
