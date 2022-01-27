@@ -2,12 +2,28 @@ import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 
 
+import { keyring } from '@polkadot/ui-keyring'
+import { useKusama } from '../../../kusama'
 import styled from 'styled-components'
 
 
 const BidVouch = () => {
-  const handleBidSubmit = (e : React.FormEvent<HTMLFormElement>) => {
-    console.log(e.target[0].value)
+  const { api } = useKusama()
+
+  const handleBidSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
+    const bidVal = parseFloat((e.currentTarget[0] as HTMLInputElement).value)
+    const bid = api?.tx?.society?.bid(bidVal)
+
+    const key = keyring.getPair(JSON.parse(localStorage.activeAccount).address)
+
+    if (key.meta.isInjected) {
+      const { web3FromSource } = await import('@polkadot/extension-dapp')
+      const injected = await web3FromSource(key.meta.source as string)
+
+      //await bid?.signAsync(key.address, { signer: injected.signer })
+      //const r = await bid?.send()
+    }
+    //console.log(e.target[0].value)
     e.preventDefault()
   }
 
