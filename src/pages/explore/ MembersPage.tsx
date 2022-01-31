@@ -57,7 +57,6 @@ const StyledDataRow = styled(StyledHeaderRow)`
   margin-top: 10px;
 `
 
-
 const MembersPage = (): JSX.Element => {
   const { api } = useKusama()
   const [members, setMembers] = useState<DeriveSocietyMember[] | []>([])

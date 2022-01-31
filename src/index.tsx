@@ -1,30 +1,33 @@
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
+import keyring from '@polkadot/ui-keyring'
+import { cryptoWaitReady } from '@polkadot/util-crypto'
 import React from 'react'
 import ReactDOM from 'react-dom'
+
+import {keyringStore} from './helpers/KeyringStore'
+//import { ApiPromise } from '@polkadot/api/promise';
+
+import { config } from './kusama/config'
 import { App } from './pages/App'
 import { reportWebVitals } from './reportWebVitals'
-
-import keyring from '@polkadot/ui-keyring'
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
-import { cryptoWaitReady } from '@polkadot/util-crypto'
-import { config } from './kusama/config'
 
 import './styles/bootstrap.scss'
 
 cryptoWaitReady().then(async () => {
-  await web3Enable(config.APP_NAME)
-  let allAccounts = await web3Accounts()
-  allAccounts = allAccounts.map(({ address, meta }) => ({
-    address,
-    meta: { ...meta, name: meta.name },
-  }))
-
-  const kusamaPrefix = 2
-  const genericPrefix = 42
-
-  const prefix = config.DEVELOPMENT_KEYRING ? genericPrefix : kusamaPrefix
-
-  keyring.loadAll({ ss58Format: prefix, type: 'ed25519', isDevelopment: config.DEVELOPMENT_KEYRING }, allAccounts)
-
+  //  await web3Enable(config.APP_NAME)
+  //  let allAccounts = await web3Accounts()
+  //  allAccounts = allAccounts.map(({ address, meta }) => ({
+  //    address,
+  //    meta: { ...meta, name: meta.name },
+  //  }))
+  //
+  //  const kusamaPrefix = 2
+  //  const genericPrefix = 42
+  //
+  //  const prefix = config.DEVELOPMENT_KEYRING ? genericPrefix : kusamaPrefix
+  //
+  //  keyring.loadAll({ ss58Format: prefix, isDevelopment: config.DEVELOPMENT_KEYRING, store: keyringStore }, allAccounts)
+  //
   ReactDOM.render(
     <React.StrictMode>
       <App />
@@ -32,7 +35,6 @@ cryptoWaitReady().then(async () => {
     document.getElementById('root'),
   )
 })
-
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
