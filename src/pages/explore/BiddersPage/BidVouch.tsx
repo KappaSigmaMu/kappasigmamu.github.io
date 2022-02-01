@@ -1,22 +1,22 @@
+import { web3FromAddress } from '@polkadot/extension-dapp'
 import { useState, useEffect } from 'react'
-import { web3FromAddress, web3FromSource } from '@polkadot/extension-dapp'
 import { Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 import styled from 'styled-components'
-
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { useKusama } from '../../../kusama'
 
 const BidVouch = () => {
-  const { api, keyring } = useKusama()
+  const { api } = useKusama()
   const [bidAmount, setbidAmount] = useState(0)
 
   useEffect(() => {
     const bid = async () => {
       const bid = api?.tx?.society?.bid(bidAmount)
 
-      const injected = await web3FromSource(keyring.getAccounts()[9].meta.source)
+      const addr = JSON.parse(localStorage.activeAccount).address
+      const injector = await web3FromAddress(addr)
 
-      console.log(injected.signer)
+      await bid?.signAndSend(addr, { signer: injector.signer }, (status) => console.log(status))
     }
 
     if (bidAmount > 0) bid()

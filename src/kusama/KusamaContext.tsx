@@ -1,14 +1,12 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
 import { ApiPromise, WsProvider } from '@polkadot/api'
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc'
+import keyring from '@polkadot/ui-keyring'
+import { cryptoWaitReady } from '@polkadot/util-crypto'
 import React, { useReducer, useContext } from 'react'
 import { config } from './config'
-
-import { cryptoWaitReady } from '@polkadot/util-crypto'
-import type { KeyringInstance } from '@polkadot/keyring/types'
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
-import keyring from '@polkadot/ui-keyring'
 
 const RPC = { ...jsonrpc, ...config.RPC }
 const SOCKET = config.PROVIDER_SOCKET
