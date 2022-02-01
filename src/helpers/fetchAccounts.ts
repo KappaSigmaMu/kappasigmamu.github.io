@@ -1,7 +1,4 @@
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
-//import Keyring from '@polkadot/keyring'
-import { keyring } from '@polkadot/ui-keyring'
-import { config } from '../kusama/config'
+import keyring from '@polkadot/ui-keyring'
 
 const fetchAccounts = (
   setAccounts: (accounts: { name: string | undefined; address: string }[]) => void,

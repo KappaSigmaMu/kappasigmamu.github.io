@@ -1,29 +1,30 @@
-import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
+import { useState, useEffect } from 'react'
+import { web3FromAddress, web3FromSource } from '@polkadot/extension-dapp'
 import { Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
-
-
-import { keyring } from '@polkadot/ui-keyring'
-import { useKusama } from '../../../kusama'
 import styled from 'styled-components'
 
+import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
+import { useKusama } from '../../../kusama'
 
 const BidVouch = () => {
-  const { api } = useKusama()
+  const { api, keyring } = useKusama()
+  const [bidAmount, setbidAmount] = useState(0)
+
+  useEffect(() => {
+    const bid = async () => {
+      const bid = api?.tx?.society?.bid(bidAmount)
+
+      const injected = await web3FromSource(keyring.getAccounts()[9].meta.source)
+
+      console.log(injected.signer)
+    }
+
+    if (bidAmount > 0) bid()
+  }, [bidAmount])
 
   const handleBidSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
     const bidVal = parseFloat((e.currentTarget[0] as HTMLInputElement).value)
-    const bid = api?.tx?.society?.bid(bidVal)
-
-    const key = keyring.getPair(JSON.parse(localStorage.activeAccount).address)
-
-    if (key.meta.isInjected) {
-      const { web3FromSource } = await import('@polkadot/extension-dapp')
-      const injected = await web3FromSource(key.meta.source as string)
-
-      //await bid?.signAsync(key.address, { signer: injected.signer })
-      //const r = await bid?.send()
-    }
-    //console.log(e.target[0].value)
+    setbidAmount(bidVal)
     e.preventDefault()
   }
 
