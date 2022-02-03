@@ -1,13 +1,16 @@
 import { web3FromAddress } from '@polkadot/extension-dapp'
 import { useState, useEffect } from 'react'
-import { Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
+import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { useKusama } from '../../../kusama'
 
-const BidVouch = () => {
+type BidVouchProps = { handleResult: any }
+
+const BidVouch = ({ handleResult } : BidVouchProps) => {
   const { api } = useKusama()
   const [bidAmount, setbidAmount] = useState(0)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const bid = async () => {
@@ -16,11 +19,24 @@ const BidVouch = () => {
       const addr = JSON.parse(localStorage.activeAccount).address
       const injector = await web3FromAddress(addr)
 
-      await bid?.signAndSend(addr, { signer: injector.signer }, (status) => console.log(status))
+      bid?.signAndSend(addr, { signer: injector.signer }, ({ status }) => {
+        const _status = status.type.toString()
+        let text
+
+        if (_status === 'Finalized') {
+          setLoading(false)
+          text = 'Bid submitted successfully. You are now a Bidder' 
+        } else {
+          setLoading(true)
+          text = `Bid submitted. Status: ${_status}`
+        }
+
+        handleResult(text) 
+      })
     }
 
     if (bidAmount > 0) bid()
-  }, [bidAmount])
+  }, [bidAmount, handleResult])
 
   const handleBidSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
     const bidVal = parseFloat((e.currentTarget[0] as HTMLInputElement).value)
@@ -29,53 +45,77 @@ const BidVouch = () => {
   }
 
   return (
-    <Tab.Container defaultActiveKey="bid">
-      <StyledNav variant='tabs'>
-        <Nav.Item>
-          <Nav.Link eventKey="bid">Place Bid</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="vouch">Vouch</Nav.Link>
-        </Nav.Item>
-      </StyledNav>
-      <StyledTabContent>
-        <Tab.Pane eventKey="bid">
-          <Form onSubmit={handleBidSubmit}>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label style={{ color: '#6c757d' }}>Bid amount</Form.Label>
-              <StyleFormInput className="mb-3">
-                <FormControl
-                  type="number"
-                  step="any"
-                  style={{ borderColor: '#495057 transparent #495057 #495057', backgroundColor: 'black', color: '#6c757d' }}
-                  placeholder="0.0000"
-                  aria-label="Bid amount"
-                />
+      <Tab.Container defaultActiveKey="bid">
+        <StyledNav variant='tabs'>
+          <Nav.Item>
+            <Nav.Link eventKey="bid">Place Bid</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="vouch">Vouch</Nav.Link>
+          </Nav.Item>
+        </StyledNav>
+        <StyledTabContent>
+          <Tab.Pane eventKey="bid">
+            <Form onSubmit={handleBidSubmit}>
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <StyledFormLabel style={{ color: '#6c757d' }}>Bid amount</StyledFormLabel>
+                <StyleFormInput className="mb-3">
+                  <StyledForm
+                    type="number"
+                    step="any"
+                    placeholder="0.0000"
+                    aria-label="Bid amount"
+                  />
 
-              <InputGroup.Text style={{ borderColor: '#495057 #495057 #495057 transparent', backgroundColor: 'black', color: '#6c757d'}}>KSM</InputGroup.Text>
-            </StyleFormInput>
-          </Form.Group>
-          <Button variant="primary" type="submit" className="w-100">
-            Submit
-          </Button>
-          <Form.Text className="text-muted" style={{ fontStyle: 'italic', fontSize: '12px' }}>
-            *Plus 0.0045 KSM fee
-          </Form.Text>
-        </Form>
-
-        <hr />
-
-        <div className="align-self-center">
-          <CurrentRound />
-        </div>
-      </Tab.Pane>
-      <Tab.Pane eventKey="vouch">
-        Vouch
-      </Tab.Pane>
-    </StyledTabContent>
-  </Tab.Container>
-)
+                <StyledInputGroupText>KSM</StyledInputGroupText>
+              </StyleFormInput>
+            </Form.Group>
+            <Button disabled={loading} variant="primary" type="submit" className="w-100">
+              {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
+            </Button>
+            <StyledButtonLabel className="text-muted">
+              *Plus 0.0045 KSM fee
+            </StyledButtonLabel>
+          </Form>
+          <hr />
+          <div className="align-self-center">
+            <CurrentRound />
+          </div>
+        </Tab.Pane>
+        <Tab.Pane eventKey="vouch">
+          Vouch
+        </Tab.Pane>
+      </StyledTabContent>
+    </Tab.Container>
+  )
 }
+
+const StyledFormLabel = styled(Form.Label)`
+  color: #6c757d
+`
+
+const StyledForm = styled(FormControl)`
+  border-color: #495057 transparent #495057 #495057;
+  background-color: black;
+  color: #6c757d;
+
+  :focus {
+    border-color: #495057 transparent #495057 #495057;
+    background-color: black;
+    color: #6c757d;
+  }
+`
+
+const StyledButtonLabel = styled(Form.Text)`
+  font-style: 'italic';
+  font-size: '12px';
+`
+
+const StyledInputGroupText = styled(InputGroup.Text)`
+  border-color: #495057 #495057 #495057 transparent;
+  background-color: black;
+  color: #6c757d;
+`
 
 const StyleFormInput = styled(InputGroup)`
   /* Chrome, Safari, Edge, Opera */
