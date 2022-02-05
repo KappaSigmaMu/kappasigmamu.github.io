@@ -3,6 +3,7 @@ import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState, useCallback } from 'react'
 import { Spinner, Row, Col, Alert } from 'react-bootstrap'
 import styled from 'styled-components'
+import { useAccount } from '../../../account/AccountContext'
 import { useKusama } from '../../../kusama'
 import { BiddersList } from './BiddersList'
 import { BidVouch } from './BidVouch'
@@ -11,6 +12,7 @@ const BiddersPage = (): JSX.Element => {
   const { api } = useKusama()
   const [bids, setBids] = useState<Vec<PalletSocietyBid> | []>([])
   const [result, setResult] = useState(null)
+  const { activeAccount } = useAccount()
   const [showAlert, setShowAlert] = useState(true)
 
   const loading = !api?.query?.society
@@ -28,7 +30,11 @@ const BiddersPage = (): JSX.Element => {
     setShowAlert(true)
   }, [])
 
-  const content = loading ? <Spinner animation="border" variant="primary" /> : <BiddersList bids={bids} />
+  const handleUnbid = () => {
+    console.log('UNBID')
+  }
+
+  const content = loading ? <Spinner animation="border" variant="primary" /> : <BiddersList bids={bids} activeAccount={activeAccount} handleUnbid={handleUnbid} />
 
   return (
     <>
@@ -37,7 +43,7 @@ const BiddersPage = (): JSX.Element => {
       }
       <Row>
         <Col>
-          <BidVouch handleResult={handleResult} /> 
+          <BidVouch activeAccount={activeAccount} handleResult={handleResult} /> 
         </Col>
         <Col xs={9}>
           {content}

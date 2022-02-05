@@ -5,9 +5,9 @@ import styled from 'styled-components'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { useKusama } from '../../../kusama'
 
-type BidVouchProps = { handleResult: any }
+type BidVouchProps = { handleResult: any, activeAccount: any }
 
-const BidVouch = ({ handleResult } : BidVouchProps) => {
+const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
   const { api } = useKusama()
   const [bidAmount, setbidAmount] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -15,11 +15,9 @@ const BidVouch = ({ handleResult } : BidVouchProps) => {
   useEffect(() => {
     const bid = async () => {
       const bid = api?.tx?.society?.bid(bidAmount)
+      const injector = await web3FromAddress(activeAccount.address)
 
-      const addr = JSON.parse(localStorage.activeAccount).address
-      const injector = await web3FromAddress(addr)
-
-      bid?.signAndSend(addr, { signer: injector.signer }, ({ status }) => {
+      bid?.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status }) => {
         const _status = status.type.toString()
         let text
 
