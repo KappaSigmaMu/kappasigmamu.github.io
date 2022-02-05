@@ -1,24 +1,45 @@
+import { web3FromAddress } from '@polkadot/extension-dapp'
 import Identicon from '@polkadot/react-identicon'
+import type { Vec } from '@polkadot/types'
+import type { PalletSocietyBid } from '@polkadot/types/lookup'
+import { useState } from 'react'
 import { Col, Badge } from 'react-bootstrap'
+import styled from 'styled-components'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { humanizeBidKind } from '../../../helpers/humanize'
-
-import styled from 'styled-components'
 import { truncateMiddle } from '../../../helpers/truncate'
+import { useKusama } from '../../../kusama'
 
-const StyledDataRow = styled(DataRow)`
-  background-color: ${(props) => props.isBidder ? '#73003d' : ''};
-  border: ${(props) => props.isBidder ? '2px solid #E6007A' : ''};
-`
+type Props = { bids: Vec<PalletSocietyBid> | [], activeAccount: accountType; handleResult: any }
 
-const StyledUnbid = styled.a`
-  color: #E6007A;
-  font-weight: 800;
-  font-size: 13px;
-`
-
-const BiddersList = ({ bids, activeAccount, handleUnbid }: { bids: any, activeAccount: any; handleUnbid: any }): JSX.Element => {
+const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Element => {
+  const { api } = useKusama()
+  const [loading, setLoading] = useState(false)
   const isBidder = (bidAddress : string) => activeAccount.address === bidAddress
+
+  const handleUnbid = (index : any) => {
+    const unbid = async () => {
+      const _unbid = api?.tx?.society?.unbid(index)
+      const injector = await web3FromAddress(activeAccount.address)
+      let text
+
+      _unbid?.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status }) => {
+        const _status = status.type.toString()
+
+        if (_status === 'Finalized') {
+          setLoading(false)
+          text = 'Bid removed successfully. You became Human again'
+        } else {
+          setLoading(true)
+          text = `Unbid request sent. Waiting for response...`
+        }
+
+        handleResult(text)
+      })
+    }
+
+    unbid()
+  }
 
   return (
     <>
@@ -28,7 +49,7 @@ const BiddersList = ({ bids, activeAccount, handleUnbid }: { bids: any, activeAc
         <Col xs={2} className="text-start">Bid Kind</Col>
         <Col xs={4} className="text-end" style={{ paddingRight: 0 }}>Value</Col>
       </DataHeaderRow>
-      {bids.map((bid: any) => {
+      {bids.map((bid : PalletSocietyBid, index : any) => {
         const _isBidder = isBidder(bid.who.toString())
         return (
           <StyledDataRow isBidder={_isBidder} key={bid.who?.toString()}>
@@ -46,7 +67,8 @@ const BiddersList = ({ bids, activeAccount, handleUnbid }: { bids: any, activeAc
               {bid.value.toHuman()} KSM
             </Col>
             <Col xs={1} className="text-start">
-              {_isBidder && <StyledUnbid onClick={handleUnbid} href="#">UNBID</StyledUnbid>}
+              {_isBidder &&
+                <StyledUnbid disabled={loading} onClick={() => handleUnbid(index)} href="#">UNBID</StyledUnbid>}
             </Col>
           </StyledDataRow>
         )
@@ -54,5 +76,23 @@ const BiddersList = ({ bids, activeAccount, handleUnbid }: { bids: any, activeAc
     </>
   )
 }
+
+const StyledDataRow = styled(DataRow)`
+  background-color: ${(props) => props.isBidder ? '#73003d' : ''};
+  border: ${(props) => props.isBidder ? '2px solid #E6007A' : ''};
+`
+
+type PropsUnbid = {
+  disabled: boolean;
+};
+
+const StyledUnbid = styled.a.attrs((props : PropsUnbid) => ({
+  disabled: props.disabled
+}))<PropsUnbid>`
+  color: ${(props) => props.disabled ? 'grey' : '#E6007A'};
+  font-weight: 800;
+  font-size: 13px;
+  pointer-events: ${(props) => props.disabled ? 'none' : ''};
+`
 
 export { BiddersList }

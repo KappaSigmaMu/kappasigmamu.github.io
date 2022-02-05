@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { useKusama } from '../../../kusama'
 
-type BidVouchProps = { handleResult: any, activeAccount: any }
+type BidVouchProps = { handleResult: any, activeAccount: accountType }
 
 const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
   const { api } = useKusama()
@@ -26,7 +26,7 @@ const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
           text = 'Bid submitted successfully. You are now a Bidder' 
         } else {
           setLoading(true)
-          text = `Bid submitted. Status: ${_status}`
+          text = `Bid request sent. Waiting for response...`
         }
 
         handleResult(text) 
@@ -57,7 +57,7 @@ const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
             <Form onSubmit={handleBidSubmit}>
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <StyledFormLabel style={{ color: '#6c757d' }}>Bid amount</StyledFormLabel>
-                <StyleFormInput className="mb-3">
+                <StyledFormInput className="mb-3">
                   <StyledForm
                     type="number"
                     step="any"
@@ -66,7 +66,7 @@ const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
                   />
 
                 <StyledInputGroupText>KSM</StyledInputGroupText>
-              </StyleFormInput>
+              </StyledFormInput>
             </Form.Group>
             <Button disabled={loading} variant="primary" type="submit" className="w-100">
               {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
@@ -115,7 +115,7 @@ const StyledInputGroupText = styled(InputGroup.Text)`
   color: #6c757d;
 `
 
-const StyleFormInput = styled(InputGroup)`
+const StyledFormInput = styled(InputGroup)`
   /* Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
@@ -153,4 +153,3 @@ const StyledTabContent = styled(Tab.Content)`
 `
 
 export { BidVouch }
-

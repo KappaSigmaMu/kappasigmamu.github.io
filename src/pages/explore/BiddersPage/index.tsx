@@ -10,16 +10,16 @@ import { BidVouch } from './BidVouch'
 
 const BiddersPage = (): JSX.Element => {
   const { api } = useKusama()
+  const { activeAccount } = useAccount()
   const [bids, setBids] = useState<Vec<PalletSocietyBid> | []>([])
   const [result, setResult] = useState(null)
-  const { activeAccount } = useAccount()
   const [showAlert, setShowAlert] = useState(true)
 
   const loading = !api?.query?.society
 
   useEffect(() => {
     if (!loading) {
-      api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
+      api.query.society.bids((response: Vec<PalletSocietyBid>) => {
         setBids(response)
       })
     }
@@ -30,17 +30,13 @@ const BiddersPage = (): JSX.Element => {
     setShowAlert(true)
   }, [])
 
-  const handleUnbid = () => {
-    console.log('UNBID')
-  }
-
-  const content = loading ? <Spinner animation="border" variant="primary" /> : <BiddersList bids={bids} activeAccount={activeAccount} handleUnbid={handleUnbid} />
+  const content = loading
+    ? <Spinner animation="border" variant="primary" />
+    : <BiddersList bids={bids} activeAccount={activeAccount} handleResult={handleResult} />
 
   return (
     <>
-      {(result && showAlert) &&
-      <StyledAlert onClose={() => setShowAlert(false)} dismissible>{result}</StyledAlert>
-      }
+      {(result && showAlert) && <StyledAlert onClose={() => setShowAlert(false)} dismissible>{result}</StyledAlert>}
       <Row>
         <Col>
           <BidVouch activeAccount={activeAccount} handleResult={handleResult} /> 
