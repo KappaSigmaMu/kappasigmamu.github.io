@@ -16,18 +16,24 @@ Array [
       Wallet Hash
     </div>
     <div
-      className="text-start col-5"
+      className="text-start col-2"
     >
       Bid Kind
     </div>
     <div
-      className="text-end col-2"
+      className="text-end col-4"
+      style={
+        Object {
+          "paddingRight": 0,
+        }
+      }
     >
       Value
     </div>
   </div>,
   <div
-    className="sc-bdfBQB sc-gsTEea DMQmf frwqlw row"
+    className="sc-bdfBQB sc-gsTEea sc-jSgvzq DMQmf frwqlw gQQaIy row"
+    isBidder={false}
   >
     <div
       className="text-center col-1"
@@ -173,18 +179,29 @@ Array [
       5CSbZ7...sYH4TZ
     </div>
     <div
-      className="text-start text-truncate col-5"
+      className="text-start text-truncate col-2"
     >
       Deposit
     </div>
     <div
-      className="text-end col-2"
+      className="text-end col-4"
+      style={
+        Object {
+          "paddingRight": 0,
+        }
+      }
     >
+       
       10
+       KSM
     </div>
+    <div
+      className="text-start col-1"
+    />
   </div>,
   <div
-    className="sc-bdfBQB sc-gsTEea DMQmf frwqlw row"
+    className="sc-bdfBQB sc-gsTEea sc-jSgvzq DMQmf frwqlw gQQaIy row"
+    isBidder={false}
   >
     <div
       className="text-center col-1"
@@ -330,15 +347,25 @@ Array [
       5Grpkn...GbfzCE
     </div>
     <div
-      className="text-start text-truncate col-5"
+      className="text-start text-truncate col-2"
     >
       Deposit
     </div>
     <div
-      className="text-end col-2"
+      className="text-end col-4"
+      style={
+        Object {
+          "paddingRight": 0,
+        }
+      }
     >
+       
       20
+       KSM
     </div>
+    <div
+      className="text-start col-1"
+    />
   </div>,
 ]
 `;
