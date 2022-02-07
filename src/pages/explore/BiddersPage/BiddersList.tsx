@@ -15,7 +15,7 @@ type Props = { bids: Vec<PalletSocietyBid> | [], activeAccount: accountType; han
 const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Element => {
   const { api, apiState } = useKusama()
   const [loading, setLoading] = useState(false)
-  const isBidder = (bidAddress : string) => activeAccount.address === bidAddress
+  const isBidder = (bidAddress : string) => activeAccount?.address === bidAddress
 
   const apiReady = apiState === 'READY'
 
