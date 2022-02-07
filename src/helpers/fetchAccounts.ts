@@ -1,6 +1,4 @@
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
-import Keyring from '@polkadot/keyring'
-import { config } from '../kusama/config'
+import keyring from '@polkadot/ui-keyring'
 
 const fetchAccounts = (
   setAccounts: (accounts: { name: string | undefined; address: string }[]) => void,
@@ -8,21 +6,7 @@ const fetchAccounts = (
 ) => {
   async function _fetchAccounts() {
     try {
-      await web3Enable(config.APP_NAME)
-      let allAccounts = await web3Accounts()
-      allAccounts = allAccounts.map(({ address, meta }) => ({
-        address,
-        meta: { ...meta, name: meta.name },
-      }))
-
-      const kusamaPrefix = 2
-      const genericPrefix = 42
-
-      const prefix = config.DEVELOPMENT_KEYRING ? genericPrefix : kusamaPrefix
-
-      const keyring = new Keyring({ ss58Format: prefix, type: 'ed25519' })
-
-      const accounts = allAccounts.map((account) => ({
+      const accounts = keyring.getAccounts().map((account) => ({
         name: account.meta.name,
         address: keyring.encodeAddress(account.address),
       }))
