@@ -8,9 +8,11 @@ import { useKusama } from '../../../kusama'
 type BidVouchProps = { handleResult: any, activeAccount: accountType }
 
 const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
-  const { api } = useKusama()
+  const { api, apiState } = useKusama()
   const [bidAmount, setbidAmount] = useState(0)
   const [loading, setLoading] = useState(false)
+
+  const apiReady = apiState === 'READY'
 
   useEffect(() => {
     const bid = async () => {
@@ -33,7 +35,7 @@ const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
       })
     }
 
-    if (bidAmount > 0) bid()
+    if (bidAmount > 0 && apiReady) bid()
   }, [bidAmount, handleResult])
 
   const handleBidSubmit = async (e : React.FormEvent<HTMLFormElement>) => {

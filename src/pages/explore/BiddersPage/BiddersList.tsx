@@ -13,9 +13,11 @@ import { useKusama } from '../../../kusama'
 type Props = { bids: Vec<PalletSocietyBid> | [], activeAccount: accountType; handleResult: any }
 
 const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Element => {
-  const { api } = useKusama()
+  const { api, apiState } = useKusama()
   const [loading, setLoading] = useState(false)
   const isBidder = (bidAddress : string) => activeAccount.address === bidAddress
+
+  const apiReady = apiState === 'READY'
 
   const handleUnbid = (index : any) => {
     const unbid = async () => {
@@ -38,7 +40,7 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
       })
     }
 
-    unbid()
+    apiReady && unbid()
   }
 
   return (
