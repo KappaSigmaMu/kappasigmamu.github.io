@@ -21,6 +21,7 @@ interface MembersData {
 
 const LandingPage = () => {
   const navigate = useNavigate()
+  const { activeAccount, fetchAccounts } = useAccount()
   const { api } = useKusama()
   const [members, setMembers] = useState<Array<string>>([""])
   const [show, setShow] = useState(false)
@@ -85,7 +86,10 @@ const LandingPage = () => {
   }, [api])
 
   const handlePrimaryButtonClick = () => {
-    navigate('/guide')
+    if (!activeAccount) {
+      fetchAccounts()
+    }
+    navigate('/journey')
   }
 
   document.body.style.overflow = "hidden"

@@ -49,7 +49,6 @@ const Main = () => {
   const onChange = (account: string) => {
     const activeAccount = accounts.filter(acc => acc.address.includes(account))[0]
     setActiveAccount(activeAccount)
-    localStorage.setItem("activeAccount", JSON.stringify(activeAccount))
   }
 
   return (
