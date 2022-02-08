@@ -1,7 +1,7 @@
 import { Button, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAccount } from '../account/AccountContext'
-import { fetchAccounts } from '../helpers/fetchAccounts'
 import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 import { AccountSelector } from './AccountSelector'
 import { SocialIcons } from './SocialIcons'
@@ -37,12 +37,12 @@ const NavbarBrand = () => (
 )
 
 const AccountNavbar = () => {
-  const { activeAccount, setActiveAccount, setAccounts } = useAccount()
+  const { activeAccount, fetchAccounts } = useAccount()
 
   return activeAccount
     ? <AccountSelector />
     : (
-      <Button variant="outline-secondary" onClick={() => fetchAccounts(setAccounts, setActiveAccount)}>
+      <Button variant="outline-secondary" onClick={fetchAccounts}>
         Connect Wallet
       </Button>
     )

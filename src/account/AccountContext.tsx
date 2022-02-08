@@ -3,17 +3,16 @@ import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
 import React, { useContext, useEffect, useState } from 'react'
 import { useKusama } from '../kusama'
+import keyring from '@polkadot/ui-keyring'
 
 // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-const storedActiveAccount = JSON.parse(localStorage.getItem('activeAccount')!) || ''
-// eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-const storedAccounts = JSON.parse(localStorage.getItem('accounts')!) || []
+const storedActiveAccount = { name: undefined, address: '' }
 
 const INIT_STATE = {
   activeAccount: storedActiveAccount,
   setActiveAccount: () => ({}),
-  accounts: storedAccounts,
-  setAccounts: () => ({}),
+  accounts: [],
+  fetchAccounts: () => ({}),
   level: 'human'
 }
 
@@ -22,30 +21,43 @@ type StateType = {
   setActiveAccount: (account: accountType) => void
   activeAccount: accountType
   accounts: accountType[]
-  setAccounts: (accounts: accountType[]) => void
+  fetchAccounts: () => void
 }
 
 const AccountContext = React.createContext<StateType>(INIT_STATE)
 
 const AccountContextProvider = ({ children } : any) => {
-  const { api } = useKusama()
+  const { api, keyringState } = useKusama()
   const [activeAccount, setActiveAccount] = useState<accountType>(storedActiveAccount)
-  const [accounts, setAccounts] = useState<accountType[]>(storedAccounts)
+  const [accounts, setAccounts] = useState<accountType[]>([])
   const [level, setLevel] = useState('human')
 
-  const loading = !api?.query?.society
+  const loading = !api?.query?.society && keyringState !== 'READY'
+
+  const fetchAccounts = () => {
+    const storedAccounts = keyring.getAccounts().map((account) => ({
+      name: account.meta.name,
+      address: keyring.encodeAddress(account.address),
+    }))
+    setAccounts(storedAccounts)
+    setActiveAccount(storedAccounts[0])
+  }
+
+  useEffect(() => {
+    if (keyringState === 'READY') fetchAccounts()
+  }, [api?.query?.society, keyringState])
 
   useEffect(() => {
     const setLevelCheckingAccounts = (accounts: AccountId32[], level: string) => {
       setLevel('human')
       accounts.forEach((account: AccountId32) => {
-        if (account.toString() === activeAccount.address) {
+        if (account.toString() === activeAccount?.address) {
           setLevel(level)
         }
       })
     }
 
-    if (api) {
+    if (api && activeAccount) {
       api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
         setLevelCheckingAccounts(response.map(account => account.who), 'bidder')
       })
@@ -58,11 +70,11 @@ const AccountContextProvider = ({ children } : any) => {
         setLevelCheckingAccounts(response, 'cyborg')
       })
     }
-  }, [api?.query?.society, activeAccount])
+  }, [accounts, activeAccount])
 
   const content = loading
     ? <></>
-    : <AccountContext.Provider value={{ level, activeAccount, setActiveAccount, accounts, setAccounts }}>
+    : <AccountContext.Provider value={{ level, activeAccount, setActiveAccount, accounts, fetchAccounts }}>
         {children}
       </AccountContext.Provider>
 

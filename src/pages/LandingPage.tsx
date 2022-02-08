@@ -7,13 +7,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { PrimaryLgButton } from '../components/base'
-import { fetchAccounts } from '../helpers/fetchAccounts'
 import { useKusama } from '../kusama'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
 const LandingPage = () => {
   const navigate = useNavigate()
-  const { activeAccount, setActiveAccount, setAccounts } = useAccount()
+  const { activeAccount, fetchAccounts } = useAccount()
   const { api } = useKusama()
   const [members, setMembers] = useState<Array<string>>([""])
 
@@ -27,7 +26,7 @@ const LandingPage = () => {
 
   const handlePrimaryButtonClick = () => {
     if (!activeAccount) {
-      fetchAccounts(setAccounts, setActiveAccount)
+      fetchAccounts()
     }
     navigate('/journey')
   }
