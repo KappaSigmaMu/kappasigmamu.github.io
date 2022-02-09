@@ -1,9 +1,9 @@
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
+import keyring from '@polkadot/ui-keyring'
 import React, { useContext, useEffect, useState } from 'react'
 import { useKusama } from '../kusama'
-import keyring from '@polkadot/ui-keyring'
 
 // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
 const storedActiveAccount = { name: undefined, address: '' }

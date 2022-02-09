@@ -8,8 +8,11 @@ import { useKusama } from '../../../kusama'
 type BidVouchProps = { handleResult: any, activeAccount: accountType, accounts: accountType[] }
 
 const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => {
-  const { api, apiState } = useKusama()
+  const { api, apiState, keyring } = useKusama()
   const [bidAmount, setbidAmount] = useState(0)
+  const [vouchValue, setVouchValue] = useState(0)
+  const [vouchTip, setVouchTip] = useState(0)
+  const [vouchAddress, setVouchAddress] = useState<string>()
   const [loading, setLoading] = useState(false)
 
   const apiReady = apiState === 'READY'
@@ -38,6 +41,21 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
     if (bidAmount > 0 && apiReady) bid()
   }, [bidAmount, handleResult])
 
+  useEffect(() => {
+    const vouch = async () => {
+      const account = keyring.getAccount(activeAccount.address)
+      const injector = await web3FromAddress(account.address)
+      const _vouch = api?.tx?.society?.vouch(account.address, vouchValue, vouchTip)
+
+      _vouch?.signAndSend(account.address, { signer: injector.signer }, ({ status }) => {
+        const _status = status.type.toString()
+        console.log(_status)
+      })
+    }
+
+    (vouchAddress && vouchTip && vouchValue && apiReady) && vouch()
+  }, [vouchAddress, vouchTip, vouchValue])
+
   const handleBidSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
     const bidVal = parseFloat((e.currentTarget[0] as HTMLInputElement).value)
     setbidAmount(bidVal)
@@ -45,7 +63,12 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
   }
 
   const handleVouchSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
-    console.log(e)
+    const address = (e.currentTarget[0] as HTMLInputElement).value
+    const value = parseFloat((e.currentTarget[1] as HTMLInputElement).value)
+    const tip = parseFloat((e.currentTarget[2] as HTMLInputElement).value)
+    setVouchAddress(address)
+    setVouchValue(value)
+    setVouchTip(tip)
     e.preventDefault()
   }
 
@@ -92,7 +115,7 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
               <StyledFormLabel style={{ color: '#6c757d' }}>Vouch for</StyledFormLabel>
               <StyledSelectForm aria-label="Default select example">
                 <option>Select an account</option>
-                {accounts.map((account, key) => <option key={key} value="1">{account.name}</option>)}
+                {accounts.map((account, key) => <option key={key} value={account.address}>{account.name}</option>)}
               </StyledSelectForm>
             </Form.Group>
 
