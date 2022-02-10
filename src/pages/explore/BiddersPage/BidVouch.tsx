@@ -45,11 +45,21 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
     const vouch = async () => {
       const account = keyring.getAccount(activeAccount.address)
       const injector = await web3FromAddress(account.address)
-      const _vouch = api?.tx?.society?.vouch(account.address, vouchValue, vouchTip)
+      const vouch = api?.tx?.society?.vouch(account.address, vouchValue, vouchTip)
 
-      _vouch?.signAndSend(account.address, { signer: injector.signer }, ({ status }) => {
+       vouch?.signAndSend(account.address, { signer: injector.signer }, ({ status }) => {
         const _status = status.type.toString()
-        console.log(_status)
+        let text
+
+        if (_status === 'Finalized') {
+          setLoading(false)
+          text = 'Vouch submitted successfully.'
+        } else {
+          setLoading(true)
+          text = `Vouch request sent. Waiting for response...`
+        }
+
+        handleResult(text)
       })
     }
 

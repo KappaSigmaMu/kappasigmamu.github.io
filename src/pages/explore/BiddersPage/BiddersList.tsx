@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Col, Badge } from 'react-bootstrap'
 import styled from 'styled-components'
 import { DataHeaderRow, DataRow } from '../../../components/base'
-import { humanizeBidKind } from '../../../helpers/humanize'
+import { humanizeBidKind, humanizeBidValue } from '../../../helpers/humanize'
 import { truncateMiddle } from '../../../helpers/truncate'
 import { useKusama } from '../../../kusama'
 
@@ -15,7 +15,9 @@ type Props = { bids: Vec<PalletSocietyBid> | [], activeAccount: accountType; han
 const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Element => {
   const { api, apiState } = useKusama()
   const [loading, setLoading] = useState(false)
-  const isBidder = (bidAddress : string) => activeAccount?.address === bidAddress
+
+  const isBidder = (bid : PalletSocietyBid) => activeAccount?.address === bid.who.toString()
+  const isVoucher = (bid : PalletSocietyBid) => activeAccount?.address === bid.kind.asVouch?.[0].toString()
 
   const apiReady = apiState === 'READY'
 
@@ -43,6 +45,72 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
     apiReady && unbid()
   }
 
+  const handleUnvouch = (index : any) => {
+    const unbid = async () => {
+      const _unvouch = api?.tx?.society?.unvouch(index)
+      const injector = await web3FromAddress(activeAccount.address)
+      let text
+
+      _unvouch?.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status }) => {
+        const _status = status.type.toString()
+
+        if (_status === 'Finalized') {
+          setLoading(false)
+          text = 'Vouch removed successfully.'
+        } else {
+          setLoading(true)
+          text = `Unvouch request sent. Waiting for response...`
+        }
+
+        handleResult(text)
+      })
+    }
+
+    apiReady && unbid()
+  }
+
+  const BidVouchIdentifier = ({ bid, index } : { bid: PalletSocietyBid, index : number }) => {
+    let badge = <></>
+    let badgeText = ""
+    let handleAction : any
+
+    if (bid.kind.isDeposit) {
+      if (isBidder(bid)) {
+        badge = <Badge pill bg="primary">My bid</Badge>
+        handleAction = handleUnbid
+        badgeText = 'UNBID'
+     }
+    } else if (bid.kind.isVouch) {
+      if (isVoucher(bid)) {
+        badge = <Badge pill bg="primary">My vouch</Badge>
+        handleAction = handleUnvouch
+        badgeText = 'UNVOUCH'
+      }
+    }
+
+    return (
+      <>
+        <Col xs={4} className="text-end" style={{ paddingRight: 0 }}>
+          {badge}{' '}
+          {humanizeBidValue(bid.kind)} KSM
+        </Col>
+        <Col xs={1} className="text-start">
+          {handleAction &&
+            <StyledUndo disabled={loading} onClick={() => handleAction(index)} href="#">{badgeText}</StyledUndo>
+          }
+        </Col>
+      </>
+    )
+  }
+
+  const isOwner = (bid : PalletSocietyBid) => {
+    if (bid.kind.isDeposit) {
+      return isBidder(bid)
+    } else if (bid.kind.isVouch) {
+      return isVoucher(bid)
+    }
+  }
+
   return (
     <>
       <DataHeaderRow>
@@ -51,44 +119,34 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
         <Col xs={2} className="text-start">Bid Kind</Col>
         <Col xs={4} className="text-end" style={{ paddingRight: 0 }}>Value</Col>
       </DataHeaderRow>
-      {bids.map((bid : PalletSocietyBid, index : any) => {
-        const _isBidder = isBidder(bid.who.toString())
-        return (
-          <StyledDataRow isBidder={_isBidder} key={bid.who?.toString()}>
-            <Col xs={1} className="text-center">
-              <Identicon value={bid.who} size={32} theme={'polkadot'} />
-            </Col>
-            <Col xs={4} className="text-start text-truncate">
-              {truncateMiddle(bid.who?.toString())}
-            </Col>
-            <Col xs={2} className="text-start text-truncate">
-              {humanizeBidKind(bid.kind)}
-            </Col>
-            <Col xs={4} className="text-end" style={{ paddingRight: 0 }}>
-              {_isBidder && <Badge pill bg="primary">My bid</Badge>}{' '}
-              {bid.value.toHuman()} KSM
-            </Col>
-            <Col xs={1} className="text-start">
-              {_isBidder &&
-                <StyledUnbid disabled={loading} onClick={() => handleUnbid(index)} href="#">UNBID</StyledUnbid>}
-            </Col>
-          </StyledDataRow>
-        )
-      })}
+      {bids.map((bid : PalletSocietyBid, index : any) => (
+        <StyledDataRow isOwner={isOwner(bid)} key={bid.who?.toString()}>
+          <Col xs={1} className="text-center">
+            <Identicon value={bid.who} size={32} theme={'polkadot'} />
+          </Col>
+          <Col xs={4} className="text-start text-truncate">
+            {truncateMiddle(bid.who?.toString())}
+          </Col>
+          <Col xs={2} className="text-start text-truncate">
+            {humanizeBidKind(bid.kind)}
+          </Col>
+          <BidVouchIdentifier bid={bid} index={index} />
+        </StyledDataRow>
+      ))}
     </>
   )
 }
 
 const StyledDataRow = styled(DataRow)`
-  background-color: ${(props) => props.isBidder ? '#73003d' : ''};
-  border: ${(props) => props.isBidder ? '2px solid #E6007A' : ''};
+  background-color: ${(props) => props.isOwner ? '#73003d' : ''};
+  border: ${(props) => props.isOwner ? '2px solid #E6007A' : ''};
 `
 
 type PropsUnbid = {
   disabled: boolean;
-};
+}
 
-const StyledUnbid = styled.a.attrs((props : PropsUnbid) => ({
+const StyledUndo = styled.a.attrs((props : PropsUnbid) => ({
   disabled: props.disabled
 }))<PropsUnbid>`
   color: ${(props) => props.disabled ? 'grey' : '#E6007A'};

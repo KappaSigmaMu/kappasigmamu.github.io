@@ -22,6 +22,12 @@ module.exports = {
     jest: true,
     node: true,
   },
+  overrides: [{
+    files: ["**/*.tsx"],
+    rules: {
+        "react/prop-types": "off"
+    }
+  }],
   rules: {
     '@typescript-eslint/camelcase': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
