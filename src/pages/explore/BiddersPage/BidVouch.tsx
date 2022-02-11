@@ -1,14 +1,14 @@
-import { web3FromAddress } from '@polkadot/extension-dapp'
 import { useState, useEffect } from 'react'
 import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { useKusama } from '../../../kusama'
+import { bid, vouch } from './helpers'
 
 type BidVouchProps = { handleResult: any, activeAccount: accountType, accounts: accountType[] }
 
 const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => {
-  const { api, apiState, keyring } = useKusama()
+  const { api, apiState } = useKusama()
   const [bidAmount, setbidAmount] = useState(0)
   const [vouchValue, setVouchValue] = useState(0)
   const [vouchTip, setVouchTip] = useState(0)
@@ -17,53 +17,23 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
 
   const apiReady = apiState === 'READY'
 
+  const onStatusChange = ({ loading, text } : { loading : boolean, text : string }) => {
+    setLoading(loading)
+    handleResult(text)
+  }
+
   useEffect(() => {
-    const bid = async () => {
-      const bid = api?.tx?.society?.bid(bidAmount)
-      const injector = await web3FromAddress(activeAccount.address)
-
-      bid?.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status }) => {
-        const _status = status.type.toString()
-        let text
-
-        if (_status === 'Finalized') {
-          setLoading(false)
-          text = 'Bid submitted successfully. You are now a Bidder'
-        } else {
-          setLoading(true)
-          text = `Bid request sent. Waiting for response...`
-        }
-
-        handleResult(text)
-      })
+    if (bidAmount > 0 && apiReady) {
+      const tx = api?.tx?.society?.bid(bidAmount)
+      bid(tx, activeAccount, onStatusChange)
     }
-
-    if (bidAmount > 0 && apiReady) bid()
   }, [bidAmount, handleResult])
 
   useEffect(() => {
-    const vouch = async () => {
-      const account = keyring.getAccount(activeAccount.address)
-      const injector = await web3FromAddress(account.address)
-      const vouch = api?.tx?.society?.vouch(account.address, vouchValue, vouchTip)
-
-       vouch?.signAndSend(account.address, { signer: injector.signer }, ({ status }) => {
-        const _status = status.type.toString()
-        let text
-
-        if (_status === 'Finalized') {
-          setLoading(false)
-          text = 'Vouch submitted successfully.'
-        } else {
-          setLoading(true)
-          text = `Vouch request sent. Waiting for response...`
-        }
-
-        handleResult(text)
-      })
+    if (vouchAddress && vouchTip && vouchValue && apiReady) {
+      const tx = api?.tx?.society?.vouch(activeAccount.address, vouchValue, vouchTip)
+      vouch(tx, activeAccount, onStatusChange)
     }
-
-    (vouchAddress && vouchTip && vouchValue && apiReady) && vouch()
   }, [vouchAddress, vouchTip, vouchValue])
 
   const handleBidSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
