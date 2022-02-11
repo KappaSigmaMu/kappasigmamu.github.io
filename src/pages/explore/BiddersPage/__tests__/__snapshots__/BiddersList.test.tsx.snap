@@ -33,7 +33,7 @@ Array [
   </div>,
   <div
     className="sc-bdfBQB sc-gsTEea sc-jSgvzq DMQmf frwqlw gQQaIy row"
-    isBidder={false}
+    isOwner={false}
   >
     <div
       className="text-center col-1"
@@ -201,7 +201,7 @@ Array [
   </div>,
   <div
     className="sc-bdfBQB sc-gsTEea sc-jSgvzq DMQmf frwqlw gQQaIy row"
-    isBidder={false}
+    isOwner={false}
   >
     <div
       className="text-center col-1"
