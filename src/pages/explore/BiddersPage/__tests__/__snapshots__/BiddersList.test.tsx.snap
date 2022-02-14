@@ -11,7 +11,7 @@ Array [
       #
     </div>
     <div
-      className="text-start col-4"
+      className="text-start col-3"
     >
       Wallet Hash
     </div>
@@ -174,7 +174,7 @@ Array [
       </div>
     </div>
     <div
-      className="text-start text-truncate col-4"
+      className="text-start text-truncate col-3"
     >
       5CSbZ7...sYH4TZ
     </div>
@@ -196,7 +196,7 @@ Array [
        KSM
     </div>
     <div
-      className="text-start col-1"
+      className="text-start col-2"
     />
   </div>,
   <div
@@ -342,7 +342,7 @@ Array [
       </div>
     </div>
     <div
-      className="text-start text-truncate col-4"
+      className="text-start text-truncate col-3"
     >
       5Grpkn...GbfzCE
     </div>
@@ -364,7 +364,7 @@ Array [
        KSM
     </div>
     <div
-      className="text-start col-1"
+      className="text-start col-2"
     />
   </div>,
 ]
