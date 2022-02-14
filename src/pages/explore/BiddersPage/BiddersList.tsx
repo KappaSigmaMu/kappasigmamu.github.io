@@ -61,7 +61,7 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
           {badge}{' '}
           {humanizeBidValue(bid.kind)} KSM
         </Col>
-        <Col xs={1} className="text-start">
+        <Col xs={2} className="text-start">
           {handleAction &&
             <StyledUndo disabled={loading} onClick={() => handleAction(index)} href="#">{badgeText}</StyledUndo>
           }
@@ -82,7 +82,7 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
     <>
       <DataHeaderRow>
         <Col xs={1} className="text-center">#</Col>
-        <Col xs={4} className="text-start">Wallet Hash</Col>
+        <Col xs={3} className="text-start">Wallet Hash</Col>
         <Col xs={2} className="text-start">Bid Kind</Col>
         <Col xs={4} className="text-end" style={{ paddingRight: 0 }}>Value</Col>
       </DataHeaderRow>
@@ -91,7 +91,7 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
           <Col xs={1} className="text-center">
             <Identicon value={bid.who} size={32} theme={'polkadot'} />
           </Col>
-          <Col xs={4} className="text-start text-truncate">
+          <Col xs={3} className="text-start text-truncate">
             {truncateMiddle(bid.who?.toString())}
           </Col>
           <Col xs={2} className="text-start text-truncate">
