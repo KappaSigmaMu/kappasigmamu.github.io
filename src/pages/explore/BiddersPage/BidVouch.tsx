@@ -1,3 +1,4 @@
+import { BN } from '@polkadot/util'
 import { useState, useEffect } from 'react'
 import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -24,14 +25,14 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
 
   useEffect(() => {
     if (bidAmount > 0 && apiReady) {
-      const tx = api?.tx?.society?.bid(bidAmount)
+      const tx = api?.tx?.society?.bid(new BN(bidAmount))
       bid(tx, activeAccount, onStatusChange)
     }
   }, [bidAmount, handleResult])
 
   useEffect(() => {
     if (vouchAddress && vouchTip && vouchValue && apiReady) {
-      const tx = api?.tx?.society?.vouch(activeAccount.address, vouchValue, vouchTip)
+      const tx = api?.tx?.society?.vouch(vouchAddress, new BN(vouchValue), new BN(vouchTip))
       vouch(tx, activeAccount, onStatusChange)
     }
   }, [vouchAddress, vouchTip, vouchValue])
