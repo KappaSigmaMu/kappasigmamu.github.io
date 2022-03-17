@@ -33,7 +33,7 @@ const LandingPage = () => {
 
   const handleClose = () => setShow(false)
 
-  const handleCanaryNodeClick = (nodeId : string) => {
+  const handleCanaryNodeClick = (nodeId: string) => {
     if (allMembers) {
       setShow(true)
       setSelectedMember(allMembers[nodeId])
@@ -51,7 +51,6 @@ const LandingPage = () => {
   }
 
   useEffect(() => {
-
     if (api) {
       api.derive.society.members().then((members) => {
         members.forEach((member) => {
@@ -61,18 +60,18 @@ const LandingPage = () => {
             "hash": id,
             "name": "unknown",
             "level": "human",
-            "strikes": member.strikes.toString() 
+            "strikes": member.strikes.toString()
           }
           setAllMembers(m)
 
           api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
             setLevelCheckingAccounts(response.map(account => account.who), id, 'bidder')
           })
-    
+
           api.query.society.candidates().then((response: Vec<PalletSocietyBid>) => {
             setLevelCheckingAccounts(response.map(account => account.who), id, 'candidate')
           })
-    
+
           api.query.society.members().then((response: Vec<AccountId32>) => {
             setLevelCheckingAccounts(response, id, 'cyborg')
           })
@@ -101,25 +100,25 @@ const LandingPage = () => {
         show={show}
         handleClose={handleClose}
         member={selectedMember}
-        />
+      />
 
       <FullPageHeightRow>
         <div className="position-absolute h-100">
-          { allMembers ?
+          {allMembers ?
             <ThreeCanary
-                objectUrl={`./static/canary.glb`}
-                nodes={
-                  members.map((id : string) => ({
-                    "hash": id,
-                    "name": "Unknown",
-                    "level": allMembers[id]?.level
-                  }))
-                }
-                onNodeClick={handleCanaryNodeClick}
-            /> : null }
+              objectUrl={`./static/canary.glb`}
+              nodes={
+                members.map((id: string) => ({
+                  "hash": id,
+                  "name": "Unknown",
+                  "level": allMembers[id]?.level
+                }))
+              }
+              onNodeClick={handleCanaryNodeClick}
+            /> : null}
         </div>
-        <CentralizedCol xs={6} />
-        <CentralizedCol xs={6}>
+        <CentralizedCol xs={7} />
+        <CentralizedCol xs={5}>
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <p>
