@@ -105,7 +105,7 @@ export const hashToPoI: { [key: string]: string } = {
     GRvRXw8jB2H9EGojmmjM4vZCeofuu91W2Zpbtr2QC5f7iLb: "https://drive.google.com/uc?export=view&id=19MjrL-__mYTa2Wo6o1cBVGf-KxfdhQQD",
     GUtkCnQKsVXzjqJvSZkiHtvdwZoEyukZrDE1iLTyV8F7tH6: "https://drive.google.com/uc?export=view&id=1o3-Z1VxmIHY9mLWIykan2VqVDfXKPAml",
     GWrL9KsayVkniG2GmkYoTRDaFHhpTTSf6fL25e623bHVkRt: "https://drive.google.com/uc?export=view&id=1us1Q4q3tahjWgCswVFDLyyEh4jX4jEA4",
-    GbiPhuH4m4BCYiiLpqo2S2TyFxvgpfdSKWMdp9ZrbKdtXeM: "https://user-images.githubusercontent.com/6154932/159142082-c9c87170-591c-46af-a0eb-79e68b610aea.png",
+    GbiPhuH4m4BCYiiLpqo2S2TyFxvgpfdSKWMdp9ZrbKdtXeM: "https://drive.google.com/uc?export=view&id=1OKIkjViihJ0hKl8A9vVNHiwETHZPA2q0",
     GczUwD9zRdzJnTCr9kyREURmVeYpZAg1wNWrZMjqqimHcds: "https://drive.google.com/uc?export=view&id=15KfAqE1kr-UEFKRNK1JBuzwJruqG4JVc",
     GkS2m7UK6RSUkFiCHYPRtp8GCKdPtrBwP1wj7448gWoiut8: "https://drive.google.com/uc?export=view&id=1y2faw_wowR9GYpVC0Lu47MMTabnBQhSM",
     Gnh63rW5fy3FAbnZQPkajyrQXxQGkg56Waoe2Ede1RjRjrJ: "https://drive.google.com/uc?export=view&id=1egsmH9hQsMmBUqSiDuHfw6KjOCdL4jzj",
