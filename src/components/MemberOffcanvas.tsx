@@ -25,8 +25,7 @@ const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }
       <Offcanvas.Body>
         <Container>
           <StyledRow>
-            <Col md={2} />
-            <Col>
+            <Col className="d-flex justify-content-center">
               <Identicon
                 value={member?.hash}
                 size={200}
@@ -38,33 +37,35 @@ const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }
             <Col>
               <Badge pill>{member?.level?.toUpperCase()}</Badge>
             </Col>
-          </StyledRow>
-          <StyledRow>
-            <Col>
-              <div className="h1 text-decoration-underline">{member?.name?.toUpperCase()}</div>
+            <Col className="d-flex justify-content-end">
+              <Badge pill>Strikes: {member?.strikes}</Badge>
             </Col>
           </StyledRow>
           <StyledRow>
             <Col>
-              <p>{formatHash(member?.hash)}</p>
+              <div className="h2">{formatHash(member?.hash)}</div>
             </Col>
           </StyledRow>
           <StyledRow>
-            <Col>
-              <p>Strikes: {member?.strikes}</p>
-            </Col>
-          </StyledRow>
-          {hashToPoI[member?.hash] &&
-            <StyledRow>
+            {hashToPoI[member?.hash] ?
               <Col>
                 <p>Proof of Ink</p>
-                <img src={hashToPoI[member?.hash]} width={"330px"} />
+                <img src={hashToPoI[member?.hash]} width={"340px"} />
               </Col>
-            </StyledRow>
-          }
+              :
+              <Col>
+                <p>Proof of Ink not found. Contact the development team on
+                  &nbsp;
+                  <a href="https://matrix.to/#/!BUmiAAnAYSRGarqwOt:matrix.parity.io?via=matrix.parity.io">Element</a>
+                  &nbsp;
+                  if this is your address.
+                </p>
+              </Col>
+            }
+          </StyledRow>
         </Container>
       </Offcanvas.Body>
-    </StyledOffcanvas>
+    </StyledOffcanvas >
   )
 }
 
