@@ -1587,10 +1587,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@kappasigmamu/canary-component@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@kappasigmamu/canary-component/-/canary-component-0.3.2.tgz#1e548278e6cf24c5f71f1ef75a89b0dbf738f3bb"
-  integrity sha512-RMRuzU9xASGjGUkpj7238MI7sYbBNEDtuBULh/Y8Xbrxc0AVvckbpokZfEscbgb2ZPG8xfvR/4n4qeQurdKjxQ==
+"@kappasigmamu/canary-component@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@kappasigmamu/canary-component/-/canary-component-0.3.3.tgz#fa75869522e8a4588cf3f516c77b50dd5ff85ae4"
+  integrity sha512-8KV58tXawwsX1e4ZVWx/t9dcrX11FGQJ2qmUAWIyO6fi4+OlUbnBY353cAO1CcvxEzkfc3h/3wcFeRnXyIvT4A==
   dependencies:
     "@babel/polyfill" "^7.12.1"
     "@react-three/drei" "^8.11.1"
