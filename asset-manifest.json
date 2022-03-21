@@ -5,13 +5,13 @@
     "main.js.map": "/static/js/main.6c3b4f19.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.6e668805.js",
     "runtime-main.js.map": "/static/js/runtime-main.6e668805.js.map",
-    "static/js/2.4b65a99d.chunk.js": "/static/js/2.4b65a99d.chunk.js",
-    "static/js/2.4b65a99d.chunk.js.map": "/static/js/2.4b65a99d.chunk.js.map",
+    "static/js/2.300f5335.chunk.js": "/static/js/2.300f5335.chunk.js",
+    "static/js/2.300f5335.chunk.js.map": "/static/js/2.300f5335.chunk.js.map",
     "static/js/3.c1c2cee0.chunk.js": "/static/js/3.c1c2cee0.chunk.js",
     "static/js/3.c1c2cee0.chunk.js.map": "/static/js/3.c1c2cee0.chunk.js.map",
     "index.html": "/index.html",
     "static/css/main.55b97eab.chunk.css.map": "/static/css/main.55b97eab.chunk.css.map",
-    "static/js/2.4b65a99d.chunk.js.LICENSE.txt": "/static/js/2.4b65a99d.chunk.js.LICENSE.txt",
+    "static/js/2.300f5335.chunk.js.LICENSE.txt": "/static/js/2.300f5335.chunk.js.LICENSE.txt",
     "static/media/canary-level-1.d3390cc2.svg": "/static/media/canary-level-1.d3390cc2.svg",
     "static/media/discord-logo.023684f9.svg": "/static/media/discord-logo.023684f9.svg",
     "static/media/element-logo.9a5a405c.svg": "/static/media/element-logo.9a5a405c.svg",
@@ -23,7 +23,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.6e668805.js",
-    "static/js/2.4b65a99d.chunk.js",
+    "static/js/2.300f5335.chunk.js",
     "static/css/main.55b97eab.chunk.css",
     "static/js/main.6c3b4f19.chunk.js"
   ]
