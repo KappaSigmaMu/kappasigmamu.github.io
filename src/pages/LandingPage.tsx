@@ -117,8 +117,8 @@ const LandingPage = () => {
               onNodeClick={handleCanaryNodeClick}
             /> : null}
         </div>
-        <CentralizedCol xs={7} />
-        <CentralizedCol xs={5}>
+        <CentralizedCol xs={9} />
+        <CentralizedCol xs={3}>
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <p>

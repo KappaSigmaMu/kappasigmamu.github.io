@@ -17,7 +17,7 @@ const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }
   const { member } = props
 
   return (
-    <StyledOffcanvas show={props.show} onHide={props.handleClose} placement="end" backdrop={true}>
+    <StyledOffcanvas show={props.show} onHide={props.handleClose} placement="start" backdrop={true}>
 
       <Offcanvas.Header closeButton>
 
