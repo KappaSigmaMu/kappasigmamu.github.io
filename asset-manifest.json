@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.55b97eab.chunk.css",
-    "main.js": "/static/js/main.1b2d00df.chunk.js",
-    "main.js.map": "/static/js/main.1b2d00df.chunk.js.map",
+    "main.js": "/static/js/main.2bfeec88.chunk.js",
+    "main.js.map": "/static/js/main.2bfeec88.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.6e668805.js",
     "runtime-main.js.map": "/static/js/runtime-main.6e668805.js.map",
     "static/js/2.300f5335.chunk.js": "/static/js/2.300f5335.chunk.js",
@@ -15,16 +15,17 @@
     "static/media/canary-level-1.d3390cc2.svg": "/static/media/canary-level-1.d3390cc2.svg",
     "static/media/discord-logo.023684f9.svg": "/static/media/discord-logo.023684f9.svg",
     "static/media/element-logo.9a5a405c.svg": "/static/media/element-logo.9a5a405c.svg",
+    "static/media/grid-canary-red.45dcb14f.png": "/static/media/grid-canary-red.45dcb14f.png",
     "static/media/kappa-sigma-mu-logo.192858ee.svg": "/static/media/kappa-sigma-mu-logo.192858ee.svg",
     "static/media/kappa-sigma-mu-title.ca479de5.svg": "/static/media/kappa-sigma-mu-title.ca479de5.svg",
     "static/media/map-icon.95057c80.svg": "/static/media/map-icon.95057c80.svg",
-    "static/media/mock-canary.d3390cc2.svg": "/static/media/mock-canary.d3390cc2.svg",
+    "static/media/spots-canary-green.1349f64f.png": "/static/media/spots-canary-green.1349f64f.png",
     "static/media/twitter-logo.7a9247c3.svg": "/static/media/twitter-logo.7a9247c3.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.6e668805.js",
     "static/js/2.300f5335.chunk.js",
     "static/css/main.55b97eab.chunk.css",
-    "static/js/main.1b2d00df.chunk.js"
+    "static/js/main.2bfeec88.chunk.js"
   ]
 }
