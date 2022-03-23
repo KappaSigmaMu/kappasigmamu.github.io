@@ -1,4 +1,4 @@
-import { Button, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
+import { Button, Nav, Navbar as RBNavbar } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useAccount } from '../account/AccountContext'
 import { fetchAccounts } from '../helpers/fetchAccounts'
@@ -19,7 +19,7 @@ const Navbar = ({
       &nbsp;
       {showSocialIcons ? <SocialIcons /> : <></>}
       &nbsp;
-      {/* {showAccount ? <AccountNavbar /> : <></>} */}
+      {showAccount ? <AccountNavbar /> : <></>}
     </Nav>
   </RBNavbar>
 )
