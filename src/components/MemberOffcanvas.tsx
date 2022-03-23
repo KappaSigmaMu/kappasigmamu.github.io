@@ -1,5 +1,6 @@
 import Identicon from '@polkadot/react-identicon'
-import { Col, Row, Offcanvas, Container, Badge } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
+import { Col, Row, Offcanvas, Container, Badge, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { hashToPoI } from '../helpers/hashToPoI'
 
@@ -15,6 +16,11 @@ const formatHash = (str: string) => {
 
 const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }) => {
   const { member } = props
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(true)
+  }, [member])
 
   return (
     <StyledOffcanvas show={props.show} onHide={props.handleClose} placement="start" backdrop={true}>
@@ -22,7 +28,7 @@ const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }
       <Offcanvas.Header closeButton>
 
       </Offcanvas.Header>
-      <Offcanvas.Body>
+      <Offcanvas.Body style={{ overflowY: "hidden" }}>
         <Container>
           <StyledRow>
             <Col className="d-flex justify-content-center">
@@ -47,10 +53,32 @@ const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }
             </Col>
           </StyledRow>
           <StyledRow>
+
             {hashToPoI[member?.hash] ?
               <Col>
-                <p>Proof of Ink</p>
-                <img src={hashToPoI[member?.hash]} width={"340px"} />
+                <p>Proof-of-Ink</p>
+
+                {loading &&
+                  <>
+                    <Spinner
+                      className="mb-2"
+                      animation="border"
+                      role="status"
+                      variant="secondary">
+                    </Spinner>
+
+                    <p>
+                      Be patient. The proof-of-ink pictures are hosted on IPFS and might take a while to load.
+                    </p>
+                  </>
+                }
+
+                <img
+                  src={hashToPoI[member?.hash]}
+                  width={"340px"}
+                  onLoad={() => setLoading(false)}
+                  style={loading ? { display: 'none' } : {}}
+                />
               </Col>
               :
               <Col>

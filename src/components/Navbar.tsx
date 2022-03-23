@@ -7,22 +7,20 @@ import { AccountSelector } from './AccountSelector'
 import { SocialIcons } from './SocialIcons'
 
 const Navbar = ({
-  showAccount=false,
-  showBrandIcon=false,
-  showExploreButton=false,
-  showSocialIcons=false,
+  showAccount = false,
+  showBrandIcon = false,
+  showExploreButton = false,
+  showSocialIcons = false,
 }: NavRouteProps) => (
-  <RBNavbar className="pt-4">
-    <Container>
-      <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
-      <Nav className="align-items-center align-self-center">
-        {showExploreButton ? <Nav.Link to="/explore" as={Link}>Explore</Nav.Link> : <></>}
-        &nbsp;
-        {showSocialIcons ? <SocialIcons /> : <></>}
-        &nbsp;
-        {showAccount ? <AccountNavbar /> : <></>}
-      </Nav>
-    </Container>
+  <RBNavbar className="pt-4 justify-content-center">
+    <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
+    <Nav className="align-items-center align-self-center">
+      {showExploreButton ? <Nav.Link to="/explore" as={Link}>Explore</Nav.Link> : <></>}
+      &nbsp;
+      {showSocialIcons ? <SocialIcons /> : <></>}
+      &nbsp;
+      {/* {showAccount ? <AccountNavbar /> : <></>} */}
+    </Nav>
   </RBNavbar>
 )
 

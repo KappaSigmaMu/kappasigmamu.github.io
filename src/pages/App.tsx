@@ -20,8 +20,8 @@ const AppNavigation = () => {
     <>
       <Navbar
         showAccount
-        showExploreButton
-        showBrandIcon={!isRoot}
+        showExploreButton={false}
+        showBrandIcon
         showSocialIcons={isRoot || pathname.includes("guide")}
       />
       <Outlet />
@@ -53,9 +53,9 @@ const App = () => (
       <AccountContextProvider>
         <ThemeProvider theme={Theme}>
           <GlobalStyle />
-            <Suspense fallback={<p>ERROR/LOADING...</p>}>
-              <AppRouter />
-            </Suspense>
+          <Suspense fallback={<p>ERROR/LOADING...</p>}>
+            <AppRouter />
+          </Suspense>
         </ThemeProvider>
       </AccountContextProvider>
     </KusamaContextProvider>
