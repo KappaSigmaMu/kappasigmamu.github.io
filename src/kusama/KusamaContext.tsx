@@ -130,7 +130,7 @@ function KusamaContextProvider(props: { children: JSX.Element }) {
   const [state, dispatch] = useReducer(reducer, INIT_STATE)
 
   connect(state, dispatch)
-  loadAccounts(state, dispatch)
+  // loadAccounts(state, dispatch)
 
   return <KusamaContext.Provider value={state}>{props.children}</KusamaContext.Provider>
 }

@@ -85,6 +85,7 @@ const LandingPage = () => {
   }, [api])
 
   const handlePrimaryButtonClick = () => {
+    document.body.style.overflow = "auto"
     navigate('/guide')
   }
 
@@ -113,8 +114,8 @@ const LandingPage = () => {
               onNodeClick={handleCanaryNodeClick}
             /> : null}
         </div>
-        <CentralizedCol xs={9} />
-        <CentralizedCol xs={3}>
+        <CentralizedCol xs={8} />
+        <CentralizedCol xs={4}>
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <p>
