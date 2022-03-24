@@ -55,6 +55,8 @@ const TrelloLink = styled(ExternalLink).attrs(() => ({
 `
 
 const CyborgGuidePage = () => {
+  document.body.style.overflow = "auto"
+
   return (<>
     <Container>
       <GuideTitleRow className="mb-5">
