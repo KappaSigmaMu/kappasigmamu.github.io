@@ -33,7 +33,7 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="" element={<AppNavigation />}>
+        <Route element={<AppNavigation />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/guide" element={<CyborgGuidePage />} />
           <Route path="/welcome" element={<WelcomePage />} />
