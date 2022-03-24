@@ -34,6 +34,10 @@ const GlobalStyle = createGlobalStyle`
     color: #01ffff;
   }
 
+  a:hover {
+    color: white;
+  }
+
   .navbar-light .navbar-nav .nav-link {
     color: #01ffff;
   }

@@ -85,8 +85,8 @@ const LandingPage = () => {
   }, [api])
 
   const handlePrimaryButtonClick = () => {
-    document.body.style.overflow = "auto"
     navigate('/guide')
+    document.body.classList.add("no-scroll")
   }
 
   document.body.style.overflow = "hidden"

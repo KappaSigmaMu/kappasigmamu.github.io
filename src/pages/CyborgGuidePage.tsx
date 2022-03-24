@@ -114,7 +114,7 @@ const CyborgGuidePage = () => {
       </GuideRow>
       <GuideRow>
         <Col xs lg="2" className="mb-2">
-          <div className="h1 text-decoration-underline">Human</div>
+          <div className="h1">Human</div>
         </Col>
       </GuideRow>
       <GuideRow className="mb-5">
@@ -138,7 +138,7 @@ const CyborgGuidePage = () => {
       </GuideRow>
       <GuideRow>
         <Col xs lg="2" className="mb-2">
-          <div className="h1 text-decoration-underline">Bidder</div>
+          <div className="h1">Bidder</div>
         </Col>
       </GuideRow>
       <GuideRow className="mb-5">
@@ -172,7 +172,7 @@ const CyborgGuidePage = () => {
       </GuideRow>
       <GuideRow>
         <Col xs lg="2" className="mb-2">
-          <div className="h1 text-decoration-underline">Candidate</div>
+          <div className="h1">Candidate</div>
         </Col>
       </GuideRow>
       <GuideRow className="mb-5">
@@ -216,7 +216,7 @@ const CyborgGuidePage = () => {
       </GuideRow>
       <GuideRow>
         <Col xs lg="2" className="mb-2">
-          <div className="h1 text-decoration-underline">Cyborg</div>
+          <div className="h1">Cyborg</div>
         </Col>
       </GuideRow>
       <GuideRow>
