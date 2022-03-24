@@ -2,188 +2,172 @@
 
 exports[`NavBar renders it with showAccount 1`] = `
 <nav
-  className="pt-4 navbar navbar-expand navbar-light"
+  className="pt-4 justify-content-center navbar navbar-expand navbar-light"
 >
   <div
-    className="container"
+    className="navbar-nav"
+    onKeyDown={[Function]}
   >
     <div
-      className="navbar-nav"
-      onKeyDown={[Function]}
-    >
-      <div
-        style={
-          Object {
-            "height": 82,
-            "width": 106,
-          }
+      style={
+        Object {
+          "height": 82,
+          "width": 106,
         }
-      />
-    </div>
-    <div
-      className="align-items-center align-self-center navbar-nav"
-      onKeyDown={[Function]}
+      }
+    />
+  </div>
+  <div
+    className="align-items-center align-self-center navbar-nav"
+    onKeyDown={[Function]}
+  >
+     
+     
+    <button
+      className="btn btn-outline-secondary"
+      disabled={false}
+      onClick={[Function]}
+      type="button"
     >
-       
-       
-      <button
-        className="btn btn-outline-secondary"
-        disabled={false}
-        onClick={[Function]}
-        type="button"
-      >
-        Connect Wallet
-      </button>
-    </div>
+      Connect Wallet
+    </button>
   </div>
 </nav>
 `;
 
 exports[`NavBar renders it with showBrandIcon 1`] = `
 <nav
-  className="pt-4 navbar navbar-expand navbar-light"
+  className="pt-4 justify-content-center navbar navbar-expand navbar-light"
 >
   <div
-    className="container"
+    className="navbar-nav"
+    onKeyDown={[Function]}
   >
-    <div
-      className="navbar-nav"
-      onKeyDown={[Function]}
+    <a
+      className="navbar-brand"
+      href="/"
+      onClick={[Function]}
     >
-      <a
-        className="navbar-brand"
-        href="/"
-        onClick={[Function]}
-      >
-        <img
-          alt="KappaSigmaMu Logo"
-          src="kappa-sigma-mu-logo.svg"
-          width={90}
-        />
-      </a>
-    </div>
-    <div
-      className="align-items-center align-self-center navbar-nav"
-      onKeyDown={[Function]}
-    >
-       
-       
-    </div>
+      <img
+        alt="KappaSigmaMu Logo"
+        src="kappa-sigma-mu-logo.svg"
+        width={90}
+      />
+    </a>
+  </div>
+  <div
+    className="align-items-center align-self-center navbar-nav"
+    onKeyDown={[Function]}
+  >
+     
+     
   </div>
 </nav>
 `;
 
 exports[`NavBar renders it with showExploreButton 1`] = `
 <nav
-  className="pt-4 navbar navbar-expand navbar-light"
+  className="pt-4 justify-content-center navbar navbar-expand navbar-light"
 >
   <div
-    className="container"
+    className="navbar-nav"
+    onKeyDown={[Function]}
   >
     <div
-      className="navbar-nav"
-      onKeyDown={[Function]}
-    >
-      <div
-        style={
-          Object {
-            "height": 82,
-            "width": 106,
-          }
+      style={
+        Object {
+          "height": 82,
+          "width": 106,
         }
-      />
-    </div>
-    <div
-      className="align-items-center align-self-center navbar-nav"
-      onKeyDown={[Function]}
+      }
+    />
+  </div>
+  <div
+    className="align-items-center align-self-center navbar-nav"
+    onKeyDown={[Function]}
+  >
+    <a
+      className="nav-link"
+      data-rr-ui-event-key={null}
+      disabled={false}
+      href="/explore"
+      onClick={[Function]}
     >
-      <a
-        className="nav-link"
-        data-rr-ui-event-key={null}
-        disabled={false}
-        href="/explore"
-        onClick={[Function]}
-      >
-        Explore
-      </a>
-       
-       
-    </div>
+      Explore
+    </a>
+     
+     
   </div>
 </nav>
 `;
 
 exports[`NavBar renders it with showSocialIcons 1`] = `
 <nav
-  className="pt-4 navbar navbar-expand navbar-light"
+  className="pt-4 justify-content-center navbar navbar-expand navbar-light"
 >
   <div
-    className="container"
+    className="navbar-nav"
+    onKeyDown={[Function]}
   >
     <div
-      className="navbar-nav"
-      onKeyDown={[Function]}
-    >
-      <div
-        style={
-          Object {
-            "height": 82,
-            "width": 106,
-          }
+      style={
+        Object {
+          "height": 82,
+          "width": 106,
         }
-      />
-    </div>
+      }
+    />
+  </div>
+  <div
+    className="align-items-center align-self-center navbar-nav"
+    onKeyDown={[Function]}
+  >
+     
     <div
-      className="align-items-center align-self-center navbar-nav"
-      onKeyDown={[Function]}
+      className="me-2"
     >
-       
-      <div
-        className="me-2"
+      <a
+        className="sc-jSgvzq"
+        href="https://discord.gg/9AWjTf8wSk"
+        rel="noreferrer"
+        target="_blank"
       >
-        <a
-          className="sc-jSgvzq"
-          href="https://discord.gg/9AWjTf8wSk"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <img
-            alt="Discord Logo"
-            src="discord-logo.svg"
-          />
-        </a>
-         
-        <a
-          className="sc-jSgvzq"
-          href="https://matrix.to/#/!BUmiAAnAYSRGarqwOt:matrix.parity.io?via=matrix.parity.io"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <img
-            alt="Element Logo"
-            src="element-logo.svg"
-          />
-        </a>
-         
-        <a
-          className="sc-jSgvzq"
-          href="https://twitter.com/kusamanetwork"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <img
-            alt="Twitter Logo"
-            src="twitter-logo.svg"
-            style={
-              Object {
-                "color": "red",
-              }
-            }
-          />
-        </a>
-      </div>
+        <img
+          alt="Discord Logo"
+          src="discord-logo.svg"
+        />
+      </a>
        
+      <a
+        className="sc-jSgvzq"
+        href="https://matrix.to/#/!BUmiAAnAYSRGarqwOt:matrix.parity.io?via=matrix.parity.io"
+        rel="noreferrer"
+        target="_blank"
+      >
+        <img
+          alt="Element Logo"
+          src="element-logo.svg"
+        />
+      </a>
+       
+      <a
+        className="sc-jSgvzq"
+        href="https://twitter.com/kusamanetwork"
+        rel="noreferrer"
+        target="_blank"
+      >
+        <img
+          alt="Twitter Logo"
+          src="twitter-logo.svg"
+          style={
+            Object {
+              "color": "red",
+            }
+          }
+        />
+      </a>
     </div>
+     
   </div>
 </nav>
 `;

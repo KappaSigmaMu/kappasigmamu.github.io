@@ -19,9 +19,9 @@ const AppNavigation = () => {
   return (
     <>
       <Navbar
-        showAccount
-        showExploreButton
-        showBrandIcon={!isRoot}
+        showAccount={false}
+        showExploreButton={false}
+        showBrandIcon
         showSocialIcons={isRoot || pathname.includes("guide")}
       />
       <Outlet />
@@ -33,7 +33,7 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="" element={<AppNavigation />}>
+        <Route element={<AppNavigation />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/guide" element={<CyborgGuidePage />} />
           <Route path="/welcome" element={<WelcomePage />} />
@@ -53,9 +53,9 @@ const App = () => (
       <AccountContextProvider>
         <ThemeProvider theme={Theme}>
           <GlobalStyle />
-            <Suspense fallback={<p>ERROR/LOADING...</p>}>
-              <AppRouter />
-            </Suspense>
+          <Suspense fallback={<p>ERROR/LOADING...</p>}>
+            <AppRouter />
+          </Suspense>
         </ThemeProvider>
       </AccountContextProvider>
     </KusamaContextProvider>

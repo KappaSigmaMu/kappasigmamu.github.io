@@ -4,12 +4,10 @@ import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { useAccount } from '../account/AccountContext'
 import { PrimaryLgButton } from '../components/base'
 import { MemberOffcanvas } from "../components/MemberOffcanvas"
-import { fetchAccounts } from '../helpers/fetchAccounts'
 import { useKusama } from '../kusama'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
@@ -23,7 +21,6 @@ interface MembersData {
 
 const LandingPage = () => {
   const navigate = useNavigate()
-  const { activeAccount, setActiveAccount, setAccounts } = useAccount()
   const { api } = useKusama()
   const [members, setMembers] = useState<Array<string>>([""])
   const [show, setShow] = useState(false)
@@ -88,11 +85,11 @@ const LandingPage = () => {
   }, [api])
 
   const handlePrimaryButtonClick = () => {
-    if (!activeAccount) {
-      fetchAccounts(setAccounts, setActiveAccount)
-    }
-    navigate('/journey')
+    document.body.style.overflow = "auto"
+    navigate('/guide')
   }
+
+  document.body.style.overflow = "hidden"
 
   return (
     <>
@@ -102,7 +99,7 @@ const LandingPage = () => {
         member={selectedMember}
       />
 
-      <FullPageHeightRow>
+      <FullPageHeightRow noGutters>
         <div className="position-absolute h-100">
           {allMembers ?
             <ThreeCanary
@@ -117,17 +114,14 @@ const LandingPage = () => {
               onNodeClick={handleCanaryNodeClick}
             /> : null}
         </div>
-        <CentralizedCol xs={7} />
-        <CentralizedCol xs={5}>
+        <CentralizedCol xs={8} />
+        <CentralizedCol xs={4}>
           <h1>Join the</h1>
           <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <p>
             <PrimaryLgButton onClick={handlePrimaryButtonClick}>
-              Become a Cyborg
+              Cyborg Guide
             </PrimaryLgButton>
-          </p>
-          <p>
-            <Link to="/guide">Cyborg Guide</Link>
           </p>
         </CentralizedCol>
       </FullPageHeightRow>
@@ -141,6 +135,7 @@ const KappaSigmaMu = styled.img`
 `
 
 const FullPageHeightRow = styled(Row)`
+  --bs-gutter-x: 0;
   height: 85vh;
   width: 100%;
 `

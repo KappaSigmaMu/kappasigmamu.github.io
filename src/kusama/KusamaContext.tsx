@@ -1,10 +1,7 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
 import { ApiPromise, WsProvider } from '@polkadot/api'
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc'
-import keyring from '@polkadot/ui-keyring'
-import { cryptoWaitReady } from '@polkadot/util-crypto'
 import React, { useReducer, useContext } from 'react'
 import { config } from './config'
 
@@ -78,59 +75,12 @@ function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
   api.on('ready', () => dispatch({ type: 'READY' }))
 }
 
-let loadAccts = false
-function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
-  let _keyring = keyring
-
-  const asyncLoadAccounts = async () => {
-    await cryptoWaitReady()
-
-    dispatch({ type: 'KEYRING_LOADING' })
-    try {
-      await web3Enable(config.APP_NAME)
-      let allAccounts = await web3Accounts()
-      allAccounts = allAccounts.map(({ address, meta }) => ({
-        address,
-        meta: { ...meta, name: `${meta.name} (${meta.source})` },
-      }))
-
-      const kusamaPrefix = 2
-      const genericPrefix = 42
-
-      const prefix = config.DEVELOPMENT_KEYRING ? genericPrefix : kusamaPrefix
-
-      keyring.loadAll(
-        {
-          isDevelopment: config.DEVELOPMENT_KEYRING,
-          ss58Format: prefix,
-          type: 'ed25519',
-          genesisHash: state?.api?.genesisHash
-        },
-        allAccounts,
-      )
-      _keyring = keyring
-      dispatch({ type: 'KEYRING_READY', payload: _keyring })
-    } catch (e) {
-      console.error(e)
-      dispatch({ type: 'KEYRING_ERROR' })
-    }
-  }
-
-  const { keyringState, apiState } = state
-  if (keyringState || apiState != 'READY') return
-  if (loadAccts) return dispatch({ type: 'KEYRING_READY', payload: _keyring })
-
-  loadAccts = true
-  asyncLoadAccounts()
-}
-
 const KusamaContext = React.createContext<StateType>(INIT_STATE)
 
 function KusamaContextProvider(props: { children: JSX.Element }) {
   const [state, dispatch] = useReducer(reducer, INIT_STATE)
 
   connect(state, dispatch)
-  loadAccounts(state, dispatch)
 
   return <KusamaContext.Provider value={state}>{props.children}</KusamaContext.Provider>
 }
