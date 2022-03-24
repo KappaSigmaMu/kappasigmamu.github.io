@@ -86,7 +86,6 @@ const LandingPage = () => {
 
   const handlePrimaryButtonClick = () => {
     navigate('/guide')
-    document.body.classList.add("no-scroll")
   }
 
   document.body.style.overflow = "hidden"
