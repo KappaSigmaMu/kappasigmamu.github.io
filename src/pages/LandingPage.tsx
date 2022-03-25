@@ -85,7 +85,6 @@ const LandingPage = () => {
   }, [api])
 
   const handlePrimaryButtonClick = () => {
-    document.body.style.overflow = "auto"
     navigate('/guide')
   }
 

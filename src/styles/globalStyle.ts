@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     background-color: #212529;
-    overflow: hidden;
+    overflow: auto;
   }
 
   h1 {
@@ -32,6 +32,10 @@ const GlobalStyle = createGlobalStyle`
 
   a {
     color: #01ffff;
+  }
+
+  a:hover {
+    color: white;
   }
 
   .navbar-light .navbar-nav .nav-link {
