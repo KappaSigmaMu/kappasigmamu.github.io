@@ -19,10 +19,10 @@ const AppNavigation = () => {
   return (
     <>
       <Navbar
-        showAccount={false}
-        showExploreButton={false}
+        showAccount
+        showExploreButton
         showBrandIcon
-        showSocialIcons={isRoot || pathname.includes("guide")}
+        showSocialIcons
       />
       <Outlet />
     </>
