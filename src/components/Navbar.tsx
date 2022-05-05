@@ -16,11 +16,11 @@ const Navbar = ({
     <Container>
       <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
       <Nav className="align-items-center align-self-center">
-        {showExploreButton ? <Nav.Link to="/explore" as={Link}>Explore</Nav.Link> : <></>}
+        {showExploreButton && <Nav.Link to="/explore" as={Link}>Explore</Nav.Link>}
         &nbsp;
-        {showSocialIcons ? <SocialIcons /> : <></>}
+        {showSocialIcons && <SocialIcons />}
         &nbsp;
-        {showAccount ? <AccountNavbar /> : <></>}
+        {showAccount && <AccountNavbar />}
       </Nav>
     </Container>
   </RBNavbar>
