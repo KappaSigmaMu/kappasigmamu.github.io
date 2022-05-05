@@ -1,4 +1,4 @@
-import { Button, Nav, Navbar as RBNavbar } from 'react-bootstrap'
+import { Button, Nav, Container, Navbar as RBNavbar } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useAccount } from '../account/AccountContext'
 import { fetchAccounts } from '../helpers/fetchAccounts'
@@ -12,15 +12,17 @@ const Navbar = ({
   showExploreButton = false,
   showSocialIcons = false,
 }: NavRouteProps) => (
-  <RBNavbar className="pt-4 justify-content-center">
-    <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
-    <Nav className="align-items-center align-self-center">
-      {showExploreButton ? <Nav.Link to="/explore" as={Link}>Explore</Nav.Link> : <></>}
-      &nbsp;
-      {showSocialIcons ? <SocialIcons /> : <></>}
-      &nbsp;
-      {showAccount ? <AccountNavbar /> : <></>}
-    </Nav>
+  <RBNavbar className="pt-4">
+    <Container>
+      <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
+      <Nav className="align-items-center align-self-center">
+        {showExploreButton && <Nav.Link to="/explore" as={Link}>Explore</Nav.Link>}
+        &nbsp;
+        {showSocialIcons && <SocialIcons />}
+        &nbsp;
+        {showAccount && <AccountNavbar />}
+      </Nav>
+    </Container>
   </RBNavbar>
 )
 

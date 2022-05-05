@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { AccountContextProvider } from '../account/AccountContext'
 import { Navbar } from '../components/Navbar'
@@ -12,22 +12,17 @@ import { JourneyPage } from './JourneyPage'
 import { LandingPage } from './LandingPage'
 import { WelcomePage } from './WelcomePage'
 
-const AppNavigation = () => {
-  const { pathname } = useLocation()
-  const isRoot = !!pathname.match("[/]$")
-
-  return (
-    <>
-      <Navbar
-        showAccount={false}
-        showExploreButton={false}
-        showBrandIcon
-        showSocialIcons={isRoot || pathname.includes("guide")}
-      />
-      <Outlet />
-    </>
-  )
-}
+const AppNavigation = () => (
+  <>
+    <Navbar
+      showAccount
+      showExploreButton
+      showBrandIcon
+      showSocialIcons
+    />
+    <Outlet />
+  </>
+)
 
 const AppRouter = () => {
   return (
