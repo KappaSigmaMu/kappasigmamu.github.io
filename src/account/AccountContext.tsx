@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useKusama } from '../kusama'
 
 // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-const storedActiveAccount = { name: undefined, address: '' }
+const storedActiveAccount = { name: '', address: '' }
 
 const INIT_STATE = {
   activeAccount: storedActiveAccount,
