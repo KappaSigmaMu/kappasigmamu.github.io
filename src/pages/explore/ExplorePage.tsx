@@ -14,19 +14,16 @@ const ExplorePage = (): JSX.Element => {
   const { api } = useKusama()
   const { maxStrikes } = useConsts()
   const [candidates, setCandidates] = useState<SocietyCandidate[]>([])
-  const [info, setInfo] = useState<DeriveSociety | null>(null)
   const [members, setMembers] = useState<SocietyMember[]>([])
 
   const loading = !api?.query?.society
 
   useEffect(() => {
     if (!loading) {
-      api.derive.society.members().then((responseMembers: DeriveSocietyMember[]) => {
-        setMembers(buildSocietyMembersArray(responseMembers, info, maxStrikes))
-      })
-
       api.derive.society.info().then((responseInfo: DeriveSociety) => {
-        setInfo(responseInfo)
+        api.derive.society.members((responseMembers: DeriveSocietyMember[]) => {
+          setMembers(buildSocietyMembersArray(responseMembers, responseInfo, maxStrikes))
+        })
       })
 
       api.derive.society.candidates().then((responseCandidates: DeriveSocietyCandidate[]) => {

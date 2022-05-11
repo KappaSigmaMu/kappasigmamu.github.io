@@ -1,22 +1,12 @@
 import { DeriveSocietyMember } from '@polkadot/api-derive/types'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Spinner } from 'react-bootstrap'
 import { useKusama } from '../../kusama'
 
-const MembersPage = (): JSX.Element => {
+const MembersPage = ({ members }: { members: SocietyMember[] }): JSX.Element => {
   const { api } = useKusama()
-  const [members, setMembers] = useState<DeriveSocietyMember[] | []>([])
 
   const loading = !api?.query?.society
-
-  useEffect(() => {
-    if (!loading) {
-      api.derive.society.members().then((response: DeriveSocietyMember[]) => {
-        setMembers(response)
-      })
-    }
-  }, [api?.query?.society])
-
   const content = loading ? <Spinner animation="border" variant="primary" /> : <>
 
     {members.map(member =>
