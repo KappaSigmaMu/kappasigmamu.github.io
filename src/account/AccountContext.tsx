@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useKusama } from '../kusama'
 
 // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-let storedActiveAccount = JSON.parse(localStorage.getItem('activeAccount')!)
+let storedActiveAccount = JSON.parse(localStorage.getItem('activeAccount') || null!)
 storedActiveAccount = storedActiveAccount ? (storedActiveAccount as accountType) : { name: '', address: '' }
 
 const INIT_STATE = {
