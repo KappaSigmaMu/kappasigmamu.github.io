@@ -6,7 +6,6 @@ import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { useAccount } from '../account/AccountContext'
 import { PrimaryLgButton } from '../components/base'
 import { MemberOffcanvas } from "../components/MemberOffcanvas"
 import { useKusama } from '../kusama'
@@ -22,7 +21,6 @@ interface MembersData {
 
 const LandingPage = () => {
   const navigate = useNavigate()
-  const { activeAccount, fetchAccounts } = useAccount()
   const { api } = useKusama()
   const [members, setMembers] = useState<Array<string>>([""])
   const [show, setShow] = useState(false)
@@ -87,9 +85,6 @@ const LandingPage = () => {
   }, [api])
 
   const handlePrimaryButtonClick = () => {
-    if (!activeAccount) {
-      fetchAccounts()
-    }
     navigate('/journey')
   }
 
