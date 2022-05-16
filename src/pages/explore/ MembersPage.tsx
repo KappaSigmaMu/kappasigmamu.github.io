@@ -1,5 +1,3 @@
-import { DeriveSocietyMember } from '@polkadot/api-derive/types'
-import { useState } from 'react'
 import { Spinner } from 'react-bootstrap'
 import { useKusama } from '../../kusama'
 
