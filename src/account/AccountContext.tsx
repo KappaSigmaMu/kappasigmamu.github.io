@@ -6,7 +6,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useKusama } from '../kusama'
 
 // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-const storedActiveAccount = { name: '', address: '' }
+let storedActiveAccount = JSON.parse(localStorage.getItem('activeAccount') || null!)
+storedActiveAccount = storedActiveAccount ? (storedActiveAccount as accountType) : { name: '', address: '' }
 
 const INIT_STATE = {
   activeAccount: storedActiveAccount,
@@ -26,9 +27,13 @@ type StateType = {
 
 const AccountContext = React.createContext<StateType>(INIT_STATE)
 
+const emptyActiveAccount = (account : accountType) => {
+  return account.name === '' && account.address === ''
+}
+
 const AccountContextProvider = ({ children } : any) => {
   const { api, keyringState } = useKusama()
-  const [activeAccount, setActiveAccount] = useState<accountType>(storedActiveAccount)
+  const [activeAccount, _setActiveAccount] = useState<accountType>(storedActiveAccount)
   const [accounts, setAccounts] = useState<accountType[]>([])
   const [level, setLevel] = useState('human')
 
@@ -40,7 +45,13 @@ const AccountContextProvider = ({ children } : any) => {
       address: keyring.encodeAddress(account.address),
     }))
     setAccounts(storedAccounts)
-    setActiveAccount(storedAccounts[0])
+
+    if (emptyActiveAccount(activeAccount)) setActiveAccount(storedAccounts[0])
+  }
+
+  const setActiveAccount = (account : accountType) => {
+    _setActiveAccount(account)
+    localStorage.setItem('activeAccount', JSON.stringify(account))
   }
 
   useEffect(() => {

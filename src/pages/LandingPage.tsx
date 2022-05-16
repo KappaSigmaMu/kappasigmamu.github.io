@@ -87,9 +87,6 @@ const LandingPage = () => {
   }, [api])
 
   const handlePrimaryButtonClick = () => {
-    if (!activeAccount) {
-      fetchAccounts()
-    }
     navigate('/journey')
   }
 
