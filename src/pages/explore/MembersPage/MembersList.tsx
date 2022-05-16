@@ -27,21 +27,13 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
         </Col>
         <Col xs={8} className="text-end">
           {member.isDefender
-            ? <Badge pill bg="primary" className="me-2 p-2">Defender</Badge>
-            : <></>
-          }
+            && <Badge pill bg="primary" className="me-2 p-2">Defender</Badge>}
           {member.isFounder
-            ? <Badge pill bg="dark" className="me-2 p-2">Founder</Badge>
-            : <></>
-          }
+            && <Badge pill bg="dark" className="me-2 p-2">Founder</Badge>}
           {member.isHead
-            ? <Badge pill bg="dark" className="me-2 p-2">Society Head</Badge>
-            : <></>
-          }
+            && <Badge pill bg="dark" className="me-2 p-2">Society Head</Badge>}
           {member.isSkeptic
-            ? <Badge pill bg="danger" className="me-2 p-2">Round Skeptic</Badge>
-            : <></>
-          }
+            && <Badge pill bg="danger" className="me-2 p-2">Round Skeptic</Badge>}
         </Col>
       </StyledDataRow>
     ))}

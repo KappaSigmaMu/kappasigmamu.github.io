@@ -37,4 +37,17 @@ declare interface SocietyMember {
   payouts: [BlockNumber, Balance][]
   strikes: StrikeCount
   strikesCount: number
+  vouching?: SocietyMemberVouching
+  vote?: SocietyMemberVote
+}
+
+declare interface SocietyMemberVouching {
+  isBanned: boolean
+  isVouching: boolean
+}
+
+declare interface SocietyMemberVote {
+  isApprove: boolean
+  isReject: boolean
+  isSkeptic: boolean
 }
