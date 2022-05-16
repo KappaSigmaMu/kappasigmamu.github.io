@@ -22,7 +22,6 @@ interface MembersData {
 
 const LandingPage = () => {
   const navigate = useNavigate()
-  const { activeAccount, fetchAccounts } = useAccount()
   const { api } = useKusama()
   const [members, setMembers] = useState<Array<string>>([""])
   const [show, setShow] = useState(false)

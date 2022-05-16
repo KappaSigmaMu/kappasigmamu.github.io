@@ -15,22 +15,32 @@ const ExplorePage = (): JSX.Element => {
   const { maxStrikes } = useConsts()
   const [candidates, setCandidates] = useState<SocietyCandidate[]>([])
   const [members, setMembers] = useState<SocietyMember[]>([])
+  const [info, setInfo] = useState<DeriveSociety | null>(null)
 
   const loading = !api?.query?.society
 
   useEffect(() => {
+    // Ensures callbacks are only added once
     if (!loading) {
-      api.derive.society.info().then((responseInfo: DeriveSociety) => {
-        api.derive.society.members((responseMembers: DeriveSocietyMember[]) => {
-          setMembers(buildSocietyMembersArray(responseMembers, responseInfo, maxStrikes))
-        })
+      api.derive.society.info((responseInfo: DeriveSociety) => {
+        setInfo(responseInfo)
       })
 
-      api.derive.society.candidates().then((responseCandidates: DeriveSocietyCandidate[]) => {
+      api?.derive.society.members((responseMembers: DeriveSocietyMember[]) => {
+        setMembers(buildSocietyMembersArray(responseMembers, info, maxStrikes))
+      })
+
+      api.derive.society.candidates((responseCandidates: DeriveSocietyCandidate[]) => {
         buildSocietyCandidatesArray(api, responseCandidates).then(setCandidates).catch(console.error)
       })
     }
   }, [api?.query?.society])
+
+  useEffect(() => {
+    api?.derive.society.members().then((responseMembers: DeriveSocietyMember[]) => {
+      setMembers(buildSocietyMembersArray(responseMembers, info, maxStrikes))
+    })
+  }, [info])
 
   return (
     <Container>
