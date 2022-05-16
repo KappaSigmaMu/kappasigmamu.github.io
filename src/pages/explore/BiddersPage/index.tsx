@@ -10,7 +10,7 @@ import { BidVouch } from './BidVouch'
 
 const BiddersPage = (): JSX.Element => {
   const { api } = useKusama()
-  const { activeAccount } = useAccount()
+  const { activeAccount, accounts } = useAccount()
   const [bids, setBids] = useState<Vec<PalletSocietyBid> | []>([])
   const [result, setResult] = useState(null)
   const [showAlert, setShowAlert] = useState(true)
@@ -39,7 +39,7 @@ const BiddersPage = (): JSX.Element => {
       {(result && showAlert) && <StyledAlert onClose={() => setShowAlert(false)} dismissible>{result}</StyledAlert>}
       <Row>
         <Col>
-          <BidVouch activeAccount={activeAccount} handleResult={handleResult} /> 
+          <BidVouch accounts={accounts} activeAccount={activeAccount} handleResult={handleResult} />
         </Col>
         <Col xs={9}>
           {content}

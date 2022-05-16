@@ -26,14 +26,9 @@ exports[`NavBar renders it with showAccount 1`] = `
     >
        
        
-      <button
-        className="btn btn-outline-secondary"
-        disabled={false}
-        onClick={[Function]}
-        type="button"
-      >
-        Connect Wallet
-      </button>
+      <div
+        className="spinner-border text-primary"
+      />
     </div>
   </div>
 </nav>

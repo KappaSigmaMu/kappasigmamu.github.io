@@ -85,7 +85,7 @@ const LandingPage = () => {
   }, [api])
 
   const handlePrimaryButtonClick = () => {
-    navigate('/guide')
+    navigate('/journey')
   }
 
   document.body.style.overflow = "hidden"

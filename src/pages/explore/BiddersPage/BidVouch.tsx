@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { useKusama } from '../../../kusama'
 
-type BidVouchProps = { handleResult: any, activeAccount: accountType }
+type BidVouchProps = { handleResult: any, activeAccount: accountType, accounts: accountType[] }
 
 const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
   const { api, apiState } = useKusama()
@@ -25,13 +25,13 @@ const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
 
         if (_status === 'Finalized') {
           setLoading(false)
-          text = 'Bid submitted successfully. You are now a Bidder' 
+          text = 'Bid submitted successfully. You are now a Bidder'
         } else {
           setLoading(true)
           text = `Bid request sent. Waiting for response...`
         }
 
-        handleResult(text) 
+        handleResult(text)
       })
     }
 
