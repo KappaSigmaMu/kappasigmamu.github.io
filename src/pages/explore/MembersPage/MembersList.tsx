@@ -2,6 +2,7 @@ import Identicon from '@polkadot/react-identicon'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
 import { DataHeaderRow, DataRow } from '../../../components/base'
+import { Index } from '../../../components/Index'
 import { truncateMiddle } from '../../../helpers/truncate'
 
 const StyledDataRow = styled(DataRow)`
@@ -15,7 +16,8 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
     <DataHeaderRow>
       <Col xs={1} className="text-center">#</Col>
       <Col xs={3} className="text-start">Wallet Hash</Col>
-      <Col xs={8} className="text-end"></Col>
+      <Col xs={3} className="text-start">Index</Col>
+      <Col xs={5} className="text-end"></Col>
     </DataHeaderRow>
     {members.map((member: SocietyMember) => (
       <StyledDataRow key={member.accountId.toString()} isDefender={member.isDefender}>
@@ -25,7 +27,10 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
         <Col xs={3} className="text-start text-truncate">
           {truncateMiddle(member.accountId?.toString())}
         </Col>
-        <Col xs={8} className="text-end">
+        <Col xs={3} className="text-start text-truncate">
+          <Index member={member} />
+        </Col>
+        <Col xs={5} className="text-end">
           {member.isDefender
             && <Badge pill bg="primary" className="me-2 p-2">Defender</Badge>}
           {member.isFounder
