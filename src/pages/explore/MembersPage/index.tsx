@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Spinner } from 'react-bootstrap'
 import { useConsts } from '../../../hooks/useConsts'
 import { buildSocietyMembersArray } from '../helpers'
-import { MembersList } from './MembersList'
+import { MembersList } from './components/MembersList'
 
 type MembersPageProps = {
   api: ApiPromise | null
