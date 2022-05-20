@@ -18,7 +18,7 @@ const ExplorePage = (): JSX.Element => {
   const [members, setMembers] = useState<SocietyMember[]>([])
   const [info, setInfo] = useState<DeriveSociety | null>(null)
 
-  const loading = !(api?.derive?.society && api?.derive?.accounts)
+  const loading = !api?.derive?.society
 
   useEffect(() => {
     // Ensures callbacks are only added once
@@ -36,7 +36,7 @@ const ExplorePage = (): JSX.Element => {
       buildSocietyCandidatesArray(api, responseCandidates).then(setCandidates).catch(console.error)
     })
 
-  }, [api?.derive?.society, api?.derive?.accounts])
+  }, [api?.derive?.society])
 
   useEffect(() => {
    if (info === null) return
