@@ -1,63 +1,31 @@
 import { ApiPromise } from '@polkadot/api'
 import { DeriveSocietyCandidate } from '@polkadot/api-derive/types'
-import Identicon from '@polkadot/react-identicon'
-import { Col, Spinner } from 'react-bootstrap'
-import { DataHeaderRow, DataRow } from '../../../components/base'
-import { FormatBalance } from '../../../components/FormatBalance'
-import { truncateMiddle } from '../../../helpers/truncate'
+import { useEffect, useState } from 'react'
+import { Spinner } from 'react-bootstrap'
+import { buildSocietyCandidatesArray } from '../helpers'
+import { CandidatesList } from './components/CandidatesList'
 
 type CandidatesPageProps = {
-  api: ApiPromise | null,
-  candidates: SocietyCandidate[]
+  api: ApiPromise | null
 }
 
-const CandidatesPage = ({ api, candidates }: CandidatesPageProps): JSX.Element => {
+const CandidatesPage = ({ api }: CandidatesPageProps): JSX.Element => {
   const loading = !api?.query?.society
-  const content = loading
-    ? <Spinner animation="border" variant="primary" />
-    : <>
-      <DataHeaderRow>
-        <Col xs={1} className="text-start">#</Col>
-        <Col xs={3} className="text-start">Wallet Hash</Col>
-        <Col className="text-start">Bid Kind</Col>
-        <Col></Col>
-        <Col></Col>
-      </DataHeaderRow>
+  const [candidates, setCandidates] = useState<SocietyCandidate[]>([])
 
-      {candidates.length > 0
-        ? candidates.map((candidate: DeriveSocietyCandidate) => (
-          <DataRow key={candidate.accountId.toString()}>
-            <Col xs={1} className="text-start">
-              <Identicon value={candidate.accountId} size={32} theme={'polkadot'} />
-            </Col>
-            <Col xs={3} className="text-start text-truncate">
-              {truncateMiddle(candidate.accountId?.toString())}
-            </Col>
-            <Col>
-              {candidate.kind.isDeposit
-                ? 'Deposit'
-                : 'Vouch'
-              }
-            </Col>
-            <Col className="text-start">
-              {candidate.kind.isDeposit
-                ? <FormatBalance balance={candidate.value} />
-                : <p>
-                    Vouching Member: {candidate.kind.asVouch[0].toHuman()} -
-                    Vouching Tip: {candidate.kind.asVouch[1].toHuman()}
-                  </p>
-              }
-            </Col>
-            <Col>
-              Skeptics
-            </Col>
-          </ DataRow>
-        ))
-        : 'NONE'
-      }
-    </>
+  if (loading) return (
+    <Spinner animation="border" variant="primary" />
+  )
 
-  return (content)
+  useEffect(() => {
+    api.derive.society.candidates((responseCandidates: DeriveSocietyCandidate[]) => {
+      buildSocietyCandidatesArray(api, responseCandidates)
+        .then(setCandidates)
+        .catch(console.error)
+    })
+  }, [])
+
+  return (<CandidatesList candidates={candidates}/>)
 }
 
 export { CandidatesPage }

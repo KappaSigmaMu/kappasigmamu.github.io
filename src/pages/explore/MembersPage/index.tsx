@@ -1,19 +1,35 @@
 import { ApiPromise } from '@polkadot/api'
+import { DeriveSociety, DeriveSocietyMember } from '@polkadot/api-derive/types'
+import { useEffect, useState } from 'react'
 import { Spinner } from 'react-bootstrap'
+import { useConsts } from '../../../hooks/useConsts'
+import { buildSocietyMembersArray } from '../helpers'
 import { MembersList } from './MembersList'
 
 type MembersPageProps = {
-  api: ApiPromise | null,
-  members: SocietyMember[]
+  api: ApiPromise | null
 }
 
-const MembersPage = ({ api, members }: MembersPageProps): JSX.Element => {
-  const loading = !api?.query?.society
-  const content = loading
-    ? <Spinner animation="border" variant="primary" />
-    : <MembersList members={members} />
+const MembersPage = ({ api }: MembersPageProps): JSX.Element => {
+  const loading = !api?.derive.society
+  const [members, setMembers] = useState<SocietyMember[]>([])
+  const { maxStrikes } = useConsts()
 
-  return (content)
+  if (loading) return (
+    <Spinner animation="border" variant="primary" />
+  )
+
+  useEffect(() => {
+    api.derive.society.info().then((info: DeriveSociety) => {
+      api.derive.society.members().then((responseMembers: DeriveSocietyMember[]) => {
+        setMembers(buildSocietyMembersArray(responseMembers, info, maxStrikes))
+      })
+    })
+  }, [])
+
+  return (
+    <MembersList members={members} />
+  )
 }
 
 export { MembersPage }
