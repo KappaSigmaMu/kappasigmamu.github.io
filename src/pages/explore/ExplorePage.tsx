@@ -24,11 +24,7 @@ const ExplorePage = (): JSX.Element => {
             <Route path="/bidders" element={<BiddersPage />}/>
             <Route path="/members" element={<MembersPage api={api}/>}/>
             <Route path="/candidates" element={<CandidatesPage api={api}/>}/>
-<<<<<<< suspended-list-page
             <Route path="/suspended" element={<SuspendedPage api={api}/>}/>
-=======
-            <Route path="/suspended" element={<>TODO SUSPENDED PAGE</>}/>
->>>>>>> main
           </Routes>
         </Col>
       </Row>
