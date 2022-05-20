@@ -9,6 +9,7 @@ import { CandidatesPage } from './CandidatesPage'
 import { NavigationBar } from './components/NavigationBar'
 import { buildSocietyCandidatesArray, buildSocietyMembersArray } from './helpers'
 import { MembersPage } from './MembersPage'
+import { SuspendedPage } from './SuspendedPage'
 
 const ExplorePage = (): JSX.Element => {
   const { api } = useKusama()
@@ -57,7 +58,7 @@ const ExplorePage = (): JSX.Element => {
             <Route path="/bidders" element={<BiddersPage />}/>
             <Route path="/members" element={<MembersPage api={api} members={members}/>}/>
             <Route path="/candidates" element={<CandidatesPage api={api} candidates={candidates}/>}/>
-            <Route path="/suspended" element={<>TODO SUSPENDED PAGE</>}/>
+            <Route path="/suspended" element={<SuspendedPage api={api}></SuspendedPage>}/>
           </Routes>
         </Col>
       </Row>
