@@ -12,6 +12,10 @@ type SuspendedListProps = {
 
 const SuspendedList = ({ candidates, members }: SuspendedListProps): JSX.Element => {
   const accountIds = arrayFlatten([members, candidates])
+
+  if (accountIds.length === 0) return (
+    <>No suspended members or candidates</>
+  )
   
   return (<>
     <DataHeaderRow>

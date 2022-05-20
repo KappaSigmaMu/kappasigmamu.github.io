@@ -33,7 +33,6 @@ const SuspendedPage = ({ api }: SuspendedPageProps): JSX.Element => {
       .then(setCandidates)
   }, [])
 
-
   return (<SuspendedList members={members} candidates={candidates} />)
 }
 
