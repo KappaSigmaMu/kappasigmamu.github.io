@@ -5,6 +5,7 @@ import { BiddersPage } from './BiddersPage'
 import { CandidatesPage } from './CandidatesPage'
 import { NavigationBar } from './components/NavigationBar'
 import { MembersPage } from './MembersPage'
+import { SuspendedPage } from './SuspendedPage'
 
 const ExplorePage = (): JSX.Element => {
   const { api } = useKusama()
@@ -23,7 +24,7 @@ const ExplorePage = (): JSX.Element => {
             <Route path="/bidders" element={<BiddersPage />}/>
             <Route path="/members" element={<MembersPage api={api}/>}/>
             <Route path="/candidates" element={<CandidatesPage api={api}/>}/>
-            <Route path="/suspended" element={<>TODO SUSPENDED PAGE</>}/>
+            <Route path="/suspended" element={<SuspendedPage api={api}/>}/>
           </Routes>
         </Col>
       </Row>

@@ -1,13 +1,12 @@
 import Identicon from '@polkadot/react-identicon'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
-import { DataHeaderRow, DataRow } from '../../../components/base'
-import { truncateMiddle } from '../../../helpers/truncate'
+import { DataHeaderRow, DataRow } from '../../../../components/base'
+import { truncateMiddle } from '../../../../helpers/truncate'
 
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => props.isDefender ? '#73003d' : ''};
   border: ${(props) => props.isDefender ? '2px solid #E6007A' : ''};
-
 `
 
 const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => {
