@@ -23,6 +23,12 @@ declare interface SocietyCandidate {
   skeptics: string[]
 }
 
+declare interface SuspendedCandidate {
+  accountId: AccountId
+  balance: BalanceOf
+  bid: PalletSocietyBidKind
+}
+
 declare interface SocietyMember {
   accountId: AccountId
   hasPayouts: boolean

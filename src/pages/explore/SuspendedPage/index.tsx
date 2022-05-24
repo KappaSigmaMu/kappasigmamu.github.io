@@ -1,16 +1,12 @@
 import { ApiPromise } from '@polkadot/api'
-import { StorageKey } from '@polkadot/types'
 import { AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { Spinner } from 'react-bootstrap'
 import { SuspendedList } from './components/SuspendedList'
+import { extractAccountIds, extractCandidates } from './helpers/data-extraction'
 
 type SuspendedPageProps = {
   api: ApiPromise | null
-}
-
-const extractAccountIds = (keys: StorageKey<[AccountId]>[]): AccountId[] => {
-  return keys.map(({ args: [accountId] }) => accountId).filter((a) => !!a)
 }
 
 const SuspendedPage = ({ api }: SuspendedPageProps): JSX.Element => {
@@ -20,7 +16,7 @@ const SuspendedPage = ({ api }: SuspendedPageProps): JSX.Element => {
     <Spinner animation="border" variant="primary" />
   )
 
-  const [candidates, setCandidates] = useState<AccountId[]>([])
+  const [candidates, setCandidates] = useState<SuspendedCandidate[]>([])
   const [members, setMembers] = useState<AccountId[]>([])
 
   useEffect(() => {
@@ -28,8 +24,8 @@ const SuspendedPage = ({ api }: SuspendedPageProps): JSX.Element => {
       .then(extractAccountIds)
       .then(setMembers)
     
-    api.query.society.suspendedCandidates.keys()
-      .then(extractAccountIds)
+    api.query.society.suspendedCandidates.entries()
+      .then(extractCandidates)
       .then(setCandidates)
   }, [])
 
