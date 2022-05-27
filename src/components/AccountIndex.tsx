@@ -4,7 +4,7 @@ import { useKusama } from '../kusama'
 
 const AccountIndex = ({ member } : { member: SocietyMember }) => {
   const { api } = useKusama()
-  const [index, setIndex] = useState<string>('Not set')
+  const [index, setIndex] = useState<string>('')
 
   useEffect(() => {
     api?.derive.accounts.idToIndex(member.accountId, (accountIndex: PAccountIndex) => {
