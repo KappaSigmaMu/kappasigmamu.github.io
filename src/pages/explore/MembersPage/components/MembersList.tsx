@@ -1,9 +1,9 @@
 import Identicon from '@polkadot/react-identicon'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
+import { AccountIndex } from '../../../../components/AccountIndex'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { truncateMiddle } from '../../../../helpers/truncate'
-import { AccountIndex } from '../../../../components/AccountIndex'
 
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => props.isDefender ? '#73003d' : ''};
