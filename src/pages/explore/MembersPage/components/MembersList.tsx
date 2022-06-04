@@ -3,7 +3,7 @@ import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
 import { AccountIndex } from '../../../../components/AccountIndex'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
-import { truncateMiddle } from '../../../../helpers/truncate'
+import { MemberIdentity } from '../../../../components/MemberIdentity'
 
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => props.isDefender ? '#73003d' : ''};
@@ -24,7 +24,7 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
           <Identicon value={member.accountId} size={32} theme={'polkadot'} />
         </Col>
         <Col xs={3} className="text-start text-truncate">
-          {truncateMiddle(member.accountId?.toString())}
+          <MemberIdentity member={member} />
         </Col>
         <Col xs={3} className="text-start text-truncate">
           <AccountIndex member={member} />
