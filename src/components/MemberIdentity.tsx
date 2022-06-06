@@ -1,10 +1,9 @@
+import type { ApiPromise } from '@polkadot/api'
 import type { DeriveAccountRegistration } from '@polkadot/api-derive/types'
 import { useEffect, useState } from 'react'
 import { truncateMiddle } from '../helpers/truncate'
-import { useKusama } from '../kusama'
 
-const MemberIdentity = ({ member }: { member: SocietyMember }) => {
-  const { api } = useKusama()
+const MemberIdentity = ({ member, api }: { member: SocietyMember, api: ApiPromise }) => {
   const [id, setId] = useState<string>('')
 
   useEffect(() => {

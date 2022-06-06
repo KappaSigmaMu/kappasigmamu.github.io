@@ -28,7 +28,7 @@ const MembersPage = ({ api }: MembersPageProps): JSX.Element => {
   }, [])
 
   return (
-    <MembersList members={members} />
+    <MembersList api={api} members={members} />
   )
 }
 
