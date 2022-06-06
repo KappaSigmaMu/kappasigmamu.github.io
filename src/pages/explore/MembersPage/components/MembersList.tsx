@@ -1,16 +1,17 @@
+import type { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
 import { AccountIndex } from '../../../../components/AccountIndex'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
-import { truncateMiddle } from '../../../../helpers/truncate'
+import { MemberIdentity } from '../../../../components/MemberIdentity'
 
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => props.isDefender ? '#73003d' : ''};
   border: ${(props) => props.isDefender ? '2px solid #E6007A' : ''};
 `
 
-const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => {
+const MembersList = ({ members, api }: { members: SocietyMember[], api: ApiPromise }): JSX.Element => {
   return (<>
     <DataHeaderRow>
       <Col xs={1} className="text-center">#</Col>
@@ -24,10 +25,10 @@ const MembersList = ({ members }: { members: SocietyMember[] }): JSX.Element => 
           <Identicon value={member.accountId} size={32} theme={'polkadot'} />
         </Col>
         <Col xs={3} className="text-start text-truncate">
-          {truncateMiddle(member.accountId?.toString())}
+          <MemberIdentity api={api} member={member} />
         </Col>
         <Col xs={3} className="text-start text-truncate">
-          <AccountIndex member={member} />
+          <AccountIndex api={api} member={member} />
         </Col>
         <Col xs={5} className="text-end">
           {member.isDefender
