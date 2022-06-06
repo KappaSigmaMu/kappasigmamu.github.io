@@ -6,7 +6,7 @@ const AccountIndex = ({ member, api } : { member: SocietyMember, api: ApiPromise
   const [index, setIndex] = useState<string>('')
 
   useEffect(() => {
-    api?.derive.accounts.idToIndex(member.accountId, (accountIndex: PAccountIndex) => {
+    api.derive.accounts.idToIndex(member.accountId, (accountIndex: PAccountIndex) => {
       if (accountIndex) {
         const index = api.registry.createType('AccountIndex', accountIndex.toNumber()).toString()
         setIndex(index)

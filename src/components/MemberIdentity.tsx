@@ -7,7 +7,7 @@ const MemberIdentity = ({ member, api }: { member: SocietyMember, api: ApiPromis
   const [id, setId] = useState<string>('')
 
   useEffect(() => {
-    api?.derive.accounts.identity(member.accountId, (identity: DeriveAccountRegistration) => {
+    api.derive.accounts.identity(member.accountId, (identity: DeriveAccountRegistration) => {
       identity.display && setId(identity.display)
     })
   }, [])
