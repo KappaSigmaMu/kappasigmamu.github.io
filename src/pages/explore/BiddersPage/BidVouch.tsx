@@ -20,18 +20,17 @@ const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
       const injector = await web3FromAddress(activeAccount.address)
 
       bid?.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status }) => {
-        const _status = status.type.toString()
-        let text
-
-        if (_status === 'Finalized') {
+        if (status.isFinalized) {
+          handleResult({ message: 'Bid submitted successfully. You are now a Bidder' , success: true })
           setLoading(false)
-          text = 'Bid submitted successfully. You are now a Bidder'
         } else {
+          handleResult({ message: `Bid request sent. Waiting for response...`, success: true })
           setLoading(true)
-          text = `Bid request sent. Waiting for response...`
         }
 
-        handleResult(text)
+      }).catch((err) => {
+        setLoading(false)
+        handleResult({ message: err.message, success: false })
       })
     }
 
