@@ -1,6 +1,7 @@
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
+import type { KeyringAddress } from '@polkadot/ui-keyring/types'
 import React, { useContext, useEffect, useState } from 'react'
 import { useKusama } from '../kusama'
 
@@ -39,7 +40,7 @@ const AccountContextProvider = ({ children } : any) => {
   const loading = !api?.query?.society && keyringState !== 'READY'
 
   const fetchAccounts = () => {
-    const storedAccounts = keyring.getAccounts().map((account : any) => ({
+    const storedAccounts = keyring.getAccounts().map((account : KeyringAddress) => ({
       name: account.meta.name,
       address: keyring.encodeAddress(account.address),
     }))
