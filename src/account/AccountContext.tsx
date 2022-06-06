@@ -1,7 +1,6 @@
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
-import keyring from '@polkadot/ui-keyring'
 import React, { useContext, useEffect, useState } from 'react'
 import { useKusama } from '../kusama'
 
@@ -28,11 +27,11 @@ type StateType = {
 const AccountContext = React.createContext<StateType>(INIT_STATE)
 
 const emptyActiveAccount = (account : accountType) => {
-  return account.name === '' && account.address === ''
+  return account?.name === '' && account?.address === ''
 }
 
 const AccountContextProvider = ({ children } : any) => {
-  const { api, keyringState } = useKusama()
+  const { api, keyringState, keyring } = useKusama()
   const [activeAccount, _setActiveAccount] = useState<accountType>(storedActiveAccount)
   const [accounts, setAccounts] = useState<accountType[]>([])
   const [level, setLevel] = useState('human')
@@ -40,13 +39,15 @@ const AccountContextProvider = ({ children } : any) => {
   const loading = !api?.query?.society && keyringState !== 'READY'
 
   const fetchAccounts = () => {
-    const storedAccounts = keyring.getAccounts().map((account) => ({
+    const storedAccounts = keyring.getAccounts().map((account : any) => ({
       name: account.meta.name,
       address: keyring.encodeAddress(account.address),
     }))
-    setAccounts(storedAccounts)
 
-    if (emptyActiveAccount(activeAccount)) setActiveAccount(storedAccounts[0])
+    if (storedAccounts.length == 0) return
+
+    setAccounts(storedAccounts)
+    emptyActiveAccount(activeAccount) && setActiveAccount(storedAccounts[0])
   }
 
   const setActiveAccount = (account : accountType) => {
