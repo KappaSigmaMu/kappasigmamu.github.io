@@ -1,41 +1,40 @@
-import { web3FromAddress } from '@polkadot/extension-dapp'
 import { useState, useEffect } from 'react'
 import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { useKusama } from '../../../kusama'
+import { bid, vouch } from './helper'
 
 type BidVouchProps = { handleResult: any, activeAccount: accountType, accounts: accountType[] }
 
-const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
+const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => {
   const { api, apiState } = useKusama()
   const [bidAmount, setbidAmount] = useState(0)
+  const [vouchValue, setVouchValue] = useState(0)
+  const [vouchTip, setVouchTip] = useState(0)
+  const [vouchAddress, setVouchAddress] = useState<string>()
   const [loading, setLoading] = useState(false)
 
   const apiReady = apiState === 'READY'
 
+  const onStatusChange = ({ loading, message, sucess } : { loading : boolean, message : string, sucess: boolean }) => {
+    setLoading(loading)
+    handleResult({ message, sucess })
+  }
+
   useEffect(() => {
-    const bid = async () => {
-      const bid = api?.tx?.society?.bid(bidAmount)
-      const injector = await web3FromAddress(activeAccount.address)
-
-      bid?.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status }) => {
-        if (status.isFinalized) {
-          handleResult({ message: 'Bid submitted successfully. You are now a Bidder' , success: true })
-          setLoading(false)
-        } else {
-          handleResult({ message: `Bid request sent. Waiting for response...`, success: true })
-          setLoading(true)
-        }
-
-      }).catch((err) => {
-        setLoading(false)
-        handleResult({ message: err.message, success: false })
-      })
+    if (bidAmount > 0 && apiReady) {
+      const tx = api?.tx?.society?.bid(bidAmount)
+      bid(tx, activeAccount, onStatusChange)
     }
-
-    if (bidAmount > 0 && apiReady) bid()
   }, [bidAmount, handleResult])
+
+  useEffect(() => {
+    if (vouchAddress && vouchTip && vouchValue && apiReady) {
+      const tx = api?.tx?.society?.vouch(vouchAddress, vouchValue, vouchTip)
+      vouch(tx, activeAccount, onStatusChange)
+    }
+  }, [vouchAddress, vouchTip, vouchValue])
 
   const handleBidSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
     const bidVal = parseFloat((e.currentTarget[0] as HTMLInputElement).value)
@@ -43,29 +42,38 @@ const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
     e.preventDefault()
   }
 
-  return (
-      <Tab.Container defaultActiveKey="bid">
-        <StyledNav variant='tabs'>
-          <Nav.Item>
-            <Nav.Link eventKey="bid">Place Bid</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey="vouch">Vouch</Nav.Link>
-          </Nav.Item>
-        </StyledNav>
-        <StyledTabContent>
-          <Tab.Pane eventKey="bid">
-            <Form onSubmit={handleBidSubmit}>
-              <Form.Group className="mb-3" controlId="formBasicPassword">
-                <StyledFormLabel style={{ color: '#6c757d' }}>Bid amount</StyledFormLabel>
-                <StyledFormInput className="mb-3">
-                  <StyledForm
-                    type="number"
-                    step="any"
-                    placeholder="0.0000"
-                    aria-label="Bid amount"
-                  />
+  const handleVouchSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
+    const address = (e.currentTarget[0] as HTMLInputElement).value
+    const value = parseFloat((e.currentTarget[1] as HTMLInputElement).value)
+    const tip = parseFloat((e.currentTarget[2] as HTMLInputElement).value)
+    setVouchAddress(address)
+    setVouchValue(value)
+    setVouchTip(tip)
+    e.preventDefault()
+  }
 
+  return (
+    <Tab.Container defaultActiveKey="bid">
+      <StyledNav variant='tabs'>
+        <Nav.Item>
+          <Nav.Link eventKey="bid">Place Bid</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="vouch">Vouch</Nav.Link>
+        </Nav.Item>
+      </StyledNav>
+      <StyledTabContent>
+        <Tab.Pane eventKey="bid">
+          <Form onSubmit={handleBidSubmit}>
+            <Form.Group className="mb-3">
+              <StyledFormLabel style={{ color: '#6c757d' }}>Bid amount</StyledFormLabel>
+              <StyledFormInput className="mb-3">
+                <StyledForm
+                  type="number"
+                  step="any"
+                  placeholder="0.0000"
+                  aria-label="Bid amount"
+                />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
@@ -82,7 +90,50 @@ const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
           </div>
         </Tab.Pane>
         <Tab.Pane eventKey="vouch">
-          Vouch
+          <Form onSubmit={handleVouchSubmit}>
+            <Form.Group className="mb-3">
+              <StyledFormLabel style={{ color: '#6c757d' }}>Vouch for</StyledFormLabel>
+              <StyledSelectForm aria-label="Default select example">
+                <option>Select an account</option>
+                {accounts.map((account, key) => <option key={key} value={account.address}>{account.name}</option>)}
+              </StyledSelectForm>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <StyledFormLabel style={{ color: '#6c757d' }}>Bid amount</StyledFormLabel>
+              <StyledFormInput className="mb-3">
+                <StyledForm
+                  type="number"
+                  step="any"
+                  placeholder="0.0000"
+                  aria-label="Bid amount"
+                />
+                <StyledInputGroupText>KSM</StyledInputGroupText>
+              </StyledFormInput>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <StyledFormLabel style={{ color: '#6c757d' }}>Tip amount</StyledFormLabel>
+              <StyledFormInput className="mb-3">
+                <StyledForm
+                  type="number"
+                  step="any"
+                  placeholder="0.0000"
+                  aria-label="Tip amount"
+                />
+                <StyledInputGroupText>KSM</StyledInputGroupText>
+              </StyledFormInput>
+            </Form.Group>
+            <Button disabled={loading} variant="primary" type="submit" className="w-100">
+              {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
+            </Button>
+            <StyledButtonLabel className="text-muted">
+              *Plus 0.0045 KSM fee
+            </StyledButtonLabel>
+          </Form>
+          <hr />
+          <div className="align-self-center">
+            <CurrentRound />
+          </div>
         </Tab.Pane>
       </StyledTabContent>
     </Tab.Container>
@@ -91,6 +142,18 @@ const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
 
 const StyledFormLabel = styled(Form.Label)`
   color: #6c757d
+`
+
+const StyledSelectForm = styled(Form.Select)`
+  border-color: #495057 transparent #495057 #495057;
+  background-color: black;
+  color: #6c757d;
+
+  :focus {
+    border-color: #495057 transparent #495057 #495057;
+    background-color: black;
+    color: #6c757d;
+  }
 `
 
 const StyledForm = styled(FormControl)`

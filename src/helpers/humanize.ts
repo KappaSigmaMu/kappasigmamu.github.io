@@ -1,4 +1,4 @@
-import type { PalletSocietyBidKind } from '@polkadot/types/lookup'
+import type { PalletSocietyBidKind, PalletSocietyBid } from '@polkadot/types/lookup'
 import { truncate } from './truncate'
 
 function humanizeBidKind(bid: Partial<PalletSocietyBidKind>) {
@@ -14,16 +14,22 @@ function humanizeBidKind(bid: Partial<PalletSocietyBidKind>) {
   }
 }
 
-function humanizeBidValue(bid: Partial<PalletSocietyBidKind>) {
+function humanizeBidValue(bid: PalletSocietyBid) {
   if (!bid) { return '<UNKNOWN VALUE>' }
 
-  if (bid.isDeposit) {
-    return bid.asDeposit?.toHuman()
-  } else if (bid.isVouch) {
-    return bid.asVouch?.[1].toHuman()
+  const s = bid?.value?.toHuman().replace(/,/g, '') || ''
+  return `${parseInt(s)} KSM`
+}
+
+function humanizeVouchValue(bid: Partial<PalletSocietyBidKind>) {
+  if (!bid) { return '<UNKNOWN VALUE>' }
+
+  if (bid.isVouch) {
+    const s = bid.asVouch?.[1].toHuman().replace(/,/g, '') || ''
+    return `${parseInt(s)} KSM`
   } else {
-    return '<UNKNOWN VALUE>'
+    return ''
   }
 }
 
-export { humanizeBidKind, humanizeBidValue }
+export { humanizeVouchValue, humanizeBidKind, humanizeBidValue }
