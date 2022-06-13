@@ -14,23 +14,23 @@ const StyledDataRow = styled(DataRow)`
 const MembersList = ({ members, api }: { members: SocietyMember[], api: ApiPromise }): JSX.Element => {
   return (<>
     <DataHeaderRow>
-      <Col xs={1} className="text-center">#</Col>
-      <Col xs={3} className="text-start">Wallet Hash</Col>
-      <Col xs={3} className="text-start">Index</Col>
-      <Col xs={5} className="text-end"></Col>
+      <Col xs={2} sm={1} className="text-center">#</Col>
+      <Col xs={10} sm={3} className="text-start">Wallet Hash</Col>
+      <Col xs={0} sm={3} className="text-start d-none">Index</Col>
+      <Col xs={0} sm={5} className="text-end d-none"></Col>
     </DataHeaderRow>
     {members.map((member: SocietyMember) => (
       <StyledDataRow key={member.accountId.toString()} isDefender={member.isDefender}>
-        <Col xs={1} className="text-center">
-          <Identicon value={member.accountId} size={32} theme={'polkadot'} />
+        <Col xs={2} sm={1} className="text-center">
+          <Identicon value={member.accountId} size={32} theme={'polkadot'} className="me-2" />
         </Col>
         <Col xs={3} className="text-start text-truncate">
           <MemberIdentity api={api} member={member} />
         </Col>
-        <Col xs={3} className="text-start text-truncate">
+        <Col xs={0} sm={3} className="text-start text-truncate d-none">
           <AccountIndex api={api} member={member} />
         </Col>
-        <Col xs={5} className="text-end">
+        <Col xs={7} sm={5} className="text-end">
           {member.isDefender
             && <Badge pill bg="primary" className="me-2 p-2">Defender</Badge>}
           {member.isFounder
