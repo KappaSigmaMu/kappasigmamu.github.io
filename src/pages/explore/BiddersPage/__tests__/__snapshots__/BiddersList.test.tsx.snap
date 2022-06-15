@@ -11,7 +11,7 @@ Array [
       #
     </div>
     <div
-      className="text-start col-3"
+      className="text-start col-4"
     >
       Wallet Hash
     </div>
@@ -21,24 +21,19 @@ Array [
       Bid Kind
     </div>
     <div
-      className="text-start col-2"
-    >
-      Value
-    </div>
-    <div
-      className="text-start col-3"
+      className="text-end col-4"
       style={
         Object {
           "paddingRight": 0,
         }
       }
     >
-      Tip
+      Value
     </div>
   </div>,
   <div
     className="sc-bdfBQB sc-gsTEea sc-jSgvzq DMQmf frwqlw gQQaIy row"
-    isOwner={false}
+    isBidder={false}
   >
     <div
       className="text-center col-1"
@@ -179,7 +174,7 @@ Array [
       </div>
     </div>
     <div
-      className="text-start text-truncate col-3"
+      className="text-start text-truncate col-4"
     >
       5CSbZ7...sYH4TZ
     </div>
@@ -189,26 +184,32 @@ Array [
       Deposit
     </div>
     <div
-      className="col-2"
+      className="text-end col-4"
+      style={
+        Object {
+          "paddingRight": 0,
+        }
+      }
     >
-      10 KSM
        
-      <span
-        className="badge rounded-pill bg-primary"
-      />
+      <span>
+        10.
+      </span>
+      <span>
+        0000
+      </span>
+      <span>
+         
+        KSM
+      </span>
     </div>
     <div
-      className="col-2"
-    >
-      &lt;UNKNOWN VALUE&gt;
-    </div>
-    <div
-      className="text-end col-1"
+      className="text-start col-1"
     />
   </div>,
   <div
     className="sc-bdfBQB sc-gsTEea sc-jSgvzq DMQmf frwqlw gQQaIy row"
-    isOwner={false}
+    isBidder={false}
   >
     <div
       className="text-center col-1"
@@ -349,7 +350,7 @@ Array [
       </div>
     </div>
     <div
-      className="text-start text-truncate col-3"
+      className="text-start text-truncate col-4"
     >
       5Grpkn...GbfzCE
     </div>
@@ -359,21 +360,27 @@ Array [
       Deposit
     </div>
     <div
-      className="col-2"
+      className="text-end col-4"
+      style={
+        Object {
+          "paddingRight": 0,
+        }
+      }
     >
-      20 KSM
        
-      <span
-        className="badge rounded-pill bg-primary"
-      />
+      <span>
+        20.
+      </span>
+      <span>
+        0000
+      </span>
+      <span>
+         
+        KSM
+      </span>
     </div>
     <div
-      className="col-2"
-    >
-      &lt;UNKNOWN VALUE&gt;
-    </div>
-    <div
-      className="text-end col-1"
+      className="text-start col-1"
     />
   </div>,
 ]
