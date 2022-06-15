@@ -11,7 +11,7 @@ Array [
       #
     </div>
     <div
-      className="text-start col-4"
+      className="text-start col-3"
     >
       Wallet Hash
     </div>
@@ -21,19 +21,24 @@ Array [
       Bid Kind
     </div>
     <div
-      className="text-end col-4"
+      className="text-start col-2"
+    >
+      Value
+    </div>
+    <div
+      className="text-start col-3"
       style={
         Object {
           "paddingRight": 0,
         }
       }
     >
-      Value
+      Tip
     </div>
   </div>,
   <div
     className="sc-bdfBQB sc-gsTEea sc-jSgvzq DMQmf frwqlw gQQaIy row"
-    isBidder={false}
+    isOwner={false}
   >
     <div
       className="text-center col-1"
@@ -174,7 +179,7 @@ Array [
       </div>
     </div>
     <div
-      className="text-start text-truncate col-4"
+      className="text-start text-truncate col-3"
     >
       5CSbZ7...sYH4TZ
     </div>
@@ -184,24 +189,26 @@ Array [
       Deposit
     </div>
     <div
-      className="text-end col-4"
-      style={
-        Object {
-          "paddingRight": 0,
-        }
-      }
+      className="col-2"
     >
+      10 KSM
        
-      10
-       KSM
+      <span
+        className="badge rounded-pill bg-primary"
+      />
     </div>
     <div
-      className="text-start col-1"
+      className="col-2"
+    >
+      &lt;UNKNOWN VALUE&gt;
+    </div>
+    <div
+      className="text-end col-1"
     />
   </div>,
   <div
     className="sc-bdfBQB sc-gsTEea sc-jSgvzq DMQmf frwqlw gQQaIy row"
-    isBidder={false}
+    isOwner={false}
   >
     <div
       className="text-center col-1"
@@ -342,7 +349,7 @@ Array [
       </div>
     </div>
     <div
-      className="text-start text-truncate col-4"
+      className="text-start text-truncate col-3"
     >
       5Grpkn...GbfzCE
     </div>
@@ -352,19 +359,21 @@ Array [
       Deposit
     </div>
     <div
-      className="text-end col-4"
-      style={
-        Object {
-          "paddingRight": 0,
-        }
-      }
+      className="col-2"
     >
+      20 KSM
        
-      20
-       KSM
+      <span
+        className="badge rounded-pill bg-primary"
+      />
     </div>
     <div
-      className="text-start col-1"
+      className="col-2"
+    >
+      &lt;UNKNOWN VALUE&gt;
+    </div>
+    <div
+      className="text-end col-1"
     />
   </div>,
 ]
