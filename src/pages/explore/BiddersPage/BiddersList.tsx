@@ -11,6 +11,7 @@ import { useKusama } from '../../../kusama'
 import { unbid, unvouch } from './helper'
 
 type Props = { bids: Vec<PalletSocietyBid> | [], activeAccount: accountType; handleResult: any }
+type OnStatusChangeProps = { loading : boolean, message : string, success: boolean } 
 
 const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Element => {
   const { api, apiState } = useKusama()
@@ -21,9 +22,9 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
 
   const apiReady = apiState === 'READY'
 
-  const onStatusChange = ({ loading, text } : { loading : boolean, text : string }) => {
+  const onStatusChange = ({ loading, message, success } : OnStatusChangeProps) => {
     setLoading(loading)
-    handleResult(text)
+    handleResult({ message, success })
   }
 
   const handleUnbid = (index : any) => {
@@ -36,37 +37,42 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
     apiReady && unvouch(tx, activeAccount, onStatusChange)
   }
 
-  const BidVouchIdentifier = ({ bid, index } : { bid: PalletSocietyBid, index : number }) => {
-    let badge = <></>
-    let badgeText = ""
-    let handleAction : any
+  const ownerActions = (bid : PalletSocietyBid) => {
+    let pillText, handleUndo : any, badgeText
 
-    if (bid.kind.isDeposit) {
-      if (isBidder(bid)) {
-        badge = <Badge pill bg="primary">My bid</Badge>
-        handleAction = handleUnbid
-        badgeText = 'UNBID'
-     }
-    } else if (bid.kind.isVouch) {
-      if (isVoucher(bid)) {
-        badge = <Badge pill bg="primary">My vouch</Badge>
-        handleAction = handleUnvouch
-        badgeText = 'UNVOUCH'
-      }
+    if (bid.kind.isDeposit && isBidder(bid)) {
+      pillText = 'My bid'
+      handleUndo = handleUnbid
+      badgeText = 'UNBID'
+    } else if (bid.kind.isVouch && isVoucher(bid)) {
+      pillText = 'My vouch'
+      handleUndo = handleUnvouch
+      badgeText = 'UNVOUCH'
     }
+
+    return { pillText, handleUndo, badgeText }
+  }
+
+  const BidVouchIdentifier = ({ bid, index } : { bid: PalletSocietyBid, index : number }) => {
+    const { pillText, badgeText, handleUndo } = ownerActions(bid)
 
     return (
       <>
         <Col xs={2}>
           {humanizeBidValue(bid)}
-          {' '}{badge}
+          {' '}
+          <Badge pill bg="primary">
+            {pillText}
+          </Badge>
         </Col>
         <Col xs={2}>
           {humanizeVouchValue(bid.kind)}
         </Col>
         <Col xs={1} className="text-end">
           {badgeText &&
-            <StyledUndo disabled={loading} onClick={() => handleAction(index)} href="#">{badgeText}</StyledUndo>
+            <StyledUndo disabled={loading} onClick={() => handleUndo(index)} href="#">
+              {badgeText}
+            </StyledUndo>
           }
         </Col>
       </>

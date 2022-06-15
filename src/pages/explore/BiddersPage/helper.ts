@@ -11,12 +11,12 @@ const doTx = async (
 
   tx?.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status } : { status : any }) => {
     if (status.isFinalized) {
-      onStatusChange({ loading: false, message: finalizedText, sucess: true })
+      onStatusChange({ loading: false, message: finalizedText, success: true })
     } else {
-      onStatusChange({ loading: true, message: otherText, sucess: true })
+      onStatusChange({ loading: true, message: otherText, success: true })
     }
   }).catch((err : any) => {
-    onStatusChange({ loading: true, message: err.message, sucess: false })
+    onStatusChange({ loading: false, message: err.message, success: false })
   })
 }
 

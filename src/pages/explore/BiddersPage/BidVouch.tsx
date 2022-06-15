@@ -6,31 +6,32 @@ import { useKusama } from '../../../kusama'
 import { bid, vouch } from './helper'
 
 type BidVouchProps = { handleResult: any, activeAccount: accountType, accounts: accountType[] }
+type OnStatusChangeProps = { loading : boolean, message : string, success: boolean } 
 
 const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => {
   const { api, apiState } = useKusama()
-  const [bidAmount, setbidAmount] = useState(0)
-  const [vouchValue, setVouchValue] = useState(0)
-  const [vouchTip, setVouchTip] = useState(0)
+  const [bidAmount, setbidAmount] = useState(-1)
+  const [vouchValue, setVouchValue] = useState(-1)
+  const [vouchTip, setVouchTip] = useState(-1)
   const [vouchAddress, setVouchAddress] = useState<string>()
   const [loading, setLoading] = useState(false)
 
   const apiReady = apiState === 'READY'
 
-  const onStatusChange = ({ loading, message, sucess } : { loading : boolean, message : string, sucess: boolean }) => {
+  const onStatusChange = ({ loading, message, success } : OnStatusChangeProps) => {
     setLoading(loading)
-    handleResult({ message, sucess })
+    handleResult({ message, success })
   }
 
   useEffect(() => {
-    if (bidAmount > 0 && apiReady) {
+    if (apiReady && bidAmount >= 0) {
       const tx = api?.tx?.society?.bid(bidAmount)
       bid(tx, activeAccount, onStatusChange)
     }
   }, [bidAmount, handleResult])
 
   useEffect(() => {
-    if (vouchAddress && vouchTip && vouchValue && apiReady) {
+    if (apiReady && vouchAddress && vouchTip >= 0 && vouchValue >= 0) {
       const tx = api?.tx?.society?.vouch(vouchAddress, vouchValue, vouchTip)
       vouch(tx, activeAccount, onStatusChange)
     }
@@ -66,7 +67,7 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
         <Tab.Pane eventKey="bid">
           <Form onSubmit={handleBidSubmit}>
             <Form.Group className="mb-3">
-              <StyledFormLabel style={{ color: '#6c757d' }}>Bid amount</StyledFormLabel>
+              <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
                 <StyledForm
                   type="number"
@@ -92,7 +93,7 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
         <Tab.Pane eventKey="vouch">
           <Form onSubmit={handleVouchSubmit}>
             <Form.Group className="mb-3">
-              <StyledFormLabel style={{ color: '#6c757d' }}>Vouch for</StyledFormLabel>
+              <StyledFormLabel>Vouch for</StyledFormLabel>
               <StyledSelectForm aria-label="Default select example">
                 <option>Select an account</option>
                 {accounts.map((account, key) => <option key={key} value={account.address}>{account.name}</option>)}
@@ -100,7 +101,7 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <StyledFormLabel style={{ color: '#6c757d' }}>Bid amount</StyledFormLabel>
+              <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
                 <StyledForm
                   type="number"
@@ -112,7 +113,7 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
               </StyledFormInput>
             </Form.Group>
             <Form.Group className="mb-3">
-              <StyledFormLabel style={{ color: '#6c757d' }}>Tip amount</StyledFormLabel>
+              <StyledFormLabel>Tip amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
                 <StyledForm
                   type="number"
