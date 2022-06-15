@@ -44,6 +44,8 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
     apiReady && unbid()
   }
 
+  if (bids.length === 0) return <>No bids</>
+
   return (
     <>
       <DataHeaderRow>
