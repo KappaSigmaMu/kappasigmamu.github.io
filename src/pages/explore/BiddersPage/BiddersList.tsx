@@ -5,7 +5,8 @@ import { useState } from 'react'
 import { Col, Badge } from 'react-bootstrap'
 import styled from 'styled-components'
 import { DataHeaderRow, DataRow } from '../../../components/base'
-import { humanizeBidKind, humanizeBidValue, humanizeVouchValue } from '../../../helpers/humanize'
+import { FormatBalance } from '../../../components/FormatBalance'
+import { humanizeBidKind } from '../../../helpers/humanize'
 import { truncateMiddle } from '../../../helpers/truncate'
 import { useKusama } from '../../../kusama'
 import { unbid, unvouch } from './helper'
@@ -59,14 +60,14 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
     return (
       <>
         <Col xs={2}>
-          {humanizeBidValue(bid.kind)}
+          {bid.kind.isDeposit && <FormatBalance balance={bid.value} />}
           {' '}
           <Badge pill bg="primary">
             {pillText}
           </Badge>
         </Col>
         <Col xs={2}>
-          {humanizeVouchValue(bid.kind)}
+          {bid.kind.isVouch && <FormatBalance balance={bid.kind.asVouch?.[1]} />}
         </Col>
         <Col xs={1} className="text-end">
           {badgeText &&
