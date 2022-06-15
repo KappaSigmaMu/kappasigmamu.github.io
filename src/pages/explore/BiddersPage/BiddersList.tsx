@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Col, Badge } from 'react-bootstrap'
 import styled from 'styled-components'
 import { DataHeaderRow, DataRow } from '../../../components/base'
+import { FormatBalance } from '../../../components/FormatBalance'
 import { humanizeBidKind } from '../../../helpers/humanize'
 import { truncateMiddle } from '../../../helpers/truncate'
 import { useKusama } from '../../../kusama'
@@ -66,7 +67,7 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
             </Col>
             <Col xs={4} className="text-end" style={{ paddingRight: 0 }}>
               {_isBidder && <Badge pill bg="primary">My bid</Badge>}{' '}
-              {bid.value.toHuman()} KSM
+              <FormatBalance balance={bid.value} />
             </Col>
             <Col xs={1} className="text-start">
               {_isBidder &&
