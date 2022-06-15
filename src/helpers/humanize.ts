@@ -8,8 +8,7 @@ function humanizeBidKind(bid: Partial<PalletSocietyBidKind>) {
     const accountId = bid.asVouch?.[0] || ''
     return `Vouch: ${truncate(accountId.toString())}`
   } else {
-    console.error('Bid has unknown kind', bid)
-    return ''
+    return 'Unknown'
   }
 }
 
