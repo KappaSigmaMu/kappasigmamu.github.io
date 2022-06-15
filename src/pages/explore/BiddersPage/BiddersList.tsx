@@ -59,7 +59,7 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
     return (
       <>
         <Col xs={2}>
-          {humanizeBidValue(bid)}
+          {humanizeBidValue(bid.kind)}
           {' '}
           <Badge pill bg="primary">
             {pillText}

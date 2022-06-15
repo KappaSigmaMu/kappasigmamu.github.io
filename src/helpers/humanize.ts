@@ -14,11 +14,15 @@ function humanizeBidKind(bid: Partial<PalletSocietyBidKind>) {
   }
 }
 
-function humanizeBidValue(bid: PalletSocietyBid) {
+function humanizeBidValue(bid: Partial<PalletSocietyBidKind>) {
   if (!bid) { return '<UNKNOWN VALUE>' }
 
-  const s = bid?.value?.toHuman().replace(/,/g, '') || ''
-  return `${parseInt(s)} KSM`
+  if (bid.isDeposit) {
+    const s = bid.asDeposit?.toHuman().replace(/,/g, '') || ''
+    return `${parseInt(s)} KSM`
+  } else {
+    return '<UNKNOWN VALUE>'
+  }
 }
 
 function humanizeVouchValue(bid: Partial<PalletSocietyBidKind>) {
@@ -28,7 +32,7 @@ function humanizeVouchValue(bid: Partial<PalletSocietyBidKind>) {
     const s = bid.asVouch?.[1].toHuman().replace(/,/g, '') || ''
     return `${parseInt(s)} KSM`
   } else {
-    return ''
+    return '<UNKNOWN VALUE>'
   }
 }
 
