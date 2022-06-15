@@ -10,8 +10,9 @@ import { humanizeBidKind } from '../../../helpers/humanize'
 import { truncateMiddle } from '../../../helpers/truncate'
 import { useKusama } from '../../../kusama'
 
-type Props = { bids: Vec<PalletSocietyBid> | [], activeAccount: accountType; handleResult: any }
+type Props = { bids: Vec<PalletSocietyBid>, activeAccount: accountType; handleResult: any }
 
+// TODO: move this to a `components` directory to follow the convention of other pages 
 const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Element => {
   const { api, apiState } = useKusama()
   const [loading, setLoading] = useState(false)
