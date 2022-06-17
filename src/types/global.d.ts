@@ -47,6 +47,11 @@ declare interface SocietyMember {
   vote?: SocietyMemberVote
 }
 
+interface SocietyMemberDetails {
+  accountId: AccountId
+  index?: string
+}
+
 declare interface SocietyMemberVouching {
   isBanned: boolean
   isVouching: boolean
