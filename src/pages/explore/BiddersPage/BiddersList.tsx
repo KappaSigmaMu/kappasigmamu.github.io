@@ -11,9 +11,10 @@ import { truncateMiddle } from '../../../helpers/truncate'
 import { useKusama } from '../../../kusama'
 import { unbid, unvouch } from './helper'
 
-type Props = { bids: Vec<PalletSocietyBid> | [], activeAccount: accountType; handleResult: any }
+type Props = { bids: Vec<PalletSocietyBid>, activeAccount: accountType; handleResult: any }
 type OnStatusChangeProps = { loading : boolean, message : string, success: boolean } 
 
+// TODO: move this to a `components` directory to follow the convention of other pages 
 const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Element => {
   const { api, apiState } = useKusama()
   const [loading, setLoading] = useState(false)
@@ -87,6 +88,8 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
       return isVoucher(bid)
     }
   }
+
+  if (bids.length === 0) return <>No bids</>
 
   return (
     <>

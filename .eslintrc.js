@@ -49,6 +49,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'import/newline-after-import': ['warn'],
     'import/no-default-export': ['warn'],
     'import/order': [
