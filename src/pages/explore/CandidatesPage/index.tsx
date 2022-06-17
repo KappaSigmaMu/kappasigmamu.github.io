@@ -1,7 +1,7 @@
 import { ApiPromise } from '@polkadot/api'
 import { DeriveSocietyCandidate } from '@polkadot/api-derive/types'
 import { useEffect, useState } from 'react'
-import { Spinner } from 'react-bootstrap'
+import { LoadingSpinner } from '../components/LoadingSpinner'
 import { buildSocietyCandidatesArray } from '../helpers'
 import { CandidatesList } from './components/CandidatesList'
 
@@ -10,22 +10,22 @@ type CandidatesPageProps = {
 }
 
 const CandidatesPage = ({ api }: CandidatesPageProps): JSX.Element => {
-  const loading = !api?.query?.society
-  const [candidates, setCandidates] = useState<SocietyCandidate[]>([])
-
-  if (loading) return (
-    <Spinner animation="border" variant="primary" />
-  )
+  const society = api?.derive?.society
+  const [candidates, setCandidates] = useState<SocietyCandidate[] | null>(null)
 
   useEffect(() => {
-    api.derive.society.candidates((responseCandidates: DeriveSocietyCandidate[]) => {
-      buildSocietyCandidatesArray(api, responseCandidates)
+    society?.candidates((responseCandidates: DeriveSocietyCandidate[]) => {
+      buildSocietyCandidatesArray(api!, responseCandidates)
         .then(setCandidates)
         .catch(console.error)
     })
-  }, [])
+  }, [society])
 
-  return (<CandidatesList candidates={candidates}/>)
+  return (
+    candidates === null 
+    ? <LoadingSpinner />
+    : <CandidatesList candidates={candidates}/>
+  )
 }
 
 export { CandidatesPage }
