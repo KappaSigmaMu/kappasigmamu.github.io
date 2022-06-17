@@ -12,6 +12,10 @@ const StyledDataRow = styled(DataRow)`
 `
 
 const MembersList = ({ members, api }: { members: SocietyMember[], api: ApiPromise }): JSX.Element => {
+  // Likely impossible to happen but if it does, better to show a 
+  // clear message than an empty list which may look like a loading state
+  if (members.length === 0) return <>No members</>
+
   return (<>
     <DataHeaderRow>
       <Col xs={1} className="text-center">#</Col>

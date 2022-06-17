@@ -8,7 +8,6 @@ import { useKusama } from '../kusama'
 
 const activeAccount = localStorage.getItem('activeAccount')
 const isValid = isValidAccount(activeAccount)
-// eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
 let storedActiveAccount = isValid ? JSON.parse(activeAccount!) : null
 storedActiveAccount = storedActiveAccount ? (storedActiveAccount as accountType) : { name: '', address: '' }
 

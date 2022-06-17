@@ -192,8 +192,16 @@ Array [
       }
     >
        
-      10
-       KSM
+      <span>
+        10.
+      </span>
+      <span>
+        0000
+      </span>
+      <span>
+         
+        KSM
+      </span>
     </div>
     <div
       className="text-start col-1"
@@ -360,8 +368,16 @@ Array [
       }
     >
        
-      20
-       KSM
+      <span>
+        20.
+      </span>
+      <span>
+        0000
+      </span>
+      <span>
+         
+        KSM
+      </span>
     </div>
     <div
       className="text-start col-1"

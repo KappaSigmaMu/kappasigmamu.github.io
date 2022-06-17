@@ -2,9 +2,10 @@ import { ApiPromise } from '@polkadot/api'
 import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState, useCallback } from 'react'
-import { Spinner, Row, Col, Alert } from 'react-bootstrap'
+import { Row, Col, Alert } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../../../account/AccountContext'
+import { LoadingSpinner } from '../components/LoadingSpinner'
 import { BiddersList } from './BiddersList'
 import { BidVouch } from './BidVouch'
 
@@ -19,27 +20,25 @@ type BiddersPageProps = {
 
 const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
   const { activeAccount, accounts } = useAccount()
-  const [bids, setBids] = useState<Vec<PalletSocietyBid> | []>([])
+  const [bids, setBids] = useState<Vec<PalletSocietyBid> | null>(null)
   const [result, setResult] = useState<BidResult>()
   const [showAlert, setShowAlert] = useState(true)
 
-  const loading = !api?.query?.society
+  const society = api?.query?.society
 
   useEffect(() => {
-    if (!loading) {
-      api.query.society.bids((response: Vec<PalletSocietyBid>) => {
-        setBids(response)
-      })
-    }
-  }, [api?.query?.society])
+    society?.bids((response: Vec<PalletSocietyBid>) => {
+      setBids(response)
+    })
+  }, [society])
 
   const handleResult = useCallback(result => {
     setResult(result)
     setShowAlert(true)
   }, [])
 
-  const content = loading
-    ? <Spinner animation="border" variant="primary" />
+  const content = bids === null
+    ? <LoadingSpinner />
     : <BiddersList bids={bids} activeAccount={activeAccount} handleResult={handleResult} />
 
   return (
@@ -63,7 +62,7 @@ const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
 }
 
 interface StyledAlertProps {
-  success: boolean;
+  success: boolean
 }
 
 const StyledAlert = styled(Alert)<StyledAlertProps>`
