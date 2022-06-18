@@ -28,6 +28,7 @@ function buildSocietyMemberIdentity(
   identityInfo: PalletIdentityIdentityInfo
 ): SocietyMemberIdentity {
   return {
+    // TODO: joined-at
     name: decode(identityInfo.display) ?? '(Unable to get name)',
     email: decode(identityInfo.email),
     legal: decode(identityInfo.legal),
