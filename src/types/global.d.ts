@@ -56,6 +56,7 @@ interface SocietyMemberDetails {
 interface SocietyMemberIdentity {
   name: string
   email?: string
+  legal?: string
   webpage?: string
   twitter?: string
   riot?: string

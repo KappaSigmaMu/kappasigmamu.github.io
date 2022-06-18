@@ -1,7 +1,8 @@
 import { ApiPromise } from "@polkadot/api"
 import { Data } from "@polkadot/types"
 import { AccountId } from "@polkadot/types/interfaces"
-import { PalletIdentityIdentityInfo, PalletIdentityRegistration } from "@polkadot/types/lookup"
+import { PalletIdentityIdentityInfo } from "@polkadot/types/lookup"
+import { u8aToBuffer } from "@polkadot/util"
 
 export async function fetchMemberDetails(
   api: ApiPromise, 
@@ -14,7 +15,7 @@ export async function fetchMemberDetails(
 
   const identity = maybeIdentity.isSome 
     ? buildSocietyMemberIdentity(maybeIdentity.unwrap().info) 
-    : undefined  
+    : undefined
     
   return {
     accountId,
@@ -27,10 +28,14 @@ function buildSocietyMemberIdentity(
   identityInfo: PalletIdentityIdentityInfo
 ): SocietyMemberIdentity {
   return {
-    email: identityInfo.email.value.toHuman()?.toString(),
-    name: identityInfo.display.value.toHuman()?.toString() ?? '(Unable to get name)',
-    riot: identityInfo.riot.value.toHuman()?.toString(),
-    twitter: identityInfo.twitter.value.toHuman()?.toString(),
-    webpage: identityInfo.web.value.toHuman()?.toString(),
+    name: decode(identityInfo.display) ?? '(Unable to get name)',
+    email: decode(identityInfo.email),
+    legal: decode(identityInfo.legal),
+    riot: decode(identityInfo.riot),
+    twitter: decode(identityInfo.twitter),
+    webpage: decode(identityInfo.web),
   }
 }
+
+const decode = (data: Data) => 
+  data.isEmpty ? undefined : u8aToBuffer(data.toU8a()).toString()
