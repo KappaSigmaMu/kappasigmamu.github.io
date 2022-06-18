@@ -48,7 +48,12 @@ const CanvasBody = ({ memberDetails }: { memberDetails: SocietyMemberDetails }) 
     </StyledRow>
     <StyledRow>
       <Col>
-        {memberDetails.accountId.toHuman()}
+        <p>hash: {memberDetails.accountId.toHuman()}</p>
+        <p>name: {memberDetails.identity?.name}</p>
+        <p>email: {memberDetails.identity?.email}</p>
+        <p>web: {memberDetails.identity?.webpage}</p>
+        <p>riot: {memberDetails.identity?.riot}</p>
+        <p>twitter: {memberDetails.identity?.twitter}</p>
       </Col>
     </StyledRow>
   </Container>

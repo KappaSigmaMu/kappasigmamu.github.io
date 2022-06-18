@@ -50,6 +50,15 @@ declare interface SocietyMember {
 interface SocietyMemberDetails {
   accountId: AccountId
   index?: string
+  identity?: SocietyMemberIdentity
+}
+
+interface SocietyMemberIdentity {
+  name: string
+  email?: string
+  webpage?: string
+  twitter?: string
+  riot?: string
 }
 
 declare interface SocietyMemberVouching {
