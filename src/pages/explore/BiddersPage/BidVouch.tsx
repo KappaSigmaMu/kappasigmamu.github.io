@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import { useState, useEffect } from 'react'
 import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -8,11 +9,13 @@ import { bid, vouch } from './helper'
 type BidVouchProps = { handleResult: any, activeAccount: accountType }
 type OnStatusChangeProps = { loading: boolean, message: string, success: boolean }
 
+const ksmMultiplier = new BN(1e12)
+
 const BidVouch = ({ handleResult, activeAccount }: BidVouchProps) => {
   const { api, apiState } = useKusama()
-  const [bidAmount, setbidAmount] = useState(-1)
-  const [vouchValue, setVouchValue] = useState(-1)
-  const [vouchTip, setVouchTip] = useState(-1)
+  const [bidAmount, setbidAmount] = useState<BN>(new BN(-1))
+  const [vouchValue, setVouchValue] = useState<BN>(new BN(-1))
+  const [vouchTip, setVouchTip] = useState<BN>(new BN(-1))
   const [vouchAddress, setVouchAddress] = useState<string>()
   const [loading, setLoading] = useState(false)
 
@@ -24,32 +27,35 @@ const BidVouch = ({ handleResult, activeAccount }: BidVouchProps) => {
   }
 
   useEffect(() => {
-    if (apiReady && bidAmount >= 0) {
+    if (apiReady && bidAmount.toNumber() >= 0) {
       const tx = api?.tx?.society?.bid(bidAmount)
       bid(tx, activeAccount, onStatusChange)
     }
   }, [bidAmount, handleResult])
 
   useEffect(() => {
-    if (apiReady && vouchAddress && vouchTip >= 0 && vouchValue >= 0) {
+    if (apiReady && vouchAddress && vouchTip.toNumber() >= 0 && vouchValue.toNumber() >= 0) {
       const tx = api?.tx?.society?.vouch(vouchAddress, vouchValue, vouchTip)
       vouch(tx, activeAccount, onStatusChange)
     }
   }, [vouchAddress, vouchTip, vouchValue])
 
-  const handleBidSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const bidVal = parseFloat((e.currentTarget[0] as HTMLInputElement).value)
-    setbidAmount(bidVal)
+  const handleBidSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const bidVal : BN = new BN((e.currentTarget[0] as HTMLInputElement).value)
+    // @ts-ignore
+    setbidAmount(new BN(bidVal * ksmMultiplier))
     e.preventDefault()
   }
 
-  const handleVouchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleVouchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const address = (e.currentTarget[0] as HTMLInputElement).value
-    const value = parseFloat((e.currentTarget[1] as HTMLInputElement).value)
-    const tip = parseFloat((e.currentTarget[2] as HTMLInputElement).value)
+    const value : BN = new BN((e.currentTarget[1] as HTMLInputElement).value)
+    const tip : BN = new BN((e.currentTarget[2] as HTMLInputElement).value)
     setVouchAddress(address)
-    setVouchValue(value)
-    setVouchTip(tip)
+    // @ts-ignore
+    setVouchValue(new BN(value * ksmMultiplier))
+    // @ts-ignore
+    setVouchTip(new BN(tip * ksmMultiplier))
     e.preventDefault()
   }
 
@@ -147,18 +153,6 @@ const BidVouch = ({ handleResult, activeAccount }: BidVouchProps) => {
 
 const StyledFormLabel = styled(Form.Label)`
   color: #6c757d
-`
-
-const StyledSelectForm = styled(Form.Select)`
-  border-color: #495057 transparent #495057 #495057;
-  background-color: black;
-  color: #6c757d;
-
-  :focus {
-    border-color: #495057 transparent #495057 #495057;
-    background-color: black;
-    color: #6c757d;
-  }
 `
 
 const StyledForm = styled(FormControl)`

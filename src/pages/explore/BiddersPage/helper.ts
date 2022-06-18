@@ -10,9 +10,11 @@ const doTx = async (
   const injector = await web3FromAddress(activeAccount.address)
 
   tx?.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status } : { status : any }) => {
-    if (status.isFinalized) {
+    let done = false
+    if (status.isInBlock) {
       onStatusChange({ loading: false, message: finalizedText, success: true })
-    } else {
+      done = true
+    } else if (!done) {
       onStatusChange({ loading: true, message: otherText, success: true })
     }
   }).catch((err : any) => {

@@ -60,14 +60,14 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
 
     return (
       <>
-        <Col xs={2}>
+        <Col xs={3}>
           {bid.kind.isDeposit && <FormatBalance balance={bid.value} />}
           {' '}
           <Badge pill bg="primary">
             {pillText}
           </Badge>
         </Col>
-        <Col xs={2}>
+        <Col xs={1}>
           {bid.kind.isVouch && <FormatBalance balance={bid.kind.asVouch?.[1]} />}
         </Col>
         <Col xs={1} className="text-end">
@@ -97,8 +97,8 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
         <Col xs={1} className="text-center">#</Col>
         <Col xs={3} className="text-start">Wallet Hash</Col>
         <Col xs={2} className="text-start">Bid Kind</Col>
-        <Col xs={2} className="text-start">Value</Col>
-        <Col xs={3} className="text-start" style={{ paddingRight: 0 }}>Tip</Col>
+        <Col xs={3} className="text-start">Value</Col>
+        <Col xs={2} className="text-start" style={{ paddingRight: 0 }}>Tip</Col>
       </DataHeaderRow>
       {bids.map((bid : PalletSocietyBid, index : any) => (
         <StyledDataRow isOwner={isOwner(bid)} key={bid.who?.toString()}>
