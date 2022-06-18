@@ -19,7 +19,7 @@ type BiddersPageProps = {
 }
 
 const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
-  const { activeAccount, accounts } = useAccount()
+  const { activeAccount } = useAccount()
   const [bids, setBids] = useState<Vec<PalletSocietyBid> | null>(null)
   const [result, setResult] = useState<BidResult>()
   const [showAlert, setShowAlert] = useState(true)
@@ -51,7 +51,7 @@ const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
         </StyledAlert>}
       <Row>
         <Col>
-          <BidVouch accounts={accounts} activeAccount={activeAccount} handleResult={handleResult} />
+          <BidVouch activeAccount={activeAccount} handleResult={handleResult} />
         </Col>
         <Col xs={9}>
           {content}
@@ -65,15 +65,15 @@ interface StyledAlertProps {
   success: boolean
 }
 
-const StyledAlert = styled(Alert)<StyledAlertProps>`
+const StyledAlert = styled(Alert) <StyledAlertProps>`
   background-color: #1A1D20;
   border-color: ${props => props.success ? '#A7FB8F' : '#ED6464'};
   color: ${props => props.success ? '#A7FB8F' : '#ED6464'};
 
   .btn-close {
     filter: ${props => props.success
-      ? 'invert(88%) sepia(27%) saturate(621%) hue-rotate(50deg) brightness(97%) contrast(104%);'
-      : 'invert(58%) sepia(6%) saturate(6386%) hue-rotate(315deg) brightness(94%) contrast(96%);'}
+    ? 'invert(88%) sepia(27%) saturate(621%) hue-rotate(50deg) brightness(97%) contrast(104%);'
+    : 'invert(58%) sepia(6%) saturate(6386%) hue-rotate(315deg) brightness(94%) contrast(96%);'}
   }
 `
 

@@ -5,10 +5,10 @@ import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { useKusama } from '../../../kusama'
 import { bid, vouch } from './helper'
 
-type BidVouchProps = { handleResult: any, activeAccount: accountType, accounts: accountType[] }
-type OnStatusChangeProps = { loading : boolean, message : string, success: boolean } 
+type BidVouchProps = { handleResult: any, activeAccount: accountType }
+type OnStatusChangeProps = { loading: boolean, message: string, success: boolean }
 
-const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => {
+const BidVouch = ({ handleResult, activeAccount }: BidVouchProps) => {
   const { api, apiState } = useKusama()
   const [bidAmount, setbidAmount] = useState(-1)
   const [vouchValue, setVouchValue] = useState(-1)
@@ -18,7 +18,7 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
 
   const apiReady = apiState === 'READY'
 
-  const onStatusChange = ({ loading, message, success } : OnStatusChangeProps) => {
+  const onStatusChange = ({ loading, message, success }: OnStatusChangeProps) => {
     setLoading(loading)
     handleResult({ message, success })
   }
@@ -37,13 +37,13 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
     }
   }, [vouchAddress, vouchTip, vouchValue])
 
-  const handleBidSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
+  const handleBidSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const bidVal = parseFloat((e.currentTarget[0] as HTMLInputElement).value)
     setbidAmount(bidVal)
     e.preventDefault()
   }
 
-  const handleVouchSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
+  const handleVouchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const address = (e.currentTarget[0] as HTMLInputElement).value
     const value = parseFloat((e.currentTarget[1] as HTMLInputElement).value)
     const tip = parseFloat((e.currentTarget[2] as HTMLInputElement).value)
@@ -94,10 +94,14 @@ const BidVouch = ({ handleResult, activeAccount, accounts } : BidVouchProps) => 
           <Form onSubmit={handleVouchSubmit}>
             <Form.Group className="mb-3">
               <StyledFormLabel>Vouch for</StyledFormLabel>
-              <StyledSelectForm aria-label="Default select example">
-                <option>Select an account</option>
-                {accounts.map((account, key) => <option key={key} value={account.address}>{account.name}</option>)}
-              </StyledSelectForm>
+              <StyledFormInput className="mb-3">
+                <StyledForm
+                  type="text"
+                  step="any"
+                  placeholder="Address to vouch for"
+                  aria-label="Address"
+                />
+              </StyledFormInput>
             </Form.Group>
 
             <Form.Group className="mb-3">
