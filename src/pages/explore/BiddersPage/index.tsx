@@ -1,10 +1,10 @@
+import { ApiPromise } from '@polkadot/api'
 import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState, useCallback } from 'react'
 import { Row, Col, Alert } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../../../account/AccountContext'
-import { useKusama } from '../../../kusama'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { BiddersList } from './BiddersList'
 import { BidVouch } from './BidVouch'
@@ -14,8 +14,11 @@ interface BidResult {
   success: boolean
 }
 
-const BiddersPage = (): JSX.Element => {
-  const { api } = useKusama()
+type BiddersPageProps = {
+  api: ApiPromise | null
+}
+
+const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
   const { activeAccount, accounts } = useAccount()
   const [bids, setBids] = useState<Vec<PalletSocietyBid> | null>(null)
   const [result, setResult] = useState<BidResult>()

@@ -1,5 +1,5 @@
 import { Col, Container, Row } from 'react-bootstrap'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { useKusama } from '../../kusama'
 import { BiddersPage } from './BiddersPage'
 import { CandidatesPage } from './CandidatesPage'
@@ -20,8 +20,8 @@ const ExplorePage = (): JSX.Element => {
       <Row>
         <Col>
           <Routes>
-            <Route path="/" element={<>TODO EXPLORE PAGE</>}/>
-            <Route path="/bidders" element={<BiddersPage />}/>
+            <Route path="/" element={<Navigate to="/explore/bidders" replace />}/>
+            <Route path="/bidders" element={<BiddersPage api={api} />}/>
             <Route path="/members" element={<MembersPage api={api}/>}/>
             <Route path="/candidates" element={<CandidatesPage api={api}/>}/>
             <Route path="/suspended" element={<SuspendedPage api={api}/>}/>
