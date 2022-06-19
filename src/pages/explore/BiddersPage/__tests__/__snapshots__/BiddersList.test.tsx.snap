@@ -11,7 +11,7 @@ Array [
       #
     </div>
     <div
-      className="text-start col-3"
+      className="text-start col-2"
     >
       Wallet Hash
     </div>
@@ -26,12 +26,7 @@ Array [
       Value
     </div>
     <div
-      className="text-start col-3"
-      style={
-        Object {
-          "paddingRight": 0,
-        }
-      }
+      className="text-start col-4"
     >
       Tip
     </div>
@@ -179,7 +174,7 @@ Array [
       </div>
     </div>
     <div
-      className="text-start text-truncate col-3"
+      className="text-start text-truncate col-2"
     >
       5CSbZ7...sYH4TZ
     </div>
@@ -201,16 +196,12 @@ Array [
          
         KSM
       </span>
-       
-      <span
-        className="badge rounded-pill bg-primary"
-      />
     </div>
     <div
       className="col-2"
     />
     <div
-      className="text-end col-1"
+      className="col-2"
     />
   </div>,
   <div
@@ -356,7 +347,7 @@ Array [
       </div>
     </div>
     <div
-      className="text-start text-truncate col-3"
+      className="text-start text-truncate col-2"
     >
       5Grpkn...GbfzCE
     </div>
@@ -378,16 +369,12 @@ Array [
          
         KSM
       </span>
-       
-      <span
-        className="badge rounded-pill bg-primary"
-      />
     </div>
     <div
       className="col-2"
     />
     <div
-      className="text-end col-1"
+      className="col-2"
     />
   </div>,
 ]
