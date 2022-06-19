@@ -60,21 +60,22 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
 
     return (
       <>
-        <Col xs={3}>
-          {bid.kind.isDeposit && <FormatBalance balance={bid.value} />}
-          {' '}
-          <Badge pill bg="primary">
-            {pillText}
-          </Badge>
+        <Col xs={2}>
+          {<FormatBalance balance={bid.value} />}
         </Col>
-        <Col xs={1}>
+        <Col xs={2}>
           {bid.kind.isVouch && <FormatBalance balance={bid.kind.asVouch?.[1]} />}
         </Col>
-        <Col xs={1} className="text-end">
+        <Col xs={2}>
           {badgeText &&
-            <StyledUndo disabled={loading} onClick={() => handleUndo(index)} href="#">
-              {badgeText}
-            </StyledUndo>
+            <>
+              <StyledUndo disabled={loading} onClick={() => handleUndo(index)} href="#">
+                {badgeText}
+              </StyledUndo>
+              <Badge pill bg="primary">
+                {pillText}
+              </Badge>
+            </>
           }
         </Col>
       </>
@@ -95,17 +96,17 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
     <>
       <DataHeaderRow>
         <Col xs={1} className="text-center">#</Col>
-        <Col xs={3} className="text-start">Wallet Hash</Col>
+        <Col xs={2} className="text-start">Wallet Hash</Col>
         <Col xs={2} className="text-start">Bid Kind</Col>
-        <Col xs={3} className="text-start">Value</Col>
-        <Col xs={2} className="text-start" style={{ paddingRight: 0 }}>Tip</Col>
+        <Col xs={2} className="text-start">Value</Col>
+        <Col xs={4} className="text-start">Tip</Col>
       </DataHeaderRow>
       {bids.map((bid : PalletSocietyBid, index : any) => (
         <StyledDataRow isOwner={isOwner(bid)} key={bid.who?.toString()}>
           <Col xs={1} className="text-center">
             <Identicon value={bid.who} size={32} theme={'polkadot'} />
           </Col>
-          <Col xs={3} className="text-start text-truncate">
+          <Col xs={2} className="text-start text-truncate">
             {truncateMiddle(bid.who?.toString())}
           </Col>
           <Col xs={2} className="text-start text-truncate">
@@ -131,6 +132,7 @@ const StyledUndo = styled.a.attrs((props : PropsUnbid) => ({
   disabled: props.disabled
 }))<PropsUnbid>`
   color: ${(props) => props.disabled ? 'grey' : '#E6007A'};
+  margin-right: 3%;
   font-weight: 800;
   font-size: 13px;
   pointer-events: ${(props) => props.disabled ? 'none' : ''};
