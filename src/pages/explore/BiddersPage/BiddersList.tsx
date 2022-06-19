@@ -96,7 +96,7 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
     <>
       <DataHeaderRow>
         <Col xs={1} className="text-center">#</Col>
-        <Col xs={2} className="text-start">Wallet Hash</Col>
+        <Col xs={3} className="text-start">Wallet Hash</Col>
         <Col xs={2} className="text-start">Bid Kind</Col>
         <Col xs={2} className="text-start">Value</Col>
         <Col xs={4} className="text-start">Tip</Col>
@@ -106,7 +106,7 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
           <Col xs={1} className="text-center">
             <Identicon value={bid.who} size={32} theme={'polkadot'} />
           </Col>
-          <Col xs={2} className="text-start text-truncate">
+          <Col xs={3} className="text-start text-truncate">
             {truncateMiddle(bid.who?.toString())}
           </Col>
           <Col xs={2} className="text-start text-truncate">
