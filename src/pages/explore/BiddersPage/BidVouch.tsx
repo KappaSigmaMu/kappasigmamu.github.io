@@ -1,71 +1,83 @@
-import { web3FromAddress } from '@polkadot/extension-dapp'
+import BN from 'bn.js'
 import { useState, useEffect } from 'react'
 import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { useKusama } from '../../../kusama'
+import { bid, vouch } from './helper'
 
-type BidVouchProps = { handleResult: any, activeAccount: accountType, accounts: accountType[] }
+type BidVouchProps = { handleResult: any, activeAccount: accountType }
+type OnStatusChangeProps = { loading: boolean, message: string, success: boolean }
 
-const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
+const ksmMultiplier = new BN(1e12)
+
+const BidVouch = ({ handleResult, activeAccount }: BidVouchProps) => {
   const { api, apiState } = useKusama()
-  const [bidAmount, setbidAmount] = useState(0)
+  const [bidAmount, setbidAmount] = useState<BN>(new BN(-1))
+  const [vouchValue, setVouchValue] = useState<BN>(new BN(-1))
+  const [vouchTip, setVouchTip] = useState<BN>(new BN(-1))
+  const [vouchAddress, setVouchAddress] = useState<string>()
   const [loading, setLoading] = useState(false)
 
   const apiReady = apiState === 'READY'
 
+  const onStatusChange = ({ loading, message, success }: OnStatusChangeProps) => {
+    setLoading(loading)
+    handleResult({ message, success })
+  }
+
   useEffect(() => {
-    const bid = async () => {
-      const bid = api?.tx?.society?.bid(bidAmount)
-      const injector = await web3FromAddress(activeAccount.address)
-
-      bid?.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status }) => {
-        if (status.isFinalized) {
-          handleResult({ message: 'Bid submitted successfully. You are now a Bidder' , success: true })
-          setLoading(false)
-        } else {
-          handleResult({ message: `Bid request sent. Waiting for response...`, success: true })
-          setLoading(true)
-        }
-
-      }).catch((err) => {
-        setLoading(false)
-        handleResult({ message: err.message, success: false })
-      })
+    if (apiReady && bidAmount.toNumber() >= 0) {
+      const tx = api?.tx?.society?.bid(bidAmount)
+      bid(tx, activeAccount, onStatusChange)
     }
-
-    if (bidAmount > 0 && apiReady) bid()
   }, [bidAmount, handleResult])
 
-  const handleBidSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
-    const bidVal = parseFloat((e.currentTarget[0] as HTMLInputElement).value)
-    setbidAmount(bidVal)
+  useEffect(() => {
+    if (apiReady && vouchAddress && vouchTip.toNumber() >= 0 && vouchValue.toNumber() >= 0) {
+      const tx = api?.tx?.society?.vouch(vouchAddress, vouchValue, vouchTip)
+      vouch(tx, activeAccount, onStatusChange)
+    }
+  }, [vouchAddress, vouchTip, vouchValue])
+
+  const handleBidSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const bidVal : BN = new BN((e.currentTarget[0] as HTMLInputElement).value)
+    setbidAmount(bidVal.mul(ksmMultiplier))
+    e.preventDefault()
+  }
+
+  const handleVouchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const address = (e.currentTarget[0] as HTMLInputElement).value
+    const value : BN = new BN((e.currentTarget[1] as HTMLInputElement).value)
+    const tip : BN = new BN((e.currentTarget[2] as HTMLInputElement).value)
+    setVouchAddress(address)
+    setVouchValue(value.mul(ksmMultiplier))
+    setVouchTip(tip.mul(ksmMultiplier))
     e.preventDefault()
   }
 
   return (
-      <Tab.Container defaultActiveKey="bid">
-        <StyledNav variant='tabs'>
-          <Nav.Item>
-            <Nav.Link eventKey="bid">Place Bid</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey="vouch">Vouch</Nav.Link>
-          </Nav.Item>
-        </StyledNav>
-        <StyledTabContent>
-          <Tab.Pane eventKey="bid">
-            <Form onSubmit={handleBidSubmit}>
-              <Form.Group className="mb-3" controlId="formBasicPassword">
-                <StyledFormLabel style={{ color: '#6c757d' }}>Bid amount</StyledFormLabel>
-                <StyledFormInput className="mb-3">
-                  <StyledForm
-                    type="number"
-                    step="any"
-                    placeholder="0.0000"
-                    aria-label="Bid amount"
-                  />
-
+    <Tab.Container defaultActiveKey="bid">
+      <StyledNav variant='tabs'>
+        <Nav.Item>
+          <Nav.Link eventKey="bid">Place Bid</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="vouch">Vouch</Nav.Link>
+        </Nav.Item>
+      </StyledNav>
+      <StyledTabContent>
+        <Tab.Pane eventKey="bid">
+          <Form onSubmit={handleBidSubmit}>
+            <Form.Group className="mb-3">
+              <StyledFormLabel>Bid amount</StyledFormLabel>
+              <StyledFormInput className="mb-3">
+                <StyledForm
+                  type="number"
+                  step="any"
+                  placeholder="0.0000"
+                  aria-label="Bid amount"
+                />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
@@ -82,7 +94,54 @@ const BidVouch = ({ handleResult, activeAccount } : BidVouchProps) => {
           </div>
         </Tab.Pane>
         <Tab.Pane eventKey="vouch">
-          Vouch
+          <Form onSubmit={handleVouchSubmit}>
+            <Form.Group className="mb-3">
+              <StyledFormLabel>Vouch for</StyledFormLabel>
+              <StyledFormInput className="mb-3">
+                <StyledForm
+                  type="text"
+                  step="any"
+                  placeholder="Address to vouch for"
+                  aria-label="Address"
+                />
+              </StyledFormInput>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <StyledFormLabel>Bid amount</StyledFormLabel>
+              <StyledFormInput className="mb-3">
+                <StyledForm
+                  type="number"
+                  step="any"
+                  placeholder="0.0000"
+                  aria-label="Bid amount"
+                />
+                <StyledInputGroupText>KSM</StyledInputGroupText>
+              </StyledFormInput>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <StyledFormLabel>Tip amount</StyledFormLabel>
+              <StyledFormInput className="mb-3">
+                <StyledForm
+                  type="number"
+                  step="any"
+                  placeholder="0.0000"
+                  aria-label="Tip amount"
+                />
+                <StyledInputGroupText>KSM</StyledInputGroupText>
+              </StyledFormInput>
+            </Form.Group>
+            <Button disabled={loading} variant="primary" type="submit" className="w-100">
+              {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
+            </Button>
+            <StyledButtonLabel className="text-muted">
+              *Plus 0.0045 KSM fee
+            </StyledButtonLabel>
+          </Form>
+          <hr />
+          <div className="align-self-center">
+            <CurrentRound />
+          </div>
         </Tab.Pane>
       </StyledTabContent>
     </Tab.Container>
