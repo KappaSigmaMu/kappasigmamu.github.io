@@ -60,6 +60,9 @@ const CanvasBody = ({ memberDetails }: { memberDetails: SocietyMemberDetails }) 
         <CopyButton content={memberDetails.accountId.toHuman()} />
       </Row>
       <StyledRow>
+        {memberDetails.index && <>Index: {memberDetails.index}</>}
+      </StyledRow>
+      <StyledRow>
         {memberDetails.identity && <h4 className="p-0 m-0">Identity</h4>}
       </StyledRow>
       <StyledRow>
