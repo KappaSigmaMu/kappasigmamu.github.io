@@ -88,8 +88,6 @@ const LandingPage = () => {
     navigate('/journey')
   }
 
-  document.body.style.overflow = "hidden"
-
   return (
     <>
       <MemberOffcanvas

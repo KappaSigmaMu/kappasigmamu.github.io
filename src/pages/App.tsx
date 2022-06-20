@@ -1,5 +1,5 @@
-import { Suspense } from 'react'
-import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom'
+import { Suspense, useLayoutEffect } from 'react'
+import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { AccountContextProvider } from '../account/AccountContext'
 import { Navbar } from '../components/Navbar'
@@ -12,8 +12,15 @@ import { JourneyPage } from './JourneyPage'
 import { LandingPage } from './LandingPage'
 import { WelcomePage } from './WelcomePage'
 
-const AppNavigation = () => (
-  <>
+const AppNavigation = () => {
+  const location = useLocation()
+
+  useLayoutEffect(() => {
+    const isLandingPage = location.pathname === "/" || location.pathname === ""
+    document.body.style.overflow = isLandingPage ? "hidden" : "auto"
+  }, [location])
+
+  return (<>
     <Navbar
       showAccount
       showExploreButton
@@ -21,8 +28,8 @@ const AppNavigation = () => (
       showSocialIcons
     />
     <Outlet />
-  </>
-)
+  </>)
+}
 
 const AppRouter = () => {
   return (
