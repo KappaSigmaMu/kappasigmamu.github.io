@@ -1,63 +1,128 @@
 import ThreeCanary from "@kappasigmamu/canary-component"
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
+import { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { useAccount } from '../account/AccountContext'
 import { PrimaryLgButton } from '../components/base'
-import { fetchAccounts } from '../helpers/fetchAccounts'
+import { MemberOffcanvas } from "../components/MemberOffcanvas"
 import { useKusama } from '../kusama'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
+interface MemberData {
+  [key: string]: string
+}
+
+interface MembersData {
+  [key: string]: MemberData
+}
+
 const LandingPage = () => {
   const navigate = useNavigate()
-  const { activeAccount, setActiveAccount, setAccounts } = useAccount()
   const { api } = useKusama()
   const [members, setMembers] = useState<Array<string>>([""])
+  const [show, setShow] = useState(false)
+
+  const [selectedMember, setSelectedMember] = useState<MemberData>({})
+  const [allMembers, setAllMembers] = useState<MembersData>({})
+
+  const handleClose = () => setShow(false)
+
+  const handleCanaryNodeClick = (nodeId: string) => {
+    if (allMembers) {
+      setShow(true)
+      setSelectedMember(allMembers[nodeId])
+    }
+  }
+
+  const setLevelCheckingAccounts = (accounts: AccountId32[], targetAccount: string, level: string) => {
+    accounts.forEach((account: AccountId32) => {
+      if (account.toString() === targetAccount) {
+        const m = allMembers
+        m[targetAccount].level = level
+        setAllMembers(m)
+      }
+    })
+  }
 
   useEffect(() => {
     if (api) {
-      api.query.society.members().then((response: Vec<AccountId32>) => {
-        setMembers(response.map((account) => account.toString()))
+      api.derive.society.members().then((members) => {
+        members.forEach((member) => {
+          const id = member.accountId.toString()
+          const m = allMembers
+          m[id] = {
+            "hash": id,
+            "name": "unknown",
+            "level": "human",
+            "strikes": member.strikes.toString()
+          }
+          setAllMembers(m)
+
+          api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
+            setLevelCheckingAccounts(response.map(account => account.who), id, 'bidder')
+          })
+
+          api.query.society.candidates().then((response: Vec<PalletSocietyBid>) => {
+            setLevelCheckingAccounts(response.map(account => account.who), id, 'candidate')
+          })
+
+          api.query.society.members().then((response: Vec<AccountId32>) => {
+            setLevelCheckingAccounts(response, id, 'cyborg')
+          })
+
+        })
       })
+
+      api.query.society.members().then((response: Vec<AccountId32>) => {
+        const ids = response.map((account) => account.toString())
+        setMembers(ids)
+      })
+
     }
   }, [api])
 
   const handlePrimaryButtonClick = () => {
-    if (!activeAccount) {
-      fetchAccounts(setAccounts, setActiveAccount)
-    }
     navigate('/journey')
   }
 
   return (
-    <FullPageHeightRow>
-      <div className="position-absolute" style={{height: '85vh'}}>
-        <ThreeCanary
-            objectUrl={`./static/canary.glb`}
-            nodes={
-              members.map((id : string) => ({
-                "hash": id.toString()
-              }))
-            }
-        />
-      </div>
-      <CentralizedCol span={6} />
-      <CentralizedCol span={6}>
-        <h1>Join the</h1>
-        <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-        <p>
-          <PrimaryLgButton onClick={handlePrimaryButtonClick}>
-            Become a Cyborg
-          </PrimaryLgButton>
-        </p>
-        <p>
-          <Link to="/guide">Cyborg Guide</Link>
-        </p>
-      </CentralizedCol>
-    </FullPageHeightRow>
+    <>
+      <MemberOffcanvas
+        show={show}
+        handleClose={handleClose}
+        member={selectedMember}
+      />
+
+      <FullPageHeightRow noGutters>
+        <div className="position-absolute h-100">
+          {allMembers ?
+            <ThreeCanary
+              objectUrl={`./static/canary.glb`}
+              nodes={
+                members.map((id: string) => ({
+                  "hash": id,
+                  "name": "Unknown",
+                  "level": allMembers[id]?.level
+                }))
+              }
+              onNodeClick={handleCanaryNodeClick}
+            /> : null}
+        </div>
+        <CentralizedCol xs={8} />
+        <CentralizedCol xs={4}>
+          <h1>Join the</h1>
+          <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
+          <p>
+            <PrimaryLgButton onClick={handlePrimaryButtonClick}>
+              Cyborg Guide
+            </PrimaryLgButton>
+          </p>
+        </CentralizedCol>
+      </FullPageHeightRow>
+    </>
   )
 }
 
@@ -67,6 +132,7 @@ const KappaSigmaMu = styled.img`
 `
 
 const FullPageHeightRow = styled(Row)`
+  --bs-gutter-x: 0;
   height: 85vh;
   width: 100%;
 `

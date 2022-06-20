@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, useLayoutEffect } from 'react'
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { AccountContextProvider } from '../account/AccountContext'
@@ -13,27 +13,29 @@ import { LandingPage } from './LandingPage'
 import { WelcomePage } from './WelcomePage'
 
 const AppNavigation = () => {
-  const { pathname } = useLocation()
-  const isRoot = !!pathname.match("[/]$")
+  const location = useLocation()
 
-  return (
-    <>
-      <Navbar
-        showAccount
-        showExploreButton
-        showBrandIcon={!isRoot}
-        showSocialIcons={isRoot || pathname.includes("guide")}
-      />
-      <Outlet />
-    </>
-  )
+  useLayoutEffect(() => {
+    const isLandingPage = location.pathname === "/" || location.pathname === ""
+    document.body.style.overflow = isLandingPage ? "hidden" : "auto"
+  }, [location])
+
+  return (<>
+    <Navbar
+      showAccount
+      showExploreButton
+      showBrandIcon
+      showSocialIcons
+    />
+    <Outlet />
+  </>)
 }
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="" element={<AppNavigation />}>
+        <Route element={<AppNavigation />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/guide" element={<CyborgGuidePage />} />
           <Route path="/welcome" element={<WelcomePage />} />
@@ -53,9 +55,9 @@ const App = () => (
       <AccountContextProvider>
         <ThemeProvider theme={Theme}>
           <GlobalStyle />
-            <Suspense fallback={<p>ERROR/LOADING...</p>}>
-              <AppRouter />
-            </Suspense>
+          <Suspense fallback={<p>ERROR/LOADING...</p>}>
+            <AppRouter />
+          </Suspense>
         </ThemeProvider>
       </AccountContextProvider>
     </KusamaContextProvider>

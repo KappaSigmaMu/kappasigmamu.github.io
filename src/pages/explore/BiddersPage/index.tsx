@@ -1,45 +1,57 @@
+import { ApiPromise } from '@polkadot/api'
 import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState, useCallback } from 'react'
-import { Spinner, Row, Col, Alert } from 'react-bootstrap'
+import { Row, Col, Alert } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../../../account/AccountContext'
-import { useKusama } from '../../../kusama'
+import { LoadingSpinner } from '../components/LoadingSpinner'
 import { BiddersList } from './BiddersList'
 import { BidVouch } from './BidVouch'
 
-const BiddersPage = (): JSX.Element => {
-  const { api } = useKusama()
+interface BidResult {
+  message: string
+  success: boolean
+}
+
+type BiddersPageProps = {
+  api: ApiPromise | null
+}
+
+const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
   const { activeAccount } = useAccount()
-  const [bids, setBids] = useState<Vec<PalletSocietyBid> | []>([])
-  const [result, setResult] = useState(null)
+  const [bids, setBids] = useState<Vec<PalletSocietyBid> | null>(null)
+  const [result, setResult] = useState<BidResult>()
   const [showAlert, setShowAlert] = useState(true)
 
-  const loading = !api?.query?.society
+  const society = api?.query?.society
 
   useEffect(() => {
-    if (!loading) {
-      api.query.society.bids((response: Vec<PalletSocietyBid>) => {
-        setBids(response)
-      })
-    }
-  }, [api?.query?.society])
+    society?.bids((response: Vec<PalletSocietyBid>) => {
+      setBids(response)
+    })
+  }, [society])
 
-  const handleResult = useCallback((result) => {
+  const handleResult = useCallback(result => {
     setResult(result)
     setShowAlert(true)
   }, [])
 
-  const content = loading
-    ? <Spinner animation="border" variant="primary" />
+  const content = bids === null
+    ? <LoadingSpinner />
     : <BiddersList bids={bids} activeAccount={activeAccount} handleResult={handleResult} />
 
   return (
     <>
-      {(result && showAlert) && <StyledAlert onClose={() => setShowAlert(false)} dismissible>{result}</StyledAlert>}
+      {(result && showAlert) &&
+        <StyledAlert
+          success={result.success}
+          onClose={() => setShowAlert(false)}
+          dismissible>{result.message}
+        </StyledAlert>}
       <Row>
         <Col>
-          <BidVouch activeAccount={activeAccount} handleResult={handleResult} /> 
+          <BidVouch activeAccount={activeAccount} handleResult={handleResult} />
         </Col>
         <Col xs={9}>
           {content}
@@ -49,13 +61,19 @@ const BiddersPage = (): JSX.Element => {
   )
 }
 
-const StyledAlert = styled(Alert)`
+interface StyledAlertProps {
+  success: boolean
+}
+
+const StyledAlert = styled(Alert) <StyledAlertProps>`
   background-color: #1A1D20;
-  border-color: #A7FB8F;
-  color: #A7FB8F;
+  border-color: ${props => props.success ? '#A7FB8F' : '#ED6464'};
+  color: ${props => props.success ? '#A7FB8F' : '#ED6464'};
 
   .btn-close {
-    filter: invert(88%) sepia(27%) saturate(621%) hue-rotate(50deg) brightness(97%) contrast(104%);
+    filter: ${props => props.success
+    ? 'invert(88%) sepia(27%) saturate(621%) hue-rotate(50deg) brightness(97%) contrast(104%);'
+    : 'invert(58%) sepia(6%) saturate(6386%) hue-rotate(315deg) brightness(94%) contrast(96%);'}
   }
 `
 

@@ -11,7 +11,7 @@ Array [
       #
     </div>
     <div
-      className="text-start col-4"
+      className="text-start col-3"
     >
       Wallet Hash
     </div>
@@ -21,19 +21,19 @@ Array [
       Bid Kind
     </div>
     <div
-      className="text-end col-4"
-      style={
-        Object {
-          "paddingRight": 0,
-        }
-      }
+      className="text-start col-2"
     >
       Value
+    </div>
+    <div
+      className="text-start col-4"
+    >
+      Tip
     </div>
   </div>,
   <div
     className="sc-bdfBQB sc-gsTEea sc-jSgvzq DMQmf frwqlw gQQaIy row"
-    isBidder={false}
+    isOwner={false}
   >
     <div
       className="text-center col-1"
@@ -174,7 +174,7 @@ Array [
       </div>
     </div>
     <div
-      className="text-start text-truncate col-4"
+      className="text-start text-truncate col-3"
     >
       5CSbZ7...sYH4TZ
     </div>
@@ -184,24 +184,29 @@ Array [
       Deposit
     </div>
     <div
-      className="text-end col-4"
-      style={
-        Object {
-          "paddingRight": 0,
-        }
-      }
+      className="col-2"
     >
-       
-      10
-       KSM
+      <span>
+        10.
+      </span>
+      <span>
+        0000
+      </span>
+      <span>
+         
+        KSM
+      </span>
     </div>
     <div
-      className="text-start col-1"
+      className="col-2"
+    />
+    <div
+      className="col-2"
     />
   </div>,
   <div
     className="sc-bdfBQB sc-gsTEea sc-jSgvzq DMQmf frwqlw gQQaIy row"
-    isBidder={false}
+    isOwner={false}
   >
     <div
       className="text-center col-1"
@@ -342,7 +347,7 @@ Array [
       </div>
     </div>
     <div
-      className="text-start text-truncate col-4"
+      className="text-start text-truncate col-3"
     >
       5Grpkn...GbfzCE
     </div>
@@ -352,19 +357,24 @@ Array [
       Deposit
     </div>
     <div
-      className="text-end col-4"
-      style={
-        Object {
-          "paddingRight": 0,
-        }
-      }
+      className="col-2"
     >
-       
-      20
-       KSM
+      <span>
+        20.
+      </span>
+      <span>
+        0000
+      </span>
+      <span>
+         
+        KSM
+      </span>
     </div>
     <div
-      className="text-start col-1"
+      className="col-2"
+    />
+    <div
+      className="col-2"
     />
   </div>,
 ]
