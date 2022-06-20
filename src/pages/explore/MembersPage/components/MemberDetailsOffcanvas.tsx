@@ -71,7 +71,6 @@ const CanvasBody = ({ memberDetails }: { memberDetails: SocietyMemberDetails }) 
       </StyledRow>
       <StyledRow>
         <Col xs={3} className="text-uppercase extra-vertical-spacing">
-          {/* TODO: use <a></a> and prepend schema */}
           {email && <Row>email</Row>}
           {webpage && <Row>web</Row>}
           {riot && <Row>riot</Row>}
