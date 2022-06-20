@@ -49,7 +49,6 @@ const Main = () => {
   const onChange = (account: string) => {
     const activeAccount = accounts.filter(acc => acc.address.includes(account))[0]
     setActiveAccount(activeAccount)
-    localStorage.setItem("activeAccount", JSON.stringify(activeAccount))
   }
 
   return (
@@ -58,7 +57,7 @@ const Main = () => {
       onSelect={(eventKey: string) => onChange(eventKey)}
       title={<Title activeAccount={activeAccount} />}
     >
-      {accounts.map((option: { name: string | undefined; address: string }) => (
+      {accounts.map((option: accountType) => (
         <Dropdown.Item style={{ fontSize: '12px' }} eventKey={option.address} key={option.address} href="#">
           {option.name ? option.name : option.address}
         </Dropdown.Item>

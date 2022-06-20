@@ -23,6 +23,12 @@ declare interface SocietyCandidate {
   skeptics: string[]
 }
 
+declare interface SuspendedCandidate {
+  accountId: AccountId
+  balance: BalanceOf
+  bid: PalletSocietyBidKind
+}
+
 declare interface SocietyMember {
   accountId: AccountId
   hasPayouts: boolean
@@ -37,4 +43,32 @@ declare interface SocietyMember {
   payouts: [BlockNumber, Balance][]
   strikes: StrikeCount
   strikesCount: number
+  vouching?: SocietyMemberVouching
+  vote?: SocietyMemberVote
+}
+
+interface SocietyMemberDetails {
+  accountId: AccountId
+  index?: string
+  identity?: SocietyMemberIdentity
+}
+
+interface SocietyMemberIdentity {
+  name: string
+  email?: string
+  legal?: string
+  webpage?: string
+  twitter?: string
+  riot?: string
+}
+
+declare interface SocietyMemberVouching {
+  isBanned: boolean
+  isVouching: boolean
+}
+
+declare interface SocietyMemberVote {
+  isApprove: boolean
+  isReject: boolean
+  isSkeptic: boolean
 }

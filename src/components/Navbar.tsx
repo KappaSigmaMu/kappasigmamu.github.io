@@ -1,7 +1,6 @@
-import { Button, Nav, Navbar as RBNavbar } from 'react-bootstrap'
+import { Button, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useAccount } from '../account/AccountContext'
-import { fetchAccounts } from '../helpers/fetchAccounts'
 import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 import { AccountSelector } from './AccountSelector'
 import { SocialIcons } from './SocialIcons'
@@ -12,15 +11,18 @@ const Navbar = ({
   showExploreButton = false,
   showSocialIcons = false,
 }: NavRouteProps) => (
-  <RBNavbar className="pt-4 justify-content-center">
-    <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
-    <Nav className="align-items-center align-self-center">
-      {showExploreButton ? <Nav.Link to="/explore" as={Link}>Explore</Nav.Link> : <></>}
-      &nbsp;
-      {showSocialIcons ? <SocialIcons /> : <></>}
-      &nbsp;
-      {showAccount ? <AccountNavbar /> : <></>}
-    </Nav>
+  <RBNavbar className="pt-4">
+    <Container>
+      <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
+      <Nav className="align-items-center align-self-center">
+        {showExploreButton && 
+          <Nav.Link to="/explore" as={Link} onClick={(e) => e.currentTarget.blur()}>Explore</Nav.Link>}
+        &nbsp;
+        {showSocialIcons && <SocialIcons />}
+        &nbsp;
+        {showAccount && <AccountNavbar />}
+      </Nav>
+    </Container>
   </RBNavbar>
 )
 
@@ -35,12 +37,12 @@ const NavbarBrand = () => (
 )
 
 const AccountNavbar = () => {
-  const { activeAccount, setActiveAccount, setAccounts } = useAccount()
+  const { activeAccount, fetchAccounts } = useAccount()
 
   return activeAccount
     ? <AccountSelector />
     : (
-      <Button variant="outline-secondary" onClick={() => fetchAccounts(setAccounts, setActiveAccount)}>
+      <Button variant="outline-secondary" onClick={fetchAccounts}>
         Connect Wallet
       </Button>
     )

@@ -66,6 +66,8 @@ const buildSocietyMembersArray = (
     payouts: member.payouts,
     strikes: member.strikes,
     strikesCount: member.strikes.isEmpty ? 0 : member.strikes.toNumber(),
+    vouching: member.vouching,
+    vote: member.vote
   }))
 
   return membersArray.sort(sortSocietyMembersArray)
