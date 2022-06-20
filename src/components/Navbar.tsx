@@ -15,7 +15,8 @@ const Navbar = ({
     <Container>
       <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
       <Nav className="align-items-center align-self-center">
-        {showExploreButton && <Nav.Link to="/explore" as={Link}>Explore</Nav.Link>}
+        {showExploreButton && 
+          <Nav.Link to="/explore" as={Link} onClick={(e) => e.currentTarget.blur()}>Explore</Nav.Link>}
         &nbsp;
         {showSocialIcons && <SocialIcons />}
         &nbsp;
