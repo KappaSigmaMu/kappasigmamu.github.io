@@ -10,6 +10,7 @@ import { CyborgGuidePage } from './CyborgGuidePage'
 import { ExplorePage } from './explore/ExplorePage'
 import { JourneyPage } from './JourneyPage'
 import { LandingPage } from './LandingPage'
+import { TranshumanismPage } from './TranshumanismPage'
 import { WelcomePage } from './WelcomePage'
 
 const AppNavigation = () => {
@@ -38,6 +39,7 @@ const AppRouter = () => {
         <Route element={<AppNavigation />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/guide" element={<CyborgGuidePage />} />
+          <Route path="/transhumanism" element={<TranshumanismPage />} />
           <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/journey" element={<JourneyPage />} />
           <Route path="/explore/*" element={<ExplorePage />} />
