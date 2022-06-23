@@ -41,8 +41,6 @@ const ActFiveWikiLink = styled(ExternalLink).attrs(() => ({
 `
 
 const FuturivelPage = () => {
-  document.body.style.overflow = "auto"
-
   return (
     <Futurable>
       <Container>
@@ -53,7 +51,7 @@ const FuturivelPage = () => {
         </GuideTitleRow>
       </Container>
       <Container>
-        <GuideRow className="mb-5">
+        <GuideRow className="mb-5 no-text-shadow">
           <Col xs lg="12">
             <GuideSubtitle className="h1 text-uppercase font-weight-bold">
               HAPPINESS IS MADE OF METAL
@@ -388,6 +386,19 @@ const FuturivelPage = () => {
 const GuideRow = styled(Container)`
   padding-left: 12px;
   padding-bottom: 20px;
+  * {
+    position: relative;
+    z-index: 2;
+  }
+  * :not(.badge) {
+    @media(max-width: 1024px) {
+      color: #fff;
+      text-shadow: 2px 2px #000;
+    }
+  }
+  &.no-text-shadow * {
+    text-shadow: none;
+  }
 `
 
 const GuideTitleRow = styled(Container)`
@@ -422,10 +433,15 @@ const GilWireframeImg = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   position: fixed;
+  z-index: 1;
   height: 60vh;
   width: 60vh;
   right: 20vw;
   bottom: -5vh;
+  @media(max-width: 1024px) {
+    opacity: 0.3;
+    right: 0;
+  }
 `
 
 export { FuturivelPage }
