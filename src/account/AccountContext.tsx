@@ -3,8 +3,10 @@ import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
 import type { KeyringAddress } from '@polkadot/ui-keyring/types'
 import React, { useContext, useEffect, useState } from 'react'
+import { Row } from 'react-bootstrap'
 import { isValidAccount } from '../helpers/validAccount'
 import { useKusama } from '../kusama'
+import { LoadingSpinner } from '../pages/explore/components/LoadingSpinner'
 
 const activeAccount = localStorage.getItem('activeAccount')
 const isValid = isValidAccount(activeAccount)
@@ -88,10 +90,13 @@ const AccountContextProvider = ({ children }: any) => {
   }, [accounts, activeAccount])
 
   const content = loading
-    ? <></>
+    ? <Row style={{ marginTop: "30vh" }}>
+        <p className="text-center">Connecting to Kusama network...</p>
+        <LoadingSpinner />
+      </Row>
     : <AccountContext.Provider value={{ level, activeAccount, setActiveAccount, accounts, fetchAccounts }}>
-      {children}
-    </AccountContext.Provider>
+        {children}
+      </AccountContext.Provider>
 
   return content
 }

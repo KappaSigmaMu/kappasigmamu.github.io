@@ -1,4 +1,4 @@
-import { Suspense, useLayoutEffect } from 'react'
+import React, { Suspense, useLayoutEffect } from 'react'
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { AccountContextProvider } from '../account/AccountContext'
@@ -22,7 +22,9 @@ const AppNavigation = () => {
 
   return (<>
     <Navbar
-      showAccount
+      // When changing back to `true`, must also revert the 
+      // way context is provided so NavBar can have access to it
+      showAccount={false}
       showExploreButton
       showBrandIcon
       showSocialIcons
@@ -31,16 +33,30 @@ const AppNavigation = () => {
   </>)
 }
 
+const KusamaContextProviderMemo = React.memo(KusamaContextProvider)
+const AccountContextProviderMemo = React.memo(AccountContextProvider)
+
+function apiDependentRoute(path: string, element: JSX.Element) {
+  const contextWrappedElement = (
+    <KusamaContextProviderMemo>
+      <AccountContextProviderMemo>
+        {element}
+      </AccountContextProviderMemo>
+    </KusamaContextProviderMemo>
+  )
+  return <Route path={path} element={contextWrappedElement} />
+}
+
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<AppNavigation />}>
-          <Route path="/" element={<LandingPage />} />
+          {apiDependentRoute("/", <LandingPage />)}
           <Route path="/guide" element={<CyborgGuidePage />} />
-          <Route path="/welcome" element={<WelcomePage />} />
-          <Route path="/journey" element={<JourneyPage />} />
-          <Route path="/explore/*" element={<ExplorePage />} />
+          {apiDependentRoute("/welcome", <WelcomePage />)}
+          {apiDependentRoute("/journey", <JourneyPage />)}
+          {apiDependentRoute("/explore/*", <ExplorePage />)}
           <Route path="*" element={<>NOT FOUND</>} />
         </Route>
       </Routes>
@@ -51,16 +67,12 @@ const AppRouter = () => {
 const App = () => (
   <>
     <GlobalStyle />
-    <KusamaContextProvider>
-      <AccountContextProvider>
-        <ThemeProvider theme={Theme}>
-          <GlobalStyle />
-          <Suspense fallback={<p>ERROR/LOADING...</p>}>
-            <AppRouter />
-          </Suspense>
-        </ThemeProvider>
-      </AccountContextProvider>
-    </KusamaContextProvider>
+    <ThemeProvider theme={Theme}>
+      <GlobalStyle />
+      <Suspense fallback={<p>ERROR/LOADING...</p>}>
+        <AppRouter />
+      </Suspense>
+    </ThemeProvider>
   </>
 )
 
