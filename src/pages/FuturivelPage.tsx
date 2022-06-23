@@ -50,37 +50,14 @@ const FuturivelPage = () => {
           <GuideTitle xs className="display-1 text-uppercase d-flex align-items-center">
             Gil Futurível
           </GuideTitle>
-          {/* <Col className="text-uppercase text-end ms-auto pt-5 d-inline-block">
-          <p>
-            <SocietyGuideLink>Kusama society guide</SocietyGuideLink>
-          </p>
-          <p>
-            <TattooRulesLink>Tattoo rules</TattooRulesLink>
-          </p>
-          <p>
-            <Motion186Link>Motion 186</Motion186Link>
-          </p>
-          <p>
-            <ThirdGenerationLink>The Third Generation</ThirdGenerationLink>
-          </p>
-          <p>
-            <BrandingDriveLink>Branding Drive</BrandingDriveLink>
-          </p>
-          <p>
-            <CodeRepositoryLink>Code Repository</CodeRepositoryLink>
-          </p>
-          <p>
-            <TrelloLink>Trello</TrelloLink>
-          </p>
-        </Col> */}
         </GuideTitleRow>
       </Container>
       <Container>
         <GuideRow className="mb-5">
-          <Col xs lg="6">
-            <div className="h1 text-uppercase font-weight-bold">
+          <Col xs lg="12">
+            <GuideSubtitle className="h1 text-uppercase font-weight-bold">
               HAPPINESS IS MADE OF METAL
-            </div>
+            </GuideSubtitle>
             <p className="mb-1">
               A partnership between Gilberto Gil and Kappa Sigma Mu.
             </p>
@@ -419,9 +396,15 @@ const GuideTitleRow = styled(Container)`
 `
 
 const GuideTitle = styled(Col)`
-  font-size: 500%;
+  font-size: 10vmin;
   color: white;
   font-weight: bolder;
+  display: inline-block;
+`
+const GuideSubtitle = styled.div`
+  font-size: 4.5vmin;
+  color: white;
+  font-weight: bold;
   display: inline-block;
 `
 
