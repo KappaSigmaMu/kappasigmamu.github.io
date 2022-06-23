@@ -41,21 +41,18 @@ const BidVouch = ({ handleResult, activeAccount }: BidVouchProps) => {
   }, [vouchAddress, vouchTip, vouchValue])
 
   const handleBidSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const bidVal : BN = new BN((e.currentTarget[0] as HTMLInputElement).value)
-    // @ts-ignore
-    setbidAmount(new BN(bidVal * ksmMultiplier))
+    const bidVal: BN = new BN((e.currentTarget[0] as HTMLInputElement).value)
+    setbidAmount(bidVal.mul(ksmMultiplier))
     e.preventDefault()
   }
 
   const handleVouchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const address = (e.currentTarget[0] as HTMLInputElement).value
-    const value : BN = new BN((e.currentTarget[1] as HTMLInputElement).value)
-    const tip : BN = new BN((e.currentTarget[2] as HTMLInputElement).value)
+    const value: BN = new BN((e.currentTarget[1] as HTMLInputElement).value)
+    const tip: BN = new BN((e.currentTarget[2] as HTMLInputElement).value)
     setVouchAddress(address)
-    // @ts-ignore
-    setVouchValue(new BN(value * ksmMultiplier))
-    // @ts-ignore
-    setVouchTip(new BN(tip * ksmMultiplier))
+    setVouchValue(value.mul(ksmMultiplier))
+    setVouchTip(tip.mul(ksmMultiplier))
     e.preventDefault()
   }
 
