@@ -424,7 +424,9 @@ const Futurable = styled.div`
 `
 
 const TimelineContainer = styled(Container)`
-  border-left: 2px solid grey;
+  @media(min-width: 1000px) {
+    border-left: 2px solid grey;
+  }
 `
 
 const GilWireframeImg = styled.div`
