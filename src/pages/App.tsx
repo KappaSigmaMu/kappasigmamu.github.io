@@ -23,7 +23,7 @@ const AppNavigation = () => {
 
   return (<>
     <Navbar
-      showAccount
+      showAccount={false}
       showExploreButton
       showBrandIcon
       showSocialIcons
