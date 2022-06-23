@@ -4,7 +4,7 @@ import { AccountId } from "@polkadot/types/interfaces"
 import { useEffect, useState } from "react"
 import { Col, Container, Offcanvas, Row } from "react-bootstrap"
 import styled from "styled-components"
-import CopyIcon from "../../../../static/copy-icon.svg"
+import { CopyButton } from "../../../../components/CopyButton"
 import { LoadingSpinner } from "../../components/LoadingSpinner"
 import { fetchMemberDetails } from "../helpers/fetchMemberDetails"
 
@@ -57,9 +57,11 @@ const CanvasBody = ({ memberDetails }: { memberDetails: SocietyMemberDetails }) 
         </HashRow>
       </Row>
       <Row className="mt-3">
-        {/* TODO: implement onclick */}
-        <img width={36} height={36} src={CopyIcon} />
+        <CopyButton content={memberDetails.accountId.toHuman()} />
       </Row>
+      <StyledRow>
+        {memberDetails.index && <>Index: {memberDetails.index}</>}
+      </StyledRow>
       <StyledRow>
         {memberDetails.identity && <h4 className="p-0 m-0">Identity</h4>}
       </StyledRow>
@@ -69,7 +71,6 @@ const CanvasBody = ({ memberDetails }: { memberDetails: SocietyMemberDetails }) 
       </StyledRow>
       <StyledRow>
         <Col xs={3} className="text-uppercase extra-vertical-spacing">
-          {/* TODO: use <a></a> and prepend schema */}
           {email && <Row>email</Row>}
           {webpage && <Row>web</Row>}
           {riot && <Row>riot</Row>}
