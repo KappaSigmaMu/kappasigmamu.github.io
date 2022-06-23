@@ -8,9 +8,9 @@ import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { CyborgGuidePage } from './CyborgGuidePage'
 import { ExplorePage } from './explore/ExplorePage'
+import { FuturivelPage } from './FuturivelPage'
 import { JourneyPage } from './JourneyPage'
 import { LandingPage } from './LandingPage'
-import { FuturivelPage } from './FuturivelPage'
 import { WelcomePage } from './WelcomePage'
 
 const AppNavigation = () => {
