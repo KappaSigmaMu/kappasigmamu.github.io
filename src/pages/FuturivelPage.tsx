@@ -431,18 +431,20 @@ const TimelineContainer = styled(Container)`
 
 const GilWireframeImg = styled.div`
   background: url(${GilWireframe});
-  background-position: center;
+  background-position: right;
   background-size: contain;
   background-repeat: no-repeat;
   position: fixed;
   z-index: 1;
   height: 60vh;
-  width: 60vh;
-  right: 20vw;
+  width: 100vw;
+  right: 15vw;
   bottom: -5vh;
   @media(max-width: 1024px) {
+    background-position: center;
     opacity: 0.3;
     right: 0;
+    bottom: -10vh;
   }
 `
 
