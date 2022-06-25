@@ -67,6 +67,15 @@ const FuturivelPage = () => {
           </Col>
         </GuideRow>
       </Container>
+      <Container>
+        <GuideRow className="mb-5">
+          <Col xs sm="12" lg="6">
+            <iframe src="https://drive.google.com/file/d/12UKovpx6gH7WN2q7wpeRrh4YRAqezBHG/preview"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope;
+  picture-in-picture" allowFullScreen></iframe>
+          </Col>
+        </GuideRow>
+      </Container>
       <TimelineContainer className="born">
         <GuideRow>
           <Col xs lg="6">
