@@ -34,6 +34,7 @@ const ActFiveLink = styled(ExternalLink).attrs(() => ({
 }))`
   text-decoration: none;
 `
+
 const ActFiveWikiLink = styled(ExternalLink).attrs(() => ({
   href: 'https://en.wikipedia.org/wiki/Institutional_Act_Number_Five',
 }))`
@@ -56,9 +57,9 @@ const FuturivelPage = () => {
             <GuideSubtitle className="h1 text-uppercase font-weight-bold">
               HAPPINESS IS MADE OF METAL
             </GuideSubtitle>
-            <p className="mb-1">
+            <GuideSecondSubtitle className="mb-1">
               A partnership between Gilberto Gil and Kappa Sigma Mu.
-            </p>
+            </GuideSecondSubtitle>
             <div className="mb-5">
               <SocietyGuideLink>You can learn more about how everything started in this proposal.</SocietyGuideLink>
             </div>
@@ -66,7 +67,7 @@ const FuturivelPage = () => {
           </Col>
         </GuideRow>
       </Container>
-      <TimelineContainer className="timeline born">
+      <TimelineContainer className="born">
         <GuideRow>
           <Col xs lg="6">
             <span className="badge rounded-pill bg-primary text-uppercase">
@@ -395,6 +396,9 @@ const GuideRow = styled(Container)`
 const GuideTitleRow = styled(Container)`
   display: flex;
   padding-top: 10vh;
+  @media(max-width: 1024px) {
+    padding-top: 5vh;
+  }
 `
 
 const GuideTitle = styled(Col)`
@@ -402,12 +406,25 @@ const GuideTitle = styled(Col)`
   color: white;
   font-weight: bolder;
   display: inline-block;
+  @media(max-width: 1024px) {
+    font-size: 11vmin;
+  }
 `
 const GuideSubtitle = styled.div`
   font-size: 4.5vmin;
   color: white;
   font-weight: bold;
   display: inline-block;
+  @media(max-width: 1024px) {
+    margin-top: 5px;
+    font-size: 5vmin;
+  }
+`
+
+const GuideSecondSubtitle = styled.p`
+  @media(max-width: 1024px) {
+    font-size: 3vmin;
+  }
 `
 
 const Futurable = styled.div`
