@@ -26,7 +26,7 @@ const AppNavigation = () => {
       // When changing back to `true`, must also revert the
       // way context is provided so NavBar can have access to it
       showAccount={false}
-      showExploreButton
+      showExploreButton={false}
       showBrandIcon
       showSocialIcons
     />

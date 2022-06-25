@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { PrimaryLgButton } from '../components/base'
+import { PrimaryLgButton, SecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from "../components/MemberOffcanvas"
 import { useKusama } from '../kusama'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
@@ -19,11 +19,14 @@ interface MembersData {
   [key: string]: MemberData
 }
 
+type ExplorerVariant = "canary" | "gil"
+
 const LandingPage = () => {
   const navigate = useNavigate()
   const { api } = useKusama()
   const [members, setMembers] = useState<Array<string>>([""])
   const [show, setShow] = useState(false)
+  const [explorerVariant, setExplorerVariant] = useState<ExplorerVariant>("canary")
 
   const [selectedMember, setSelectedMember] = useState<MemberData>({})
   const [allMembers, setAllMembers] = useState<MembersData>({})
@@ -84,8 +87,12 @@ const LandingPage = () => {
     }
   }, [api])
 
-  const handlePrimaryButtonClick = () => {
+  const handleGuideButtonClick = () => {
     navigate('/journey')
+  }
+
+  const handlePartnershipButtonClick = () => {
+    navigate('/futurivel')
   }
 
   return (
@@ -111,24 +118,52 @@ const LandingPage = () => {
               onNodeClick={handleCanaryNodeClick}
             /> : null}
         </div>
-        <CentralizedCol xs={8} />
-        <CentralizedCol xs={4}>
-          <h1>Join the</h1>
-          <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-          <p>
-            <PrimaryLgButton onClick={handlePrimaryButtonClick}>
-              Cyborg Guide
+        <CentralizedCol xs={0} lg={8} />
+        <CentralizedCol xs={12} lg={4}>
+          <h1 className="d-none d-lg-block">Join the</h1>
+          <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
+          <ActionsContainer>
+            <div className="d-lg-none">
+              <span >Join the</span>
+              <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
+            </div>
+            <PrimaryLgButton onClick={handleGuideButtonClick}>
+              Cyborg <br /> Guide
             </PrimaryLgButton>
-          </p>
+            <SecondaryLgButton onClick={handlePartnershipButtonClick}>
+              Partnership<br />with Gilberto Gil
+            </SecondaryLgButton>
+          </ActionsContainer>
         </CentralizedCol>
       </FullPageHeightRow>
     </>
   )
 }
 
+const ActionsContainer = styled.div`
+  @media(max-width: 1024px) {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem;
+    position: absolute;
+    left: 0vh;
+    bottom: 2vh;
+    .btn {
+      font-size: 4.5vmin;
+    }
+  }
+`
+
 const KappaSigmaMu = styled.img`
   margin: 50px 0;
   display: block;
+  @media(max-width: 1024px) {
+    width: 80px;
+    height: 80x;
+    margin: 10px 0;
+  }
 `
 
 const FullPageHeightRow = styled(Row)`
