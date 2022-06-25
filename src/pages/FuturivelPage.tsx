@@ -51,7 +51,7 @@ const FuturivelPage = () => {
         </GuideTitleRow>
       </Container>
       <Container>
-        <GuideRow className="mb-5 no-text-shadow">
+        <GuideRow className="mb-5">
           <Col xs lg="12">
             <GuideSubtitle className="h1 text-uppercase font-weight-bold">
               HAPPINESS IS MADE OF METAL
@@ -66,7 +66,7 @@ const FuturivelPage = () => {
           </Col>
         </GuideRow>
       </Container>
-      <TimelineContainer className="born">
+      <TimelineContainer className="timeline born">
         <GuideRow>
           <Col xs lg="6">
             <span className="badge rounded-pill bg-primary text-uppercase">
@@ -390,15 +390,6 @@ const GuideRow = styled(Container)`
     position: relative;
     z-index: 2;
   }
-  * :not(.badge) {
-    @media(max-width: 1024px) {
-      color: #fff;
-      text-shadow: 2px 2px #000;
-    }
-  }
-  &.no-text-shadow * {
-    text-shadow: none;
-  }
 `
 
 const GuideTitleRow = styled(Container)`
@@ -424,9 +415,19 @@ const Futurable = styled.div`
 `
 
 const TimelineContainer = styled(Container)`
-  @media(min-width: 1000px) {
+  @media(min-width: 1024px) {
     border-left: 2px solid grey;
   }
+  * {
+    @media(max-width: 1024px) {
+      color: #fff;
+      text-shadow: 2px 2px #000;
+    }
+  }
+  .badge {
+    text-shadow: none;
+  }
+}
 `
 
 const GilWireframeImg = styled.div`
