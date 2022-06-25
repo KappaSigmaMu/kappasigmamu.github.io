@@ -19,14 +19,14 @@ interface MembersData {
   [key: string]: MemberData
 }
 
-type ExplorerVariant = "canary" | "gil"
+// type ExplorerVariant = "canary" | "gil"
 
 const LandingPage = () => {
   const navigate = useNavigate()
   const { api } = useKusama()
   const [members, setMembers] = useState<Array<string>>([""])
   const [show, setShow] = useState(false)
-  const [explorerVariant, setExplorerVariant] = useState<ExplorerVariant>("canary")
+  // const [explorerVariant, setExplorerVariant] = useState<ExplorerVariant>("canary")
 
   const [selectedMember, setSelectedMember] = useState<MemberData>({})
   const [allMembers, setAllMembers] = useState<MembersData>({})
