@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import { PrimaryLgButton, SecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from "../components/MemberOffcanvas"
 import { useKusama } from '../kusama'
+import { ApiState } from "../kusama/KusamaContext"
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
 interface MemberData {
@@ -23,8 +24,8 @@ interface MembersData {
 
 const LandingPage = () => {
   const navigate = useNavigate()
-  const { api } = useKusama()
-  const [members, setMembers] = useState<Array<string>>([""])
+  const { api, apiState } = useKusama()
+  const [members, setMembers] = useState<Array<string>>([])
   const [show, setShow] = useState(false)
   // const [explorerVariant, setExplorerVariant] = useState<ExplorerVariant>("canary")
 
@@ -51,7 +52,8 @@ const LandingPage = () => {
   }
 
   useEffect(() => {
-    if (api) {
+    console.log(api, apiState)
+    if (api && apiState === ApiState.ready) {
       api.derive.society.members().then((members) => {
         members.forEach((member) => {
           const id = member.accountId.toString()
@@ -85,7 +87,7 @@ const LandingPage = () => {
       })
 
     }
-  }, [api])
+  }, [api, apiState])
 
   const handleGuideButtonClick = () => {
     navigate('/guide')

@@ -1,4 +1,4 @@
-import React, { Suspense, useLayoutEffect } from 'react'
+import { Suspense, useLayoutEffect } from 'react'
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { AccountContextProvider } from '../account/AccountContext'
@@ -34,29 +34,15 @@ const AppNavigation = () => {
   </>)
 }
 
-const KusamaContextProviderMemo = React.memo(KusamaContextProvider)
-const AccountContextProviderMemo = React.memo(AccountContextProvider)
-
-function apiDependentRoute(path: string, element: JSX.Element) {
-  const contextWrappedElement = (
-    <KusamaContextProviderMemo>
-      <AccountContextProviderMemo>
-        {element}
-      </AccountContextProviderMemo>
-    </KusamaContextProviderMemo>
-  )
-  return <Route path={path} element={contextWrappedElement} />
-}
-
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<AppNavigation />}>
-          {apiDependentRoute("/", <LandingPage />)}
-          {apiDependentRoute("/welcome", <WelcomePage />)}
-          {apiDependentRoute("/journey", <JourneyPage />)}
-          {apiDependentRoute("/explore/*", <ExplorePage />)}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/welcome" element={<WelcomePage />} />
+          <Route path="/journey" element={<JourneyPage />} />
+          <Route path="/explore/*" element={<ExplorePage />} />
           <Route path="/guide" element={<CyborgGuidePage />} />
           <Route path="/futurivel" element={<FuturivelPage />} />
           <Route path="*" element={<>NOT FOUND</>} />
@@ -68,13 +54,17 @@ const AppRouter = () => {
 
 const App = () => (
   <>
-    <GlobalStyle />
-    <ThemeProvider theme={Theme}>
-      <GlobalStyle />
-      <Suspense fallback={<p>ERROR/LOADING...</p>}>
-        <AppRouter />
-      </Suspense>
-    </ThemeProvider>
+    <KusamaContextProvider>
+      <AccountContextProvider>
+        <GlobalStyle />
+        <ThemeProvider theme={Theme}>
+          <GlobalStyle />
+          <Suspense fallback={<p>ERROR/LOADING...</p>}>
+            <AppRouter />
+          </Suspense>
+        </ThemeProvider>
+      </AccountContextProvider>
+    </KusamaContextProvider>
   </>
 )
 

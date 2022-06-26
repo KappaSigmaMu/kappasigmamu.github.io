@@ -4,6 +4,7 @@ import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-
 import styled from 'styled-components'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { useKusama } from '../../../kusama'
+import { ApiState } from '../../../kusama/KusamaContext'
 import { bid, vouch } from './helper'
 
 type BidVouchProps = { handleResult: any, activeAccount: accountType }
@@ -19,7 +20,7 @@ const BidVouch = ({ handleResult, activeAccount }: BidVouchProps) => {
   const [vouchAddress, setVouchAddress] = useState<string>()
   const [loading, setLoading] = useState(false)
 
-  const apiReady = apiState === 'READY'
+  const apiReady = apiState === ApiState.ready
 
   const onStatusChange = ({ loading, message, success }: OnStatusChangeProps) => {
     setLoading(loading)

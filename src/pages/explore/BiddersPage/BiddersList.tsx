@@ -9,6 +9,7 @@ import { FormatBalance } from '../../../components/FormatBalance'
 import { humanizeBidKind } from '../../../helpers/humanize'
 import { truncateMiddle } from '../../../helpers/truncate'
 import { useKusama } from '../../../kusama'
+import { ApiState } from '../../../kusama/KusamaContext'
 import { unbid, unvouch } from './helper'
 
 type Props = { bids: Vec<PalletSocietyBid>, activeAccount: accountType; handleResult: any }
@@ -22,7 +23,7 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
   const isBidder = (bid : PalletSocietyBid) => activeAccount?.address === bid.who.toString()
   const isVoucher = (bid : PalletSocietyBid) => activeAccount?.address === bid.kind.asVouch?.[0].toString()
 
-  const apiReady = apiState === 'READY'
+  const apiReady = apiState === ApiState.ready
 
   const onStatusChange = ({ loading, message, success } : OnStatusChangeProps) => {
     setLoading(loading)
