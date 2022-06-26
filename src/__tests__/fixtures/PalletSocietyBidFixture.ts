@@ -14,13 +14,14 @@ registry.setMetadata(metadata)
 
 class PalletSocietyBidFixture implements Partial<PalletSocietyBid> {
   public who: AccountId32 = registry.createType('AccountId32', '5DcN2feEKzC23toLBu63N7Q9E2Tc3HE44oyd992WY31iZee4')
-  public kind: Partial<PalletSocietyBidKind> = PalletSocietyBidKindFixture.createDeposit(20)
+  // FIXME: uncomment and find out how to satisfy types
+  // public kind: Partial<PalletSocietyBidKind> = PalletSocietyBidKindFixture.createDeposit(20)
   public value: u128 = registry.createType('u128', new BN(20).mul(ksmMultiplier))
 
   public static createDeposit(who: string, value: number): PalletSocietyBidFixture {
     const bid = new PalletSocietyBidFixture()
     bid.who = registry.createType('AccountId32', who)
-    bid.kind = PalletSocietyBidKindFixture.createDeposit(value)
+    // bid.kind = PalletSocietyBidKindFixture.createDeposit(value)
     bid.value = registry.createType('u128', new BN(value).mul(ksmMultiplier))
 
     return bid
@@ -29,7 +30,7 @@ class PalletSocietyBidFixture implements Partial<PalletSocietyBid> {
   public static createVouch(who: string, vouch: string, value: number): PalletSocietyBidFixture {
     const bid = new PalletSocietyBidFixture()
     bid.who = registry.createType('AccountId32', who)
-    bid.kind = PalletSocietyBidKindFixture.createVouch(vouch, value)
+    // bid.kind = PalletSocietyBidKindFixture.createVouch(vouch, value)
     bid.value = registry.createType('u128', new BN(value).mul(ksmMultiplier))
 
     return bid

@@ -15,7 +15,6 @@ const safePostCssParser = require('postcss-safe-parser');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -24,7 +23,6 @@ const modules = require('./modules');
 const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
-const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const postcssNormalize = require('postcss-normalize');
@@ -363,6 +361,10 @@ module.exports = function (webpackEnv) {
         // Disable require.ensure as it's not a standard language feature.
         { parser: { requireEnsure: false } },
         {
+          test: /\.js$/,
+          loader: require.resolve('@open-wc/webpack-import-meta-loader')
+        },
+        {
           // "oneOf" will traverse all following loaders until one will
           // match the requirements. When no loader matches it will fall
           // back to the "file" loader at the end of the loader list.
@@ -406,8 +408,13 @@ module.exports = function (webpackEnv) {
                       runtime: hasJsxRuntime ? 'automatic' : 'classic',
                     },
                   ],
+                  [
+                    require.resolve('@babel/preset-env'),
+                    {
+                      exclude: ["transform-exponentiation-operator"]
+                    }
+                  ]
                 ],
-                
                 plugins: [
                   [
                     require.resolve('babel-plugin-named-asset-import'),
@@ -448,6 +455,12 @@ module.exports = function (webpackEnv) {
                     require.resolve('babel-preset-react-app/dependencies'),
                     { helpers: true },
                   ],
+                  [
+                    require.resolve('@babel/preset-env'),
+                    {
+                      exclude: ["transform-exponentiation-operator"]
+                    }
+                  ]
                 ],
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
@@ -625,12 +638,6 @@ module.exports = function (webpackEnv) {
       // a plugin that prints an error when you attempt to do this.
       // See https://github.com/facebook/create-react-app/issues/240
       isEnvDevelopment && new CaseSensitivePathsPlugin(),
-      // If you require a missing module and then `npm install` it, you still have
-      // to restart the development server for webpack to discover it. This plugin
-      // makes the discovery automatic so you don't have to restart.
-      // See https://github.com/facebook/create-react-app/issues/186
-      isEnvDevelopment &&
-        new WatchMissingNodeModulesPlugin(paths.appNodeModules),
       isEnvProduction &&
         new MiniCssExtractPlugin({
           // Options similar to the same options in webpackOptions.output
@@ -684,33 +691,27 @@ module.exports = function (webpackEnv) {
       // TypeScript type checking
       useTypeScript &&
         new ForkTsCheckerWebpackPlugin({
-          typescript: resolve.sync('typescript', {
-            basedir: paths.appNodeModules,
-          }),
           async: isEnvDevelopment,
-          checkSyntacticErrors: true,
-          resolveModuleNameModule: process.versions.pnp
-            ? `${__dirname}/pnpTs.js`
-            : undefined,
-          resolveTypeReferenceDirectiveModule: process.versions.pnp
-            ? `${__dirname}/pnpTs.js`
-            : undefined,
-          tsconfig: paths.appTsConfig,
-          reportFiles: [
-            // This one is specifically to match during CI tests,
-            // as micromatch doesn't match
-            // '../cra-template-typescript/template/src/App.tsx'
-            // otherwise.
-            '../**/src/**/*.{ts,tsx}',
-            '**/src/**/*.{ts,tsx}',
-            '!**/src/**/__tests__/**',
-            '!**/src/**/?(*.)(spec|test).*',
-            '!**/src/setupProxy.*',
-            '!**/src/setupTests.*',
-          ],
-          silent: true,
-          // The formatter is invoked directly in WebpackDevServerUtils during development
-          formatter: isEnvProduction ? typescriptFormatter : undefined,
+          typescript: { 
+            configFile: paths.appTsConfig,
+            diagnosticOptions: { synctatic: true },
+            typescriptPath: resolve.sync('typescript', {
+              basedir: paths.appNodeModules,
+            })
+          }
+          // TODO: We need to find out if this config still exists and if so, what's the new format
+          // reportFiles: [
+          //   // This one is specifically to match during CI tests,
+          //   // as micromatch doesn't match
+          //   // '../cra-template-typescript/template/src/App.tsx'
+          //   // otherwise.
+          //   '../**/src/**/*.{ts,tsx}',
+          //   '**/src/**/*.{ts,tsx}',
+          //   '!**/src/**/__tests__/**',
+          //   '!**/src/**/?(*.)(spec|test).*',
+          //   '!**/src/setupProxy.*',
+          //   '!**/src/setupTests.*',
+          // ]
         }),
       !disableESLintPlugin &&
         new ESLintPlugin({
