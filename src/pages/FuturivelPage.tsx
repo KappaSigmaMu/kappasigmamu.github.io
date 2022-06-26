@@ -53,8 +53,14 @@ const ActFiveWikiLink = styled(ExternalLink).attrs(() => ({
   text-decoration: none;
 `
 
-const CyborgManifestoLink = styled(ExternalLink).attrs(() => ({
+const CyborgManifestoWikiLink = styled(ExternalLink).attrs(() => ({
   href: 'https://en.wikipedia.org/wiki/A_Cyborg_Manifesto',
+}))`
+  text-decoration: none;
+`
+
+const CyborgManifestoLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://web.archive.org/web/20120214194015/http://www.stanford.edu/dept/HPS/Haraway/CyborgManifesto.html',
 }))`
   text-decoration: none;
 `
@@ -245,8 +251,8 @@ const FuturivelPage = () => {
               an ability to move beyond physical limits
               and a future where <span color="white">&#34;happiness is made of metal&#34;</span>.
               <br /> <br />
-              We understand this song as a kind of poetic predecessor
-              of the <CyborgManifestoLink>Cyborg Manifesto</CyborgManifestoLink>.
+              We understand this song as a small poetic predecessor
+              to the <CyborgManifestoLink>Cyborg Manifesto</CyborgManifestoLink>.
             </p>
           </Col>
         </GuideRow>
@@ -300,19 +306,24 @@ const FuturivelPage = () => {
         <GuideRow className="pb-5">
           <Col xs lg={6}>
             <p className="mb-1">
-              On another seemengly unrelated note but around the same time,
-              Yayoi Kusama releases her highly experimental short film:
-              <SelfObliterationLink> Kusama&apos;s Self-Obliteration</SelfObliterationLink>.
+              <CyborgManifestoLink>A Cyborg Manifesto</CyborgManifestoLink> was written by Donna Haraway in 1985.
+              <br /> <br />
+              The essay explores the concept of the cyborg and it&apos;s ramifications for the future,
+              and effectively inaugurating the academic study of cyborgs.
+              <br /> <br />
+              The cyborg for Haraway can be understood as a metaphor for merging biology and technology.
+              But more than that, it blurs the borders between the real and the imagined,
+              also eliminating the division between the human body and other living beings;
+              or between culture and nature itself.
+              <br /> <br />
+              <i>&#34;The cyborg is a dualism, as opposed to a dichotomy;
+                there is value perceived in the confusion of the borders of bounded categories.
+                The need for the divide between culture and nature is no longer relevant,
+                and the cyborg emerges from the blending of that boundary.&#34;</i>
+              - from <CyborgManifestoWikiLink>Wikipedia article</CyborgManifestoWikiLink> about the manifesto
               <br /><br />
-              The artist used polka dots to cover and conceal people,
-              animals, the environment, and everything around.
-              It can be understood as a metaphor of giving up identity, abolishing uniqueness,
-              and becoming one with the universe-or <i>self-obliteration</i>.
-              <br /><br />
-              It is not clear if both artists know about each others work,
-              but they were facing similar issues and fighting for similar things around the same time.
-              <br /><br />
-              Several years later their work met in a very unusual way...
+              Again is unclear if Donna Haraway knew about Yayoi&apos;s Kusama and Gilberto Gil&apos;s early works,
+              but they all shared the same subject.
             </p>
           </Col>
         </GuideRow>
