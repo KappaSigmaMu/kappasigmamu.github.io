@@ -20,13 +20,25 @@ const SelfObliterationLink = styled(ExternalLink).attrs(() => ({
 const VelosoLink = styled(ExternalLink).attrs(() => ({
   href: 'https://en.wikipedia.org/wiki/Caetano_Veloso',
 }))`
-text-decoration: none;
+  text-decoration: none;
 `
 
 const TropicaliaLink = styled(ExternalLink).attrs(() => ({
   href: 'https://en.wikipedia.org/wiki/Tropic%C3%A1lia:_ou_Panis_et_Circencis',
 }))`
-text-decoration: none;
+  text-decoration: none;
+`
+
+const ElectronicBrainLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://en.wikipedia.org/wiki/Gilberto_Gil_(1969_album)',
+}))`
+  text-decoration: none;
+`
+
+const FuturableLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://www.youtube.com/watch?v=sAyGHbFx0V0',
+}))`
+  text-decoration: none;
 `
 
 const ActFiveLink = styled(ExternalLink).attrs(() => ({
@@ -41,18 +53,22 @@ const ActFiveWikiLink = styled(ExternalLink).attrs(() => ({
   text-decoration: none;
 `
 
+const CyborgManifestoLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://en.wikipedia.org/wiki/A_Cyborg_Manifesto',
+}))`
+  text-decoration: none;
+`
+
 const FuturivelPage = () => {
   return (
     <Futurable>
-      <Container>
+      <TitleContainer>
         <GuideTitleRow className="d-flex align-items-center">
           <GuideTitle xs className="display-1 text-uppercase d-flex align-items-center">
             Gil Futurível
           </GuideTitle>
         </GuideTitleRow>
-      </Container>
-      <Container>
-        <GuideRow className="mb-5">
+        <GuideRow>
           <Col xs lg="12">
             <GuideSubtitle className="h1 text-uppercase font-weight-bold">
               HAPPINESS IS MADE OF METAL
@@ -60,22 +76,13 @@ const FuturivelPage = () => {
             <GuideSecondSubtitle className="mb-1">
               A partnership between Gilberto Gil and Kappa Sigma Mu.
             </GuideSecondSubtitle>
-            <div className="mb-5">
+            <div>
               <SocietyGuideLink>You can learn more about how everything started in this proposal.</SocietyGuideLink>
             </div>
             <GilWireframeImg className="float-end"></GilWireframeImg>
           </Col>
         </GuideRow>
-      </Container>
-      <Container>
-        <GuideRow className="mb-5">
-          <Col xs sm="12" lg="6">
-            <iframe src="https://drive.google.com/file/d/12UKovpx6gH7WN2q7wpeRrh4YRAqezBHG/preview"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope;
-  picture-in-picture" allowFullScreen></iframe>
-          </Col>
-        </GuideRow>
-      </Container>
+      </TitleContainer>
       <TimelineContainer className="born">
         <GuideRow>
           <Col xs lg="6">
@@ -128,7 +135,7 @@ const FuturivelPage = () => {
               an album Gil listened to constantly.
               <br /><br />
               Gil describes Tropicália: ou Panis et Circenses as the birth of the tropicália movement.
-              T him tropicália, or tropicalismo, was a conflation of musical and cultural developments
+              To him tropicália, or tropicalismo, was a conflation of musical and cultural developments
               that had occurred in Brazil during the 1950s and 1960s—primarily bossa nova
               and the Jovem Guarda (Young Wave) collective—with rock and roll music from the United States and Europe,
               <span color="white"> a movement deemed threatening by the Brazilian government of the time</span>.
@@ -158,42 +165,21 @@ const FuturivelPage = () => {
               after a coup d&apos;état by the Brazilian Armed Forces,
               with support from the United States government.
               <br /><br />
-              In 1968 things started becoming dark, when the brazilian military dictatorship
+              In 1968 things became dangerous for free thinkers, when the Brazilian military dictatorship
               <ActFiveLink> virtually legalized torture and censorship</ActFiveLink>.
               <br /><br />
-              Aong other things, the <ActFiveWikiLink>Instituional Act Number Five </ActFiveWikiLink>
-              allowed the government to: censor every medium of mass communication and art;
-              made illegal political meetings that didn&apos;t have police authorization;
-              take away anyone&apos;s political right for up to ten years and put the death penalty back.
+              Among other things, the <ActFiveWikiLink>Institutional Act Number Five </ActFiveWikiLink>
+              allowed the government to censor every medium of mass communication and art,
+              criminalize political meetings that didn&apos;t have police authorization,
+              limit anyone&apos;s right to gather and protest for up to ten years and even restore the death penalty
               <br /><br />
-              At this point, Gil and Veloso became targets.
+              On November 22, 1968, the Superior Council of Censorship was created, based on the American model of 1939.
+              After this, Gil and Veloso became targets.
             </p>
           </Col>
         </GuideRow>
       </TimelineContainer>
       <TimelineContainer className="censorship">
-        <GuideRow>
-          <Col xs lg="6">
-            <span className="badge rounded-pill bg-primary text-uppercase">
-              1968
-            </span>
-          </Col>
-        </GuideRow>
-        <GuideRow>
-          <Col xs lg="6" className="mb-2">
-            <div className="h1">The Superior Council of Censorship</div>
-          </Col>
-        </GuideRow>
-        <GuideRow className="pb-5">
-          <Col xs lg={6}>
-
-            <p className="mb-1">
-              On November 22, 1968, the Superior Council of Censorship was created, based on the American model of 1939
-            </p>
-          </Col>
-        </GuideRow>
-      </TimelineContainer>
-      <TimelineContainer className="censored">
         <GuideRow>
           <Col xs lg="6">
             <span className="badge rounded-pill bg-primary text-uppercase">
@@ -248,11 +234,19 @@ const FuturivelPage = () => {
         <GuideRow className="pb-5">
           <Col xs lg={6}>
             <p className="mb-1">
-              He composed four songs during his imprisonment,
-              among them &#34;Cérebro Electrônico&#34; (&#34;Electronic Brain&#34;)
-              and &#34;Futurível&#34; (&#34;Futurable&#34;).
-
-              @TODO: Explain the songs meaning and lyrics
+              In August 1969, Gil released a new album called
+              <ElectronicBrainLink> Cérebro Eletrônico (Electronic Brain) </ElectronicBrainLink>
+              He composed four songs during his imprisonment that ended up featuring in the album,
+              among them <FuturableLink>Futurível (Futurable)</FuturableLink>.
+              <br /> <br />
+              Gilberto Gil wrote <FuturableLink>Futurível</FuturableLink> anticipating the cultural and technological
+              movements that would bring human beings and machines together. Futurível brings its lyrical content
+              a concrete vision of the cyborg, with inorganic material body members, a superior intelligence,
+              an ability to move beyond physical limits
+              and a future where <span color="white">&#34;happiness is made of metal&#34;</span>.
+              <br /> <br />
+              We understand this song as a kind of poetic predecessor
+              of the <CyborgManifestoLink>Cyborg Manifesto</CyborgManifestoLink>.
             </p>
           </Col>
         </GuideRow>
@@ -280,7 +274,40 @@ const FuturivelPage = () => {
               The artist used polka dots to cover and conceal people,
               animals, the environment, and everything around.
               It can be understood as a metaphor of giving up identity, abolishing uniqueness,
-              ad becoming one with the universe-or <i>self-obliteration</i>.
+              and becoming one with the universe-or <i>self-obliteration</i>.
+              <br /><br />
+              It is not clear if both artists know about each others work,
+              but they were facing similar issues and fighting for similar things around the same time.
+              <br /><br />
+              Several years later their work met in a very unusual way...
+            </p>
+          </Col>
+        </GuideRow>
+      </TimelineContainer>
+      <TimelineContainer className="cyborg-manifesto">
+        <GuideRow>
+          <Col xs lg="6">
+            <span className="badge rounded-pill bg-primary text-uppercase">
+              1985
+            </span>
+          </Col>
+        </GuideRow>
+        <GuideRow>
+          <Col xs lg="6" className="mb-2">
+            <div className="h1">A Cyborg Manifesto</div>
+          </Col>
+        </GuideRow>
+        <GuideRow className="pb-5">
+          <Col xs lg={6}>
+            <p className="mb-1">
+              On another seemengly unrelated note but around the same time,
+              Yayoi Kusama releases her highly experimental short film:
+              <SelfObliterationLink> Kusama&apos;s Self-Obliteration</SelfObliterationLink>.
+              <br /><br />
+              The artist used polka dots to cover and conceal people,
+              animals, the environment, and everything around.
+              It can be understood as a metaphor of giving up identity, abolishing uniqueness,
+              and becoming one with the universe-or <i>self-obliteration</i>.
               <br /><br />
               It is not clear if both artists know about each others work,
               but they were facing similar issues and fighting for similar things around the same time.
@@ -388,6 +415,13 @@ const FuturivelPage = () => {
             </p>
           </Col>
         </GuideRow>
+        <GuideRow className="pb-0">
+          <Col xs sm="12" lg="6">
+            <MakingOfVideo src="https://drive.google.com/file/d/12UKovpx6gH7WN2q7wpeRrh4YRAqezBHG/preview"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope;
+  picture-in-picture" allowFullScreen></MakingOfVideo>
+          </Col>
+        </GuideRow>
       </TimelineContainer>
     </Futurable>
   )
@@ -404,10 +438,6 @@ const GuideRow = styled(Container)`
 
 const GuideTitleRow = styled(Container)`
   display: flex;
-  padding-top: 10vh;
-  @media(max-width: 1024px) {
-    padding-top: 5vh;
-  }
 `
 
 const GuideTitle = styled(Col)`
@@ -440,6 +470,12 @@ const Futurable = styled.div`
   position: relative;
 `
 
+const TitleContainer = styled(Container)`
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+}
+`
+
 const TimelineContainer = styled(Container)`
   @media(min-width: 1024px) {
     border-left: 2px solid grey;
@@ -448,6 +484,12 @@ const TimelineContainer = styled(Container)`
     @media(max-width: 1024px) {
       color: #fff;
       text-shadow: 2px 2px #000;
+      a {
+        color: ${(props) => props.theme.colors.secondary}
+      }
+      span {
+        font-weight: bold
+      }
     }
   }
   .badge {
@@ -473,6 +515,11 @@ const GilWireframeImg = styled.div`
     right: 0;
     bottom: -10vh;
   }
+`
+
+const MakingOfVideo = styled.iframe`
+  width: 100%;
+  min-height: 36vh;
 `
 
 export { FuturivelPage }
