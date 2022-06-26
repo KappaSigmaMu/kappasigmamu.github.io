@@ -88,7 +88,7 @@ const LandingPage = () => {
   }, [api])
 
   const handleGuideButtonClick = () => {
-    navigate('/journey')
+    navigate('/guide')
   }
 
   const handlePartnershipButtonClick = () => {
