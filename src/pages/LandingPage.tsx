@@ -141,6 +141,11 @@ const LandingPage = () => {
 }
 
 const ActionsContainer = styled.div`
+  @media(min-width: 1024px) {
+    .btn { 
+      margin-right: 1rem;
+    }
+  }
   @media(max-width: 1024px) {
     width: 100%;
     display: flex;
