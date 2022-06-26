@@ -135,7 +135,7 @@ function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
 
 const KusamaContext = React.createContext<StateType>(INIT_STATE)
 
-function KusamaContextProvider(props: { children: JSX.Element }) {
+function KusamaContextProvider(props: { children: JSX.Element | JSX.Element[] }) {
   const [state, dispatch] = useReducer(reducer, INIT_STATE)
 
   connect(state, dispatch)
@@ -144,8 +144,8 @@ function KusamaContextProvider(props: { children: JSX.Element }) {
   return <KusamaContext.Provider value={state}>{props.children}</KusamaContext.Provider>
 }
 
-const useKusama = () => ({ ...useContext(KusamaContext) })
+const useKusama = () => {
+  return { ...useContext(KusamaContext) }
+}
 
-const KusamaContextProviderMemo = React.memo(KusamaContextProvider)
-
-export { KusamaContextProviderMemo as KusamaContextProvider, useKusama, ApiState }
+export { KusamaContextProvider, useKusama, ApiState }
