@@ -1,7 +1,9 @@
 import { Col, Container } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { ExternalLink } from '../components/base'
+import { ExternalLink, PrimaryLgButton, SecondaryLgButton } from '../components/base'
 import GilWireframe from '../static/gil-wireframe.png'
+import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
 const SocietyGuideLink = styled(ExternalLink).attrs(() => ({
   href: 'https://docs.google.com/document/d/1trsjncEMSRT2u2eSh1IsQfB9o7tfh9s4moMbA2op6RA/edit',
@@ -66,6 +68,16 @@ const CyborgManifestoLink = styled(ExternalLink).attrs(() => ({
 `
 
 const FuturivelPage = () => {
+  const navigate = useNavigate()
+
+  const handleHomeButtonClick = () => {
+    navigate('/')
+  }
+
+  const handleGuideButtonClick = () => {
+    navigate('/guide')
+  }
+
   return (
     <Futurable>
       <TitleContainer>
@@ -434,9 +446,56 @@ const FuturivelPage = () => {
           </Col>
         </GuideRow>
       </TimelineContainer>
+      <Container>
+        <ActionsContainer>
+          <div className="d-lg-none">
+            <span >Join the</span>
+            <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
+          </div>
+          <PrimaryLgButton onClick={handleGuideButtonClick}>
+            Cyborg<br />Guide
+          </PrimaryLgButton>
+          <SecondaryLgButton onClick={handleHomeButtonClick}>
+            Return<br />Home
+          </SecondaryLgButton>
+        </ActionsContainer>
+      </Container>
     </Futurable>
   )
 }
+
+const ActionsContainer = styled.div`
+  position: relative;
+  z-index: 2;
+
+  @media(min-width: 1024px) {
+    .btn {
+      margin-right: 1rem;
+    }
+  }
+  @media(max-width: 1024px) {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem;
+    left: 0vh;
+    bottom: 2vh;
+    .btn {
+      font-size: 4.5vmin;
+    }
+  }
+`
+
+const KappaSigmaMu = styled.img`
+  margin: 50px 0;
+  display: block;
+  @media(max-width: 1024px) {
+    width: 80px;
+    height: 80x;
+    margin: 10px 0;
+  }
+`
 
 const GuideRow = styled(Container)`
   padding-left: 12px;

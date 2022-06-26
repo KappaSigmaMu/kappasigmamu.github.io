@@ -126,11 +126,11 @@ const LandingPage = () => {
           <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <ActionsContainer>
             <div className="d-lg-none">
-              <span >Join the</span>
+              <span>Join the</span>
               <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
             </div>
             <PrimaryLgButton onClick={handleGuideButtonClick}>
-              Cyborg <br /> Guide
+              Cyborg<br />Guide
             </PrimaryLgButton>
             <SecondaryLgButton onClick={handlePartnershipButtonClick}>
               Partnership<br />with Gilberto Gil
@@ -144,7 +144,7 @@ const LandingPage = () => {
 
 const ActionsContainer = styled.div`
   @media(min-width: 1024px) {
-    .btn { 
+    .btn {
       margin-right: 1rem;
     }
   }
