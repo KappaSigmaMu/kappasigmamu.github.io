@@ -168,7 +168,7 @@ const KappaSigmaMu = styled.img`
   display: block;
   @media(max-width: 1024px) {
     width: 80px;
-    height: 80x;
+    height: 80px;
     margin: 10px 0;
   }
 `

@@ -91,8 +91,12 @@ const FuturivelPage = () => {
             <GuideSubtitle className="h1 text-uppercase font-weight-bold">
               HAPPINESS IS MADE OF METAL
             </GuideSubtitle>
+          </Col>
+          <Col xs lg="6">
             <GuideSecondSubtitle className="mb-1">
-              A partnership between Gilberto Gil and Kappa Sigma Mu.
+              A partnership between Gilberto Gil and Kappa Sigma Mu: using bleeding-edge technologies to immortalize
+              the memory of one of the greatest singer-songwriters of all time
+              and an avid activist for open source technologies and free digital societies.
             </GuideSecondSubtitle>
             <div>
               <SocietyGuideLink>You can learn more about how everything started in this proposal.</SocietyGuideLink>
@@ -260,7 +264,8 @@ const FuturivelPage = () => {
               Gilberto Gil wrote <FuturableLink>Futurível</FuturableLink> anticipating the cultural and technological
               movements that would bring human beings and machines together. Futurível brings its lyrical content
               a concrete vision of the cyborg, with inorganic material body members, a superior intelligence,
-              an ability to move beyond physical limits
+              an ability to move beyond physical limits,
+              being transmuted into energy,
               and a future where <span color="white">&#34;happiness is made of metal&#34;</span>.
               <br /> <br />
               We understand this song as a small poetic predecessor
@@ -428,13 +433,20 @@ const FuturivelPage = () => {
               Finally, our history converges to this unexpected partnership between Gilberto Gil and a digital society
               inspired by the Cyborg Manifesto and Yayoi&apos;s Kusama early work.
               <br /> <br />
-              Through this project we celebrate Gilberto Gil&apos;s work
-              making him immortal and uncensorable on his 80th birthday.
+              This project uses volumetric image capture techniques to generate a 3D model of Gilberto Gil,
+              one of the greatest singer-songwriters of all time and an avid activist for open source technologies
+              and free digital societies.
+              <br /> <br />
+              Through this project we celebrate Gilberto Gil&apos;s work on his 80th birthday
+              creating an immortal and uncensorable symbolic memory on the Kusama blockchain.
               <br /> <br />
               His song Futurível goes full circle and becomes a self-fulfulling prophecy,
               Gilberto Gil is &#34;being transmuted into energy.&#34;
               <br /> <br />
+              We are Kappa Sigma Mu. We are cyborgs - the cyborg community.
               We are an alliance between humans and machine because happiness is made of metal.
+              <br /> <br />
+              <strong>Watch this conceptual video to have a better visual understanding of the project:</strong>
             </p>
           </Col>
         </GuideRow>
@@ -446,21 +458,26 @@ const FuturivelPage = () => {
           </Col>
         </GuideRow>
       </TimelineContainer>
-      <Container>
-        <ActionsContainer>
-          <div className="d-lg-none">
-            <span >Join the</span>
-            <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-          </div>
-          <PrimaryLgButton onClick={handleGuideButtonClick}>
-            Cyborg<br />Guide
-          </PrimaryLgButton>
-          <SecondaryLgButton onClick={handleHomeButtonClick}>
-            Return<br />Home
-          </SecondaryLgButton>
-        </ActionsContainer>
+      <Container className="pt-2">
+        <Col xs lg="6">
+          <GuideRow>
+            <div className="h1 text-center">Want to know more?</div>
+          </GuideRow>
+          <ActionsContainer>
+            <div className="">
+              <span>Join the</span>
+              <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
+            </div>
+            <PrimaryLgButton onClick={handleGuideButtonClick}>
+              Cyborg<br />Guide
+            </PrimaryLgButton>
+            <SecondaryLgButton onClick={handleHomeButtonClick}>
+              Return<br />Home
+            </SecondaryLgButton>
+          </ActionsContainer>
+        </Col>
       </Container>
-    </Futurable>
+    </Futurable >
   )
 }
 
@@ -473,27 +490,22 @@ const ActionsContainer = styled.div`
       margin-right: 1rem;
     }
   }
-  @media(max-width: 1024px) {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 0.5rem;
-    left: 0vh;
-    bottom: 2vh;
-    .btn {
-      font-size: 4.5vmin;
-    }
-  }
+
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 0 0.5rem;
+  left: 0vh;
+  bottom: 2vh;
 `
 
 const KappaSigmaMu = styled.img`
-  margin: 50px 0;
   display: block;
+  width: 6vw;
   @media(max-width: 1024px) {
     width: 80px;
-    height: 80x;
-    margin: 10px 0;
+    height: 80px;
   }
 `
 
@@ -543,7 +555,6 @@ const Futurable = styled.div`
 const TitleContainer = styled(Container)`
   padding-top: 5vh;
   padding-bottom: 5vh;
-}
 `
 
 const TimelineContainer = styled(Container)`
