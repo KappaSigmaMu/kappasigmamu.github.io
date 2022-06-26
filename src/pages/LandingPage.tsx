@@ -20,8 +20,6 @@ interface MembersData {
   [key: string]: MemberData
 }
 
-// type ExplorerVariant = "canary" | "gil"
-
 const LandingPage = () => {
   window.scrollTo(0, 0)
 
@@ -29,7 +27,6 @@ const LandingPage = () => {
   const { api, apiState } = useKusama()
   const [members, setMembers] = useState<Array<string>>([])
   const [show, setShow] = useState(false)
-  // const [explorerVariant, setExplorerVariant] = useState<ExplorerVariant>("canary")
 
   const [selectedMember, setSelectedMember] = useState<MemberData>({})
   const [allMembers, setAllMembers] = useState<MembersData>({})
@@ -89,7 +86,7 @@ const LandingPage = () => {
       )}
       <FullPageHeightRow noGutters>
         <div className="position-absolute h-100">
-          {members ?
+          {members &&
             <ThreeCanary
               objectUrl={`./static/canary.glb`}
               nodes={
@@ -100,7 +97,7 @@ const LandingPage = () => {
                 }))
               }
               onNodeClick={handleCanaryNodeClick}
-            /> : null}
+            />}
         </div>
         <CentralizedCol xs={0} lg={8} />
         <CentralizedCol xs={12} lg={4}>
