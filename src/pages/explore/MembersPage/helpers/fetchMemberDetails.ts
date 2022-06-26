@@ -16,19 +16,19 @@ export async function fetchMemberDetails(
   const identity = maybeIdentity.isSome 
     ? buildSocietyMemberIdentity(maybeIdentity.unwrap().info) 
     : undefined
-    
-  return {
-    accountId,
-    identity,
-    index: accountInfo.accountIndex?.toHuman()
-  }
+  
+  const rawIndex = accountInfo?.accountIndex
+  const index = rawIndex 
+    ? api.registry.createType('AccountIndex', rawIndex.toNumber()).toString() 
+    : undefined
+
+  return { accountId, identity, index }
 }
 
 function buildSocietyMemberIdentity(
   identityInfo: PalletIdentityIdentityInfo
 ): SocietyMemberIdentity {
   return {
-    // TODO: joined-at
     name: decode(identityInfo.display) ?? '(Unable to get name)',
     email: decode(identityInfo.email),
     legal: decode(identityInfo.legal),

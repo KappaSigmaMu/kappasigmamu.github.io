@@ -31,10 +31,13 @@ const ExternalLink = styled.a.attrs(() => ({
 const PrimaryButton = styled(Button).attrs(() => ({ variant: 'primary' }))``
 const PrimaryLgButton = styled(PrimaryButton).attrs(() => ({ size: 'lg' }))``
 
+const SecondaryLgButton = styled(Button).attrs(() => ({ variant: 'secondary', size: 'lg' }))``
+
 export {
   DataHeaderRow,
   DataRow,
   ExternalLink,
   PrimaryButton,
   PrimaryLgButton,
+  SecondaryLgButton
 }
