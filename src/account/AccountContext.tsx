@@ -62,6 +62,7 @@ const AccountContextProvider = ({ children }: any) => {
     if (keyringState === 'READY') fetchAccounts()
   }, [api?.query?.society, keyringState])
 
+  // TODO: this is duplicated in LandingPage
   useEffect(() => {
     const setLevelCheckingAccounts = (accounts: AccountId32[], level: string) => {
       setLevel('human')
@@ -98,6 +99,4 @@ const AccountContextProvider = ({ children }: any) => {
 
 const useAccount = () => ({ ...useContext(AccountContext) })
 
-const AccountContextProviderMemo = React.memo(AccountContextProvider)
-
-export { AccountContextProviderMemo as AccountContextProvider, useAccount }
+export { AccountContextProvider, useAccount }

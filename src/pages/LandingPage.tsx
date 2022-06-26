@@ -1,7 +1,6 @@
 import ThreeCanary from "@kappasigmamu/canary-component"
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
-import { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
@@ -11,6 +10,7 @@ import { MemberOffcanvas } from "../components/MemberOffcanvas"
 import { useKusama } from '../kusama'
 import { ApiState } from "../kusama/KusamaContext"
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
+import { LoadingSpinner } from "./explore/components/LoadingSpinner"
 
 interface MemberData {
   [key: string]: string
@@ -20,14 +20,13 @@ interface MembersData {
   [key: string]: MemberData
 }
 
-// type ExplorerVariant = "canary" | "gil"
-
 const LandingPage = () => {
+  window.scrollTo(0, 0)
+
   const navigate = useNavigate()
   const { api, apiState } = useKusama()
   const [members, setMembers] = useState<Array<string>>([])
   const [show, setShow] = useState(false)
-  // const [explorerVariant, setExplorerVariant] = useState<ExplorerVariant>("canary")
 
   const [selectedMember, setSelectedMember] = useState<MemberData>({})
   const [allMembers, setAllMembers] = useState<MembersData>({})
@@ -41,18 +40,7 @@ const LandingPage = () => {
     }
   }
 
-  const setLevelCheckingAccounts = (accounts: AccountId32[], targetAccount: string, level: string) => {
-    accounts.forEach((account: AccountId32) => {
-      if (account.toString() === targetAccount) {
-        const m = allMembers
-        m[targetAccount].level = level
-        setAllMembers(m)
-      }
-    })
-  }
-
   useEffect(() => {
-    console.log(api, apiState)
     if (api && apiState === ApiState.ready) {
       api.derive.society.members().then((members) => {
         members.forEach((member) => {
@@ -61,23 +49,10 @@ const LandingPage = () => {
           m[id] = {
             "hash": id,
             "name": "unknown",
-            "level": "human",
+            "level": "cyborg",
             "strikes": member.strikes.toString()
           }
           setAllMembers(m)
-
-          api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
-            setLevelCheckingAccounts(response.map(account => account.who), id, 'bidder')
-          })
-
-          api.query.society.candidates().then((response: Vec<PalletSocietyBid>) => {
-            setLevelCheckingAccounts(response.map(account => account.who), id, 'candidate')
-          })
-
-          api.query.society.members().then((response: Vec<AccountId32>) => {
-            setLevelCheckingAccounts(response, id, 'cyborg')
-          })
-
         })
       })
 
@@ -85,7 +60,6 @@ const LandingPage = () => {
         const ids = response.map((account) => account.toString())
         setMembers(ids)
       })
-
     }
   }, [api, apiState])
 
@@ -104,10 +78,15 @@ const LandingPage = () => {
         handleClose={handleClose}
         member={selectedMember}
       />
-
+      {apiState !== ApiState.ready && (
+        <LoadingContainer>
+          <p className="text-center">Connecting to Kusama network...</p>
+          <LoadingSpinner />
+        </LoadingContainer>
+      )}
       <FullPageHeightRow noGutters>
         <div className="position-absolute h-100">
-          {allMembers ?
+          {members &&
             <ThreeCanary
               objectUrl={`./static/canary.glb`}
               nodes={
@@ -118,7 +97,7 @@ const LandingPage = () => {
                 }))
               }
               onNodeClick={handleCanaryNodeClick}
-            /> : null}
+            />}
         </div>
         <CentralizedCol xs={0} lg={8} />
         <CentralizedCol xs={12} lg={4}>
@@ -184,6 +163,18 @@ const CentralizedCol = styled(Col)`
   margin-bottom: auto;
   margin-top: auto;
   z-index: 1;
+`
+
+const LoadingContainer = styled.div`
+  position: absolute;
+  z-index: 2;
+  width: 300px;
+  top: calc(50% - 70px);
+  left: calc(50% - 150px);
+  padding: 10px;
+  padding-bottom: 15px;
+  background-color: rgba(0, 0, 0, 0.75);
+  border-radius: 10px;
 `
 
 export { LandingPage }
