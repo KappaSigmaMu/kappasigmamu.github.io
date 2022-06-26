@@ -1,13 +1,13 @@
-import React, { Suspense, useLayoutEffect } from 'react'
+import { Suspense, useLayoutEffect } from 'react'
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
-import { AccountContextProvider } from '../account/AccountContext'
 import { Navbar } from '../components/Navbar'
 import { KusamaContextProvider } from '../kusama'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { CyborgGuidePage } from './CyborgGuidePage'
 import { ExplorePage } from './explore/ExplorePage'
+import { FuturivelPage } from './FuturivelPage'
 import { JourneyPage } from './JourneyPage'
 import { LandingPage } from './LandingPage'
 import { WelcomePage } from './WelcomePage'
@@ -22,10 +22,10 @@ const AppNavigation = () => {
 
   return (<>
     <Navbar
-      // When changing back to `true`, must also revert the 
+      // When changing back to `true`, must also revert the
       // way context is provided so NavBar can have access to it
       showAccount={false}
-      showExploreButton
+      showExploreButton={false}
       showBrandIcon
       showSocialIcons
     />
@@ -33,30 +33,17 @@ const AppNavigation = () => {
   </>)
 }
 
-const KusamaContextProviderMemo = React.memo(KusamaContextProvider)
-const AccountContextProviderMemo = React.memo(AccountContextProvider)
-
-function apiDependentRoute(path: string, element: JSX.Element) {
-  const contextWrappedElement = (
-    <KusamaContextProviderMemo>
-      <AccountContextProviderMemo>
-        {element}
-      </AccountContextProviderMemo>
-    </KusamaContextProviderMemo>
-  )
-  return <Route path={path} element={contextWrappedElement} />
-}
-
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<AppNavigation />}>
-          {apiDependentRoute("/", <LandingPage />)}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/welcome" element={<WelcomePage />} />
+          <Route path="/journey" element={<JourneyPage />} />
+          <Route path="/explore/*" element={<ExplorePage />} />
           <Route path="/guide" element={<CyborgGuidePage />} />
-          {apiDependentRoute("/welcome", <WelcomePage />)}
-          {apiDependentRoute("/journey", <JourneyPage />)}
-          {apiDependentRoute("/explore/*", <ExplorePage />)}
+          <Route path="/futurivel" element={<FuturivelPage />} />
           <Route path="*" element={<>NOT FOUND</>} />
         </Route>
       </Routes>
@@ -65,7 +52,7 @@ const AppRouter = () => {
 }
 
 const App = () => (
-  <>
+  <KusamaContextProvider>
     <GlobalStyle />
     <ThemeProvider theme={Theme}>
       <GlobalStyle />
@@ -73,7 +60,7 @@ const App = () => (
         <AppRouter />
       </Suspense>
     </ThemeProvider>
-  </>
+  </KusamaContextProvider>
 )
 
 export { App }

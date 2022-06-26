@@ -12,10 +12,19 @@ const RPC = { ...jsonrpc, ...config.RPC }
 const SOCKET = config.PROVIDER_SOCKET
 const TYPES = config.types
 
-const INIT_STATE = {
+enum ApiState {
+  initializing,
+  connecting,
+  connected,
+  disconnected,
+  error,
+  ready
+}
+
+const INIT_STATE: StateType = {
   api: null,
   apiError: null,
-  apiState: null,
+  apiState: ApiState.initializing,
   keyring: null,
   keyringState: null,
 }
@@ -23,7 +32,7 @@ const INIT_STATE = {
 type StateType = {
   api: ApiPromise | null
   apiError: string | null
-  apiState: string | null
+  apiState: ApiState
   keyring: any | null
   keyringState: string | null
 }
@@ -41,13 +50,13 @@ type ActionType =
 function reducer(state: StateType, action: ActionType): StateType {
   switch (action.type) {
     case 'CONNECTING':
-      return { ...state, apiState: 'CONNECTING' }
+      return { ...state, apiState: ApiState.connecting }
     case 'CONNECTED':
-      return { ...state, api: action.payload, apiState: 'CONNECTED' }
+      return { ...state, api: action.payload, apiState: ApiState.connected }
     case 'READY':
-      return { ...state, apiState: 'READY' }
+      return { ...state, apiState: ApiState.ready }
     case 'DISCONNECTED':
-      return { ...state, apiState: 'DISCONNECTED' }
+      return { ...state, apiState: ApiState.disconnected }
     case 'KEYRING_LOADING':
       return { ...state, keyringState: 'LOADING' }
     case 'KEYRING_READY':
@@ -55,14 +64,14 @@ function reducer(state: StateType, action: ActionType): StateType {
     case 'KEYRING_ERROR':
       return { ...state, keyringState: 'ERROR', keyring: null }
     case 'ERROR':
-      return { ...state, apiState: 'ERROR', apiError: action.payload }
+      return { ...state, apiState: ApiState.error, apiError: action.payload }
   }
 }
 
 function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
   const { apiState } = state
 
-  if (apiState && apiState !== 'DISCONNECTED') return
+  if (apiState !== ApiState.initializing && apiState !== ApiState.disconnected) return
 
   dispatch({ type: 'CONNECTING' })
 
@@ -117,7 +126,7 @@ function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
   }
 
   const { keyringState, apiState } = state
-  if (keyringState || apiState != 'READY') return
+  if (keyringState || apiState != ApiState.ready) return
   if (loadAccts) return dispatch({ type: 'KEYRING_READY', payload: _keyring })
 
   loadAccts = true
@@ -126,7 +135,7 @@ function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
 
 const KusamaContext = React.createContext<StateType>(INIT_STATE)
 
-function KusamaContextProvider(props: { children: JSX.Element }) {
+function KusamaContextProvider(props: { children: JSX.Element | JSX.Element[] }) {
   const [state, dispatch] = useReducer(reducer, INIT_STATE)
 
   connect(state, dispatch)
@@ -135,6 +144,8 @@ function KusamaContextProvider(props: { children: JSX.Element }) {
   return <KusamaContext.Provider value={state}>{props.children}</KusamaContext.Provider>
 }
 
-const useKusama = () => ({ ...useContext(KusamaContext) })
+const useKusama = () => {
+  return { ...useContext(KusamaContext) }
+}
 
-export { KusamaContextProvider, useKusama }
+export { KusamaContextProvider, useKusama, ApiState }

@@ -4,6 +4,7 @@ import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-
 import styled from 'styled-components'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { useKusama } from '../../../kusama'
+import { ApiState } from '../../../kusama/KusamaContext'
 import { bid, vouch } from './helper'
 
 type BidVouchProps = { handleResult: any, activeAccount: accountType }
@@ -19,7 +20,7 @@ const BidVouch = ({ handleResult, activeAccount }: BidVouchProps) => {
   const [vouchAddress, setVouchAddress] = useState<string>()
   const [loading, setLoading] = useState(false)
 
-  const apiReady = apiState === 'READY'
+  const apiReady = apiState === ApiState.ready
 
   const onStatusChange = ({ loading, message, success }: OnStatusChangeProps) => {
     setLoading(loading)
@@ -41,15 +42,15 @@ const BidVouch = ({ handleResult, activeAccount }: BidVouchProps) => {
   }, [vouchAddress, vouchTip, vouchValue])
 
   const handleBidSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const bidVal : BN = new BN((e.currentTarget[0] as HTMLInputElement).value)
+    const bidVal: BN = new BN((e.currentTarget[0] as HTMLInputElement).value)
     setbidAmount(bidVal.mul(ksmMultiplier))
     e.preventDefault()
   }
 
   const handleVouchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const address = (e.currentTarget[0] as HTMLInputElement).value
-    const value : BN = new BN((e.currentTarget[1] as HTMLInputElement).value)
-    const tip : BN = new BN((e.currentTarget[2] as HTMLInputElement).value)
+    const value: BN = new BN((e.currentTarget[1] as HTMLInputElement).value)
+    const tip: BN = new BN((e.currentTarget[2] as HTMLInputElement).value)
     setVouchAddress(address)
     setVouchValue(value.mul(ksmMultiplier))
     setVouchTip(tip.mul(ksmMultiplier))

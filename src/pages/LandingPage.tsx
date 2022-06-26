@@ -1,15 +1,16 @@
 import ThreeCanary from "@kappasigmamu/canary-component"
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
-import { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { PrimaryLgButton } from '../components/base'
+import { PrimaryLgButton, SecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from "../components/MemberOffcanvas"
 import { useKusama } from '../kusama'
+import { ApiState } from "../kusama/KusamaContext"
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
+import { LoadingSpinner } from "./explore/components/LoadingSpinner"
 
 interface MemberData {
   [key: string]: string
@@ -20,9 +21,11 @@ interface MembersData {
 }
 
 const LandingPage = () => {
+  window.scrollTo(0, 0)
+
   const navigate = useNavigate()
-  const { api } = useKusama()
-  const [members, setMembers] = useState<Array<string>>([""])
+  const { api, apiState } = useKusama()
+  const [members, setMembers] = useState<Array<string>>([])
   const [show, setShow] = useState(false)
 
   const [selectedMember, setSelectedMember] = useState<MemberData>({})
@@ -37,18 +40,8 @@ const LandingPage = () => {
     }
   }
 
-  const setLevelCheckingAccounts = (accounts: AccountId32[], targetAccount: string, level: string) => {
-    accounts.forEach((account: AccountId32) => {
-      if (account.toString() === targetAccount) {
-        const m = allMembers
-        m[targetAccount].level = level
-        setAllMembers(m)
-      }
-    })
-  }
-
   useEffect(() => {
-    if (api) {
+    if (api && apiState === ApiState.ready) {
       api.derive.society.members().then((members) => {
         members.forEach((member) => {
           const id = member.accountId.toString()
@@ -56,23 +49,10 @@ const LandingPage = () => {
           m[id] = {
             "hash": id,
             "name": "unknown",
-            "level": "human",
+            "level": "cyborg",
             "strikes": member.strikes.toString()
           }
           setAllMembers(m)
-
-          api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
-            setLevelCheckingAccounts(response.map(account => account.who), id, 'bidder')
-          })
-
-          api.query.society.candidates().then((response: Vec<PalletSocietyBid>) => {
-            setLevelCheckingAccounts(response.map(account => account.who), id, 'candidate')
-          })
-
-          api.query.society.members().then((response: Vec<AccountId32>) => {
-            setLevelCheckingAccounts(response, id, 'cyborg')
-          })
-
         })
       })
 
@@ -80,12 +60,15 @@ const LandingPage = () => {
         const ids = response.map((account) => account.toString())
         setMembers(ids)
       })
-
     }
-  }, [api])
+  }, [api, apiState])
 
-  const handlePrimaryButtonClick = () => {
-    navigate('/journey')
+  const handleGuideButtonClick = () => {
+    navigate('/guide')
+  }
+
+  const handlePartnershipButtonClick = () => {
+    navigate('/futurivel')
   }
 
   return (
@@ -95,10 +78,15 @@ const LandingPage = () => {
         handleClose={handleClose}
         member={selectedMember}
       />
-
+      {apiState !== ApiState.ready && (
+        <LoadingContainer>
+          <p className="text-center">Connecting to Kusama network...</p>
+          <LoadingSpinner />
+        </LoadingContainer>
+      )}
       <FullPageHeightRow noGutters>
         <div className="position-absolute h-100">
-          {allMembers ?
+          {members &&
             <ThreeCanary
               objectUrl={`./static/canary.glb`}
               nodes={
@@ -109,26 +97,59 @@ const LandingPage = () => {
                 }))
               }
               onNodeClick={handleCanaryNodeClick}
-            /> : null}
+            />}
         </div>
-        <CentralizedCol xs={8} />
-        <CentralizedCol xs={4}>
-          <h1>Join the</h1>
-          <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-          <p>
-            <PrimaryLgButton onClick={handlePrimaryButtonClick}>
-              Cyborg Guide
+        <CentralizedCol xs={0} lg={8} />
+        <CentralizedCol xs={12} lg={4}>
+          <h1 className="d-none d-lg-block">Join the</h1>
+          <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
+          <ActionsContainer>
+            <div className="d-lg-none">
+              <span>Join the</span>
+              <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
+            </div>
+            <PrimaryLgButton onClick={handleGuideButtonClick}>
+              Cyborg<br />Guide
             </PrimaryLgButton>
-          </p>
+            <SecondaryLgButton onClick={handlePartnershipButtonClick}>
+              Partnership<br />with Gilberto Gil
+            </SecondaryLgButton>
+          </ActionsContainer>
         </CentralizedCol>
       </FullPageHeightRow>
     </>
   )
 }
 
+const ActionsContainer = styled.div`
+  @media(min-width: 1024px) {
+    .btn {
+      margin-right: 1rem;
+    }
+  }
+  @media(max-width: 1024px) {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem;
+    position: absolute;
+    left: 0vh;
+    bottom: 2vh;
+    .btn {
+      font-size: 4.5vmin;
+    }
+  }
+`
+
 const KappaSigmaMu = styled.img`
   margin: 50px 0;
   display: block;
+  @media(max-width: 1024px) {
+    width: 80px;
+    height: 80px;
+    margin: 10px 0;
+  }
 `
 
 const FullPageHeightRow = styled(Row)`
@@ -142,6 +163,18 @@ const CentralizedCol = styled(Col)`
   margin-bottom: auto;
   margin-top: auto;
   z-index: 1;
+`
+
+const LoadingContainer = styled.div`
+  position: absolute;
+  z-index: 2;
+  width: 300px;
+  top: calc(50% - 70px);
+  left: calc(50% - 150px);
+  padding: 10px;
+  padding-bottom: 15px;
+  background-color: rgba(0, 0, 0, 0.75);
+  border-radius: 10px;
 `
 
 export { LandingPage }
