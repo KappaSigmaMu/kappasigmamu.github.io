@@ -1,20 +1,22 @@
 {
   "files": {
     "main.css": "/static/css/main.55b97eab.chunk.css",
-    "main.js": "/static/js/main.38006750.chunk.js",
-    "main.js.map": "/static/js/main.38006750.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.6e668805.js",
-    "runtime-main.js.map": "/static/js/runtime-main.6e668805.js.map",
-    "static/js/2.e68d4686.chunk.js": "/static/js/2.e68d4686.chunk.js",
-    "static/js/2.e68d4686.chunk.js.map": "/static/js/2.e68d4686.chunk.js.map",
-    "static/js/3.c1c2cee0.chunk.js": "/static/js/3.c1c2cee0.chunk.js",
-    "static/js/3.c1c2cee0.chunk.js.map": "/static/js/3.c1c2cee0.chunk.js.map",
+    "main.js": "/static/js/main.76f5ecd9.chunk.js",
+    "main.js.map": "/static/js/main.76f5ecd9.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.7d042da9.js",
+    "runtime-main.js.map": "/static/js/runtime-main.7d042da9.js.map",
+    "static/js/2.c8449e41.chunk.js": "/static/js/2.c8449e41.chunk.js",
+    "static/js/2.c8449e41.chunk.js.map": "/static/js/2.c8449e41.chunk.js.map",
+    "static/js/3.6aae1694.chunk.js": "/static/js/3.6aae1694.chunk.js",
+    "static/js/3.6aae1694.chunk.js.map": "/static/js/3.6aae1694.chunk.js.map",
     "index.html": "/index.html",
     "static/css/main.55b97eab.chunk.css.map": "/static/css/main.55b97eab.chunk.css.map",
-    "static/js/2.e68d4686.chunk.js.LICENSE.txt": "/static/js/2.e68d4686.chunk.js.LICENSE.txt",
+    "static/js/2.c8449e41.chunk.js.LICENSE.txt": "/static/js/2.c8449e41.chunk.js.LICENSE.txt",
     "static/media/canary-level-1.d3390cc2.svg": "/static/media/canary-level-1.d3390cc2.svg",
+    "static/media/copy-icon.36929213.svg": "/static/media/copy-icon.36929213.svg",
     "static/media/discord-logo.023684f9.svg": "/static/media/discord-logo.023684f9.svg",
     "static/media/element-logo.9a5a405c.svg": "/static/media/element-logo.9a5a405c.svg",
+    "static/media/gil-wireframe.ee982c58.png": "/static/media/gil-wireframe.ee982c58.png",
     "static/media/grid-canary-red.45dcb14f.png": "/static/media/grid-canary-red.45dcb14f.png",
     "static/media/kappa-sigma-mu-logo.192858ee.svg": "/static/media/kappa-sigma-mu-logo.192858ee.svg",
     "static/media/kappa-sigma-mu-title.ca479de5.svg": "/static/media/kappa-sigma-mu-title.ca479de5.svg",
@@ -23,9 +25,9 @@
     "static/media/twitter-logo.7a9247c3.svg": "/static/media/twitter-logo.7a9247c3.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.6e668805.js",
-    "static/js/2.e68d4686.chunk.js",
+    "static/js/runtime-main.7d042da9.js",
+    "static/js/2.c8449e41.chunk.js",
     "static/css/main.55b97eab.chunk.css",
-    "static/js/main.38006750.chunk.js"
+    "static/js/main.76f5ecd9.chunk.js"
   ]
 }
