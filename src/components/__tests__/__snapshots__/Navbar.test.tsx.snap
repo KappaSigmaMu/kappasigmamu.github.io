@@ -137,7 +137,7 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
         className="me-2"
       >
         <a
-          className="sc-jSgvzq"
+          className="sc-jSMfEi"
           href="https://discord.gg/9AWjTf8wSk"
           rel="noreferrer"
           target="_blank"
@@ -149,7 +149,7 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
         </a>
          
         <a
-          className="sc-jSgvzq"
+          className="sc-jSMfEi"
           href="https://matrix.to/#/!BUmiAAnAYSRGarqwOt:matrix.parity.io?via=matrix.parity.io"
           rel="noreferrer"
           target="_blank"
@@ -161,7 +161,7 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
         </a>
          
         <a
-          className="sc-jSgvzq"
+          className="sc-jSMfEi"
           href="https://twitter.com/kusamanetwork"
           rel="noreferrer"
           target="_blank"
