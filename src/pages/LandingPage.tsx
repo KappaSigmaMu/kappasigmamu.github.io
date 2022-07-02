@@ -23,6 +23,62 @@ interface MembersData {
 const LandingPage = () => {
   window.scrollTo(0, 0)
 
+  const defaultCanaryConfig = {
+    "canary": {
+      "nodeCoords": "canary.geometry.attributes.position",
+      "nodeSigns": [1, 1, -1],
+      "nodeScale": 0.1,
+      "nodeGroupScale": 0.4,
+      "meshColorIndex": 0,
+      "meshScale": 4,
+      "model": {
+        "material": "Default OBJ",
+        "scale": 0.1,
+        "metalness": 1.2,
+        "roughness": 1,
+        "opacity": 0.8,
+        "color": 0
+      },
+      "gridPosition": [0, -0.135, 0],
+      "cameraPosition": [2.3, 1, 1],
+      "pointColorIndex": {
+        "primary": 3,
+        "secondary": 1
+      },
+      "pointLight": {
+        "position": [0, 0, 0],
+        "intensity": [2, 2, 2],
+        "distance": 15
+      }
+    },
+    "gil": {
+      "nodeCoords": "Baked_GIL_BUSTO003_1.geometry.attributes.position",
+      "nodeSigns": [-1, 1, -1],
+      "nodeScale": 1.5,
+      "nodeGroupScale": 0.1,
+      "meshColorIndex": 3,
+      "model": {
+        "material": "MatWireframe",
+        "scale": 0.2,
+        "metalness": 0.1,
+        "roughness": 0.1,
+        "opacity": 0.1,
+        "color": 3
+      },
+      "gridPosition": [0, -0, 4, 0],
+      "cameraPosition": [-1, 2.5, 4],
+      "pointColorIndex": {
+        "primary": 2,
+        "secondary": 0
+      },
+      "pointLight": {
+        "position": [0, 5, 0],
+        "intensity": [2, 15, 15],
+        "distance": 15
+      },
+    },
+  }
+
   const navigate = useNavigate()
   const { api, apiState } = useKusama()
   const [members, setMembers] = useState<Array<string>>([])
@@ -97,6 +153,7 @@ const LandingPage = () => {
                 }))
               }
               onNodeClick={handleCanaryNodeClick}
+              config={defaultCanaryConfig["canary"]}
             />}
         </div>
         <CentralizedCol xs={0} lg={8} />
