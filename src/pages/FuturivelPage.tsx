@@ -387,7 +387,7 @@ const FuturivelPage = () => {
         <GuideRow className="pb-5">
           <Col xs lg={6}>
             <p className="mb-1">
-              @TODO: Kusama Network, its relation to radical innovation and art, and censorship resistance
+              The Kusama Network, the canary network, the wild sister of Polkadot, is launched.
             </p>
           </Col>
         </GuideRow>
@@ -408,8 +408,35 @@ const FuturivelPage = () => {
         <GuideRow className="pb-5">
           <Col xs lg={6}>
             <p className="mb-1">
-              @TODO: Kusama Society, Proof-of-Ink, the Alliance between humans and machine,
-              Yayoi Kusama inspiration, self-obliteration
+              Some months later, the capalities of the Kusama Network
+              were put to test with the launch of the Kusama Society, also known
+              as Kappa Sigma Mu, which was founded by an anonymous member.
+              <br /> <br />
+              In technical terms, Kappa Sigma Mu is a collective created using the society pallet on Substrate,
+              which in principle, is defined as an economic game incentivizing users to participate and maintain
+              membership through rewards paid by the collective treasury.
+              But in actuality, the Society is more than just that:
+              It aims to make the Kusama network and its functionalities known to non-technical users,
+              raise awareness of new forms of organization
+              and identify the link between the onchain and offchain worlds.
+              <br /> <br />
+              THIS IS AN ALLIANCE BETWEEN HUMANS AND MACHINES.
+              <br />
+              We are a product of science and technology, we cannot distance ourselves from it.
+              We can forge an alliance to embrace what technology can do for us and what we can do for others.
+              <br /> <br />
+              WE ARE PART HUMAN AND MACHINE.
+              <br />
+              We are part of hybrid networks living and reproducing in our bodies.
+              The dichotomy of natural/artificial is no longer relevant in our times.
+              We are here to understand how hybrid networks can help human development. We are cyborgs.
+              <br /> <br />
+              The Kusama Human Blockchain Project aims to forge an eternal alliance between human and machine,
+              and to make this alliance tangible through the Kusama network.
+              By joining the collective, we live in the machine and the machine lives in us.
+              This is a social movement triggered by the immutable hash-chain as a concept,
+              with the goal of erasing the division between human and machine.
+              By erasing the division between both worlds, self-obliteration is achieved.
             </p>
           </Col>
         </GuideRow>
@@ -440,10 +467,10 @@ const FuturivelPage = () => {
               Through this project we celebrate Gilberto Gil&apos;s work on his 80th birthday
               creating an immortal and uncensorable symbolic memory on the Kusama blockchain.
               <br /> <br />
-              His song Futurível goes full circle and becomes a self-fulfulling prophecy,
-              Gilberto Gil is &#34;being transmuted into energy.&#34;
+              His song Futurível comes full circle and becomes a self-fulfilling prophecy,
+              Gilberto Gil is &#34;transmuted into energy&#34;, achieving self-obliteration.
               <br /> <br />
-              We are Kappa Sigma Mu. We are cyborgs - the cyborg community.
+              We are Kappa Sigma Mu. We are cyborgs, a cyborg community.
               We are an alliance between humans and machine because happiness is made of metal.
               <br /> <br />
               <strong>Watch this conceptual video to have a better visual understanding of the project:</strong>
