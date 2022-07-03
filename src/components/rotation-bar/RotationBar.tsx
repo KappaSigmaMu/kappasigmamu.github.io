@@ -1,4 +1,3 @@
-import { ReactElement } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../../account/AccountContext'
@@ -58,7 +57,7 @@ const CyborgCurrentRound = (
 )
 
 interface LevelsType {
-  [key: string]: ReactElement
+  [key: string]: JSX.Element
 }
 
 const LEVELS: LevelsType = {

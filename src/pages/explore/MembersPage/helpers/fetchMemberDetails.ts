@@ -1,6 +1,7 @@
 import { ApiPromise } from "@polkadot/api"
 import { Data } from "@polkadot/types"
 import { AccountId } from "@polkadot/types/interfaces"
+import "@polkadot/api-augment/substrate"
 import { PalletIdentityIdentityInfo } from "@polkadot/types/lookup"
 import { u8aToBuffer } from "@polkadot/util"
 

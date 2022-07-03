@@ -80,7 +80,6 @@ function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
 
   api.on('connected', () => {
     dispatch({ type: 'CONNECTED', payload: api })
-    api.isReady.then(() => dispatch({ type: 'READY' }))
   })
   api.on('disconnected', () => dispatch({ type: 'DISCONNECTED' }))
   api.on('error', (err) => dispatch({ type: 'ERROR', payload: err }))
