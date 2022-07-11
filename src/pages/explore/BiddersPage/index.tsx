@@ -32,7 +32,7 @@ const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
     })
   }, [society])
 
-  const handleResult = useCallback(result => {
+  const handleResult = useCallback((result: BidResult) => {
     setResult(result)
     setShowAlert(true)
   }, [])

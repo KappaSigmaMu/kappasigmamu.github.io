@@ -133,9 +133,7 @@ exports[`NavBar renders it with showSocialIcons 1`] = `
       onKeyDown={[Function]}
     >
        
-      <div
-        className="me-2"
-      >
+      <div>
         <a
           className="sc-jSMfEi"
           href="https://discord.gg/9AWjTf8wSk"

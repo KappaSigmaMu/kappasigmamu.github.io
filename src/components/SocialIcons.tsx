@@ -4,7 +4,7 @@ import TwitterLogo from '../static/twitter-logo.svg'
 import { ExternalLink } from './base'
 
 const SocialIcons = () => (
-  <div className='me-2'>
+  <div>
     <ExternalLink href="https://discord.gg/9AWjTf8wSk">
       <img src={DiscordLogo} alt="Discord Logo" />
     </ExternalLink>
