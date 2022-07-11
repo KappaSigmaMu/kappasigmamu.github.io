@@ -1,5 +1,5 @@
-import renderer from 'react-test-renderer'
 import { MemoryRouter } from 'react-router-dom'
+import renderer from 'react-test-renderer'
 import { ThemeProvider } from 'styled-components'
 import { Theme } from '../../../../styles/Theme'
 import { NavigationBar } from '../NavigationBar'

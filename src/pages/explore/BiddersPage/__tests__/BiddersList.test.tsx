@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import TestRenderer from 'react-test-renderer'
 import { ThemeProvider } from 'styled-components'
 import { PalletSocietyBidFixture } from '../../../../__tests__/fixtures/PalletSocietyBidFixture'
