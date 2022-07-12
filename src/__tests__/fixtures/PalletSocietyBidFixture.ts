@@ -1,4 +1,6 @@
-import type { u128} from '@polkadot/types'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import type { u128 } from '@polkadot/types'
 import rpcMetadata from '@polkadot/types-support/metadata/static-substrate'
 import { TypeRegistry } from '@polkadot/types/create/registry'
 import type { AccountId32 } from '@polkadot/types/interfaces/runtime'
