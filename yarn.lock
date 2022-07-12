@@ -1480,10 +1480,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@kappasigmamu/canary-component@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@kappasigmamu/canary-component/-/canary-component-0.4.1.tgz#c0bde4954d43a105a8704af58795147edaca8045"
-  integrity sha512-S13qb0iWLscY7ze+cat5JGM4jqJjG1Q1GAGVCDb9q06v7zq5ESOymOXDMNuDhznI0867KKToUlBBb0j3zuSzkA==
+"@kappasigmamu/canary-component@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@kappasigmamu/canary-component/-/canary-component-0.4.5.tgz#737bf8e666ea8a60c9ee3b6ce97544b080a57402"
+  integrity sha512-CB5nchroHiuZ2Tr0ZSoNyAfx23rONanI1FxGxuc61IkRLo/IsZu9dhkRnwERSVRmMQi2FkY5hvfWOESowTcERg==
   dependencies:
     "@babel/polyfill" "^7.12.1"
     "@react-three/drei" "^8.11.1"
