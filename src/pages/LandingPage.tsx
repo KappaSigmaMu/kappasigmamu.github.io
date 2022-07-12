@@ -12,14 +12,15 @@ import { ApiState } from "../kusama/KusamaContext"
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 import { LoadingSpinner } from "./explore/components/LoadingSpinner"
 
-const customConfig = defaultCanaryConfig
-customConfig.gil.bloom = {
-  "kernelSize": 1,
-  "luminanceThreshold": 0.1,
-  "luminanceSmoothing": 0.05,
-  "intensity": 0.1
+const customGilConfig = {
+  ...defaultCanaryConfig.gil,
+  bloom: {
+    kernelSize: 1,
+    luminanceThreshold: 0.1,
+    luminanceSmoothing: 0.05,
+    intensity: 0.1
+  }
 }
-
 interface MemberData {
   [key: string]: string
 }
@@ -105,7 +106,7 @@ const LandingPage = () => {
                 }))
               }
               onNodeClick={handleCanaryNodeClick}
-              config={defaultCanaryConfig["gil"]}
+              config={customGilConfig}
             />}
         </div>
         <CentralizedCol xs={0} lg={8} />
