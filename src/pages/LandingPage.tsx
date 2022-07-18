@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { PrimaryLgButton, SecondaryLgButton } from '../components/base'
+import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from "../components/MemberOffcanvas"
 import { useKusama } from '../kusama'
 import { ApiState } from "../kusama/KusamaContext"
@@ -118,12 +118,12 @@ const LandingPage = () => {
               <span>Join the</span>
               <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
             </div>
-            <PrimaryLgButton onClick={handleGuideButtonClick}>
+            <OutlinedPrimaryLgButton onClick={handleGuideButtonClick}>
               Cyborg<br />Guide
-            </PrimaryLgButton>
-            <SecondaryLgButton onClick={handlePartnershipButtonClick}>
+            </OutlinedPrimaryLgButton>
+            <OutlinedSecondaryLgButton onClick={handlePartnershipButtonClick}>
               Partnership<br />with Gilberto Gil
-            </SecondaryLgButton>
+            </OutlinedSecondaryLgButton>
           </ActionsContainer>
         </CentralizedCol>
       </FullPageHeightRow>

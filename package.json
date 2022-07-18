@@ -122,8 +122,8 @@
     "cy:open": "cypress open",
     "eslint": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\"",
     "eslint:fix": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\" --fix",
-    "linter": "yarn eslint",
-    "linter:fix": "yarn eslint:fix",
+    "lint": "yarn eslint",
+    "lint:fix": "yarn eslint:fix",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {

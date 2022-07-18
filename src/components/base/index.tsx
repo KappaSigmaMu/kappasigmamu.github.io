@@ -30,8 +30,10 @@ const ExternalLink = styled.a.attrs(() => ({
 
 const PrimaryButton = styled(Button).attrs(() => ({ variant: 'primary' }))``
 const PrimaryLgButton = styled(PrimaryButton).attrs(() => ({ size: 'lg' }))``
+const OutlinedPrimaryLgButton = styled(Button).attrs(() => ({ variant: 'outline-primary', size: 'lg' }))``
 
 const SecondaryLgButton = styled(Button).attrs(() => ({ variant: 'secondary', size: 'lg' }))``
+const OutlinedSecondaryLgButton = styled(Button).attrs(() => ({ variant: 'outline-secondary', size: 'lg' }))``
 
 export {
   DataHeaderRow,
@@ -39,5 +41,7 @@ export {
   ExternalLink,
   PrimaryButton,
   PrimaryLgButton,
-  SecondaryLgButton
+  OutlinedPrimaryLgButton,
+  SecondaryLgButton,
+  OutlinedSecondaryLgButton
 }

@@ -1,7 +1,7 @@
 import { Col, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { ExternalLink, PrimaryLgButton, SecondaryLgButton } from '../components/base'
+import { ExternalLink, OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
 import GilWireframe from '../static/gil-wireframe.png'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
@@ -150,7 +150,7 @@ const FuturivelPage = () => {
               Federal University of Bahia in 1963.
               The two began collaborating and performing together, releasing a single and EP.
               <br /><br />
-              Along with Maria Bethânia (Veloso&apos;s sister), Gal Costa, and Tom Zé, Gil and Veloso
+              Along with Gal Costa, and Tom Zé, Gil and Veloso
               formed a collective on the landmark 1968 album
               <TropicaliaLink> Tropicália: ou Panis et Circenses</TropicaliaLink>,
               whose style was influenced by The Beatles&apos; Sgt. Pepper&apos;s Lonely Hearts Club Band,
@@ -495,12 +495,12 @@ const FuturivelPage = () => {
               <span>Join the</span>
               <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
             </div>
-            <PrimaryLgButton onClick={handleGuideButtonClick}>
+            <OutlinedPrimaryLgButton onClick={handleGuideButtonClick}>
               Cyborg<br />Guide
-            </PrimaryLgButton>
-            <SecondaryLgButton onClick={handleHomeButtonClick}>
+            </OutlinedPrimaryLgButton>
+            <OutlinedSecondaryLgButton onClick={handleHomeButtonClick}>
               Return<br />Home
-            </SecondaryLgButton>
+            </OutlinedSecondaryLgButton>
           </ActionsContainer>
         </Col>
       </Container>
