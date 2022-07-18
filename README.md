@@ -53,10 +53,10 @@ yarn start
 ## Linter
 
 ```
-yarn eslint
+yarn lint
 ```
 
-You can automatically fix some issues with `yarn eslint:fix`
+You can automatically fix some issues with `yarn lint:fix`
 
 
 ## Tests
