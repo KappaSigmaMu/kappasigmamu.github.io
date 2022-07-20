@@ -21,6 +21,7 @@ const customGilConfig = {
     intensity: 0.1
   }
 }
+
 interface MemberData {
   [key: string]: string
 }
