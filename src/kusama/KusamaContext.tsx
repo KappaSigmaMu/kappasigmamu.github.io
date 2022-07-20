@@ -10,7 +10,6 @@ import { config } from './config'
 
 const RPC = { ...jsonrpc, ...config.RPC }
 const SOCKET = config.PROVIDER_SOCKET
-const TYPES = config.types
 
 enum ApiState {
   initializing,
@@ -76,7 +75,7 @@ function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
   dispatch({ type: 'CONNECTING' })
 
   const provider = new WsProvider(SOCKET)
-  const api = new ApiPromise({ provider, types: TYPES, rpc: RPC })
+  const api = new ApiPromise({ provider, rpc: RPC })
 
   api.on('connected', () => {
     dispatch({ type: 'CONNECTED', payload: api })

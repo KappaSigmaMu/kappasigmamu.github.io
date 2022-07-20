@@ -23,8 +23,8 @@ const AppNavigation = () => {
 
   return (<>
     <Navbar
-      showAccount={config.env === 'development'}
-      showExploreButton={config.env === 'development'}
+      showAccount={config.env.isDev}
+      showExploreButton={config.env.isDev}
       showBrandIcon
       showSocialIcons
     />
