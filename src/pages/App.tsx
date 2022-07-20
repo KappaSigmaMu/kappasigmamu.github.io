@@ -3,6 +3,7 @@ import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-
 import { ThemeProvider } from 'styled-components'
 import { Navbar } from '../components/Navbar'
 import { KusamaContextProvider } from '../kusama'
+import { config } from '../kusama/config'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { CyborgGuidePage } from './CyborgGuidePage'
@@ -22,10 +23,8 @@ const AppNavigation = () => {
 
   return (<>
     <Navbar
-      // When changing back to `true`, must also revert the
-      // way context is provided so NavBar can have access to it
-      showAccount={false}
-      showExploreButton={false}
+      showAccount={config.env === 'development'}
+      showExploreButton={config.env === 'development'}
       showBrandIcon
       showSocialIcons
     />
