@@ -7,24 +7,24 @@ import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { MemberIdentity } from '../../../../components/MemberIdentity'
 
 const StyledDataRow = styled(DataRow)`
-  background-color: ${(props) => props.isDefender ? '#73003d' : ''};
-  border: ${(props) => props.isDefender ? '2px solid #E6007A' : ''};
+  background-color: ${(props) => props.$isDefender ? '#73003d' : ''};
+  border: ${(props) => props.$isDefender ? '2px solid #E6007A' : ''};
   &:hover {
     cursor: pointer;
   }
 `
 
-type MembersListProps = { 
+type MembersListProps = {
   api: ApiPromise,
   members: SocietyMember[],
   onClickMember: (member: SocietyMember) => any
 }
 
 const MembersList = ({ members, api, onClickMember }: MembersListProps): JSX.Element => {
-  // Likely impossible to happen but if it does, better to show a 
+  // Likely impossible to happen but if it does, better to show a
   // clear message than an empty list which may look like a loading state
   if (members.length === 0) return <>No members</>
-  
+
   return (<>
     <DataHeaderRow>
       <Col xs={1} className="text-center">#</Col>
@@ -33,9 +33,9 @@ const MembersList = ({ members, api, onClickMember }: MembersListProps): JSX.Ele
       <Col xs={5} className="text-end"></Col>
     </DataHeaderRow>
     {members.map((member: SocietyMember) => (
-      <StyledDataRow 
-        key={member.accountId.toString()} 
-        isDefender={member.isDefender} 
+      <StyledDataRow
+        key={member.accountId.toString()}
+        $isDefender={member.isDefender}
         onClick={() => onClickMember(member)}>
         <Col xs={1} className="text-center">
           <Identicon value={member.accountId} size={32} theme={'polkadot'} />
