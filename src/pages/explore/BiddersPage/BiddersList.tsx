@@ -1,3 +1,4 @@
+import { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
 import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
@@ -8,22 +9,23 @@ import { DataHeaderRow, DataRow } from '../../../components/base'
 import { FormatBalance } from '../../../components/FormatBalance'
 import { humanizeBidKind } from '../../../helpers/humanize'
 import { truncateMiddle } from '../../../helpers/truncate'
-import { useKusama } from '../../../kusama'
-import { ApiState } from '../../../kusama/KusamaContext'
 import { unbid, unvouch } from './helper'
 
-type Props = { bids: Vec<PalletSocietyBid>, activeAccount: accountType; handleResult: any }
+type Props = {
+  api: ApiPromise,
+  bids: Vec<PalletSocietyBid>,
+  activeAccount: accountType,
+  handleResult: any
+}
+
 type OnStatusChangeProps = { loading: boolean, message: string, success: boolean }
 
 // TODO: move this to a `components` directory to follow the convention of other pages
-const BiddersList = ({ bids, activeAccount, handleResult }: Props): JSX.Element => {
-  const { api, apiState } = useKusama()
+const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Element => {
   const [loading, setLoading] = useState(false)
 
   const isBidder = (bid: PalletSocietyBid) => activeAccount?.address === bid.who.toString()
   const isVoucher = (bid: PalletSocietyBid) => activeAccount?.address === bid.kind.asVouch?.[0].toString()
-
-  const apiReady = apiState === ApiState.ready
 
   const onStatusChange = ({ loading, message, success }: OnStatusChangeProps) => {
     setLoading(loading)
@@ -31,13 +33,13 @@ const BiddersList = ({ bids, activeAccount, handleResult }: Props): JSX.Element 
   }
 
   const handleUnbid = (index: any) => {
-    const tx = api?.tx?.society?.unbid(index)
-    apiReady && unbid(tx, activeAccount, onStatusChange)
+    const tx = api.tx.society.unbid(index)
+    unbid(tx, activeAccount, onStatusChange)
   }
 
   const handleUnvouch = (index: any) => {
-    const tx = api?.tx?.society?.unvouch(index)
-    apiReady && unvouch(tx, activeAccount, onStatusChange)
+    const tx = api.tx.society.unvouch(index)
+    unvouch(tx, activeAccount, onStatusChange)
   }
 
   const ownerActions = (bid: PalletSocietyBid) => {
