@@ -7,6 +7,7 @@ import { FormatBalance } from '../../../../components/FormatBalance'
 import { truncate, truncateMiddle } from '../../../../helpers/truncate'
 import { StyledAlert } from '../../components/StyledAlert'
 import { ApproveButton } from './ApproveButton'
+import { RejectButton } from './RejectButton'
 
 type CandidatesListProps = {
   api: ApiPromise,
@@ -59,7 +60,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
         <Col xs={1}>
           {candidate.kind.isDeposit ? 'Deposit' : 'Vouch'}
         </Col>
-        <Col xs={4} className="text-start">
+        <Col xs={2} className="text-start">
           {candidate.kind.isDeposit
             ? <FormatBalance balance={candidate.value} />
             : (<>
@@ -67,11 +68,16 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
               Tip: {<FormatBalance balance={candidate.kind.asVouch[1]}></FormatBalance>}
             </>)}
         </Col>
-        <Col xs={1}>
+        <Col xs={2}>
           Skeptics
         </Col>
-        <Col xs={2}>
+        <Col xs={3}>
           <ApproveButton
+            api={api}
+            activeAccount={activeAccount}
+            candidateId={candidate.accountId}
+            showMessage={showMessage} />
+          <RejectButton
             api={api}
             activeAccount={activeAccount}
             candidateId={candidate.accountId}
