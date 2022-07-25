@@ -5,9 +5,10 @@ import { Col } from 'react-bootstrap'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
 import { truncate, truncateMiddle } from '../../../../helpers/truncate'
+import ApproveIcon from '../../../../static/approve-icon.svg'
+import RejectIcon from '../../../../static/reject-icon.svg'
 import { StyledAlert } from '../../components/StyledAlert'
-import { ApproveButton } from './ApproveButton'
-import { RejectButton } from './RejectButton'
+import { VoteButton } from './VoteButton'
 
 type CandidatesListProps = {
   api: ApiPromise,
@@ -72,16 +73,24 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
           Skeptics
         </Col>
         <Col xs={3}>
-          <ApproveButton
+          <VoteButton
             api={api}
-            activeAccount={activeAccount}
-            candidateId={candidate.accountId}
-            showMessage={showMessage} />
-          <RejectButton
+            showMessage={showMessage}
+            successText="Approval vote sent."
+            waitingText="Approval vote request sent. Waiting for response..."
+            vote={{ approve: true, voterAccount: activeAccount, candidateId: candidate.accountId }}
+            icon={ApproveIcon}>
+            <u>Approve</u>
+          </VoteButton>
+          <VoteButton
             api={api}
-            activeAccount={activeAccount}
-            candidateId={candidate.accountId}
-            showMessage={showMessage} />
+            showMessage={showMessage}
+            successText="Rejection vote sent."
+            waitingText="Rejection vote request sent. Waiting for response..."
+            vote={{ approve: false, voterAccount: activeAccount, candidateId: candidate.accountId }}
+            icon={RejectIcon}>
+            <u>Reject</u>
+          </VoteButton>
         </Col>
       </DataRow>))}
   </>)

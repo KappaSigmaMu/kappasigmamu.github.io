@@ -3,22 +3,30 @@ import { AccountId } from "@polkadot/types/interfaces"
 import { useState } from "react"
 import { IconButton } from "../../../../components/IconButton"
 import { doTx, StatusChangeHandler } from "../../../../helpers/extrinsitcs"
-import RejectIcon from "../../../../static/reject-icon.svg"
 import { LoadingSpinner } from "../../components/LoadingSpinner"
 
-type RejectButtonProps = {
+type VoteButtonProps = {
   api: ApiPromise,
-  activeAccount: accountType,
-  candidateId: AccountId,
+  vote: Vote,
   showMessage: (args: ShowMessageArgs) => any
+  icon: string,
+  successText: string,
+  waitingText: string,
+  children: JSX.Element
 }
 
-type ShowMessageArgs = {
+export interface ShowMessageArgs {
   success: boolean,
   message: string
 }
 
-export function RejectButton({ api, activeAccount, candidateId, showMessage }: RejectButtonProps) {
+export interface Vote {
+  approve: boolean,
+  candidateId: AccountId,
+  voterAccount: accountType
+}
+
+export function VoteButton({ api, vote, showMessage, icon, successText, waitingText, children }: VoteButtonProps) {
   const [loading, setLoading] = useState(false)
 
   const onStatusChange: StatusChangeHandler = ({ loading, message, success }) => {
@@ -26,14 +34,14 @@ export function RejectButton({ api, activeAccount, candidateId, showMessage }: R
     showMessage({ success, message })
   }
 
-  const handleReject = async () => {
+  const handleVote = async () => {
     setLoading(true)
     try {
       await doTx(
-        api.tx.society.vote(candidateId, false),
-        'Rejection vote sent.',
-        'Rejection vote request sent. Waiting for response...',
-        activeAccount,
+        api.tx.society.vote(vote.candidateId, vote.approve),
+        successText,
+        waitingText,
+        vote.voterAccount,
         onStatusChange
       )
     } catch (e) {
@@ -46,8 +54,8 @@ export function RejectButton({ api, activeAccount, candidateId, showMessage }: R
   if (loading) return <LoadingSpinner center={false} />
 
   return (
-    <IconButton icon={RejectIcon} onClick={handleReject}>
-      <u>Reject</u>
+    <IconButton icon={icon} onClick={handleVote}>
+      <u>{children}</u>
     </IconButton>
   )
 }
