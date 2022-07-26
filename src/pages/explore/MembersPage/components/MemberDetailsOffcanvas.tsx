@@ -5,8 +5,8 @@ import { useEffect, useState } from "react"
 import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
 import { CopyButton } from "../../../../components/CopyButton"
-import { Offcanvas } from "../../components/Offcanvas"
 import { LoadingSpinner } from "../../components/LoadingSpinner"
+import { Offcanvas } from "../../components/Offcanvas"
 import { fetchMemberDetails } from "../helpers/fetchMemberDetails"
 
 type MemberDetailsOffCanvasProps = {

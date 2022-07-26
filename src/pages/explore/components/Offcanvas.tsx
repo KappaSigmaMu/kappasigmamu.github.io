@@ -5,15 +5,15 @@ type Props = {
   show: boolean
   placement: "start" | "end"
   onClose: () => void
-  header: JSX.Element
+  header?: JSX.Element
   children: JSX.Element
 }
 
 export function Offcanvas({
   show,
   placement,
-  onClose = () => null,
-  header = <></>,
+  onClose,
+  header = <div />, // aligns close button to the right
   children
 }: Props) {
   return (
@@ -35,7 +35,7 @@ const StyledOffcanvas = styled(RBOffcanvas)`
     margin: unset;
   }
   .offcanvas-body {
-    overflow-x: hidden;
+    overflow - x: hidden;
     overflow-y: hidden;
   }
 `
