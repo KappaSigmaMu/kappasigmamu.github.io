@@ -68,7 +68,6 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
     </DataHeaderRow>
 
     {candidates.map((candidate: SocietyCandidate) => (
-      // TODO: set cursor to `pointer` on hover
       <DataRow
         key={candidate.accountId.toString()}
         onClick={() => showCandidateDetails(candidate.accountId)}>
@@ -90,7 +89,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
             </>)}
         </Col>
         <Col xs={2}>
-          <Button variant="link">Skeptics</Button>
+          <Button variant="link">Votes</Button>
         </Col>
         <Col xs={3}>
           <VoteButton

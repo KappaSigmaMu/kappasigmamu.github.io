@@ -6,7 +6,7 @@ type Props = {
   placement: "start" | "end"
   onClose: () => void
   header?: JSX.Element
-  children: JSX.Element
+  children: JSX.Element | JSX.Element[]
 }
 
 export function Offcanvas({
@@ -35,7 +35,6 @@ const StyledOffcanvas = styled(RBOffcanvas)`
     margin: unset;
   }
   .offcanvas-body {
-    overflow - x: hidden;
-    overflow-y: hidden;
+    overflow-x: hidden;
   }
 `
