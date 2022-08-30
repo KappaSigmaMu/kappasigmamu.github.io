@@ -5,6 +5,7 @@ import type { KeyringAddress } from '@polkadot/ui-keyring/types'
 import React, { useContext, useEffect, useState } from 'react'
 import { isValidAccount } from '../helpers/validAccount'
 import { useKusama } from '../kusama'
+import { ApiState } from '../kusama/KusamaContext'
 
 const activeAccount = localStorage.getItem('activeAccount')
 const isValid = isValidAccount(activeAccount)
@@ -34,12 +35,12 @@ const emptyActiveAccount = (account: accountType) => {
 }
 
 const AccountContextProvider = ({ children }: any) => {
-  const { api, keyringState, keyring } = useKusama()
+  const { api, apiState, keyringState, keyring } = useKusama()
   const [activeAccount, _setActiveAccount] = useState<accountType>(storedActiveAccount)
   const [accounts, setAccounts] = useState<accountType[]>([])
   const [level, setLevel] = useState('human')
 
-  const loading = !api?.query?.society && keyringState !== 'READY'
+  const loading = apiState !== ApiState.ready || keyringState !== 'READY'
 
   const fetchAccounts = () => {
     const storedAccounts = keyring.getAccounts().map((account: KeyringAddress) => ({
@@ -60,7 +61,7 @@ const AccountContextProvider = ({ children }: any) => {
 
   useEffect(() => {
     if (keyringState === 'READY') fetchAccounts()
-  }, [api?.query?.society, keyringState])
+  }, [keyringState])
 
   // TODO: this is duplicated in LandingPage
   useEffect(() => {
@@ -88,13 +89,13 @@ const AccountContextProvider = ({ children }: any) => {
     }
   }, [accounts, activeAccount])
 
-  const content = loading
+  return loading
     ? <>{children}</>
-    : <AccountContext.Provider value={{ level, activeAccount, setActiveAccount, accounts, fetchAccounts }}>
+    : (
+      <AccountContext.Provider value={{ level, activeAccount, setActiveAccount, accounts, fetchAccounts }}>
         {children}
       </AccountContext.Provider>
-
-  return content
+    )
 }
 
 const useAccount = () => ({ ...useContext(AccountContext) })

@@ -1,6 +1,7 @@
 import { Suspense, useLayoutEffect } from 'react'
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
+import { AccountContextProvider } from '../account/AccountContext'
 import { Navbar } from '../components/Navbar'
 import { KusamaContextProvider } from '../kusama'
 import { config } from '../kusama/config'
@@ -52,13 +53,15 @@ const AppRouter = () => {
 
 const App = () => (
   <KusamaContextProvider>
-    <GlobalStyle />
-    <ThemeProvider theme={Theme}>
+    <AccountContextProvider>
       <GlobalStyle />
-      <Suspense fallback={<p>ERROR/LOADING...</p>}>
-        <AppRouter />
-      </Suspense>
-    </ThemeProvider>
+      <ThemeProvider theme={Theme}>
+        <GlobalStyle />
+        <Suspense fallback={<p>ERROR/LOADING...</p>}>
+          <AppRouter />
+        </Suspense>
+      </ThemeProvider>
+    </AccountContextProvider>
   </KusamaContextProvider>
 )
 
