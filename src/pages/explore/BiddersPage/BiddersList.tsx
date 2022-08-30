@@ -1,3 +1,4 @@
+import { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
 import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
@@ -8,40 +9,41 @@ import { DataHeaderRow, DataRow } from '../../../components/base'
 import { FormatBalance } from '../../../components/FormatBalance'
 import { humanizeBidKind } from '../../../helpers/humanize'
 import { truncateMiddle } from '../../../helpers/truncate'
-import { useKusama } from '../../../kusama'
-import { ApiState } from '../../../kusama/KusamaContext'
 import { unbid, unvouch } from './helper'
 
-type Props = { bids: Vec<PalletSocietyBid>, activeAccount: accountType; handleResult: any }
-type OnStatusChangeProps = { loading : boolean, message : string, success: boolean } 
+type Props = {
+  api: ApiPromise,
+  bids: Vec<PalletSocietyBid>,
+  activeAccount: accountType,
+  handleResult: any
+}
 
-// TODO: move this to a `components` directory to follow the convention of other pages 
-const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Element => {
-  const { api, apiState } = useKusama()
+type OnStatusChangeProps = { loading: boolean, message: string, success: boolean }
+
+// TODO: move this to a `components` directory to follow the convention of other pages
+const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Element => {
   const [loading, setLoading] = useState(false)
 
-  const isBidder = (bid : PalletSocietyBid) => activeAccount?.address === bid.who.toString()
-  const isVoucher = (bid : PalletSocietyBid) => activeAccount?.address === bid.kind.asVouch?.[0].toString()
+  const isBidder = (bid: PalletSocietyBid) => activeAccount?.address === bid.who.toString()
+  const isVoucher = (bid: PalletSocietyBid) => activeAccount?.address === bid.kind.asVouch?.[0].toString()
 
-  const apiReady = apiState === ApiState.ready
-
-  const onStatusChange = ({ loading, message, success } : OnStatusChangeProps) => {
+  const onStatusChange = ({ loading, message, success }: OnStatusChangeProps) => {
     setLoading(loading)
     handleResult({ message, success })
   }
 
-  const handleUnbid = (index : any) => {
-    const tx = api?.tx?.society?.unbid(index)
-    apiReady && unbid(tx, activeAccount, onStatusChange)
+  const handleUnbid = (index: any) => {
+    const tx = api.tx.society.unbid(index)
+    unbid(tx, activeAccount, onStatusChange)
   }
 
-  const handleUnvouch = (index : any) => {
-    const tx = api?.tx?.society?.unvouch(index)
-    apiReady && unvouch(tx, activeAccount, onStatusChange)
+  const handleUnvouch = (index: any) => {
+    const tx = api.tx.society.unvouch(index)
+    unvouch(tx, activeAccount, onStatusChange)
   }
 
-  const ownerActions = (bid : PalletSocietyBid) => {
-    let pillText, handleUndo : any, badgeText
+  const ownerActions = (bid: PalletSocietyBid) => {
+    let pillText, handleUndo: any, badgeText
 
     if (bid.kind.isDeposit && isBidder(bid)) {
       pillText = 'My bid'
@@ -56,7 +58,7 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
     return { pillText, handleUndo, badgeText }
   }
 
-  const BidVouchIdentifier = ({ bid, index } : { bid: PalletSocietyBid, index : number }) => {
+  const BidVouchIdentifier = ({ bid, index }: { bid: PalletSocietyBid, index: number }) => {
     const { pillText, badgeText, handleUndo } = ownerActions(bid)
 
     return (
@@ -83,7 +85,7 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
     )
   }
 
-  const isOwner = (bid : PalletSocietyBid) => {
+  const isOwner = (bid: PalletSocietyBid) => {
     if (bid.kind.isDeposit) {
       return isBidder(bid)
     } else if (bid.kind.isVouch) {
@@ -102,8 +104,8 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
         <Col xs={2} className="text-start">Value</Col>
         <Col xs={4} className="text-start">Tip</Col>
       </DataHeaderRow>
-      {bids.map((bid : PalletSocietyBid, index : any) => (
-        <StyledDataRow isOwner={isOwner(bid)} key={bid.who?.toString()}>
+      {bids.map((bid: PalletSocietyBid, index: any) => (
+        <StyledDataRow $isOwner={isOwner(bid)} key={bid.who?.toString()}>
           <Col xs={1} className="text-center">
             <Identicon value={bid.who} size={32} theme={'polkadot'} />
           </Col>
@@ -121,17 +123,17 @@ const BiddersList = ({ bids, activeAccount, handleResult } : Props) : JSX.Elemen
 }
 
 const StyledDataRow = styled(DataRow)`
-  background-color: ${(props) => props.isOwner ? '#73003d' : ''};
-  border: ${(props) => props.isOwner ? '2px solid #E6007A' : ''};
+  background-color: ${(props) => props.$isOwner ? '#73003d' : ''};
+  border: ${(props) => props.$isOwner ? '2px solid #E6007A' : ''};
 `
 
 type PropsUnbid = {
   disabled: boolean;
 };
 
-const StyledUndo = styled.a.attrs((props : PropsUnbid) => ({
+const StyledUndo = styled.a.attrs((props: PropsUnbid) => ({
   disabled: props.disabled
-}))<PropsUnbid>`
+})) <PropsUnbid>`
   color: ${(props) => props.disabled ? 'grey' : '#E6007A'};
   margin-right: 3%;
   font-weight: 800;

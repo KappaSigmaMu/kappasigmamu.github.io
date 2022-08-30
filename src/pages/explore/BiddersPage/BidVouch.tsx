@@ -1,26 +1,22 @@
+import { ApiPromise } from '@polkadot/api'
 import BN from 'bn.js'
 import { useState, useEffect } from 'react'
 import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
-import { useKusama } from '../../../kusama'
-import { ApiState } from '../../../kusama/KusamaContext'
 import { bid, vouch } from './helper'
 
-type BidVouchProps = { handleResult: any, activeAccount: accountType }
+type BidVouchProps = { api: ApiPromise, handleResult: any, activeAccount: accountType }
 type OnStatusChangeProps = { loading: boolean, message: string, success: boolean }
 
 const ksmMultiplier = new BN(1e12)
 
-const BidVouch = ({ handleResult, activeAccount }: BidVouchProps) => {
-  const { api, apiState } = useKusama()
-  const [bidAmount, setbidAmount] = useState<BN>(new BN(-1))
+const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
+  const [bidAmount, setBidAmount] = useState<BN>(new BN(-1))
   const [vouchValue, setVouchValue] = useState<BN>(new BN(-1))
   const [vouchTip, setVouchTip] = useState<BN>(new BN(-1))
   const [vouchAddress, setVouchAddress] = useState<string>()
   const [loading, setLoading] = useState(false)
-
-  const apiReady = apiState === ApiState.ready
 
   const onStatusChange = ({ loading, message, success }: OnStatusChangeProps) => {
     setLoading(loading)
@@ -28,22 +24,22 @@ const BidVouch = ({ handleResult, activeAccount }: BidVouchProps) => {
   }
 
   useEffect(() => {
-    if (apiReady && bidAmount.toNumber() >= 0) {
-      const tx = api?.tx?.society?.bid(bidAmount)
+    if (bidAmount.toNumber() >= 0) {
+      const tx = api.tx.society.bid(bidAmount)
       bid(tx, activeAccount, onStatusChange)
     }
   }, [bidAmount, handleResult])
 
   useEffect(() => {
-    if (apiReady && vouchAddress && vouchTip.toNumber() >= 0 && vouchValue.toNumber() >= 0) {
-      const tx = api?.tx?.society?.vouch(vouchAddress, vouchValue, vouchTip)
+    if (vouchAddress && vouchTip.toNumber() >= 0 && vouchValue.toNumber() >= 0) {
+      const tx = api.tx.society.vouch(vouchAddress, vouchValue, vouchTip)
       vouch(tx, activeAccount, onStatusChange)
     }
   }, [vouchAddress, vouchTip, vouchValue])
 
   const handleBidSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const bidVal: BN = new BN((e.currentTarget[0] as HTMLInputElement).value)
-    setbidAmount(bidVal.mul(ksmMultiplier))
+    setBidAmount(bidVal.mul(ksmMultiplier))
     e.preventDefault()
   }
 
