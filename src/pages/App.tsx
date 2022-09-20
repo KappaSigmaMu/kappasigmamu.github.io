@@ -24,9 +24,9 @@ const AppNavigation = () => {
 
   return (<>
     <Navbar
-      showAccount={config.env.isDev}
-      showExploreButton={config.env.isDev}
-      showBrandIcon
+      showAccount={false}
+      showExploreButton={false}
+      showBrandIcon={false}
       showSocialIcons
     />
     <Outlet />

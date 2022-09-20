@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import Identicon from '@polkadot/react-identicon'
 import { useEffect, useState } from 'react'
 import { Col, Row, Offcanvas, Container, Badge, Spinner } from 'react-bootstrap'
@@ -31,32 +32,10 @@ const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }
       <Offcanvas.Body style={{ overflowY: "hidden" }}>
         <Container>
           <StyledRow>
-            <Col className="d-flex justify-content-center">
-              <Identicon
-                value={member?.hash}
-                size={200}
-                theme={'polkadot'}
-              />
-            </Col>
-          </StyledRow>
-          <StyledRow>
-            <Col>
-              <Badge pill>{member?.level?.toUpperCase()}</Badge>
-            </Col>
-            <Col className="d-flex justify-content-end">
-              <Badge pill>Strikes: {member?.strikes}</Badge>
-            </Col>
-          </StyledRow>
-          <StyledRow>
-            <Col>
-              <div className="h2">{formatHash(member?.hash)}</div>
-            </Col>
-          </StyledRow>
-          <StyledRow>
 
             {hashToPoI[member?.hash] ?
               <Col>
-                <p>Proof-of-Ink</p>
+                <h2>Lauro Gripa</h2>
 
                 {loading &&
                   <>
@@ -68,7 +47,7 @@ const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }
                     </Spinner>
 
                     <p>
-                      Be patient. The proof-of-ink pictures are hosted on IPFS and might take a while to load.
+                      Carregando
                     </p>
                   </>
                 }
@@ -79,14 +58,18 @@ const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }
                   onLoad={() => setLoading(false)}
                   style={loading ? { display: 'none' } : {}}
                 />
+
+                <br /><br />
+
+                <p>
+                  "Sou um grande fã do Gil,
+                  tanto em seu trabalho artístico quanto político na defesa pelo software livre.
+                  É uma grande honra contribuir para esse projeto."
+                </p>
               </Col>
               :
               <Col>
-                <p>Proof of Ink not found. Contact the development team on
-                  &nbsp;
-                  <a href="https://matrix.to/#/!BUmiAAnAYSRGarqwOt:matrix.parity.io?via=matrix.parity.io">Element</a>
-                  &nbsp;
-                  if this is your address.
+                <p>Este contribuiente preferiu não se identificar
                 </p>
               </Col>
             }
