@@ -3,7 +3,6 @@ import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from "react"
 import { Row } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { MemberOffcanvas } from "../components/MemberOffcanvas"
 import { useKusama } from '../kusama'

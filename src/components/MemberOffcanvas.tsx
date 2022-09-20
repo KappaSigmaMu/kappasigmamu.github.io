@@ -1,19 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
-import Identicon from '@polkadot/react-identicon'
 import { useEffect, useState } from 'react'
-import { Col, Row, Offcanvas, Container, Badge, Spinner } from 'react-bootstrap'
+import { Col, Row, Offcanvas, Container, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { hashToPoI } from '../helpers/hashToPoI'
-
-const formatHash = (str: string) => {
-  if (!str) return ""
-  const numChars = 6
-  const sep = "..."
-  const strLen = str.length
-  const head = str.slice(0, numChars)
-  const tail = str.slice(strLen - 5, strLen)
-  return head + sep + tail
-}
 
 const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }) => {
   const { member } = props
