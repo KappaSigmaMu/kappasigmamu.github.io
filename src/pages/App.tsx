@@ -4,7 +4,6 @@ import { ThemeProvider } from 'styled-components'
 import { AccountContextProvider } from '../account/AccountContext'
 import { Navbar } from '../components/Navbar'
 import { KusamaContextProvider } from '../kusama'
-import { config } from '../kusama/config'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 import { CyborgGuidePage } from './CyborgGuidePage'
@@ -24,8 +23,8 @@ const AppNavigation = () => {
 
   return (<>
     <Navbar
-      showAccount={config.env.isDev}
-      showExploreButton={config.env.isDev}
+      showAccount
+      showExploreButton
       showBrandIcon
       showSocialIcons
     />
