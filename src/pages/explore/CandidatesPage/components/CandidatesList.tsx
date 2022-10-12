@@ -1,6 +1,6 @@
 import { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Col } from 'react-bootstrap'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
@@ -23,11 +23,37 @@ type VoteResult = {
 
 const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps): JSX.Element => {
   const [showAlert, setShowAlert] = useState(false)
+  const [votes, setVotes] = useState<SocietyCandidate[]>([])
   const [voteResult, setVoteResult] = useState<VoteResult>({ success: false, message: '' })
   const showMessage = (result: VoteResult) => {
     setVoteResult(result)
     setShowAlert(true)
   }
+
+  const usePrevious = (value: any) => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  }
+
+  const prevActiveAccount = usePrevious(activeAccount)
+
+  useEffect(() => {
+    if (candidates.length === 0) return
+
+    candidates.forEach((candidate) => {
+      api.query.society.votes(candidate.accountId, activeAccount.address, (vote: any) => {
+        if (vote.isEmpty) {
+          if (prevActiveAccount != activeAccount) setVotes([])
+          return
+        }
+        
+        setVotes([candidate.accountId, ...votes])
+      })
+    })
+  }, [activeAccount, prevActiveAccount])
 
   if (candidates.length === 0) return (
     <>No candidates</>
@@ -69,28 +95,31 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
               Tip: {<FormatBalance balance={candidate.kind.asVouch[1]}></FormatBalance>}
             </>)}
         </Col>
-        <Col xs={2}>
-          Skeptics
-        </Col>
+        <Col xs={2} />
         <Col xs={3}>
-          <VoteButton
-            api={api}
-            showMessage={showMessage}
-            successText="Approval vote sent."
-            waitingText="Approval vote request sent. Waiting for response..."
-            vote={{ approve: true, voterAccount: activeAccount, candidateId: candidate.accountId }}
-            icon={ApproveIcon}>
-            <u>Approve</u>
-          </VoteButton>
-          <VoteButton
-            api={api}
-            showMessage={showMessage}
-            successText="Rejection vote sent."
-            waitingText="Rejection vote request sent. Waiting for response..."
-            vote={{ approve: false, voterAccount: activeAccount, candidateId: candidate.accountId }}
-            icon={RejectIcon}>
-            <u>Reject</u>
-          </VoteButton>
+          {votes.includes(candidate.accountId)
+            ? 'Already voted' 
+            : <>
+                <VoteButton
+                  api={api}
+                  showMessage={showMessage}
+                  successText="Approval vote sent."
+                  waitingText="Approval vote request sent. Waiting for response..."
+                  vote={{ approve: true, voterAccount: activeAccount, candidateId: candidate.accountId }}
+                  icon={ApproveIcon}>
+                  <u>Approve</u>
+                </VoteButton>
+                <VoteButton
+                  api={api}
+                  showMessage={showMessage}
+                  successText="Rejection vote sent."
+                  waitingText="Rejection vote request sent. Waiting for response..."
+                  vote={{ approve: false, voterAccount: activeAccount, candidateId: candidate.accountId }}
+                  icon={RejectIcon}>
+                  <u>Reject</u>
+                </VoteButton>
+              </>
+          }
         </Col>
       </DataRow>))}
   </>)
