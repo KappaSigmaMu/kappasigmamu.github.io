@@ -68,9 +68,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
     </DataHeaderRow>
 
     {candidates.map((candidate: SocietyCandidate) => (
-      <DataRow
-        key={candidate.accountId.toString()}
-        onClick={() => showCandidateDetails(candidate.accountId)}>
+      <DataRow key={candidate.accountId.toString()}>
         <Col xs={1} className="text-center">
           <Identicon value={candidate.accountId} size={32} theme={'polkadot'} />
         </Col>
@@ -88,7 +86,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
               Tip: {<FormatBalance balance={candidate.kind.asVouch[1]}></FormatBalance>}
             </>)}
         </Col>
-        <Col xs={2}>
+        <Col xs={2} onClick={() => showCandidateDetails(candidate.accountId)}>
           <Button variant="link">Votes</Button>
         </Col>
         <Col xs={3}>
