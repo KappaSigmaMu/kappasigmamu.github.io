@@ -1,11 +1,14 @@
 import { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
+import type { Option } from '@polkadot/types'
+import type { SocietyVote } from '@polkadot/types/interfaces'
 import { useEffect, useRef, useState } from 'react'
 import { Col } from 'react-bootstrap'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
 import { truncate, truncateMiddle } from '../../../../helpers/truncate'
 import ApproveIcon from '../../../../static/approve-icon.svg'
+import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
 import { StyledAlert } from '../../components/StyledAlert'
 import { VoteButton } from './VoteButton'
@@ -21,21 +24,30 @@ type VoteResult = {
   message: string
 }
 
+const AlreadyVotedIcon = () => (
+ <>
+    <img src={CheckAllIcon} className="me-2" />
+    <label style={{ color: '#6c757d' }}>Voted</label>
+  </>     
+)
+
 const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps): JSX.Element => {
   const [showAlert, setShowAlert] = useState(false)
   const [votes, setVotes] = useState<SocietyCandidate[]>([])
   const [voteResult, setVoteResult] = useState<VoteResult>({ success: false, message: '' })
+  const society = api?.query?.society
+  
   const showMessage = (result: VoteResult) => {
     setVoteResult(result)
     setShowAlert(true)
   }
 
   const usePrevious = (value: any) => {
-    const ref = useRef();
+    const ref = useRef()
     useEffect(() => {
-      ref.current = value;
-    });
-    return ref.current;
+      ref.current = value
+    })
+    return ref.current
   }
 
   const prevActiveAccount = usePrevious(activeAccount)
@@ -44,7 +56,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
     if (candidates.length === 0) return
 
     candidates.forEach((candidate) => {
-      api.query.society.votes(candidate.accountId, activeAccount.address, (vote: any) => {
+      society.votes(candidate.accountId, activeAccount.address, (vote: Option<SocietyVote>) => {
         if (vote.isEmpty) {
           if (prevActiveAccount != activeAccount) setVotes([])
           return
@@ -98,7 +110,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
         <Col xs={2} />
         <Col xs={3}>
           {votes.includes(candidate.accountId)
-            ? 'Already voted' 
+            ? <AlreadyVotedIcon />
             : <>
                 <VoteButton
                   api={api}
