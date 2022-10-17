@@ -41,7 +41,7 @@ const MembersList = ({ members, api, onClickMember }: MembersListProps): JSX.Ele
           <Identicon value={member.accountId} size={32} theme={'polkadot'} />
         </Col>
         <Col xs={3} className="text-start text-truncate">
-          <MemberIdentity api={api} member={member} />
+          <MemberIdentity api={api} memberAccountId={member.accountId} />
         </Col>
         <Col xs={3} className="text-start text-truncate">
           <AccountIndex api={api} member={member} />

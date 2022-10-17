@@ -8,10 +8,10 @@ const NavigationBar = () => (
       <Nav.Link as={NavLink} to="/explore/bidders">Bidders</Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/members">Members</Nav.Link>
+      <Nav.Link as={NavLink} to="/explore/candidates">Candidates</Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/candidates">Candidates</Nav.Link>
+      <Nav.Link as={NavLink} to="/explore/members">Members</Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
       <Nav.Link as={NavLink} to="/explore/suspended">Suspended</Nav.Link>

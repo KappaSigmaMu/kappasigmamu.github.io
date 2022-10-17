@@ -1,11 +1,11 @@
 import { ApiPromise } from "@polkadot/api"
-import Identicon from "@polkadot/react-identicon"
 import { AccountId } from "@polkadot/types/interfaces"
 import { useEffect, useState } from "react"
-import { Col, Container, Offcanvas, Row } from "react-bootstrap"
+import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
-import { CopyButton } from "../../../../components/CopyButton"
+import { AccountHeader } from "../../components/AccountHeader"
 import { LoadingSpinner } from "../../components/LoadingSpinner"
+import { Offcanvas } from "../../components/Offcanvas"
 import { fetchMemberDetails } from "../helpers/fetchMemberDetails"
 
 type MemberDetailsOffCanvasProps = {
@@ -29,16 +29,13 @@ const MemberDetailsOffCanvas = ({ api, accountId, show, onClose }: MemberDetails
   }, [accountId])
 
   return (
-    <StyledOffcanvas show={show} placement="end" backdrop={true}>
-      <Offcanvas.Header closeButton onClick={onClose}>
-        <h3>{memberDetails?.identity?.name}</h3>
-      </Offcanvas.Header>
-      <Offcanvas.Body style={{ overflowY: "hidden", overflowX: "hidden" }}>
-        {loading
-          ? <LoadingSpinner />
-          : <CanvasBody memberDetails={memberDetails!} />}
-      </Offcanvas.Body>
-    </StyledOffcanvas >
+    <Offcanvas
+      show={show}
+      placement="end"
+      onClose={onClose}
+      header={<h3>{memberDetails?.identity?.name}</h3>}>
+      {loading ? <LoadingSpinner /> : <CanvasBody memberDetails={memberDetails!} />}
+    </Offcanvas>
   )
 }
 
@@ -46,19 +43,7 @@ const CanvasBody = ({ memberDetails }: { memberDetails: SocietyMemberDetails }) 
   const { name, email, legal, webpage, riot, twitter } = memberDetails.identity ?? {}
   return (
     <Container>
-      <Row>
-        <Col className="d-flex justify-content-center">
-          <Identicon value={memberDetails.accountId} size={100} theme={'polkadot'} />
-        </Col>
-      </Row>
-      <Row>
-        <HashRow className="mx-auto">
-          {memberDetails.accountId.toHuman()}
-        </HashRow>
-      </Row>
-      <Row className="mt-3">
-        <CopyButton content={memberDetails.accountId.toHuman()} />
-      </Row>
+      <AccountHeader accountId={memberDetails.accountId} />
       <StyledRow>
         {memberDetails.index && <>Index: {memberDetails.index}</>}
       </StyledRow>
@@ -86,22 +71,6 @@ const CanvasBody = ({ memberDetails }: { memberDetails: SocietyMemberDetails }) 
     </Container>
   )
 }
-
-const StyledOffcanvas = styled(Offcanvas)`
-  background: #33393F;
-  box-shadow: rgba(0, 0, 0, 0.3) -6px 0px 20px 0px;
-  .offcanvas-header .btn-close {
-    margin: unset;
-  }
-`
-
-const HashRow = styled(Row)`
-  margin-top: 30px;
-  word-break: break-all;
-  display: inline-block;
-  width: 27ch;
-  font-family: monospace;
-`
 
 const StyledRow = styled(Row)`
   margin-top: 30px;

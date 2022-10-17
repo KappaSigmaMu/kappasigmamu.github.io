@@ -1,13 +1,15 @@
 import { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
+import { AccountId } from '@polkadot/types/interfaces'
 import { useState } from 'react'
-import { Col } from 'react-bootstrap'
+import { Button, Col } from 'react-bootstrap'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
 import { truncate, truncateMiddle } from '../../../../helpers/truncate'
 import ApproveIcon from '../../../../static/approve-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
 import { StyledAlert } from '../../components/StyledAlert'
+import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
 import { VoteButton } from './VoteButton'
 
 type CandidatesListProps = {
@@ -24,9 +26,17 @@ type VoteResult = {
 const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps): JSX.Element => {
   const [showAlert, setShowAlert] = useState(false)
   const [voteResult, setVoteResult] = useState<VoteResult>({ success: false, message: '' })
+  const [selectedCandidate, setSelectedCandidate] = useState<AccountId | null>(null)
+  const [showCandidateDetailsOffcanvas, setShowCandidateDetailsOffcanvas] = useState(false)
+
   const showMessage = (result: VoteResult) => {
     setVoteResult(result)
     setShowAlert(true)
+  }
+
+  const showCandidateDetails = (candidateId: AccountId) => {
+    setSelectedCandidate(candidateId)
+    setShowCandidateDetailsOffcanvas(true)
   }
 
   if (candidates.length === 0) return (
@@ -34,6 +44,13 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
   )
 
   return (<>
+    {selectedCandidate &&
+      <CandidateDetailsOffcanvas
+        api={api}
+        candidateId={selectedCandidate}
+        show={showCandidateDetailsOffcanvas}
+        onClose={() => setShowCandidateDetailsOffcanvas(false)} />}
+
     <StyledAlert
       success={voteResult.success}
       onClose={() => setShowAlert(false)}
@@ -69,8 +86,8 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
               Tip: {<FormatBalance balance={candidate.kind.asVouch[1]}></FormatBalance>}
             </>)}
         </Col>
-        <Col xs={2}>
-          Skeptics
+        <Col xs={2} onClick={() => showCandidateDetails(candidate.accountId)}>
+          <Button variant="link">Votes</Button>
         </Col>
         <Col xs={3}>
           <VoteButton
