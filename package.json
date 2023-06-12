@@ -2,10 +2,9 @@
   "name": "ksm-app",
   "version": "0.2.0",
   "homepage": "https://KappaSigmaMu.github.io/",
-  "private": false,
   "types": "src/types.d.ts",
   "dependencies": {
-    "@kappasigmamu/canary-component": "^0.4.5",
+    "@kappasigmamu/canary-component": "^0.4.6",
     "@polkadot/api": "^8.10.1",
     "@polkadot/api-derive": "^8.10.1",
     "@polkadot/extension-dapp": "^0.44.1",
