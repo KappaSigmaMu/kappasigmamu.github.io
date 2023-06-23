@@ -1,4 +1,4 @@
-import { ThreeCanary, defaultCanaryConfig } from "@kappasigmamu/canary-component"
+import { ThreeCanary, defaultConfig } from "@kappasigmamu/canary-component"
 import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from "react"
@@ -12,14 +12,10 @@ import { ApiState } from "../kusama/KusamaContext"
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 import { LoadingSpinner } from "./explore/components/LoadingSpinner"
 
-const customGilConfig = {
-  ...defaultCanaryConfig.gil,
-  bloom: {
-    kernelSize: 1,
-    luminanceThreshold: 0.1,
-    luminanceSmoothing: 0.05,
-    intensity: 0.1
-  }
+const customCanaryConfig = {
+  ...defaultConfig.canary,
+  "objectUrl": "/assets/canary.glb",
+  "nodeCoords": "canary.geometry.attributes.position",
 }
 
 interface MemberData {
@@ -99,7 +95,7 @@ const LandingPage = () => {
         <div className="position-absolute h-100">
           {members &&
             <ThreeCanary
-              objectUrl={`./static/gil.glb`}
+              objectUrl={`./static/canary.glb`}
               nodes={
                 members.map((id: string) => ({
                   "hash": id,
@@ -108,7 +104,7 @@ const LandingPage = () => {
                 }))
               }
               onNodeClick={handleCanaryNodeClick}
-              config={customGilConfig}
+              config={customCanaryConfig}
             />}
         </div>
         <CentralizedCol xs={0} lg={8} />

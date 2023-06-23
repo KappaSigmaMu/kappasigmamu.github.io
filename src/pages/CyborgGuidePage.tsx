@@ -42,6 +42,12 @@ const BrandingDriveLink = styled(ExternalLink).attrs(() => ({
   text-decoration: none;
 `
 
+const BrandingIPFSLink = styled(ExternalLink).attrs(() => ({
+  href: 'https://cloudflare-ipfs.com/ipfs/QmTvCsRfGXhPN4kqu19hhYV2zR7dCB1RFR6D7JUaxRpkxF#x-ipfs-companion-no-redirect',
+}))`
+  text-decoration: none;
+`
+
 const CodeRepositoryLink = styled(ExternalLink).attrs(() => ({
   href: 'https://github.com/KappaSigmaMu',
 }))`
@@ -248,7 +254,10 @@ const CyborgGuidePage = () => {
               <ThirdGenerationLink>The Third Generation</ThirdGenerationLink>
             </p>
             <p>
-              <BrandingDriveLink>Branding Drive</BrandingDriveLink>
+              <BrandingDriveLink>Brand Book (Google Drive)</BrandingDriveLink>
+            </p>
+            <p>
+              <BrandingIPFSLink>Brand Book (IPFS)</BrandingIPFSLink>
             </p>
             <p>
               <CodeRepositoryLink>Code Repository</CodeRepositoryLink>

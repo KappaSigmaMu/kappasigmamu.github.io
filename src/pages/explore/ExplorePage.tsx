@@ -27,8 +27,8 @@ const ExplorePage = (): JSX.Element => {
               <Routes>
                 <Route path="/" element={<Navigate to="/explore/bidders" replace />} />
                 <Route path="/bidders" element={<BiddersPage api={api} />} />
-                <Route path="/members" element={<MembersPage api={api} />} />
                 <Route path="/candidates" element={<CandidatesPage api={api} />} />
+                <Route path="/members" element={<MembersPage api={api} />} />
                 <Route path="/suspended" element={<SuspendedPage api={api} />} />
               </Routes>
             )}

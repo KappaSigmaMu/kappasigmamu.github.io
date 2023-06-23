@@ -26,10 +26,10 @@ exports[`NavigationBar initialize with explore/bidders selected 1`] = `
       className="nav-link"
       data-rr-ui-event-key={null}
       disabled={false}
-      href="/explore/members"
+      href="/explore/candidates"
       onClick={[Function]}
     >
-      Members
+      Candidates
     </a>
   </div>
   <div
@@ -39,10 +39,10 @@ exports[`NavigationBar initialize with explore/bidders selected 1`] = `
       className="nav-link"
       data-rr-ui-event-key={null}
       disabled={false}
-      href="/explore/candidates"
+      href="/explore/members"
       onClick={[Function]}
     >
-      Candidates
+      Members
     </a>
   </div>
   <div
