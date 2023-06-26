@@ -48,6 +48,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (api && apiState === ApiState.ready) {
+
       api.derive.society.members().then((members) => {
         members.forEach((member) => {
           const id = member.accountId.toString()
