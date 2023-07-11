@@ -2,11 +2,11 @@
 
 exports[`NavigationBar initialize with explore/bidders selected 1`] = `
 <div
-  className="sc-aXZVg eXYMrc py-2 my-4 nav"
+  className="sc-bczRLJ eaeLWo py-2 my-4 nav"
   onKeyDown={[Function]}
 >
   <div
-    className="sc-gEvEer iVaPDZ nav-item"
+    className="sc-gsnTZi hCWTYr nav-item"
   >
     <a
       aria-current="page"
@@ -20,7 +20,7 @@ exports[`NavigationBar initialize with explore/bidders selected 1`] = `
     </a>
   </div>
   <div
-    className="sc-gEvEer iVaPDZ nav-item"
+    className="sc-gsnTZi hCWTYr nav-item"
   >
     <a
       className="nav-link"
@@ -33,7 +33,7 @@ exports[`NavigationBar initialize with explore/bidders selected 1`] = `
     </a>
   </div>
   <div
-    className="sc-gEvEer iVaPDZ nav-item"
+    className="sc-gsnTZi hCWTYr nav-item"
   >
     <a
       className="nav-link"
@@ -46,7 +46,7 @@ exports[`NavigationBar initialize with explore/bidders selected 1`] = `
     </a>
   </div>
   <div
-    className="sc-gEvEer iVaPDZ nav-item"
+    className="sc-gsnTZi hCWTYr nav-item"
   >
     <a
       className="nav-link"
