@@ -12,10 +12,14 @@ import { ApiState } from "../kusama/KusamaContext"
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 import { LoadingSpinner } from "./explore/components/LoadingSpinner"
 
-const customCanaryConfig = {
-  ...defaultConfig.canary,
-  "objectUrl": "/assets/canary.glb",
-  "nodeCoords": "canary.geometry.attributes.position",
+const customGilConfig = {
+  ...defaultConfig.gil,
+  bloom: {
+    kernelSize: 1,
+    luminanceThreshold: 0.1,
+    luminanceSmoothing: 0.05,
+    intensity: 0.1
+  }
 }
 
 interface MemberData {
@@ -26,7 +30,7 @@ interface MembersData {
   [key: string]: MemberData
 }
 
-const LandingPage = () => {
+const GilbertoGilPage = () => {
   window.scrollTo(0, 0)
 
   const navigate = useNavigate()
@@ -48,7 +52,6 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (api && apiState === ApiState.ready) {
-
       api.derive.society.members().then((members) => {
         members.forEach((member) => {
           const id = member.accountId.toString()
@@ -75,7 +78,7 @@ const LandingPage = () => {
   }
 
   const handlePartnershipButtonClick = () => {
-    navigate('/gilbertogil')
+    navigate('/futurivel')
   }
 
   const handleExploreButtonClick = () => {
@@ -99,7 +102,7 @@ const LandingPage = () => {
         <div className="position-absolute h-100">
           {members &&
             <ThreeCanary
-              objectUrl={`./static/canary.glb`}
+              objectUrl={`./static/gil.glb`}
               nodes={
                 members.map((id: string) => ({
                   "hash": id,
@@ -108,7 +111,7 @@ const LandingPage = () => {
                 }))
               }
               onNodeClick={handleCanaryNodeClick}
-              config={customCanaryConfig}
+              config={customGilConfig}
             />}
         </div>
         <CentralizedCol xs={0} lg={8} />
@@ -127,7 +130,7 @@ const LandingPage = () => {
               Cyborg<br />Guide
             </OutlinedPrimaryLgButton>
             <OutlinedSecondaryLgButton onClick={handlePartnershipButtonClick}>
-              Partnership<br />with Gilberto Gil
+              About the<br /> partnership
             </OutlinedSecondaryLgButton>
           </ActionsContainer>
         </CentralizedCol>
@@ -192,4 +195,4 @@ const LoadingContainer = styled.div`
   border-radius: 10px;
 `
 
-export { LandingPage }
+export { GilbertoGilPage }
