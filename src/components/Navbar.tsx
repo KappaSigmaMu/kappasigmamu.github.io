@@ -27,8 +27,6 @@ const Navbar = ({
   </RBNavbar>
 )
 
-console.info(isMobile)
-
 const BrandPlaceholder = () => (
   <div style={{ height: 82, width: 106 }}></div>
 )
