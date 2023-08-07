@@ -1,4 +1,5 @@
 import { Button, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
+import { isMobile } from 'react-device-detect'
 import { Link } from 'react-router-dom'
 import { useAccount } from '../account/AccountContext'
 import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
@@ -15,16 +16,18 @@ const Navbar = ({
     <Container>
       <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
       <Nav className="align-items-center align-self-center">
-        {showExploreButton && 
+        {showExploreButton && !isMobile &&
           <Nav.Link to="/explore" as={Link} onClick={(e) => e.currentTarget.blur()}>Explore</Nav.Link>}
         &nbsp;
         {showSocialIcons && <SocialIcons />}
         &nbsp;
-        {showAccount && <AccountNavbar />}
+        {showAccount && !isMobile && <AccountNavbar />}
       </Nav>
     </Container>
   </RBNavbar>
 )
+
+console.info(isMobile)
 
 const BrandPlaceholder = () => (
   <div style={{ height: 82, width: 106 }}></div>

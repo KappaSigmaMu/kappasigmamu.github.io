@@ -3,6 +3,7 @@ import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
+import { isMobile } from 'react-device-detect'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
@@ -16,6 +17,10 @@ const customCanaryConfig = {
   ...defaultConfig.canary,
   "objectUrl": "/assets/canary.glb",
   "nodeCoords": "canary.geometry.attributes.position",
+}
+
+if (isMobile) {
+  customCanaryConfig.cameraPosition = [3, 0.5, 3]
 }
 
 interface MemberData {
@@ -115,19 +120,15 @@ const LandingPage = () => {
         <CentralizedCol xs={12} lg={4}>
           <h1 className="d-none d-lg-block">Join the</h1>
           <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-          <ActionsContainer>
-            <div className="d-lg-none">
-              <span>Join the</span>
-              <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-            </div>
-            <OutlinedPrimaryLgButton onClick={handleExploreButtonClick}>
-              Explore<br />KappaSigmaMu
+          <ActionsContainer className="container">
+            <OutlinedPrimaryLgButton  xs={0} lg={8} onClick={handleExploreButtonClick}>
+              Explore<br />Society
             </OutlinedPrimaryLgButton>
             <OutlinedPrimaryLgButton onClick={handleGuideButtonClick}>
               Cyborg<br />Guide
             </OutlinedPrimaryLgButton>
             <OutlinedSecondaryLgButton onClick={handlePartnershipButtonClick}>
-              Partnership<br />with Gilberto Gil
+              Gilberto Gil<br />Partnership
             </OutlinedSecondaryLgButton>
           </ActionsContainer>
         </CentralizedCol>

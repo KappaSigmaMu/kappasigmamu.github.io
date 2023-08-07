@@ -119,12 +119,8 @@ const GilbertoGilPage = () => {
           <h1 className="d-none d-lg-block">Join the</h1>
           <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <ActionsContainer>
-            <div className="d-lg-none">
-              <span>Join the</span>
-              <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-            </div>
             <OutlinedPrimaryLgButton onClick={handleExploreButtonClick}>
-              Explore<br />KappaSigmaMu
+              Explore<br />Society
             </OutlinedPrimaryLgButton>
             <OutlinedPrimaryLgButton onClick={handleGuideButtonClick}>
               Cyborg<br />Guide
