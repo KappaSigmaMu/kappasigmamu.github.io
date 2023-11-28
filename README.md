@@ -4,7 +4,7 @@ This is a dedicated interface for Kusama Society.
 
 ## Dependencies
 
-* [Node v16.13.0](#)
+* [Node v20.10.0](#)
 * [yarn](https://yarnpkg.com)
 
 ## Setup
