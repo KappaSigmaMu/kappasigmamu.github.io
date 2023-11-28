@@ -4,7 +4,7 @@
   "homepage": "https://KappaSigmaMu.github.io/",
   "types": "src/types.d.ts",
   "dependencies": {
-    "@kappasigmamu/canary-component": "^0.4.6",
+    "@kappasigmamu/canary-component": "^0.4.7",
     "@polkadot/api": "^8.10.1",
     "@polkadot/api-derive": "^8.10.1",
     "@polkadot/extension-dapp": "^0.44.1",
@@ -113,7 +113,9 @@
     "workbox-webpack-plugin": "5.1.4"
   },
   "resolutions": {
-    "styled-components": "^5.3.0"
+    "styled-components": "^5.3.0",
+    "three": "0.136.0",
+    "postprocessing": "6.24.1"
   },
   "scripts": {
     "build": "node scripts/build.js",
