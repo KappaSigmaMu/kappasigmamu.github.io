@@ -14,15 +14,15 @@ function Timer() {
   const [, periodTime] = useBlockTime(rotationPeriod, api)
   const [, periodTimeLeft] = useBlockTime(periodBlocksLeft, api)
 
-  useEffect(() => {
-    if (api) {
-      const rotationPeriod = api.consts.society.rotationPeriod.toNumber()
-      api.derive.chain.bestNumber((block) => {
-        setCurrentBlock(block.toNumber())
-      })
-      setRotationPeriod(rotationPeriod)
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (api) {
+  //     const rotationPeriod = api.consts.society.rotationPeriod.toNumber()
+  //     api.derive.chain.bestNumber((block) => {
+  //       setCurrentBlock(block.toNumber())
+  //     })
+  //     setRotationPeriod(rotationPeriod)
+  //   }
+  // }, [])
 
   return (
     <>

@@ -28,15 +28,15 @@ const CurrentRound = () => {
   const [, , time] = useBlockTime(periodBlocksLeft, api)
   const { days, hours, minutes, seconds } = time
 
-  useEffect(() => {
-    if (api) {
-      const rotationPeriod = api.consts.society.rotationPeriod.toNumber()
-      api.derive.chain.bestNumber((block) => {
-        setCurrentBlock(block.toNumber())
-      })
-      setRotationPeriod(rotationPeriod)
-    }
-  }, [api])
+  // useEffect(() => {
+  //   if (api) {
+  //     const rotationPeriod = api.consts.society.rotationPeriod.toNumber()
+  //     api.derive.chain.bestNumber((block) => {
+  //       setCurrentBlock(block.toNumber())
+  //     })
+  //     setRotationPeriod(rotationPeriod)
+  //   }
+  // }, [api])
 
   return (
     <>

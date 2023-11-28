@@ -11,18 +11,18 @@ const Bid = () => {
   const { activeAccount } = useAccount()
   const [bidAmount, setBidAmount] = useState<string>('0')
 
-  useEffect(() => {
-    if (api) {
-      api.query.society.bids().then((bids: Vec<PalletSocietyBid>) => {
-        const accountBid = bids.find((bid) => {
-          activeAccount && bid.who.toHuman() === activeAccount.address
-        })
-        if (!accountBid) return setBidAmount('0')
+  // useEffect(() => {
+  //   if (api) {
+  //     api.query.society.bids().then((bids: Vec<PalletSocietyBid>) => {
+  //       const accountBid = bids.find((bid) => {
+  //         activeAccount && bid.who.toHuman() === activeAccount.address
+  //       })
+  //       if (!accountBid) return setBidAmount('0')
 
-        setBidAmount(accountBid.value.toHuman())
-      })
-    }
-  }, [api])
+  //       setBidAmount(accountBid.value.toHuman())
+  //     })
+  //   }
+  // }, [api])
 
   return (
     <>

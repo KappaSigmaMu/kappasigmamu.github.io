@@ -66,10 +66,10 @@ const GilbertoGilPage = () => {
         })
       })
 
-      api.query.society.members().then((response: Vec<AccountId32>) => {
-        const ids = response.map((account) => account.toString())
-        setMembers(ids)
-      })
+      // api.query.society.members().then((response: Vec<AccountId32>) => {
+      //   const ids = response.map((account) => account.toString())
+      //   setMembers(ids)
+      // })
     }
   }, [api, apiState])
 

@@ -1,6 +1,7 @@
 import { ThreeCanary, defaultConfig } from "@kappasigmamu/canary-component"
-import { Vec } from '@polkadot/types'
+import { StorageKey, Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
+import { Option } from '@polkadot/types';
 import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
 import { isMobile } from 'react-device-detect'
@@ -53,24 +54,20 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (api && apiState === ApiState.ready) {
+      api.query.society.members.keys().then((members: StorageKey<[AccountId32]>[]) => {
+        const ids = members.map(account => account.toHuman())
+        setMembers(ids)
 
-      api.derive.society.members().then((members) => {
         members.forEach((member) => {
-          const id = member.accountId.toString()
+          const id = member.toHuman().toString()
           const m = allMembers
           m[id] = {
             "hash": id,
             "name": "unknown",
             "level": "cyborg",
-            "strikes": member.strikes.toString()
           }
           setAllMembers(m)
         })
-      })
-
-      api.query.society.members().then((response: Vec<AccountId32>) => {
-        const ids = response.map((account) => account.toString())
-        setMembers(ids)
       })
     }
   }, [api, apiState])

@@ -75,17 +75,17 @@ const AccountContextProvider = ({ children }: any) => {
     }
 
     if (api && activeAccount) {
-      api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
-        setLevelCheckingAccounts(response.map(account => account.who), 'bidder')
-      })
+      // api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
+      //   setLevelCheckingAccounts(response.map(account => account.who), 'bidder')
+      // })
 
-      api.query.society.candidates().then((response: Vec<PalletSocietyBid>) => {
-        setLevelCheckingAccounts(response.map(account => account.who), 'candidate')
-      })
+      // api.query.society.candidates().then((response: Vec<PalletSocietyBid>) => {
+      //   setLevelCheckingAccounts(response.map(account => account.who), 'candidate')
+      // })
 
-      api.query.society.members().then((response: Vec<AccountId32>) => {
-        setLevelCheckingAccounts(response, 'cyborg')
-      })
+      // api.query.society.members().then((response: Vec<AccountId32>) => {
+      //   setLevelCheckingAccounts(response, 'cyborg')
+      // })
     }
   }, [accounts, activeAccount])
 

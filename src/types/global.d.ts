@@ -47,6 +47,16 @@ declare interface SocietyMember {
   vote?: SocietyMemberVote
 }
 
+// declare interface PalletSocietyMemberRecord {
+//   accountId: AccountId;
+//   details: {
+//     rank: number;
+//     strikes: number;
+//     vouching?: SocietyMemberVouching;
+//     index: number;
+//   };
+// }
+
 interface SocietyMemberDetails {
   accountId: AccountId
   index?: string
