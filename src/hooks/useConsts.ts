@@ -9,7 +9,7 @@ type SocietyConsts = {
   candidateDeposit: BalanceOf
   challengePeriod: BlockNumber
   maxCandidateIntake: u32
-  maxStrikes: u32
+  graceStrikes: u32
   palletId: PalletId
   periodSpend: BalanceOf
   rotationPeriod: BlockNumber
@@ -23,7 +23,7 @@ export function useConsts(): SocietyConsts {
     const candidateDeposit: BalanceOf = api.consts.society.candidateDeposit
     const challengePeriod: BlockNumber = api.consts.society.challengePeriod
     const maxCandidateIntake: u32 = api.consts.society.maxCandidateIntake
-    const maxStrikes: u32 = api.consts.society.maxStrikes
+    const graceStrikes: u32 = api.consts.society.graceStrikes
     const palletId: PalletId = api.consts.society.palletId
     const periodSpend: BalanceOf = api.consts.society.periodSpend
     const rotationPeriod: BlockNumber = api.consts.society.rotationPeriod
@@ -33,7 +33,7 @@ export function useConsts(): SocietyConsts {
       candidateDeposit,
       challengePeriod,
       maxCandidateIntake,
-      maxStrikes,
+      graceStrikes,
       palletId,
       periodSpend,
       rotationPeriod,
