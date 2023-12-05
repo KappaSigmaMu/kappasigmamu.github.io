@@ -5,12 +5,12 @@ import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { LoadingSpinner } from "./explore/components/LoadingSpinner"
 import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from "../components/MemberOffcanvas"
 import { useKusama } from '../kusama'
 import { ApiState } from "../kusama/KusamaContext"
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
-import { LoadingSpinner } from "./explore/components/LoadingSpinner"
 
 const customGilConfig = {
   ...defaultConfig.gil,

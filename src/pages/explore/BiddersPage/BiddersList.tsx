@@ -5,11 +5,11 @@ import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useState } from 'react'
 import { Col, Badge } from 'react-bootstrap'
 import styled from 'styled-components'
+import { unbid, unvouch } from './helper'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { FormatBalance } from '../../../components/FormatBalance'
 import { humanizeBidKind } from '../../../helpers/humanize'
 import { truncateMiddle } from '../../../helpers/truncate'
-import { unbid, unvouch } from './helper'
 
 // type Props = {
 //   api: ApiPromise,

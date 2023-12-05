@@ -1,10 +1,10 @@
 import { Button, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
 import { isMobile } from 'react-device-detect'
 import { Link } from 'react-router-dom'
-import { useAccount } from '../account/AccountContext'
-import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 import { AccountSelector } from './AccountSelector'
 import { SocialIcons } from './SocialIcons'
+import { useAccount } from '../account/AccountContext'
+import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 
 const Navbar = ({
   showAccount = false,
