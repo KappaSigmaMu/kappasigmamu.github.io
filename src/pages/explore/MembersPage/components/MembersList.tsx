@@ -2,9 +2,9 @@ import type { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
+import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { AccountIndex } from '../../../../components/AccountIndex'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
-import { MemberIdentity } from '../../../../components/MemberIdentity'
 
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => props.$isDefender ? '#73003d' : ''};
@@ -41,7 +41,7 @@ const MembersList = ({ members, api, onClickMember }: MembersListProps): JSX.Ele
           <Identicon value={member.accountId} size={32} theme={'polkadot'} />
         </Col>
         <Col xs={3} className="text-start text-truncate">
-          <MemberIdentity api={api} memberAccountId={member.accountId} />
+          <AccountIdentity api={api} accountId={member.accountId} />
         </Col>
         <Col xs={3} className="text-start text-truncate">
           <AccountIndex api={api} member={member} />

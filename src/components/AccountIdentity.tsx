@@ -4,16 +4,16 @@ import { AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { truncateMiddle } from '../helpers/truncate'
 
-const MemberIdentity = ({ memberAccountId, api }: { memberAccountId: AccountId, api: ApiPromise }) => {
+const AccountIdentity = ({ accountId, api }: { accountId: AccountId, api: ApiPromise }) => {
   const [id, setId] = useState<string>('')
 
   useEffect(() => {
-    api.derive.accounts.identity(memberAccountId, (identity: DeriveAccountRegistration) => {
+    api.derive.accounts.identity(accountId, (identity: DeriveAccountRegistration) => {
       identity.display && setId(identity.display)
     })
   }, [])
 
-  return <>{id ? id : truncateMiddle(memberAccountId?.toString())}</>
+  return <>{id ? id : truncateMiddle(accountId?.toString())}</>
 }
 
-export { MemberIdentity }
+export { AccountIdentity }

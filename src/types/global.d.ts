@@ -51,23 +51,13 @@ type ExtendedDeriveSociety {
   skeptic?: AccountId32 | undefined
 } & DeriveSociety
 
-// declare interface PalletSocietyMemberRecord {
-//   accountId: AccountId;
-//   details: {
-//     rank: number;
-//     strikes: number;
-//     vouching?: SocietyMemberVouching;
-//     index: number;
-//   };
-// }
-
 interface SocietyMemberDetails {
   accountId: AccountId
   index?: string
-  identity?: SocietyMemberIdentity
+  identity?: AccountIdentity
 }
 
-interface SocietyMemberIdentity {
+interface AccountIdentity {
   name: string
   email?: string
   legal?: string

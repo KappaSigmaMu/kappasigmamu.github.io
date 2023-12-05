@@ -78,15 +78,15 @@ const buildSocietyMembersArray = (
 const sortSocietyMembersArray = (a: SocietyMember, b: SocietyMember): number => (
   a.isDefender !== b.isDefender
     ? a.isDefender ? -1 : 1
-    : a.isHead !== b.isHead
-      ? (a.isHead ? -1 : 1)
-      : a.isFounder !== b.isFounder
-        ? (a.isFounder ? -1 : 1)
-        : a.isSkeptic !== b.isSkeptic
-          ? (a.isSkeptic ? -1 : 1)
-          : a.isDefenderVoter !== (b.isDefenderVoter)
-            ? (a.isDefenderVoter ? -1 : 1)
-            : 1
+    : a.isSkeptic !== b.isSkeptic
+      ? (a.isSkeptic ? -1 : 1)
+      : a.isHead !== b.isHead
+        ? (a.isHead ? -1 : 1)
+        : a.isFounder !== b.isFounder
+          ? (a.isFounder ? -1 : 1)
+            : a.isDefenderVoter !== (b.isDefenderVoter)
+              ? (a.isDefenderVoter ? -1 : 1)
+              : 1
 )
 
 export { buildSocietyCandidatesArray, buildSocietyMembersArray }

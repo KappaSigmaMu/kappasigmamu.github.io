@@ -1,3 +1,4 @@
+import { u32 } from '@polkadot/types'
 import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
@@ -19,6 +20,13 @@ const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element =>
 )
 
 const CurrentRound = () => {
+  return <>
+    <CurrentRoundItem title='Voting Period' period='votingPeriod' />
+    <CurrentRoundItem title='Challenge Period' period='challengePeriod' />
+  </>
+}
+
+const CurrentRoundItem = ({ title, period }: { title: string, period: string }) => {
   const { api } = useKusama()
   const [currentBlock, setCurrentBlock] = useState<number>(0)
   const [rotationPeriod, setRotationPeriod] = useState<number>(0)
@@ -28,21 +36,21 @@ const CurrentRound = () => {
   const [, , time] = useBlockTime(periodBlocksLeft, api)
   const { days, hours, minutes, seconds } = time
 
-  // useEffect(() => {
-  //   if (api) {
-  //     const rotationPeriod = api.consts.society.rotationPeriod.toNumber()
-  //     api.derive.chain.bestNumber((block) => {
-  //       setCurrentBlock(block.toNumber())
-  //     })
-  //     setRotationPeriod(rotationPeriod)
-  //   }
-  // }, [api])
+  useEffect(() => {
+    if (api) {
+      const rotationPeriod = (api.consts.society[period] as u32).toNumber()
+      api.derive.chain.bestNumber((block) => {
+        setCurrentBlock(block.toNumber())
+      })
+      setRotationPeriod(rotationPeriod)
+    }
+  }, [api])
 
   return (
     <>
-      <Row className="mb-3">
+      <Row className="mt-4 mb-1">
         <Col>
-          <h4>Current Round</h4>
+          <h4>{title}</h4>
         </Col>
       </Row>
       <Row>
