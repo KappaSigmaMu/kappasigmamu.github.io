@@ -1,6 +1,9 @@
 import type { ApiPromise } from '@polkadot/api'
 import { DeriveSocietyCandidate, DeriveSocietyMember } from '@polkadot/api-derive/types'
+import { StorageKey, u32 } from '@polkadot/types'
+import type { AccountId, AccountId32 } from '@polkadot/types/interfaces'
 import { BN } from '@polkadot/util'
+import { combineLatest, firstValueFrom, map, of } from 'rxjs'
 
 async function buildSocietyCandidatesArray(
   api: ApiPromise,
@@ -89,4 +92,47 @@ const sortSocietyMembersArray = (a: SocietyMember, b: SocietyMember): number => 
               : 1
 )
 
-export { buildSocietyCandidatesArray, buildSocietyMembersArray }
+async function deriveMembersInfo (api: ApiPromise): Promise<DeriveSocietyMember[]> {
+  const currentChallengeRound: u32 = await api.query.society.challengeRoundCount() as u32
+
+  const memberKeys = await api.query.society.members.keys() as StorageKey<[AccountId32]>[]
+  const accountIds: AccountId[] = memberKeys.map(account => account.args[0] as AccountId32)
+
+  return firstValueFrom(
+    combineLatest([
+      of(accountIds),
+      api.query.society.members.multi(accountIds),
+      api.query.society.payouts.multi(accountIds),
+      api.query.society.defenderVotes.multi(accountIds.map(accountId => [currentChallengeRound, accountId])),
+      api.query.society.suspendedMembers.multi(accountIds)
+    ]).pipe(
+      map(([accountIds, members, payouts, defenderVotes, suspendedMembers]) =>
+        accountIds
+          .map((accountId, index) =>
+            members[index].isSome
+              ? {
+                accountId,
+                isDefenderVoter: defenderVotes[index].isSome
+                  ? defenderVotes[index].unwrap().approve.isTrue
+                  : false,
+                isSuspended: suspendedMembers[index].isSome,
+                member: members[index].unwrap(),
+                payouts: payouts[index].payouts
+              }
+              : null
+          )
+          .filter((m): m is NonNullable<typeof m> => !!m)
+          .map(({ accountId, isDefenderVoter, isSuspended, member, payouts }) => ({
+            accountId,
+            isDefenderVoter,
+            isSuspended,
+            payouts,
+            strikes: member.strikes,
+            vouching: member.vouching.unwrapOr(undefined)
+          }))
+      )
+    )
+  )
+}
+
+export { buildSocietyCandidatesArray, buildSocietyMembersArray, deriveMembersInfo }

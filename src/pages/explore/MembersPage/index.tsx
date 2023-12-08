@@ -6,7 +6,7 @@ import { MemberDetailsOffCanvas } from './components/MemberDetailsOffcanvas'
 import { MembersList } from './components/MembersList'
 import { useConsts } from '../../../hooks/useConsts'
 import { LoadingSpinner } from '../components/LoadingSpinner'
-import { buildSocietyMembersArray } from '../helpers'
+import { buildSocietyMembersArray, deriveMembersInfo } from '../helpers'
 
 type MembersPageProps = {
   api: ApiPromise | null
@@ -32,7 +32,7 @@ const MembersPage = ({ api }: MembersPageProps): JSX.Element => {
           info.defender = defender
           info.skeptic = skeptic
   
-          society?.members().then((responseMembers: DeriveSocietyMember[]) => {
+          deriveMembersInfo(api).then((responseMembers: DeriveSocietyMember[]) => {
             setMembers(buildSocietyMembersArray(responseMembers, info, graceStrikes)) 
         })
       })
