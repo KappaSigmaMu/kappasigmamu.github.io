@@ -5,11 +5,11 @@ import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useState } from 'react'
 import { Col, Badge } from 'react-bootstrap'
 import styled from 'styled-components'
+import { unbid, unvouch } from './helper'
+import { AccountIdentity } from '../../../components/AccountIdentity'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { FormatBalance } from '../../../components/FormatBalance'
 import { humanizeBidKind } from '../../../helpers/humanize'
-import { truncateMiddle } from '../../../helpers/truncate'
-import { unbid, unvouch } from './helper'
 
 type Props = {
   api: ApiPromise,
@@ -32,13 +32,13 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
     handleResult({ message, success })
   }
 
-  const handleUnbid = (index: any) => {
-    const tx = api.tx.society.unbid(index)
+  const handleUnbid = () => {
+    const tx = api.tx.society.unbid()
     unbid(tx, activeAccount, onStatusChange)
   }
 
-  const handleUnvouch = (index: any) => {
-    const tx = api.tx.society.unvouch(index)
+  const handleUnvouch = () => {
+    const tx = api.tx.society.unvouch()
     unvouch(tx, activeAccount, onStatusChange)
   }
 
@@ -110,7 +110,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
             <Identicon value={bid.who} size={32} theme={'polkadot'} />
           </Col>
           <Col xs={3} className="text-start text-truncate">
-            {truncateMiddle(bid.who?.toString())}
+            <AccountIdentity api={api} accountId={bid.who} />
           </Col>
           <Col xs={2} className="text-start text-truncate">
             {humanizeBidKind(bid.kind)}

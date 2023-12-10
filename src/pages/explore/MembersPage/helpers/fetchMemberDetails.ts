@@ -15,7 +15,7 @@ export async function fetchMemberDetails(
   ])
 
   const identity = maybeIdentity.isSome 
-    ? buildSocietyMemberIdentity(maybeIdentity.unwrap().info) 
+    ? buildAccountIdentity(maybeIdentity.unwrap().info) 
     : undefined
   
   const rawIndex = accountInfo?.accountIndex
@@ -26,9 +26,9 @@ export async function fetchMemberDetails(
   return { accountId, identity, index }
 }
 
-function buildSocietyMemberIdentity(
+function buildAccountIdentity(
   identityInfo: PalletIdentityIdentityInfo
-): SocietyMemberIdentity {
+): AccountIdentity {
   return {
     name: decode(identityInfo.display) ?? '(Unable to get name)',
     email: decode(identityInfo.email),

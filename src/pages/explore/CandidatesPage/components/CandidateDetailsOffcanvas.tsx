@@ -1,10 +1,10 @@
 import { ApiPromise } from "@polkadot/api"
 import Identicon from "@polkadot/react-identicon"
-import { Option } from "@polkadot/types"
-import { AccountId } from "@polkadot/types/interfaces"
+import { Option, StorageKey } from "@polkadot/types"
+import { AccountId, AccountId32 } from "@polkadot/types/interfaces"
 import { PalletSocietyVote } from "@polkadot/types/lookup"
 import { useEffect, useState } from "react"
-import { MemberIdentity } from "../../../../components/MemberIdentity"
+import { AccountIdentity } from "../../../../components/AccountIdentity"
 import { AccountHeader } from "../../components/AccountHeader"
 import { LoadingSpinner } from "../../components/LoadingSpinner"
 import { Offcanvas } from "../../components/Offcanvas"
@@ -24,7 +24,7 @@ export function CandidateDetailsOffcanvas({ api, candidateId, show, onClose }: P
 
   useEffect(() => {
     // TODO: cache members and member->candidate map
-    api.query.society.members().then(async (memberIds) => {
+    api.query.society.members.keys().then(async (memberIds) => {
       const candidateMemberMap = memberIds.map((memberId) => [candidateId, memberId])
       const votesResponse = await api.query.society.votes.multi(candidateMemberMap)
       setVotes(groupVotes(candidateMemberMap, votesResponse))
@@ -58,7 +58,7 @@ function VoterList({ api, type, memberIds }: { api: ApiPromise, type: string, me
       {memberIds.map((id) => (
         <div key={id.toString()} className="mb-2 ms-2">
           <Identicon value={id} size={22} theme="polkadot" className="me-2" />
-          <MemberIdentity api={api} memberAccountId={id} />
+          <AccountIdentity api={api} accountId={id} />
         </div>
       ))}
     </div>
@@ -66,19 +66,19 @@ function VoterList({ api, type, memberIds }: { api: ApiPromise, type: string, me
 }
 
 function groupVotes(
-  candidateMemberMap: AccountId[][],
+  candidateMemberMap: (StorageKey<[AccountId32]> | AccountId)[][],
   votesResponse: Option<PalletSocietyVote>[]
 ): GroupedVotes {
   const initial = { "Approve": [], "Reject": [], "Skeptic": [] }
   return votesResponse.reduce((grouped, vote, idx) => {
     if (vote.isNone) return grouped
 
-    const type = vote.unwrap().type
+    const type = vote.unwrap().Type
 
     return {
       ...grouped,
       // Associate voter id to vote based on list position
-      [type]: Array.of(candidateMemberMap[idx][1], ...grouped[type])
+      [type as unknown as string]: Array.of(candidateMemberMap[idx][1], ...grouped["Approve"])
     }
   }, initial)
 }

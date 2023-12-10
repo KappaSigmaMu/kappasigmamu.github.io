@@ -11,10 +11,10 @@ const Circle = ({ active = false }: { active?: boolean }): JSX.Element => (
   </svg>
 )
 
-const StrikesCounter = (props: { count: number; maxStrikes: number }): JSX.Element => {
+const StrikesCounter = (props: { count: number; graceStrikes: number }): JSX.Element => {
   const strikesArray = Array(props.count)
     .fill(true)
-    .concat(Array(props.maxStrikes - props.count).fill(false))
+    .concat(Array(props.graceStrikes - props.count).fill(false))
 
   return (
     <>
@@ -29,7 +29,7 @@ const Strikes = () => {
   const { api } = useKusama()
   const { activeAccount } = useAccount()
   const [strikes, setStrikes] = useState<number>(0)
-  const { maxStrikes } = useConsts()
+  const { graceStrikes } = useConsts()
 
   useEffect(() => {
     if (api) {
@@ -53,12 +53,12 @@ const Strikes = () => {
       </Row>
       <Row className="mb-2">
         <Col>
-          <Value>{strikes}</Value>&nbsp;<Unit>/&nbsp;{maxStrikes.toNumber()}</Unit>
+          <Value>{strikes}</Value>&nbsp;<Unit>/&nbsp;{graceStrikes.toNumber()}</Unit>
         </Col>
       </Row>
       <Row>
         <Col>
-          <StrikesCounter count={strikes} maxStrikes={maxStrikes.toNumber()} />
+          <StrikesCounter count={strikes} graceStrikes={graceStrikes.toNumber()} />
         </Col>
       </Row>
     </>

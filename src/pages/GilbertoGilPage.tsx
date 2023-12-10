@@ -1,16 +1,16 @@
 import { ThreeCanary, defaultConfig } from "@kappasigmamu/canary-component"
-import { Vec } from '@polkadot/types'
+import { StorageKey } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { LoadingSpinner } from "./explore/components/LoadingSpinner"
 import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from "../components/MemberOffcanvas"
 import { useKusama } from '../kusama'
 import { ApiState } from "../kusama/KusamaContext"
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
-import { LoadingSpinner } from "./explore/components/LoadingSpinner"
 
 const customGilConfig = {
   ...defaultConfig.gil,
@@ -52,23 +52,21 @@ const GilbertoGilPage = () => {
 
   useEffect(() => {
     if (api && apiState === ApiState.ready) {
-      api.derive.society.members().then((members) => {
+      api.query.society.members.keys().then((members: StorageKey<[AccountId32]>[]) => {
+        const ids = members.map(account => account.toHuman()!.toString())
+        setMembers(ids)
+
+        // TODO: include identity and picture here
         members.forEach((member) => {
-          const id = member.accountId.toString()
+          const id = member.toHuman()!.toString()
           const m = allMembers
           m[id] = {
             "hash": id,
             "name": "unknown",
             "level": "cyborg",
-            "strikes": member.strikes.toString()
           }
           setAllMembers(m)
         })
-      })
-
-      api.query.society.members().then((response: Vec<AccountId32>) => {
-        const ids = response.map((account) => account.toString())
-        setMembers(ids)
       })
     }
   }, [api, apiState])

@@ -1,11 +1,6 @@
 import { Suspense, useLayoutEffect } from 'react'
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
-import { AccountContextProvider } from '../account/AccountContext'
-import { Navbar } from '../components/Navbar'
-import { KusamaContextProvider } from '../kusama'
-import { GlobalStyle } from '../styles/globalStyle'
-import { Theme } from '../styles/Theme'
 import { CyborgGuidePage } from './CyborgGuidePage'
 import { ExplorePage } from './explore/ExplorePage'
 import { FuturivelPage } from './FuturivelPage'
@@ -13,6 +8,11 @@ import { GilbertoGilPage } from './GilbertoGilPage'
 import { JourneyPage } from './JourneyPage'
 import { LandingPage } from './LandingPage'
 import { WelcomePage } from './WelcomePage'
+import { AccountContextProvider } from '../account/AccountContext'
+import { Navbar } from '../components/Navbar'
+import { KusamaContextProvider } from '../kusama'
+import { GlobalStyle } from '../styles/globalStyle'
+import { Theme } from '../styles/Theme'
 
 const AppNavigation = () => {
   const location = useLocation()

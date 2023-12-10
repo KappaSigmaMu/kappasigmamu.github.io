@@ -1,10 +1,10 @@
 import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { useAccount } from '../../account/AccountContext'
 import { Bid } from './Bid'
 import { CurrentRound } from './CurrentRound'
 import { RoundPayout } from './RoundPayout'
 import { Strikes } from './Strikes'
+import { useAccount } from '../../account/AccountContext'
 
 const HumanCurrentRound = (
   <>

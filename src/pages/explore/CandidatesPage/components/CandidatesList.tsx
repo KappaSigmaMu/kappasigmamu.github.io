@@ -4,6 +4,8 @@ import type { Option } from '@polkadot/types'
 import type { SocietyVote, AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useRef, useState } from 'react'
 import { Button, Col } from 'react-bootstrap'
+import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
+import { VoteButton } from './VoteButton'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
 import { truncate, truncateMiddle } from '../../../../helpers/truncate'
@@ -11,8 +13,6 @@ import ApproveIcon from '../../../../static/approve-icon.svg'
 import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
 import { StyledAlert } from '../../components/StyledAlert'
-import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
-import { VoteButton } from './VoteButton'
 
 type CandidatesListProps = {
   api: ApiPromise,
