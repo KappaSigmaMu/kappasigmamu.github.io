@@ -3,8 +3,8 @@ import BN from 'bn.js'
 import { useState, useEffect } from 'react'
 import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 import styled from 'styled-components'
-import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 import { bid, vouch } from './helper'
+import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 
 type BidVouchProps = { api: ApiPromise, handleResult: any, activeAccount: accountType }
 type OnStatusChangeProps = { loading: boolean, message: string, success: boolean }

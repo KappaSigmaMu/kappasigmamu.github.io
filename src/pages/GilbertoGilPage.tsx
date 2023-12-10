@@ -3,7 +3,6 @@ import { StorageKey } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from "react"
 import { Col, Row } from 'react-bootstrap'
-import { isMobile } from 'react-device-detect'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { LoadingSpinner } from "./explore/components/LoadingSpinner"
@@ -13,14 +12,14 @@ import { useKusama } from '../kusama'
 import { ApiState } from "../kusama/KusamaContext"
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
-const customCanaryConfig = {
-  ...defaultConfig.canary,
-  "objectUrl": "/assets/canary.glb",
-  "nodeCoords": "canary.geometry.attributes.position",
-}
-
-if (isMobile) {
-  customCanaryConfig.cameraPosition = [3, 0.5, 3]
+const customGilConfig = {
+  ...defaultConfig.gil,
+  bloom: {
+    kernelSize: 1,
+    luminanceThreshold: 0.1,
+    luminanceSmoothing: 0.05,
+    intensity: 0.1
+  }
 }
 
 interface MemberData {
@@ -31,7 +30,7 @@ interface MembersData {
   [key: string]: MemberData
 }
 
-const LandingPage = () => {
+const GilbertoGilPage = () => {
   window.scrollTo(0, 0)
 
   const navigate = useNavigate()
@@ -77,7 +76,7 @@ const LandingPage = () => {
   }
 
   const handlePartnershipButtonClick = () => {
-    navigate('/gilbertogil')
+    navigate('/futurivel')
   }
 
   const handleExploreButtonClick = () => {
@@ -101,7 +100,7 @@ const LandingPage = () => {
         <div className="position-absolute h-100">
           {members &&
             <ThreeCanary
-              objectUrl={`./static/canary.glb`}
+              objectUrl={`./static/gil.glb`}
               nodes={
                 members.map((id: string) => ({
                   "hash": id,
@@ -110,22 +109,22 @@ const LandingPage = () => {
                 }))
               }
               onNodeClick={handleCanaryNodeClick}
-              config={customCanaryConfig}
+              config={customGilConfig}
             />}
         </div>
         <CentralizedCol xs={0} lg={8} />
         <CentralizedCol xs={12} lg={4}>
           <h1 className="d-none d-lg-block">Join the</h1>
           <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
-          <ActionsContainer className="container">
-            <OutlinedPrimaryLgButton  xs={0} lg={8} onClick={handleExploreButtonClick}>
+          <ActionsContainer>
+            <OutlinedPrimaryLgButton onClick={handleExploreButtonClick}>
               Explore<br />Society
             </OutlinedPrimaryLgButton>
             <OutlinedPrimaryLgButton onClick={handleGuideButtonClick}>
               Cyborg<br />Guide
             </OutlinedPrimaryLgButton>
             <OutlinedSecondaryLgButton onClick={handlePartnershipButtonClick}>
-              Gilberto Gil<br />Partnership
+              About the<br /> partnership
             </OutlinedSecondaryLgButton>
           </ActionsContainer>
         </CentralizedCol>
@@ -190,4 +189,4 @@ const LoadingContainer = styled.div`
   border-radius: 10px;
 `
 
-export { LandingPage }
+export { GilbertoGilPage }

@@ -1,7 +1,7 @@
+import { ExternalLink } from './base'
 import DiscordLogo from '../static/discord-logo.svg'
 import ElementLogo from '../static/element-logo.svg'
 import TwitterLogo from '../static/twitter-logo.svg'
-import { ExternalLink } from './base'
 
 const SocialIcons = () => (
   <div>

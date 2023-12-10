@@ -1,4 +1,4 @@
-import { Vec } from '@polkadot/types'
+import { StorageKey, Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
 import type { KeyringAddress } from '@polkadot/ui-keyring/types'
@@ -79,12 +79,12 @@ const AccountContextProvider = ({ children }: any) => {
         setLevelCheckingAccounts(response.map(account => account.who), 'bidder')
       })
 
-      api.query.society.candidates().then((response: Vec<PalletSocietyBid>) => {
-        setLevelCheckingAccounts(response.map(account => account.who), 'candidate')
+      api.query.society.candidates.keys().then((response: StorageKey<[AccountId32]>[]) => {
+        setLevelCheckingAccounts(response.map(account => account.args[0] as AccountId32), 'candidate')
       })
 
-      api.query.society.members().then((response: Vec<AccountId32>) => {
-        setLevelCheckingAccounts(response, 'cyborg')
+      api.query.society.members.keys().then((response: StorageKey<[AccountId32]>[]) => {
+        setLevelCheckingAccounts(response.map(account => account.args[0] as AccountId32), 'cyborg')
       })
     }
   }, [accounts, activeAccount])

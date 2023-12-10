@@ -1,10 +1,10 @@
 import { ApiPromise } from '@polkadot/api'
 import { DeriveSocietyCandidate } from '@polkadot/api-derive/types'
 import { useEffect, useState } from 'react'
+import { CandidatesList } from './components/CandidatesList'
 import { useAccount } from '../../../account/AccountContext'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { buildSocietyCandidatesArray } from '../helpers'
-import { CandidatesList } from './components/CandidatesList'
 
 type CandidatesPageProps = {
   api: ApiPromise | null
