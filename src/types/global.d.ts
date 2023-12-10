@@ -74,5 +74,4 @@ declare interface SocietyMemberVouching {
 declare interface SocietyMemberVote {
   isApprove: boolean
   isReject: boolean
-  // isSkeptic: boolean
 }

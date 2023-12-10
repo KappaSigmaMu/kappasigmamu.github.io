@@ -33,17 +33,8 @@ async function buildSocietyCandidatesArray(
 
       if (voteOption.isSome) {
         const key = voterAccountId.toString()
-        const vote = voteOption.unwrap()
-
-        console.info(vote)
-
-        // if (vote.isSkeptic) {
-        //   !candidatesMap[candidateAccountId.toString()].skeptics.includes(key) &&
-        //   candidatesMap[candidateAccountId.toString()].skeptics.push(key)
-        // } else {
-          !candidatesMap[candidateAccountId.toString()].voters.includes(key) &&
-          candidatesMap[candidateAccountId.toString()].voters.push(key)
-        // }
+        !candidatesMap[candidateAccountId.toString()].voters.includes(key) &&
+        candidatesMap[candidateAccountId.toString()].voters.push(key)
       }
     })
   })
