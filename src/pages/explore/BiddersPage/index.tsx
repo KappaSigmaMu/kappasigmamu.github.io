@@ -3,11 +3,11 @@ import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState, useCallback } from 'react'
 import { Row, Col } from 'react-bootstrap'
+import { BiddersList } from './BiddersList'
+import { BidVouch } from './BidVouch'
 import { useAccount } from '../../../account/AccountContext'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { StyledAlert } from '../components/StyledAlert'
-import { BiddersList } from './BiddersList'
-import { BidVouch } from './BidVouch'
 
 interface BidResult {
   message: string

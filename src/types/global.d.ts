@@ -44,16 +44,20 @@ declare interface SocietyMember {
   strikes: StrikeCount
   strikesCount: number
   vouching?: SocietyMemberVouching
-  vote?: SocietyMemberVote
+  vote?: PalletSocietyVote
 }
+
+type ExtendedDeriveSociety {
+  skeptic?: AccountId32 | undefined
+} & DeriveSociety
 
 interface SocietyMemberDetails {
   accountId: AccountId
   index?: string
-  identity?: SocietyMemberIdentity
+  identity?: AccountIdentity
 }
 
-interface SocietyMemberIdentity {
+interface AccountIdentity {
   name: string
   email?: string
   legal?: string
@@ -70,5 +74,4 @@ declare interface SocietyMemberVouching {
 declare interface SocietyMemberVote {
   isApprove: boolean
   isReject: boolean
-  isSkeptic: boolean
 }

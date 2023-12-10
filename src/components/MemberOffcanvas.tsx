@@ -28,7 +28,7 @@ const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }
       <Offcanvas.Header closeButton>
 
       </Offcanvas.Header>
-      <Offcanvas.Body style={{ overflowY: "hidden" }}>
+      <Offcanvas.Body style={{ overflowY: "scroll" }}>
         <Container>
           <StyledRow>
             <Col className="d-flex justify-content-center">
