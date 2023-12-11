@@ -18,8 +18,6 @@ cp ./src/kusama/config/development.json.sample ./src/kusama/config/development.j
 
 > Use `"PROVIDER_SOCKET": "wss://kusama-rpc.polkadot.io"` if you want to connect to production RPC
 
-- Download [this binary](https://gateway.pinata.cloud/ipfs/QmPbk5Xx3kHdWw4gDBiNTp6dSnzW8d2PAofE1TAh2Tpc9J), rename it to `substrate` and place it on the root folder. This binary has a initial state with some members and short rotation times.
-
 ## Installation
 
 ```bash
@@ -38,11 +36,18 @@ docker-compose up
 
 ## Running locally
 
-### Society node:
+### Using Chopsticks:
 
+Use [Chopsticks](https://github.com/AcalaNetwork/chopsticks) and set `"PROVIDER_SOCKET": "ws://127.0.0.1:8000"` to run a local fork of Kusama with predetermined Society storage:
 ```
-./substrate --tmp --dev
+npx @acala-network/chopsticks@latest --config=config/kusama.yml
 ```
+
+Private keys for development accounts. Change hard derivation key to switch from `Alice` to `Bob`, `Charlie`, etc.
+```
+bottom drive obey lake curtain smoke basket hold race lonely fit walk\\Alice
+```
+
 
 ### Application:
 

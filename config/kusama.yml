@@ -68,7 +68,7 @@ import-storage:
     Bids:
       - { who: "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY", kind: "deposit", value: 1 }
     Candidates:
-      - [[5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty], rank: 0]
+      - [[5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty]]
     Members:
       - [[5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y], rank: 0]
   ParasDisputes:
