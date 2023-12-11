@@ -34,7 +34,7 @@ docker-compose up
 
 - You can also access [Polkadotjs pointing to your development node](https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A9944#/society) to interact with it.
 
-## Running locally
+## Running a local fork of Kusama
 
 ### Using Chopsticks:
 
@@ -43,7 +43,7 @@ Use [Chopsticks](https://github.com/AcalaNetwork/chopsticks) and set `"PROVIDER_
 npx @acala-network/chopsticks@latest --config=config/kusama.yml
 ```
 
-Private keys for development accounts. Change hard derivation key to switch from `Alice` to `Bob`, `Charlie`, etc.
+Private keys for development accounts. Change hard derivation key to switch from `Alice` to `Bob`, `Charlie`, etc. Use this private key to import these development accounts to a wallet of your choice.
 ```
 bottom drive obey lake curtain smoke basket hold race lonely fit walk\\Alice
 ```
