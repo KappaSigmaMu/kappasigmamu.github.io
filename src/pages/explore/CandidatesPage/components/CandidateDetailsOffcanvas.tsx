@@ -69,6 +69,7 @@ function groupVotes(
   candidateMemberMap: (StorageKey<[AccountId32]> | AccountId)[][],
   votesResponse: Option<PalletSocietyVote>[]
 ): GroupedVotes {
+  // TODO: fix me
   const initial = { "Approve": [], "Reject": [], "Skeptic": [] }
   return votesResponse.reduce((grouped, vote, idx) => {
     if (vote.isNone) return grouped

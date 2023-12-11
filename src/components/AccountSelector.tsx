@@ -20,6 +20,7 @@ const Title = ({ activeAccount }: { activeAccount: accountType }) => {
   const { level } = useAccount()
   const account = activeAccount.name
 
+  // TODO: Title not working
   return (
     <>
       <div className='align-top d-inline-block me-3' style={{ marginTop: 6 }}>
