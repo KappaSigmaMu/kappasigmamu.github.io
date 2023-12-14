@@ -38,9 +38,9 @@ docker-compose up
 
 ### Using Chopsticks:
 
-Use [Chopsticks](https://github.com/AcalaNetwork/chopsticks) and set `"PROVIDER_SOCKET": "ws://127.0.0.1:8000"` to run a local fork of Kusama with predetermined Society storage:
+Use [Chopsticks](https://github.com/AcalaNetwork/chopsticks) and set `"PROVIDER_SOCKET": "ws://127.0.0.1:8000"` to run a local fork of Kusama with predetermined Society storage and a custom runtime (comment out the `wasm-override` parameter on the config file if you don't want a custom runtime):
 ```
-npx @acala-network/chopsticks@latest --config=config/kusama.yml
+yarn chopsticks
 ```
 
 Private keys for development accounts. Change hard derivation key to switch from `Alice` to `Bob`, `Charlie`, etc. Use this private key to import these development accounts to a wallet of your choice.
