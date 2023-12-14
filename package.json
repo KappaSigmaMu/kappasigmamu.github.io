@@ -120,15 +120,16 @@
   },
   "scripts": {
     "build": "NODE_OPTIONS=--openssl-legacy-provider node scripts/build.js",
+    "chopsticks": "npx @acala-network/chopsticks@latest --config=config/kusama.yml",
     "ci": "yarn install --immutable",
-    "start": "NODE_OPTIONS=--openssl-legacy-provider node scripts/start.js",
-    "test": "node scripts/test.js",
     "cy:open": "cypress open",
-    "eslint": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\"",
+    "deploy": "gh-pages -d build",
     "eslint:fix": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\" --fix",
-    "lint": "yarn eslint",
+    "eslint": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\"",
     "lint:fix": "yarn eslint:fix",
-    "deploy": "gh-pages -d build"
+    "lint": "yarn eslint",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider node scripts/start.js",
+    "test": "node scripts/test.js"
   },
   "eslintConfig": {
     "extends": [
