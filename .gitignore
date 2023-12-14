@@ -29,3 +29,5 @@ yarn-error.log*
 src/kusama/config/development.json
 
 **/*/*.swp
+db.sqlite*
+*.wasm

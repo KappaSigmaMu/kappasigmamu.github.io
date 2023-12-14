@@ -29,15 +29,17 @@ const AlreadyVotedIcon = () => (
  <>
     <img src={CheckAllIcon} className="me-2" />
     <label style={{ color: '#6c757d' }}>Voted</label>
-  </>     
+  </>
 )
 
+// TODO: only let members vote
+// TODO: check error/success messages (non-members votes are returning success)
 const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps): JSX.Element => {
   const [showAlert, setShowAlert] = useState(false)
   const [votes, setVotes] = useState<SocietyCandidate[]>([])
   const [voteResult, setVoteResult] = useState<VoteResult>({ success: false, message: '' })
   const society = api?.query?.society
-  
+
   const [selectedCandidate, setSelectedCandidate] = useState<AccountId | null>(null)
   const [showCandidateDetailsOffcanvas, setShowCandidateDetailsOffcanvas] = useState(false)
   const showMessage = (result: VoteResult) => {
@@ -64,7 +66,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
           if (prevActiveAccount != activeAccount) setVotes([])
           return
         }
-        
+
         setVotes([candidate.accountId, ...votes])
       })
     })
@@ -100,7 +102,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
       <Col xs={3} className="text-start">Wallet Hash</Col>
       <Col className="text-start">Bid Kind</Col>
       <Col></Col>
-      <Col></Col>
+      <Col>Vote</Col>
     </DataHeaderRow>
 
     {candidates.map((candidate: SocietyCandidate) => (
