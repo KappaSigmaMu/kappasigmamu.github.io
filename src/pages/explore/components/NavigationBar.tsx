@@ -16,6 +16,9 @@ const NavigationBar = () => (
     <StyledNavItem>
       <Nav.Link as={NavLink} to="/explore/suspended">Suspended</Nav.Link>
     </StyledNavItem>
+    <StyledNavItem>
+      <Nav.Link as={NavLink} to="/explore/poi">Proof of Ink</Nav.Link>
+    </StyledNavItem>
   </StyledNav>
 )
 
