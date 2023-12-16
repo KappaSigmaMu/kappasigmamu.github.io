@@ -6,10 +6,9 @@ import jsonrpc from '@polkadot/types/interfaces/jsonrpc'
 import keyring from '@polkadot/ui-keyring'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import React, { useReducer, useContext } from 'react'
-import { config } from './config'
 
-const RPC = { ...jsonrpc, ...config.RPC }
-const SOCKET = config.PROVIDER_SOCKET
+const RPC = { ...jsonrpc, ...process.env.REACT_APP_RPC }
+const SOCKET = process.env.REACT_APP_PROVIDER_SOCKET
 
 enum ApiState {
   initializing,
@@ -25,7 +24,7 @@ const INIT_STATE: StateType = {
   apiError: null,
   apiState: ApiState.initializing,
   keyring: null,
-  keyringState: null,
+  keyringState: null
 }
 
 type StateType = {
@@ -70,7 +69,8 @@ function reducer(state: StateType, action: ActionType): StateType {
 function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
   const { apiState } = state
 
-  if (apiState !== ApiState.initializing && apiState !== ApiState.disconnected) return
+  if (apiState !== ApiState.initializing && apiState !== ApiState.disconnected)
+    return
 
   dispatch({ type: 'CONNECTING' })
 
@@ -94,26 +94,28 @@ function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
 
     dispatch({ type: 'KEYRING_LOADING' })
     try {
-      await web3Enable(config.APP_NAME)
+      await web3Enable(process.env.REACT_APP_NAME)
       let allAccounts = await web3Accounts()
       allAccounts = allAccounts.map(({ address, meta }) => ({
         address,
-        meta: { ...meta, name: `${meta.name} (${meta.source})` },
+        meta: { ...meta, name: `${meta.name} (${meta.source})` }
       }))
 
       const kusamaPrefix = 2
       const genericPrefix = 42
 
-      const prefix = config.DEVELOPMENT_KEYRING ? genericPrefix : kusamaPrefix
+      const prefix = process.env.REACT_APP_DEVELOPMENT_KEYRING
+        ? genericPrefix
+        : kusamaPrefix
 
       keyring.loadAll(
         {
-          isDevelopment: config.DEVELOPMENT_KEYRING,
+          isDevelopment: process.env.REACT_APP_DEVELOPMENT_KEYRING,
           ss58Format: prefix,
           type: 'ed25519',
           genesisHash: state?.api?.genesisHash
         },
-        allAccounts,
+        allAccounts
       )
       _keyring = keyring
       dispatch({ type: 'KEYRING_READY', payload: _keyring })
@@ -133,13 +135,19 @@ function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
 
 const KusamaContext = React.createContext<StateType>(INIT_STATE)
 
-function KusamaContextProvider(props: { children: JSX.Element | JSX.Element[] }) {
+function KusamaContextProvider(props: {
+  children: JSX.Element | JSX.Element[]
+}) {
   const [state, dispatch] = useReducer(reducer, INIT_STATE)
 
   connect(state, dispatch)
   loadAccounts(state, dispatch)
 
-  return <KusamaContext.Provider value={state}>{props.children}</KusamaContext.Provider>
+  return (
+    <KusamaContext.Provider value={state}>
+      {props.children}
+    </KusamaContext.Provider>
+  )
 }
 
 const useKusama = () => {

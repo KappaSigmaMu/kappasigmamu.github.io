@@ -75,3 +75,12 @@ declare interface SocietyMemberVote {
   isApprove: boolean
   isReject: boolean
 }
+
+namespace NodeJS {
+  interface ProcessEnv {
+    REACT_APP_NAME: string
+    REACT_APP_PROVIDER_SOCKET: string
+    REACT_APP_DEVELOPMENT_KEYRING: boolean
+    REACT_APP_RPC: object
+  }
+}
