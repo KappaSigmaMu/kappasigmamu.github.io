@@ -11,12 +11,12 @@ This is a dedicated interface for Kusama Society.
 
 - Clone this repository.
 
-- Copy the development sample config file:
+- Copy the development sample config file on the root folder:
 ```bash
-cp ./src/kusama/config/development.json.sample ./src/kusama/config/development.json
+cp .env.development.sample .env.development
 ```
 
-> Use `"PROVIDER_SOCKET": "wss://kusama-rpc.polkadot.io"` if you want to connect to production RPC
+> Use `"PROVIDER_SOCKET": "wss://kusama-rpc.polkadot.io"` (or one of the other options available on the sample config file) if you want to connect to production RPC
 
 ## Installation
 
