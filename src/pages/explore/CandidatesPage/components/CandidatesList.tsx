@@ -35,24 +35,14 @@ const AlreadyVotedIcon = () => (
 
 // TODO: only let members vote
 // TODO: check error/success messages (non-members votes are returning success)
-const CandidatesList = ({
-  api,
-  activeAccount,
-  candidates
-}: CandidatesListProps): JSX.Element => {
+const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps): JSX.Element => {
   const [showAlert, setShowAlert] = useState(false)
   const [votes, setVotes] = useState<SocietyCandidate[]>([])
-  const [voteResult, setVoteResult] = useState<VoteResult>({
-    success: false,
-    message: ''
-  })
+  const [voteResult, setVoteResult] = useState<VoteResult>({ success: false, message: '' })
   const society = api?.query?.society
 
-  const [selectedCandidate, setSelectedCandidate] = useState<AccountId | null>(
-    null
-  )
-  const [showCandidateDetailsOffcanvas, setShowCandidateDetailsOffcanvas] =
-    useState(false)
+  const [selectedCandidate, setSelectedCandidate] = useState<AccountId | null>(null)
+  const [showCandidateDetailsOffcanvas, setShowCandidateDetailsOffcanvas] = useState(false)
   const showMessage = (result: VoteResult) => {
     setVoteResult(result)
     setShowAlert(true)
@@ -72,18 +62,14 @@ const CandidatesList = ({
     if (candidates.length === 0) return
 
     candidates.forEach((candidate) => {
-      society.votes(
-        candidate.accountId,
-        activeAccount.address,
-        (vote: Option<SocietyVote>) => {
-          if (vote.isEmpty) {
-            if (prevActiveAccount != activeAccount) setVotes([])
-            return
-          }
-
-          setVotes([candidate.accountId, ...votes])
+      society.votes(candidate.accountId, activeAccount.address, (vote: Option<SocietyVote>) => {
+        if (vote.isEmpty) {
+          if (prevActiveAccount != activeAccount) setVotes([])
+          return
         }
-      )
+
+        setVotes([candidate.accountId, ...votes])
+      })
     })
   }, [activeAccount, prevActiveAccount])
 
@@ -105,12 +91,7 @@ const CandidatesList = ({
         />
       )}
 
-      <StyledAlert
-        success={voteResult.success}
-        onClose={() => setShowAlert(false)}
-        show={showAlert}
-        dismissible
-      >
+      <StyledAlert success={voteResult.success} onClose={() => setShowAlert(false)} show={showAlert} dismissible>
         {voteResult.message}
       </StyledAlert>
 
@@ -129,11 +110,7 @@ const CandidatesList = ({
       {candidates.map((candidate: SocietyCandidate) => (
         <DataRow key={candidate.accountId.toString()}>
           <Col xs={1} className="text-center">
-            <Identicon
-              value={candidate.accountId}
-              size={32}
-              theme={'polkadot'}
-            />
+            <Identicon value={candidate.accountId} size={32} theme={'polkadot'} />
           </Col>
           <Col xs={3} className="text-start text-truncate">
             <AccountIdentity api={api} accountId={candidate.accountId} />
@@ -144,13 +121,8 @@ const CandidatesList = ({
               <FormatBalance balance={candidate.value} />
             ) : (
               <>
-                Member: {truncate(candidate.kind.asVouch[0].toHuman(), 7)} |
-                Tip:{' '}
-                {
-                  <FormatBalance
-                    balance={candidate.kind.asVouch[1]}
-                  ></FormatBalance>
-                }
+                Member: {truncate(candidate.kind.asVouch[0].toHuman(), 7)} | Tip:{' '}
+                {<FormatBalance balance={candidate.kind.asVouch[1]}></FormatBalance>}
               </>
             )}
           </Col>
@@ -167,11 +139,7 @@ const CandidatesList = ({
                   showMessage={showMessage}
                   successText="Approval vote sent."
                   waitingText="Approval vote request sent. Waiting for response..."
-                  vote={{
-                    approve: true,
-                    voterAccount: activeAccount,
-                    candidateId: candidate.accountId
-                  }}
+                  vote={{ approve: true, voterAccount: activeAccount, candidateId: candidate.accountId }}
                   icon={ApproveIcon}
                 >
                   <u>Approve</u>
@@ -181,11 +149,7 @@ const CandidatesList = ({
                   showMessage={showMessage}
                   successText="Rejection vote sent."
                   waitingText="Rejection vote request sent. Waiting for response..."
-                  vote={{
-                    approve: false,
-                    voterAccount: activeAccount,
-                    candidateId: candidate.accountId
-                  }}
+                  vote={{ approve: false, voterAccount: activeAccount, candidateId: candidate.accountId }}
                   icon={RejectIcon}
                 >
                   <u>Reject</u>
