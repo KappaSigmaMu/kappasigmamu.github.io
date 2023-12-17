@@ -3,18 +3,8 @@ services:
   frontend:
     build: .
     ports:
-    - "3000:3000"
+      - '3000:3000'
     volumes:
       - .:/var/app
     environment:
       - NODE_ENV=development
-
-  substrate:
-    image: ubuntu:20.04
-    privileged: true
-    command: [ "./data/app/substrate", "--tmp", "--dev" ]
-    volumes:
-      - type: bind
-        source: ./substrate
-        target: /data/app/substrate
-    network_mode : "host"
