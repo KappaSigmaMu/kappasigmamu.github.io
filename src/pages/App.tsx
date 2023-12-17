@@ -18,19 +18,16 @@ const AppNavigation = () => {
   const location = useLocation()
 
   useLayoutEffect(() => {
-    const isLandingPage = location.pathname === "/" || location.pathname === ""
-    document.body.style.overflow = isLandingPage ? "hidden" : "auto"
+    const isLandingPage = location.pathname === '/' || location.pathname === ''
+    document.body.style.overflow = isLandingPage ? 'hidden' : 'auto'
   }, [location])
 
-  return (<>
-    <Navbar
-      showAccount
-      showExploreButton
-      showBrandIcon
-      showSocialIcons
-    />
-    <Outlet />
-  </>)
+  return (
+    <>
+      <Navbar showAccount showExploreButton showBrandIcon showSocialIcons />
+      <Outlet />
+    </>
+  )
 }
 
 const AppRouter = () => {

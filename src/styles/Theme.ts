@@ -11,8 +11,8 @@ const Theme: DefaultTheme = {
     black: '#212529',
     grey: '#ced4da',
     lightGrey: '#6c757d',
-    darkGrey: '#343A40',
-  },
+    darkGrey: '#343A40'
+  }
 }
 
 export { Theme }

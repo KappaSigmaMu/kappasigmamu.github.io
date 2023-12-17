@@ -11,8 +11,8 @@ const CANVAS_STYLE = {
   backgroundColor: 'white'
 }
 
-const HEIGHT = (SIZE * 2) + (PADD * 1)
-const WIDTH = (SIZE * 3) + (PADD * 2)
+const HEIGHT = SIZE * 2 + PADD * 1
+const WIDTH = SIZE * 3 + PADD * 2
 
 type ProofOfInkPageProps = {
   api: ApiPromise | null
@@ -27,24 +27,20 @@ const ProofOfInkPage = ({ api }: ProofOfInkPageProps): JSX.Element => {
     society?.head().then((head) => setHead(head.unwrap()))
   }, [society])
 
-  return (
-    head === null
-    ? <LoadingSpinner />
-    : <>
-        <Row className="d-flex align-items-center">
-          Current head is: {head.toHuman()}
-        </Row>
-        <br />
-        <Row className="d-flex align-items-center">
-          Proof-of-ink examples (auto-generated based on the current head):
-        </Row>
-        <br />
-        <DesignKusama accountId={head} />
-      </>
+  return head === null ? (
+    <LoadingSpinner />
+  ) : (
+    <>
+      <Row className="d-flex align-items-center">Current head is: {head.toHuman()}</Row>
+      <br />
+      <Row className="d-flex align-items-center">Proof-of-ink examples (auto-generated based on the current head):</Row>
+      <br />
+      <DesignKusama accountId={head} />
+    </>
   )
 }
 
-function DesignKusama ({ accountId }: { accountId: AccountId }) {
+function DesignKusama({ accountId }: { accountId: AccountId }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   useEffect((): void => {
@@ -57,14 +53,7 @@ function DesignKusama ({ accountId }: { accountId: AccountId }) {
     }
   })
 
-  return (
-    <canvas
-      height={HEIGHT}
-      ref={canvasRef}
-      style={CANVAS_STYLE}
-      width={WIDTH}
-    />
-  )
+  return <canvas height={HEIGHT} ref={canvasRef} style={CANVAS_STYLE} width={WIDTH} />
 }
 
 export { ProofOfInkPage }

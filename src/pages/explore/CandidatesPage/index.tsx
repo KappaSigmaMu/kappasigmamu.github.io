@@ -17,16 +17,14 @@ const CandidatesPage = ({ api }: CandidatesPageProps): JSX.Element => {
 
   useEffect(() => {
     society?.candidates((responseCandidates: DeriveSocietyCandidate[]) => {
-      buildSocietyCandidatesArray(api!, responseCandidates)
-        .then(setCandidates)
-        .catch(console.error)
+      buildSocietyCandidatesArray(api!, responseCandidates).then(setCandidates).catch(console.error)
     })
   }, [society])
 
-  return (
-    candidates === null
-      ? <LoadingSpinner />
-      : <CandidatesList api={api!} activeAccount={activeAccount} candidates={candidates} />
+  return candidates === null ? (
+    <LoadingSpinner />
+  ) : (
+    <CandidatesList api={api!} activeAccount={activeAccount} candidates={candidates} />
   )
 }
 

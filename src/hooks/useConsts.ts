@@ -37,7 +37,7 @@ export function useConsts(): SocietyConsts {
       palletId,
       periodSpend,
       rotationPeriod,
-      wrongSideDeduction,
+      wrongSideDeduction
     }
   })
 }

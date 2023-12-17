@@ -2,7 +2,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types'
 import { doTx } from '../../../helpers/extrinsitcs'
 
 export const unbid = async (
-  tx: SubmittableExtrinsic<"promise", any>,
+  tx: SubmittableExtrinsic<'promise', any>,
   activeAccount: accountType,
   onStatusChange: any
 ) => {
@@ -13,7 +13,7 @@ export const unbid = async (
 }
 
 export const unvouch = async (
-  tx: SubmittableExtrinsic<"promise", any>,
+  tx: SubmittableExtrinsic<'promise', any>,
   activeAccount: accountType,
   onStatusChange: any
 ) => {
@@ -24,7 +24,7 @@ export const unvouch = async (
 }
 
 export const bid = async (
-  tx: SubmittableExtrinsic<"promise", any>,
+  tx: SubmittableExtrinsic<'promise', any>,
   activeAccount: accountType,
   onStatusChange: any
 ) => {
@@ -35,7 +35,7 @@ export const bid = async (
 }
 
 export const vouch = async (
-  tx: SubmittableExtrinsic<"promise", any>,
+  tx: SubmittableExtrinsic<'promise', any>,
   activeAccount: accountType,
   onStatusChange: any
 ) => {

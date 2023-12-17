@@ -14,7 +14,7 @@ const SocialIcons = () => (
     </ExternalLink>
     &nbsp;
     <ExternalLink href="https://twitter.com/kusamanetwork">
-      <img src={TwitterLogo} alt="Twitter Logo" style={{color: 'red'}} />
+      <img src={TwitterLogo} alt="Twitter Logo" style={{ color: 'red' }} />
     </ExternalLink>
   </div>
 )

@@ -21,7 +21,7 @@ const INIT_STATE = {
 }
 
 type StateType = {
-  level: string,
+  level: string
   setActiveAccount: (account: accountType) => void
   activeAccount: accountType
   accounts: accountType[]
@@ -45,7 +45,7 @@ const AccountContextProvider = ({ children }: any) => {
   const fetchAccounts = () => {
     const storedAccounts = keyring.getAccounts().map((account: KeyringAddress) => ({
       name: account.meta.name,
-      address: keyring.encodeAddress(account.address),
+      address: keyring.encodeAddress(account.address)
     }))
 
     if (storedAccounts.length == 0) return
@@ -76,26 +76,35 @@ const AccountContextProvider = ({ children }: any) => {
 
     if (api && activeAccount) {
       api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
-        setLevelCheckingAccounts(response.map(account => account.who), 'bidder')
+        setLevelCheckingAccounts(
+          response.map((account) => account.who),
+          'bidder'
+        )
       })
 
       api.query.society.candidates.keys().then((response: StorageKey<[AccountId32]>[]) => {
-        setLevelCheckingAccounts(response.map(account => account.args[0] as AccountId32), 'candidate')
+        setLevelCheckingAccounts(
+          response.map((account) => account.args[0] as AccountId32),
+          'candidate'
+        )
       })
 
       api.query.society.members.keys().then((response: StorageKey<[AccountId32]>[]) => {
-        setLevelCheckingAccounts(response.map(account => account.args[0] as AccountId32), 'cyborg')
+        setLevelCheckingAccounts(
+          response.map((account) => account.args[0] as AccountId32),
+          'cyborg'
+        )
       })
     }
   }, [accounts, activeAccount])
 
-  return loading
-    ? <>{children}</>
-    : (
-      <AccountContext.Provider value={{ level, activeAccount, setActiveAccount, accounts, fetchAccounts }}>
-        {children}
-      </AccountContext.Provider>
-    )
+  return loading ? (
+    <>{children}</>
+  ) : (
+    <AccountContext.Provider value={{ level, activeAccount, setActiveAccount, accounts, fetchAccounts }}>
+      {children}
+    </AccountContext.Provider>
+  )
 }
 
 const useAccount = () => ({ ...useContext(AccountContext) })

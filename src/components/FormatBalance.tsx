@@ -13,7 +13,7 @@ type ValueType = Compact<any> | BN | string
 const applyFormatBalance = (value: ValueType, withCurrency = true, isShort = false): React.ReactNode => {
   const [decimals, token] = DEFAULT_KSM_PROPERTIES
   const [prefix, postfix] = formatBalance(value, { decimals, forceUnit: '-', withSi: false }).split('.')
-  const _isShort = isShort || (prefix.length >= K_LENGTH)
+  const _isShort = isShort || prefix.length >= K_LENGTH
   const unitPost = withCurrency ? token : ''
 
   if (prefix.length > M_LENGTH) {
@@ -21,21 +21,28 @@ const applyFormatBalance = (value: ValueType, withCurrency = true, isShort = fal
     const minor = rest.substring(0, 4)
     const unit = rest.substring(4)
 
-    return <>
-      <span>{major}.</span>
-      <span>{minor}</span>
-      <span>{unit}{unit ? unitPost : ` ${unitPost}`}</span>
-    </>
+    return (
+      <>
+        <span>{major}.</span>
+        <span>{minor}</span>
+        <span>
+          {unit}
+          {unit ? unitPost : ` ${unitPost}`}
+        </span>
+      </>
+    )
   }
 
-  return <>
-    <span>{`${prefix}${_isShort ? '' : '.'}`}</span>
-    <span>{!_isShort && `0000${postfix || ''}`.slice(-4)}</span>
-    <span> {unitPost}</span>
-  </>
+  return (
+    <>
+      <span>{`${prefix}${_isShort ? '' : '.'}`}</span>
+      <span>{!_isShort && `0000${postfix || ''}`.slice(-4)}</span>
+      <span> {unitPost}</span>
+    </>
+  )
 }
 
-type FormatBalanceProps = { balance: Balance, withCurrency?: boolean, isShort?: boolean}
+type FormatBalanceProps = { balance: Balance; withCurrency?: boolean; isShort?: boolean }
 
 const FormatBalance = ({ balance, withCurrency = true, isShort = false }: FormatBalanceProps): JSX.Element => (
   <>{applyFormatBalance(balance, withCurrency, isShort)}</>

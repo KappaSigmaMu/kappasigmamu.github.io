@@ -1,9 +1,9 @@
-import { Offcanvas as RBOffcanvas } from "react-bootstrap"
-import styled from "styled-components"
+import { Offcanvas as RBOffcanvas } from 'react-bootstrap'
+import styled from 'styled-components'
 
 type Props = {
   show: boolean
-  placement: "start" | "end"
+  placement: 'start' | 'end'
   onClose: () => void
   header?: JSX.Element
   children: JSX.Element | JSX.Element[]
@@ -18,18 +18,14 @@ export function Offcanvas({
 }: Props) {
   return (
     <StyledOffcanvas show={show} onHide={onClose} placement={placement} backdrop={true}>
-      <RBOffcanvas.Header closeButton>
-        {header}
-      </RBOffcanvas.Header>
-      <RBOffcanvas.Body>
-        {children}
-      </RBOffcanvas.Body>
+      <RBOffcanvas.Header closeButton>{header}</RBOffcanvas.Header>
+      <RBOffcanvas.Body>{children}</RBOffcanvas.Body>
     </StyledOffcanvas>
   )
 }
 
 const StyledOffcanvas = styled(RBOffcanvas)`
-  background: #33393F;
+  background: #33393f;
   box-shadow: rgba(0, 0, 0, 0.3) -6px 0px 20px 0px;
   .offcanvas-header .btn-close {
     margin: unset;

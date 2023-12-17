@@ -6,8 +6,8 @@ import styled from 'styled-components'
 import { bid, vouch } from './helper'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 
-type BidVouchProps = { api: ApiPromise, handleResult: any, activeAccount: accountType }
-type OnStatusChangeProps = { loading: boolean, message: string, success: boolean }
+type BidVouchProps = { api: ApiPromise; handleResult: any; activeAccount: accountType }
+type OnStatusChangeProps = { loading: boolean; message: string; success: boolean }
 
 const ksmMultiplier = new BN(1e12)
 
@@ -55,7 +55,7 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
 
   return (
     <Tab.Container defaultActiveKey="bid">
-      <StyledNav variant='tabs'>
+      <StyledNav variant="tabs">
         <Nav.Item>
           <Nav.Link eventKey="bid">Place Bid</Nav.Link>
         </Nav.Item>
@@ -69,21 +69,14 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
             <Form.Group className="mb-3">
               <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm
-                  type="number"
-                  step="any"
-                  placeholder="0.0000"
-                  aria-label="Bid amount"
-                />
+                <StyledForm type="number" step="any" placeholder="0.0000" aria-label="Bid amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
             <Button disabled={loading} variant="primary" type="submit" className="w-100">
               {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
-            <StyledButtonLabel className="text-muted">
-              *Plus 0.0045 KSM fee
-            </StyledButtonLabel>
+            <StyledButtonLabel className="text-muted">*Plus 0.0045 KSM fee</StyledButtonLabel>
           </Form>
           <hr />
           <div className="align-self-center">
@@ -95,45 +88,28 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
             <Form.Group className="mb-3">
               <StyledFormLabel>Vouch for</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm
-                  type="text"
-                  step="any"
-                  placeholder="Address to vouch for"
-                  aria-label="Address"
-                />
+                <StyledForm type="text" step="any" placeholder="Address to vouch for" aria-label="Address" />
               </StyledFormInput>
             </Form.Group>
 
             <Form.Group className="mb-3">
               <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm
-                  type="number"
-                  step="any"
-                  placeholder="0.0000"
-                  aria-label="Bid amount"
-                />
+                <StyledForm type="number" step="any" placeholder="0.0000" aria-label="Bid amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
             <Form.Group className="mb-3">
               <StyledFormLabel>Tip amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm
-                  type="number"
-                  step="any"
-                  placeholder="0.0000"
-                  aria-label="Tip amount"
-                />
+                <StyledForm type="number" step="any" placeholder="0.0000" aria-label="Tip amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
             <Button disabled={loading} variant="primary" type="submit" className="w-100">
               {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
-            <StyledButtonLabel className="text-muted">
-              *Plus 0.0045 KSM fee
-            </StyledButtonLabel>
+            <StyledButtonLabel className="text-muted">*Plus 0.0045 KSM fee</StyledButtonLabel>
           </Form>
           <hr />
           <div className="align-self-center">
@@ -146,7 +122,7 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
 }
 
 const StyledFormLabel = styled(Form.Label)`
-  color: #6c757d
+  color: #6c757d;
 `
 
 const StyledForm = styled(FormControl)`
@@ -181,7 +157,7 @@ const StyledFormInput = styled(InputGroup)`
   }
 
   /* Firefox */
-  input[type=number] {
+  input[type='number'] {
     -moz-appearance: textfield;
   }
 `
@@ -198,14 +174,14 @@ const StyledNav = styled(Nav)`
 
   .nav-link.active {
     color: white;
-    background-color: #343A40;
+    background-color: #343a40;
   }
 `
 
 const StyledTabContent = styled(Tab.Content)`
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
-  background-color: #343A40;
+  background-color: #343a40;
   padding: 10% 7%;
 `
 

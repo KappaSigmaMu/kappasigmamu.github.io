@@ -23,18 +23,12 @@ const Title = ({ activeAccount }: { activeAccount: accountType }) => {
   // TODO: Title not working
   return (
     <>
-      <div className='align-top d-inline-block me-3' style={{ marginTop: 6 }}>
-        <Identicon
-          value={activeAccount.address}
-          size={32}
-          theme={'polkadot'}
-        />
+      <div className="align-top d-inline-block me-3" style={{ marginTop: 6 }}>
+        <Identicon value={activeAccount.address} size={32} theme={'polkadot'} />
       </div>
 
       <label style={{ fontSize: '12px' }}>
-        <SelectedAccountDiv className="text-start mb-1">
-          {truncateMiddle(account || '')}
-        </SelectedAccountDiv>
+        <SelectedAccountDiv className="text-start mb-1">{truncateMiddle(account || '')}</SelectedAccountDiv>
         <LevelStatusDiv>
           <label className="pe-3">JOURNEY: {level.toUpperCase()}</label>
           <label>{LEVELSTATUS[level]}</label>
@@ -48,7 +42,7 @@ const Main = () => {
   const { activeAccount, setActiveAccount, accounts } = useAccount()
 
   const onChange = (account: string) => {
-    const activeAccount = accounts.filter(acc => acc.address.includes(account))[0]
+    const activeAccount = accounts.filter((acc) => acc.address.includes(account))[0]
     setActiveAccount(activeAccount)
   }
 

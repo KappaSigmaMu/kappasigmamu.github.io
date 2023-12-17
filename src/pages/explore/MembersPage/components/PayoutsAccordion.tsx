@@ -3,8 +3,8 @@ import { Accordion, Card, useAccordionButton } from 'react-bootstrap'
 import { BlockTime } from '../../../../components/BlockTime'
 import { FormatBalance } from '../../../../components/FormatBalance'
 
-const PayoutsAccordionToggle = ({ children, eventKey }: { children: any, eventKey: any }) => (
-  <a href="javascript:void(0)" onClick={useAccordionButton(eventKey)} >
+const PayoutsAccordionToggle = ({ children, eventKey }: { children: any; eventKey: any }) => (
+  <a href="javascript:void(0)" onClick={useAccordionButton(eventKey)}>
     {children}
   </a>
 )
@@ -16,7 +16,7 @@ const PayoutsAccordion = ({ payouts }: { payouts: [BlockNumber, Balance][] }) =>
       <Card.Body>
         {payouts.map((payout: [BlockNumber, Balance], index: number) => {
           const [block, balance] = payout
-          return(
+          return (
             <div key={index}>
               <p className="mb-0">
                 <FormatBalance balance={balance} />

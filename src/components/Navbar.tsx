@@ -10,14 +10,17 @@ const Navbar = ({
   showAccount = false,
   showBrandIcon = false,
   showExploreButton = false,
-  showSocialIcons = false,
+  showSocialIcons = false
 }: NavRouteProps) => (
   <RBNavbar className="pt-4">
     <Container>
       <Nav>{showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}</Nav>
       <Nav className="align-items-center align-self-center">
-        {showExploreButton && !isMobile &&
-          <Nav.Link to="/explore" as={Link} onClick={(e) => e.currentTarget.blur()}>Explore</Nav.Link>}
+        {showExploreButton && !isMobile && (
+          <Nav.Link to="/explore" as={Link} onClick={(e) => e.currentTarget.blur()}>
+            Explore
+          </Nav.Link>
+        )}
         &nbsp;
         {showSocialIcons && <SocialIcons />}
         &nbsp;
@@ -27,9 +30,7 @@ const Navbar = ({
   </RBNavbar>
 )
 
-const BrandPlaceholder = () => (
-  <div style={{ height: 82, width: 106 }}></div>
-)
+const BrandPlaceholder = () => <div style={{ height: 82, width: 106 }}></div>
 
 const NavbarBrand = () => (
   <RBNavbar.Brand as={Link} to="/">
@@ -40,13 +41,13 @@ const NavbarBrand = () => (
 const AccountNavbar = () => {
   const { activeAccount, fetchAccounts } = useAccount()
 
-  return activeAccount
-    ? <AccountSelector />
-    : (
-      <Button variant="outline-secondary" onClick={fetchAccounts}>
-        Connect Wallet
-      </Button>
-    )
+  return activeAccount ? (
+    <AccountSelector />
+  ) : (
+    <Button variant="outline-secondary" onClick={fetchAccounts}>
+      Connect Wallet
+    </Button>
+  )
 }
 
 export { Navbar }

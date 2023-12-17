@@ -5,7 +5,7 @@ import CanaryRed from '../static/grid-canary-red.png'
 import CanaryGreen from '../static/spots-canary-green.png'
 
 const SocietyGuideLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://wiki.polkadot.network/docs/maintain-guides-society-kusama',
+  href: 'https://wiki.polkadot.network/docs/maintain-guides-society-kusama'
 }))`
   font-size: 24px;
   font-weight: 700;
@@ -13,55 +13,55 @@ const SocietyGuideLink = styled(ExternalLink).attrs(() => ({
 `
 
 const TattooRulesLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17',
+  href: 'https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17'
 }))`
   text-decoration: none;
 `
 
 const SocietyElementLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://riot.im/app/#/room/#kappasigmamulounge:matrix.parity.io',
+  href: 'https://riot.im/app/#/room/#kappasigmamulounge:matrix.parity.io'
 }))`
   text-decoration: none;
 `
 
 const Motion186Link = styled(ExternalLink).attrs(() => ({
-  href: 'https://kusama.polkassembly.io/motion/186',
+  href: 'https://kusama.polkassembly.io/motion/186'
 }))`
   text-decoration: none;
 `
 
 const ThirdGenerationLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://www.youtube.com/watch?v=-JfQ2vCipWU',
+  href: 'https://www.youtube.com/watch?v=-JfQ2vCipWU'
 }))`
   text-decoration: none;
 `
 
 const BrandingDriveLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://drive.google.com/drive/u/1/folders/1ReG63yRvPgIRRyryDTbrACHELcZoMkA3',
+  href: 'https://drive.google.com/drive/u/1/folders/1ReG63yRvPgIRRyryDTbrACHELcZoMkA3'
 }))`
   text-decoration: none;
 `
 
 const BrandingIPFSLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://cloudflare-ipfs.com/ipfs/QmTvCsRfGXhPN4kqu19hhYV2zR7dCB1RFR6D7JUaxRpkxF#x-ipfs-companion-no-redirect',
+  href: 'https://cloudflare-ipfs.com/ipfs/QmTvCsRfGXhPN4kqu19hhYV2zR7dCB1RFR6D7JUaxRpkxF#x-ipfs-companion-no-redirect'
 }))`
   text-decoration: none;
 `
 
 const CodeRepositoryLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://github.com/KappaSigmaMu',
+  href: 'https://github.com/KappaSigmaMu'
 }))`
   text-decoration: none;
 `
 
 const TrelloLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://trello.com/b/aqOYaoD0/ksm-society-website',
+  href: 'https://trello.com/b/aqOYaoD0/ksm-society-website'
 }))`
   text-decoration: none;
 `
 
 const CyborgGuidePage = () => {
-  document.body.style.overflow = "auto"
+  document.body.style.overflow = 'auto'
 
   return (
     <Guide>
@@ -76,13 +76,8 @@ const CyborgGuidePage = () => {
           <JourneyIntroContainer className="px-0 position-relative">
             <GuideRow className="mb-5 pt-5">
               <Col>
-                <div className="h1 text-uppercase font-weight-bold">
-                  The journey
-                </div>
-                <p className="mb-1">
-                  To become a Cyborg means to get a membership in the Kappa Sigma Mu
-                  Society.
-                </p>
+                <div className="h1 text-uppercase font-weight-bold">The journey</div>
+                <p className="mb-1">To become a Cyborg means to get a membership in the Kappa Sigma Mu Society.</p>
                 <div className="mb-5">
                   <SocietyGuideLink>You can learn more about it here.</SocietyGuideLink>
                 </div>
@@ -92,9 +87,7 @@ const CyborgGuidePage = () => {
           <TimelineContainer>
             <GuideRow>
               <Col>
-                <span className="badge rounded-pill bg-primary text-uppercase">
-                  Level 1
-                </span>
+                <span className="badge rounded-pill bg-primary text-uppercase">Level 1</span>
               </Col>
             </GuideRow>
             <GuideRow>
@@ -107,18 +100,14 @@ const CyborgGuidePage = () => {
                 <strong>
                   <p className="mb-1">Connect your wallet</p>
                 </strong>
-                <p>
-                  You start out as a Human, with your Polkadot Wallet connected.
-                </p>
+                <p>You start out as a Human, with your Polkadot Wallet connected.</p>
               </Col>
             </GuideRow>
           </TimelineContainer>
           <TimelineContainer>
             <GuideRow>
               <Col>
-                <span className="badge rounded-pill bg-primary text-uppercase">
-                  Level 2
-                </span>
+                <span className="badge rounded-pill bg-primary text-uppercase">Level 2</span>
               </Col>
             </GuideRow>
             <GuideRow>
@@ -132,17 +121,15 @@ const CyborgGuidePage = () => {
                   <p className="mb-1">Place a Bid</p>
                 </strong>
                 <p>
-                  Then you must place a bid. Your bid is the KSM value you want to
-                  receive for getting your Cyborg Tattoo, or Proof of Ink (PoI).
-                  This process will require some fees.
+                  Then you must place a bid. Your bid is the KSM value you want to receive for getting your Cyborg
+                  Tattoo, or Proof of Ink (PoI). This process will require some fees.
                 </p>
                 <strong>
                   <p className="mb-1">Get your Bid Accepted</p>
                 </strong>
                 <p>
-                  You must do this inside a time frame, the Round. Your bid will
-                  only get accepted if it’s between the smallest bids which sum is
-                  below the pot value of the round. It is like a reverse auction.
+                  You must do this inside a time frame, the Round. Your bid will only get accepted if it’s between the
+                  smallest bids which sum is below the pot value of the round. It is like a reverse auction.
                 </p>
               </Col>
             </GuideRow>
@@ -150,9 +137,7 @@ const CyborgGuidePage = () => {
           <TimelineContainer>
             <GuideRow>
               <Col>
-                <span className="badge rounded-pill bg-primary text-uppercase">
-                  Level 3
-                </span>
+                <span className="badge rounded-pill bg-primary text-uppercase">Level 3</span>
               </Col>
             </GuideRow>
             <GuideRow>
@@ -166,8 +151,7 @@ const CyborgGuidePage = () => {
                   <p className="mb-1">Becoming a Candidate</p>
                 </strong>
                 <p className="mb-1">
-                  When your bid gets accepted, you become a Candidate. Now it’s time
-                  to get tattoed!
+                  When your bid gets accepted, you become a Candidate. Now it’s time to get tattoed!
                 </p>
                 <p>
                   <TattooRulesLink>See the rules for your PoI here.</TattooRulesLink>
@@ -176,17 +160,15 @@ const CyborgGuidePage = () => {
                   <p className="mb-1">Your tattoo, the Proof of Ink (PoI)</p>
                 </strong>
                 <p>
-                  After getting your PoI, it’s time to show it to the world! You can
-                  submit a photo or video of it&nbsp;
+                  After getting your PoI, it’s time to show it to the world! You can submit a photo or video of it&nbsp;
                   <SocietyElementLink>here on our Kappa Sigma Mu Lounge.</SocietyElementLink>
                 </p>
                 <strong>
                   <p className="mb-1">Getting votes on your Proof of Ink</p>
                 </strong>
                 <p>
-                  Once it is submitted, the Cyborgs can vote for your approval.
-                  You’re almost there! Just be careful with your timeframe, you have
-                  only one round to get the PoI <b>and</b> get voted.
+                  Once it is submitted, the Cyborgs can vote for your approval. You’re almost there! Just be careful
+                  with your timeframe, you have only one round to get the PoI <b>and</b> get voted.
                 </p>
               </Col>
             </GuideRow>
@@ -194,9 +176,7 @@ const CyborgGuidePage = () => {
           <TimelineContainer>
             <GuideRow>
               <Col>
-                <span className="badge rounded-pill bg-primary text-uppercase">
-                  Level 4
-                </span>
+                <span className="badge rounded-pill bg-primary text-uppercase">Level 4</span>
               </Col>
             </GuideRow>
             <GuideRow>
@@ -210,30 +190,25 @@ const CyborgGuidePage = () => {
                   <p className="mb-1">Becoming a Cyborg</p>
                 </strong>
                 <p>
-                  Once the round is up, one random vote will decide if you are a
-                  Cyborg or not. It’s not the majority of votes! Still, the most you
-                  get approved, the better are your chances.
+                  Once the round is up, one random vote will decide if you are a Cyborg or not. It’s not the majority of
+                  votes! Still, the most you get approved, the better are your chances.
                 </p>
                 <strong>
                   <p className="mb-1">
-                    Congrats! You are now a Society member. You can vote, be a
-                    Skeptic or a Defender
+                    Congrats! You are now a Society member. You can vote, be a Skeptic or a Defender
                   </p>
                 </strong>
                 <p>
-                  As a Cyborg, you can now vote on new Candidates. If you are a
-                  Skeptic in the Round, you must vote, otherwise you get a strike.
-                  10 strikes eliminate you from the Society. Cyborgs also can be
-                  requested to show their PoI again, as Defenders, to prove they
-                  still have their PoI.
+                  As a Cyborg, you can now vote on new Candidates. If you are a Skeptic in the Round, you must vote,
+                  otherwise you get a strike. 10 strikes eliminate you from the Society. Cyborgs also can be requested
+                  to show their PoI again, as Defenders, to prove they still have their PoI.
                 </p>
                 <strong>
                   <p className="mb-1">Request a Payout</p>
                 </strong>
                 <p>
-                  Once you become a Cyborg, there is a period to wait until you
-                  can request your payout, the bid you placed. Once this period
-                  is up, you can request it here on this website.
+                  Once you become a Cyborg, there is a period to wait until you can request your payout, the bid you
+                  placed. Once this period is up, you can request it here on this website.
                 </p>
               </Col>
             </GuideRow>
@@ -304,7 +279,7 @@ const GuideTitle = styled(Col)`
 `
 
 const JourneyIntroContainer = styled(Container)`
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     text-align: center;
   }
 `
@@ -334,7 +309,7 @@ const TimelineContainer = styled(Container)`
 
 const LinksContainer = styled(Container)`
   padding-right: 0;
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     text-align: center;
     text-shadow: 2px 2px #000;
   }
@@ -345,7 +320,7 @@ const CanaryImg = styled.img`
   top: 45%;
   width: 500px;
   right: 20%;
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     opacity: 0.5;
     right: unset;
     top: unset;
