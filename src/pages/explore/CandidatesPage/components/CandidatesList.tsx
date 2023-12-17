@@ -78,6 +78,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
     setShowCandidateDetailsOffcanvas(true)
   }
 
+  console.info(candidates)
   if (candidates.length === 0) return <>No candidates</>
 
   return (
@@ -110,7 +111,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
       {candidates.map((candidate: SocietyCandidate) => (
         <DataRow key={candidate.accountId.toString()}>
           <Col xs={1} className="text-center">
-            <Identicon value={candidate.accountId} size={32} theme={'polkadot'} />
+            <Identicon value={candidate.accountId.toHuman()} size={32} theme={'polkadot'} />
           </Col>
           <Col xs={3} className="text-start text-truncate">
             <AccountIdentity api={api} accountId={candidate.accountId} />

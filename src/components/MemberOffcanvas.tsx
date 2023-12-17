@@ -5,16 +5,16 @@ import styled from 'styled-components'
 import { hashToPoI } from '../helpers/hashToPoI'
 
 const formatHash = (str: string) => {
-  if (!str) return ""
+  if (!str) return ''
   const numChars = 6
-  const sep = "..."
+  const sep = '...'
   const strLen = str.length
   const head = str.slice(0, numChars)
   const tail = str.slice(strLen - 5, strLen)
   return head + sep + tail
 }
 
-const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }) => {
+const MemberOffcanvas = (props: { show: boolean; handleClose: any; member: any }) => {
   const { member } = props
   const [loading, setLoading] = useState(true)
 
@@ -24,19 +24,12 @@ const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }
 
   return (
     <StyledOffcanvas show={props.show} onHide={props.handleClose} placement="start" backdrop={true}>
-
-      <Offcanvas.Header closeButton>
-
-      </Offcanvas.Header>
-      <Offcanvas.Body style={{ overflowY: "scroll" }}>
+      <Offcanvas.Header closeButton></Offcanvas.Header>
+      <Offcanvas.Body style={{ overflowY: 'scroll' }}>
         <Container>
           <StyledRow>
             <Col className="d-flex justify-content-center">
-              <Identicon
-                value={member?.hash}
-                size={200}
-                theme={'polkadot'}
-              />
+              <Identicon value={member?.hash} size={200} theme={'polkadot'} />
             </Col>
           </StyledRow>
           <StyledRow>
@@ -53,52 +46,43 @@ const MemberOffcanvas = (props: { show: boolean, handleClose: any, member: any }
             </Col>
           </StyledRow>
           <StyledRow>
-
-            {hashToPoI[member?.hash] ?
+            {hashToPoI[member?.hash] ? (
               <Col>
                 <p>Proof-of-Ink</p>
 
-                {loading &&
+                {loading && (
                   <>
-                    <Spinner
-                      className="mb-2"
-                      animation="border"
-                      role="status"
-                      variant="secondary">
-                    </Spinner>
+                    <Spinner className="mb-2" animation="border" role="status" variant="secondary"></Spinner>
 
-                    <p>
-                      Be patient. The proof-of-ink pictures are hosted on IPFS and might take a while to load.
-                    </p>
+                    <p>Be patient. The proof-of-ink pictures are hosted on IPFS and might take a while to load.</p>
                   </>
-                }
+                )}
 
                 <img
                   src={hashToPoI[member?.hash]}
-                  width={"340px"}
+                  width={'340px'}
                   onLoad={() => setLoading(false)}
                   style={loading ? { display: 'none' } : {}}
                 />
               </Col>
-              :
+            ) : (
               <Col>
-                <p>Proof of Ink not found. Contact the development team on
-                  &nbsp;
+                <p>
+                  Proof of Ink not found. Contact the development team on &nbsp;
                   <a href="https://matrix.to/#/!BUmiAAnAYSRGarqwOt:matrix.parity.io?via=matrix.parity.io">Element</a>
-                  &nbsp;
-                  if this is your address.
+                  &nbsp; if this is your address.
                 </p>
               </Col>
-            }
+            )}
           </StyledRow>
         </Container>
       </Offcanvas.Body>
-    </StyledOffcanvas >
+    </StyledOffcanvas>
   )
 }
 
 const StyledOffcanvas = styled(Offcanvas)`
-  background: #33393F;
+  background: #33393f;
 `
 
 const StyledRow = styled(Row)`

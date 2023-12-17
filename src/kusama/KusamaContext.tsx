@@ -69,8 +69,7 @@ function reducer(state: StateType, action: ActionType): StateType {
 function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
   const { apiState } = state
 
-  if (apiState !== ApiState.initializing && apiState !== ApiState.disconnected)
-    return
+  if (apiState !== ApiState.initializing && apiState !== ApiState.disconnected) return
 
   dispatch({ type: 'CONNECTING' })
 
@@ -101,16 +100,12 @@ function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
         meta: { ...meta, name: `${meta.name} (${meta.source})` }
       }))
 
-      const kusamaPrefix = 2
       const genericPrefix = 42
-
-      const prefix = process.env.REACT_APP_DEVELOPMENT_KEYRING
-        ? genericPrefix
-        : kusamaPrefix
+      const prefix = process.env.REACT_APP_KEYRING_PREFIX ? process.env.REACT_APP_KEYRING_PREFIX : genericPrefix
 
       keyring.loadAll(
         {
-          isDevelopment: process.env.REACT_APP_DEVELOPMENT_KEYRING,
+          isDevelopment: process.env.NODE_ENV === 'development',
           ss58Format: prefix,
           type: 'ed25519',
           genesisHash: state?.api?.genesisHash
@@ -135,19 +130,13 @@ function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
 
 const KusamaContext = React.createContext<StateType>(INIT_STATE)
 
-function KusamaContextProvider(props: {
-  children: JSX.Element | JSX.Element[]
-}) {
+function KusamaContextProvider(props: { children: JSX.Element | JSX.Element[] }) {
   const [state, dispatch] = useReducer(reducer, INIT_STATE)
 
   connect(state, dispatch)
   loadAccounts(state, dispatch)
 
-  return (
-    <KusamaContext.Provider value={state}>
-      {props.children}
-    </KusamaContext.Provider>
-  )
+  return <KusamaContext.Provider value={state}>{props.children}</KusamaContext.Provider>
 }
 
 const useKusama = () => {

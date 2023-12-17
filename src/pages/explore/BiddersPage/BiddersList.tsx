@@ -12,13 +12,13 @@ import { FormatBalance } from '../../../components/FormatBalance'
 import { humanizeBidKind } from '../../../helpers/humanize'
 
 type Props = {
-  api: ApiPromise,
-  bids: Vec<PalletSocietyBid>,
-  activeAccount: accountType,
+  api: ApiPromise
+  bids: Vec<PalletSocietyBid>
+  activeAccount: accountType
   handleResult: any
 }
 
-type OnStatusChangeProps = { loading: boolean, message: string, success: boolean }
+type OnStatusChangeProps = { loading: boolean; message: string; success: boolean }
 
 // TODO: move this to a `components` directory to follow the convention of other pages
 const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Element => {
@@ -58,19 +58,15 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
     return { pillText, handleUndo, badgeText }
   }
 
-  const BidVouchIdentifier = ({ bid, index }: { bid: PalletSocietyBid, index: number }) => {
+  const BidVouchIdentifier = ({ bid, index }: { bid: PalletSocietyBid; index: number }) => {
     const { pillText, badgeText, handleUndo } = ownerActions(bid)
 
     return (
       <>
+        <Col xs={2}>{<FormatBalance balance={bid.value} />}</Col>
+        <Col xs={2}>{bid.kind.isVouch && <FormatBalance balance={bid.kind.asVouch?.[1]} />}</Col>
         <Col xs={2}>
-          {<FormatBalance balance={bid.value} />}
-        </Col>
-        <Col xs={2}>
-          {bid.kind.isVouch && <FormatBalance balance={bid.kind.asVouch?.[1]} />}
-        </Col>
-        <Col xs={2}>
-          {badgeText &&
+          {badgeText && (
             <>
               <StyledUndo disabled={loading} onClick={() => handleUndo(index)} href="#">
                 {badgeText}
@@ -79,7 +75,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
                 {pillText}
               </Badge>
             </>
-          }
+          )}
         </Col>
       </>
     )
@@ -98,16 +94,26 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
   return (
     <>
       <DataHeaderRow>
-        <Col xs={1} className="text-center">#</Col>
-        <Col xs={3} className="text-start">Wallet Hash</Col>
-        <Col xs={2} className="text-start">Bid Kind</Col>
-        <Col xs={2} className="text-start">Value</Col>
-        <Col xs={4} className="text-start">Tip</Col>
+        <Col xs={1} className="text-center">
+          #
+        </Col>
+        <Col xs={3} className="text-start">
+          Wallet Hash
+        </Col>
+        <Col xs={2} className="text-start">
+          Bid Kind
+        </Col>
+        <Col xs={2} className="text-start">
+          Value
+        </Col>
+        <Col xs={4} className="text-start">
+          Tip
+        </Col>
       </DataHeaderRow>
       {bids.map((bid: PalletSocietyBid, index: any) => (
         <StyledDataRow $isOwner={isOwner(bid)} key={bid.who?.toString()}>
           <Col xs={1} className="text-center">
-            <Identicon value={bid.who} size={32} theme={'polkadot'} />
+            <Identicon value={bid.who.toHuman()} size={32} theme={'polkadot'} />
           </Col>
           <Col xs={3} className="text-start text-truncate">
             <AccountIdentity api={api} accountId={bid.who} />
@@ -123,22 +129,22 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
 }
 
 const StyledDataRow = styled(DataRow)`
-  background-color: ${(props) => props.$isOwner ? '#73003d' : ''};
-  border: ${(props) => props.$isOwner ? '2px solid #E6007A' : ''};
+  background-color: ${(props) => (props.$isOwner ? '#73003d' : '')};
+  border: ${(props) => (props.$isOwner ? '2px solid #E6007A' : '')};
 `
 
 type PropsUnbid = {
-  disabled: boolean;
-};
+  disabled: boolean
+}
 
 const StyledUndo = styled.a.attrs((props: PropsUnbid) => ({
   disabled: props.disabled
-})) <PropsUnbid>`
-  color: ${(props) => props.disabled ? 'grey' : '#E6007A'};
+}))<PropsUnbid>`
+  color: ${(props) => (props.disabled ? 'grey' : '#E6007A')};
   margin-right: 3%;
   font-weight: 800;
   font-size: 13px;
-  pointer-events: ${(props) => props.disabled ? 'none' : ''};
+  pointer-events: ${(props) => (props.disabled ? 'none' : '')};
 `
 
 export { BiddersList }
