@@ -5,19 +5,29 @@ import styled from 'styled-components'
 const NavigationBar = () => (
   <StyledNav defaultActiveKey="/explore/bidders" className="py-2 my-4">
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/bidders">Bidders</Nav.Link>
+      <Nav.Link as={NavLink} to="/explore/bidders">
+        Bidders
+      </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/candidates">Candidates</Nav.Link>
+      <Nav.Link as={NavLink} to="/explore/candidates">
+        Candidates
+      </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/members">Members</Nav.Link>
+      <Nav.Link as={NavLink} to="/explore/members">
+        Members
+      </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/suspended">Suspended</Nav.Link>
+      <Nav.Link as={NavLink} to="/explore/suspended">
+        Suspended
+      </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/poi">Proof of Ink</Nav.Link>
+      <Nav.Link as={NavLink} to="/explore/poi">
+        Proof of Ink
+      </Nav.Link>
     </StyledNavItem>
   </StyledNav>
 )

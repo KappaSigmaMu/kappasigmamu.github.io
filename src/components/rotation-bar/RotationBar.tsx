@@ -72,9 +72,7 @@ const RotationBar = () => {
   return (
     <StyledDiv className="py-4">
       <Container>
-        <Row sm={4}>
-          {LEVELS[level]}
-        </Row>
+        <Row sm={4}>{LEVELS[level]}</Row>
       </Container>
     </StyledDiv>
   )

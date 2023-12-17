@@ -39,22 +39,23 @@ const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
 
   if (bids === null) return <LoadingSpinner />
 
-  return (<>
-    {(result && showAlert) &&
-      <StyledAlert
-        success={result.success}
-        onClose={() => setShowAlert(false)}
-        dismissible>{result.message}
-      </StyledAlert>}
-    <Row>
-      <Col>
-        <BidVouch api={api!} activeAccount={activeAccount} handleResult={handleResult} />
-      </Col>
-      <Col xs={9}>
-        <BiddersList api={api!} bids={bids} activeAccount={activeAccount} handleResult={handleResult} />
-      </Col>
-    </Row>
-  </>)
+  return (
+    <>
+      {result && showAlert && (
+        <StyledAlert success={result.success} onClose={() => setShowAlert(false)} dismissible>
+          {result.message}
+        </StyledAlert>
+      )}
+      <Row>
+        <Col>
+          <BidVouch api={api!} activeAccount={activeAccount} handleResult={handleResult} />
+        </Col>
+        <Col xs={9}>
+          <BiddersList api={api!} bids={bids} activeAccount={activeAccount} handleResult={handleResult} />
+        </Col>
+      </Row>
+    </>
+  )
 }
 
 export { BiddersPage }

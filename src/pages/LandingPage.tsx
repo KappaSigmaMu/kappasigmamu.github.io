@@ -1,22 +1,22 @@
-import { ThreeCanary, defaultConfig } from "@kappasigmamu/canary-component"
+import { ThreeCanary, defaultConfig } from '@kappasigmamu/canary-component'
 import { StorageKey } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { isMobile } from 'react-device-detect'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { LoadingSpinner } from "./explore/components/LoadingSpinner"
+import { LoadingSpinner } from './explore/components/LoadingSpinner'
 import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
-import { MemberOffcanvas } from "../components/MemberOffcanvas"
+import { MemberOffcanvas } from '../components/MemberOffcanvas'
 import { useKusama } from '../kusama'
-import { ApiState } from "../kusama/KusamaContext"
+import { ApiState } from '../kusama/KusamaContext'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
 const customCanaryConfig = {
   ...defaultConfig.canary,
-  "objectUrl": "/assets/canary.glb",
-  "nodeCoords": "canary.geometry.attributes.position",
+  objectUrl: '/assets/canary.glb',
+  nodeCoords: 'canary.geometry.attributes.position'
 }
 
 if (isMobile) {
@@ -54,7 +54,7 @@ const LandingPage = () => {
   useEffect(() => {
     if (api && apiState === ApiState.ready) {
       api.query.society.members.keys().then((members: StorageKey<[AccountId32]>[]) => {
-        const ids = members.map(account => account.toHuman()!.toString())
+        const ids = members.map((account) => account.toHuman()!.toString())
         setMembers(ids)
 
         // TODO: include identity and picture here
@@ -62,9 +62,9 @@ const LandingPage = () => {
           const id = member.toHuman()!.toString()
           const m = allMembers
           m[id] = {
-            "hash": id,
-            "name": "unknown",
-            "level": "cyborg",
+            hash: id,
+            name: 'unknown',
+            level: 'cyborg'
           }
           setAllMembers(m)
         })
@@ -86,11 +86,7 @@ const LandingPage = () => {
 
   return (
     <>
-      <MemberOffcanvas
-        show={show}
-        handleClose={handleClose}
-        member={selectedMember}
-      />
+      <MemberOffcanvas show={show} handleClose={handleClose} member={selectedMember} />
       {apiState !== ApiState.ready && (
         <LoadingContainer>
           <p className="text-center">Connecting to Kusama network...</p>
@@ -99,33 +95,38 @@ const LandingPage = () => {
       )}
       <FullPageHeightRow noGutters>
         <div className="position-absolute h-100">
-          {members &&
+          {members && (
             <ThreeCanary
               objectUrl={`./static/canary.glb`}
-              nodes={
-                members.map((id: string) => ({
-                  "hash": id,
-                  "name": "Unknown",
-                  "level": allMembers[id]?.level
-                }))
-              }
+              nodes={members.map((id: string) => ({
+                hash: id,
+                name: 'Unknown',
+                level: allMembers[id]?.level
+              }))}
               onNodeClick={handleCanaryNodeClick}
               config={customCanaryConfig}
-            />}
+            />
+          )}
         </div>
         <CentralizedCol xs={0} lg={8} />
         <CentralizedCol xs={12} lg={4}>
           <h1 className="d-none d-lg-block">Join the</h1>
           <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <ActionsContainer className="container">
-            <OutlinedPrimaryLgButton  xs={0} lg={8} onClick={handleExploreButtonClick}>
-              Explore<br />Society
+            <OutlinedPrimaryLgButton xs={0} lg={8} onClick={handleExploreButtonClick}>
+              Explore
+              <br />
+              Society
             </OutlinedPrimaryLgButton>
             <OutlinedPrimaryLgButton onClick={handleGuideButtonClick}>
-              Cyborg<br />Guide
+              Cyborg
+              <br />
+              Guide
             </OutlinedPrimaryLgButton>
             <OutlinedSecondaryLgButton onClick={handlePartnershipButtonClick}>
-              Gilberto Gil<br />Partnership
+              Gilberto Gil
+              <br />
+              Partnership
             </OutlinedSecondaryLgButton>
           </ActionsContainer>
         </CentralizedCol>
@@ -135,12 +136,12 @@ const LandingPage = () => {
 }
 
 const ActionsContainer = styled.div`
-  @media(min-width: 1024px) {
+  @media (min-width: 1024px) {
     .btn {
       margin-right: 1rem;
     }
   }
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -158,7 +159,7 @@ const ActionsContainer = styled.div`
 const KappaSigmaMu = styled.img`
   margin: 50px 0;
   display: block;
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     width: 80px;
     height: 80px;
     margin: 10px 0;

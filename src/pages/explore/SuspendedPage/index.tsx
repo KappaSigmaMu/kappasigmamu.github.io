@@ -15,16 +15,10 @@ const SuspendedPage = ({ api }: SuspendedPageProps): JSX.Element => {
   const [members, setMembers] = useState<AccountId[] | null>(null)
 
   useEffect(() => {
-    society?.suspendedMembers.keys()
-      .then(extractAccountIds)
-      .then(setMembers)    
+    society?.suspendedMembers.keys().then(extractAccountIds).then(setMembers)
   }, [society])
 
-  return (
-    members === null
-    ? <LoadingSpinner />
-    : <SuspendedList members={members!} />
-  )
+  return members === null ? <LoadingSpinner /> : <SuspendedList members={members!} />
 }
 
 export { SuspendedPage }

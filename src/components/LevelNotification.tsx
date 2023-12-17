@@ -15,34 +15,37 @@ interface LevelsType {
   [key: string]: ReactElement
 }
 
-const DefaultLevelNotification  = (
+const DefaultLevelNotification = (
   <>
-    You are IN the society;<br/>
-    You are NOT a member;<br/>
-    You CAN&apos;T vote;<br/>
+    You are IN the society;
+    <br />
+    You are NOT a member;
+    <br />
+    You CAN&apos;T vote;
+    <br />
     You CAN EXPLORE the chain data.
   </>
 )
 
-const HumanLevelNotification = (
-  <h5>
-    {DefaultLevelNotification}
-  </h5>
-)
+const HumanLevelNotification = <h5>{DefaultLevelNotification}</h5>
 
 const BidderLevelNotification = (
   <h5>
-    Your bid NEEDS to get accepted;<br/>
+    Your bid NEEDS to get accepted;
+    <br />
     <NoFocus>{DefaultLevelNotification}</NoFocus>
   </h5>
 )
 
 const CandidateLevelNotification = (
   <h5>
-    You need to SUBMIT your Proof of Ink;<br/>
-    Your Proof of Ink needs to be VOTED;<br/>
+    You need to SUBMIT your Proof of Ink;
+    <br />
+    Your Proof of Ink needs to be VOTED;
+    <br />
     <NoFocus>
-      Your bid should be low enough to get accepted;<br/>
+      Your bid should be low enough to get accepted;
+      <br />
       {DefaultLevelNotification}
     </NoFocus>
   </h5>
@@ -50,9 +53,7 @@ const CandidateLevelNotification = (
 
 const CyborgLevelNotification = (
   <>
-    <h5>
-      You can enjoy, now.
-    </h5>
+    <h5>You can enjoy, now.</h5>
     <Link to="/guide" className="ml-5 btn btn-primary">
       What&apos;s next?
     </Link>

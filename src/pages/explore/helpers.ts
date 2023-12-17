@@ -22,9 +22,7 @@ async function buildSocietyCandidatesArray(
   })
 
   const candidateVotes = candidates.length
-    ? await Promise.all(candidates.map(({ accountId }) =>
-      api.query.society.votes.entries(accountId)
-    ))
+    ? await Promise.all(candidates.map(({ accountId }) => api.query.society.votes.entries(accountId)))
     : []
 
   candidateVotes.forEach((votes): void => {
@@ -34,7 +32,7 @@ async function buildSocietyCandidatesArray(
       if (voteOption.isSome) {
         const key = voterAccountId.toString()
         !candidatesMap[candidateAccountId.toString()].voters.includes(key) &&
-        candidatesMap[candidateAccountId.toString()].voters.push(key)
+          candidatesMap[candidateAccountId.toString()].voters.push(key)
       }
     })
   })
@@ -45,9 +43,8 @@ async function buildSocietyCandidatesArray(
 const buildSocietyMembersArray = (
   members: DeriveSocietyMember[],
   info: ExtendedDeriveSociety | null,
-  graceStrikes: BN,
-  ): SocietyMember[] => {
-
+  graceStrikes: BN
+): SocietyMember[] => {
   const membersArray = members.map((member) => ({
     accountId: member.accountId,
     hasPayouts: member.payouts.length > 0,
@@ -69,32 +66,41 @@ const buildSocietyMembersArray = (
   return membersArray.sort(sortSocietyMembersArray)
 }
 
-const sortSocietyMembersArray = (a: SocietyMember, b: SocietyMember): number => (
+const sortSocietyMembersArray = (a: SocietyMember, b: SocietyMember): number =>
   a.isDefender !== b.isDefender
-    ? a.isDefender ? -1 : 1
+    ? a.isDefender
+      ? -1
+      : 1
     : a.isSkeptic !== b.isSkeptic
-      ? (a.isSkeptic ? -1 : 1)
+      ? a.isSkeptic
+        ? -1
+        : 1
       : a.isHead !== b.isHead
-        ? (a.isHead ? -1 : 1)
+        ? a.isHead
+          ? -1
+          : 1
         : a.isFounder !== b.isFounder
-          ? (a.isFounder ? -1 : 1)
-            : a.isDefenderVoter !== (b.isDefenderVoter)
-              ? (a.isDefenderVoter ? -1 : 1)
+          ? a.isFounder
+            ? -1
+            : 1
+          : a.isDefenderVoter !== b.isDefenderVoter
+            ? a.isDefenderVoter
+              ? -1
               : 1
-)
+            : 1
 
-async function deriveMembersInfo (api: ApiPromise): Promise<DeriveSocietyMember[]> {
-  const currentChallengeRound: u32 = await api.query.society.challengeRoundCount() as u32
+async function deriveMembersInfo(api: ApiPromise): Promise<DeriveSocietyMember[]> {
+  const currentChallengeRound: u32 = (await api.query.society.challengeRoundCount()) as u32
 
-  const memberKeys = await api.query.society.members.keys() as StorageKey<[AccountId32]>[]
-  const accountIds: AccountId[] = memberKeys.map(account => account.args[0] as AccountId32)
+  const memberKeys = (await api.query.society.members.keys()) as StorageKey<[AccountId32]>[]
+  const accountIds: AccountId[] = memberKeys.map((account) => account.args[0] as AccountId32)
 
   return firstValueFrom(
     combineLatest([
       of(accountIds),
       api.query.society.members.multi(accountIds),
       api.query.society.payouts.multi(accountIds),
-      api.query.society.defenderVotes.multi(accountIds.map(accountId => [currentChallengeRound, accountId])),
+      api.query.society.defenderVotes.multi(accountIds.map((accountId) => [currentChallengeRound, accountId])),
       api.query.society.suspendedMembers.multi(accountIds)
     ]).pipe(
       map(([accountIds, members, payouts, defenderVotes, suspendedMembers]) =>
@@ -102,14 +108,12 @@ async function deriveMembersInfo (api: ApiPromise): Promise<DeriveSocietyMember[
           .map((accountId, index) =>
             members[index].isSome
               ? {
-                accountId,
-                isDefenderVoter: defenderVotes[index].isSome
-                  ? defenderVotes[index].unwrap().approve.isTrue
-                  : false,
-                isSuspended: suspendedMembers[index].isSome,
-                member: members[index].unwrap(),
-                payouts: payouts[index].payouts
-              }
+                  accountId,
+                  isDefenderVoter: defenderVotes[index].isSome ? defenderVotes[index].unwrap().approve.isTrue : false,
+                  isSuspended: suspendedMembers[index].isSome,
+                  member: members[index].unwrap(),
+                  payouts: payouts[index].payouts
+                }
               : null
           )
           .filter((m): m is NonNullable<typeof m> => !!m)

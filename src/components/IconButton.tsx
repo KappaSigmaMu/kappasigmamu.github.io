@@ -1,8 +1,8 @@
-import { Button } from "react-bootstrap"
+import { Button } from 'react-bootstrap'
 
 type IconButtonProps = {
-  onClick: () => any,
-  icon: string,
+  onClick: () => any
+  icon: string
   children: JSX.Element
 }
 

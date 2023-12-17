@@ -1,28 +1,28 @@
-import { ApiPromise } from "@polkadot/api"
-import { AccountId } from "@polkadot/types/interfaces"
-import { useState } from "react"
-import { IconButton } from "../../../../components/IconButton"
-import { doTx, StatusChangeHandler } from "../../../../helpers/extrinsitcs"
-import { LoadingSpinner } from "../../components/LoadingSpinner"
+import { ApiPromise } from '@polkadot/api'
+import { AccountId } from '@polkadot/types/interfaces'
+import { useState } from 'react'
+import { IconButton } from '../../../../components/IconButton'
+import { doTx, StatusChangeHandler } from '../../../../helpers/extrinsitcs'
+import { LoadingSpinner } from '../../components/LoadingSpinner'
 
 type VoteButtonProps = {
-  api: ApiPromise,
-  vote: Vote,
+  api: ApiPromise
+  vote: Vote
   showMessage: (args: ShowMessageArgs) => any
-  icon: string,
-  successText: string,
-  waitingText: string,
+  icon: string
+  successText: string
+  waitingText: string
   children: JSX.Element
 }
 
 export interface ShowMessageArgs {
-  success: boolean,
+  success: boolean
   message: string
 }
 
 export interface Vote {
-  approve: boolean,
-  candidateId: AccountId,
+  approve: boolean
+  candidateId: AccountId
   voterAccount: accountType
 }
 

@@ -10,15 +10,21 @@ const WelcomePage = (): JSX.Element => {
     <>
       <LevelContainer>
         <Row>
-          <Col><Level /></Col>
+          <Col>
+            <Level />
+          </Col>
         </Row>
       </LevelContainer>
       <StyledContainer>
         <Row className="mb-5">
-          <Col><Badge pill>WALLET CONNECTED</Badge></Col>
+          <Col>
+            <Badge pill>WALLET CONNECTED</Badge>
+          </Col>
         </Row>
         <Row className="mb-5">
-          <Col><h1>Welcome, Human.</h1></Col>
+          <Col>
+            <h1>Welcome, Human.</h1>
+          </Col>
         </Row>
         <Row>
           <Col>
@@ -31,11 +37,12 @@ const WelcomePage = (): JSX.Element => {
           </Col>
         </Row>
         <Row className="mb-5">
-          <Col><SocialIcons /></Col>
+          <Col>
+            <SocialIcons />
+          </Col>
           <Col>
             <Link to="/guide" className="btn btn-outline-secondary" role="button">
-              Cyborg Guide
-              &nbsp;&nbsp;
+              Cyborg Guide &nbsp;&nbsp;
               <span className="btn-label">
                 <img src={MapIcon} alt="Map Icon" />
               </span>

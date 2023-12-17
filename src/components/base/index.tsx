@@ -19,8 +19,8 @@ const DataRow = styled(DataHeaderRow)`
   margin-top: 10px;
 
   * {
-  color: ${(props) => props.theme.colors.white};
-}
+    color: ${(props) => props.theme.colors.white};
+  }
 `
 
 const ExternalLink = styled.a.attrs(() => ({

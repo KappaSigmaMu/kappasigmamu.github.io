@@ -1,15 +1,15 @@
-import { ThreeCanary, defaultConfig } from "@kappasigmamu/canary-component"
+import { ThreeCanary, defaultConfig } from '@kappasigmamu/canary-component'
 import { StorageKey } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { LoadingSpinner } from "./explore/components/LoadingSpinner"
+import { LoadingSpinner } from './explore/components/LoadingSpinner'
 import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
-import { MemberOffcanvas } from "../components/MemberOffcanvas"
+import { MemberOffcanvas } from '../components/MemberOffcanvas'
 import { useKusama } from '../kusama'
-import { ApiState } from "../kusama/KusamaContext"
+import { ApiState } from '../kusama/KusamaContext'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
 const customGilConfig = {
@@ -53,7 +53,7 @@ const GilbertoGilPage = () => {
   useEffect(() => {
     if (api && apiState === ApiState.ready) {
       api.query.society.members.keys().then((members: StorageKey<[AccountId32]>[]) => {
-        const ids = members.map(account => account.toHuman()!.toString())
+        const ids = members.map((account) => account.toHuman()!.toString())
         setMembers(ids)
 
         // TODO: include identity and picture here
@@ -61,9 +61,9 @@ const GilbertoGilPage = () => {
           const id = member.toHuman()!.toString()
           const m = allMembers
           m[id] = {
-            "hash": id,
-            "name": "unknown",
-            "level": "cyborg",
+            hash: id,
+            name: 'unknown',
+            level: 'cyborg'
           }
           setAllMembers(m)
         })
@@ -85,11 +85,7 @@ const GilbertoGilPage = () => {
 
   return (
     <>
-      <MemberOffcanvas
-        show={show}
-        handleClose={handleClose}
-        member={selectedMember}
-      />
+      <MemberOffcanvas show={show} handleClose={handleClose} member={selectedMember} />
       {apiState !== ApiState.ready && (
         <LoadingContainer>
           <p className="text-center">Connecting to Kusama network...</p>
@@ -98,19 +94,18 @@ const GilbertoGilPage = () => {
       )}
       <FullPageHeightRow noGutters>
         <div className="position-absolute h-100">
-          {members &&
+          {members && (
             <ThreeCanary
               objectUrl={`./static/gil.glb`}
-              nodes={
-                members.map((id: string) => ({
-                  "hash": id,
-                  "name": "Unknown",
-                  "level": allMembers[id]?.level
-                }))
-              }
+              nodes={members.map((id: string) => ({
+                hash: id,
+                name: 'Unknown',
+                level: allMembers[id]?.level
+              }))}
               onNodeClick={handleCanaryNodeClick}
               config={customGilConfig}
-            />}
+            />
+          )}
         </div>
         <CentralizedCol xs={0} lg={8} />
         <CentralizedCol xs={12} lg={4}>
@@ -118,13 +113,18 @@ const GilbertoGilPage = () => {
           <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <ActionsContainer>
             <OutlinedPrimaryLgButton onClick={handleExploreButtonClick}>
-              Explore<br />Society
+              Explore
+              <br />
+              Society
             </OutlinedPrimaryLgButton>
             <OutlinedPrimaryLgButton onClick={handleGuideButtonClick}>
-              Cyborg<br />Guide
+              Cyborg
+              <br />
+              Guide
             </OutlinedPrimaryLgButton>
             <OutlinedSecondaryLgButton onClick={handlePartnershipButtonClick}>
-              About the<br /> partnership
+              About the
+              <br /> partnership
             </OutlinedSecondaryLgButton>
           </ActionsContainer>
         </CentralizedCol>
@@ -134,12 +134,12 @@ const GilbertoGilPage = () => {
 }
 
 const ActionsContainer = styled.div`
-  @media(min-width: 1024px) {
+  @media (min-width: 1024px) {
     .btn {
       margin-right: 1rem;
     }
   }
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -157,7 +157,7 @@ const ActionsContainer = styled.div`
 const KappaSigmaMu = styled.img`
   margin: 50px 0;
   display: block;
-  @media(max-width: 1024px) {
+  @media (max-width: 1024px) {
     width: 80px;
     height: 80px;
     margin: 10px 0;

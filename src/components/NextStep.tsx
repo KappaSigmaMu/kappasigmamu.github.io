@@ -15,7 +15,7 @@ const HumanNextStep = (
   <>
     <h5 className="mb-4">
       To become a Candidate you need to level up;
-      <br/>
+      <br />
       To level up you must first Submit a Bid.
     </h5>
     <Link to="/guide" className="btn btn-outline-light-grey">

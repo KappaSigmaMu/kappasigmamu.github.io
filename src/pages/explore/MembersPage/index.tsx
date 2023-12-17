@@ -25,31 +25,33 @@ const MembersPage = ({ api }: MembersPageProps): JSX.Element => {
 
   useEffect(() => {
     society?.info().then((info: ExtendedDeriveSociety) => {
-        api?.query.society.defending().then(defending => {
-          defender = defending.unwrap()[0]
-          skeptic = defending.unwrap()[1]
- 
-          info.defender = defender
-          info.skeptic = skeptic
-  
-          deriveMembersInfo(api).then((responseMembers: DeriveSocietyMember[]) => {
-            setMembers(buildSocietyMembersArray(responseMembers, info, graceStrikes)) 
+      api?.query.society.defending().then((defending) => {
+        defender = defending.unwrap()[0]
+        skeptic = defending.unwrap()[1]
+
+        info.defender = defender
+        info.skeptic = skeptic
+
+        deriveMembersInfo(api).then((responseMembers: DeriveSocietyMember[]) => {
+          setMembers(buildSocietyMembersArray(responseMembers, info, graceStrikes))
         })
       })
     })
   }, [society])
 
   if (members === null) return <LoadingSpinner />
-  
-  return (<>
-    <MemberDetailsOffCanvas 
-      api={api!} 
-      accountId={selectedMember?.accountId} 
-      show={selectedMember !== null}
-      onClose={() => setSelectedMember(null)}
-    />
-    <MembersList api={api!} members={members} onClickMember={onClickMember} />
-  </>)
+
+  return (
+    <>
+      <MemberDetailsOffCanvas
+        api={api!}
+        accountId={selectedMember?.accountId}
+        show={selectedMember !== null}
+        onClose={() => setSelectedMember(null)}
+      />
+      <MembersList api={api!} members={members} onClickMember={onClickMember} />
+    </>
+  )
 }
 
 export { MembersPage }

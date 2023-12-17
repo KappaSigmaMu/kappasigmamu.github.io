@@ -7,11 +7,13 @@ const BlockTime = ({ block }: { block: BlockNumber }) => {
   const { api } = useKusama()
   const [, time] = useBlockTime(block, api)
 
-  return (<>
-    <span>{time}</span>
-    &nbsp;
-    <span>(#{formatNumber(block)})</span>
-  </>)
+  return (
+    <>
+      <span>{time}</span>
+      &nbsp;
+      <span>(#{formatNumber(block)})</span>
+    </>
+  )
 }
 
 export { BlockTime }

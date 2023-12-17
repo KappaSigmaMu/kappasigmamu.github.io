@@ -1,27 +1,27 @@
-import { SubmittableExtrinsic } from "@polkadot/api/types"
-import { web3FromAddress } from "@polkadot/extension-dapp"
+import { SubmittableExtrinsic } from '@polkadot/api/types'
+import { web3FromAddress } from '@polkadot/extension-dapp'
 
 export type StatusChangeHandler = (info: StatusChangeInfo) => any
 
 export interface StatusChangeInfo {
-  loading: boolean,
-  message: string,
+  loading: boolean
+  message: string
   success: boolean
 }
 
 export const doTx = async (
-  tx: SubmittableExtrinsic<"promise", any>,
+  tx: SubmittableExtrinsic<'promise', any>,
   finalizedText: string,
   waitingText: string,
   activeAccount: accountType,
-  onStatusChange: StatusChangeHandler,
+  onStatusChange: StatusChangeHandler
 ) => {
   let injector = null
   try {
     injector = await web3FromAddress(activeAccount.address)
   } catch (e) {
     console.error(e)
-    onStatusChange({ loading: false, message: "Error connecting to wallet", success: false })
+    onStatusChange({ loading: false, message: 'Error connecting to wallet', success: false })
     return
   }
 

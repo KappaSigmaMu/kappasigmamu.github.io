@@ -1,12 +1,12 @@
-import { ApiPromise } from "@polkadot/api"
-import { AccountId } from "@polkadot/types/interfaces"
-import { useEffect, useState } from "react"
-import { Col, Container, Row } from "react-bootstrap"
-import styled from "styled-components"
-import { AccountHeader } from "../../components/AccountHeader"
-import { LoadingSpinner } from "../../components/LoadingSpinner"
-import { Offcanvas } from "../../components/Offcanvas"
-import { fetchMemberDetails } from "../helpers/fetchMemberDetails"
+import { ApiPromise } from '@polkadot/api'
+import { AccountId } from '@polkadot/types/interfaces'
+import { useEffect, useState } from 'react'
+import { Col, Container, Row } from 'react-bootstrap'
+import styled from 'styled-components'
+import { AccountHeader } from '../../components/AccountHeader'
+import { LoadingSpinner } from '../../components/LoadingSpinner'
+import { Offcanvas } from '../../components/Offcanvas'
+import { fetchMemberDetails } from '../helpers/fetchMemberDetails'
 
 type MemberDetailsOffCanvasProps = {
   api: ApiPromise
@@ -29,11 +29,7 @@ const MemberDetailsOffCanvas = ({ api, accountId, show, onClose }: MemberDetails
   }, [accountId])
 
   return (
-    <Offcanvas
-      show={show}
-      placement="end"
-      onClose={onClose}
-      header={<h3>{memberDetails?.identity?.name}</h3>}>
+    <Offcanvas show={show} placement="end" onClose={onClose} header={<h3>{memberDetails?.identity?.name}</h3>}>
       {loading ? <LoadingSpinner /> : <CanvasBody memberDetails={memberDetails!} />}
     </Offcanvas>
   )
@@ -44,12 +40,8 @@ const CanvasBody = ({ memberDetails }: { memberDetails: SocietyMemberDetails }) 
   return (
     <Container>
       <AccountHeader accountId={memberDetails.accountId} />
-      <StyledRow>
-        {memberDetails.index && <>Index: {memberDetails.index}</>}
-      </StyledRow>
-      <StyledRow>
-        {memberDetails.identity && <h4 className="p-0 m-0">Identity</h4>}
-      </StyledRow>
+      <StyledRow>{memberDetails.index && <>Index: {memberDetails.index}</>}</StyledRow>
+      <StyledRow>{memberDetails.identity && <h4 className="p-0 m-0">Identity</h4>}</StyledRow>
       <StyledRow>
         <Row>{name}</Row>
         {legal && <Row>{legal}</Row>}
