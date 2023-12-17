@@ -4,21 +4,13 @@ import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import styled from 'styled-components'
-import { calculateChallengePercentage, calculateVotingPercentage, isVotingPeriod } from './helpers/periods'
+import {
+  calculateChallengePercentage,
+  calculateClaimPercentage,
+  calculateVotingPercentage,
+  isVotingPeriod
+} from './helpers/periods'
 import { useKusama } from '../../kusama'
-
-const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element => (
-  <div style={{ width: 100, height: 100 }}>
-    <CircularProgressbar
-      value={props.percentageDone}
-      styles={buildStyles({
-        pathColor: '#E6007A',
-        trailColor: '#fff',
-        strokeLinecap: 'butt'
-      })}
-    />
-  </div>
-)
 
 const CurrentRound = () => {
   const { api } = useKusama()
@@ -53,7 +45,7 @@ const CurrentRound = () => {
         title="Claim Period"
         inactive={isVoting}
         text={text}
-        info={calculateChallengePercentage(currentBlock, claimPeriod, api)}
+        info={calculateClaimPercentage(currentBlock, votingPeriod, claimPeriod, api)}
       />
       <CurrentRoundItem
         title="Voting Period"
@@ -113,6 +105,19 @@ const CurrentRoundItem = ({ title, inactive, text, info }: CurrentRoundItemProps
     </>
   )
 }
+
+const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element => (
+  <div style={{ width: 100, height: 100 }}>
+    <CircularProgressbar
+      value={props.percentageDone}
+      styles={buildStyles({
+        pathColor: '#E6007A',
+        trailColor: '#fff',
+        strokeLinecap: 'butt'
+      })}
+    />
+  </div>
+)
 
 const Unit = styled.span`
   color: ${(props) => props.theme.colors.lightGrey};
