@@ -47,7 +47,7 @@ declare interface SocietyMember {
   vote?: PalletSocietyVote
 }
 
-type ExtendedDeriveSociety {
+type ExtendedDeriveSociety = {
   skeptic?: AccountId32 | undefined
 } & DeriveSociety
 
@@ -79,8 +79,8 @@ declare interface SocietyMemberVote {
 namespace NodeJS {
   interface ProcessEnv {
     REACT_APP_NAME: string
-    REACT_APP_PROVIDER_SOCKET: string
-    REACT_APP_DEVELOPMENT_KEYRING: boolean
+    REACT_APP_KEYRING_PREFIX: number
     REACT_APP_RPC: object
+    REACT_APP_PROVIDER_SOCKET: string
   }
 }

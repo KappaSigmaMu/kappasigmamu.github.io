@@ -1,21 +1,21 @@
-import { ApiPromise } from "@polkadot/api"
-import Identicon from "@polkadot/react-identicon"
-import { Option, StorageKey } from "@polkadot/types"
-import { AccountId, AccountId32 } from "@polkadot/types/interfaces"
-import { PalletSocietyVote } from "@polkadot/types/lookup"
-import { useEffect, useState } from "react"
-import { AccountIdentity } from "../../../../components/AccountIdentity"
-import { AccountHeader } from "../../components/AccountHeader"
-import { LoadingSpinner } from "../../components/LoadingSpinner"
-import { Offcanvas } from "../../components/Offcanvas"
+import { ApiPromise } from '@polkadot/api'
+import Identicon from '@polkadot/react-identicon'
+import { Option, StorageKey } from '@polkadot/types'
+import { AccountId, AccountId32 } from '@polkadot/types/interfaces'
+import { PalletSocietyVote } from '@polkadot/types/lookup'
+import { useEffect, useState } from 'react'
+import { AccountIdentity } from '../../../../components/AccountIdentity'
+import { AccountHeader } from '../../components/AccountHeader'
+import { LoadingSpinner } from '../../components/LoadingSpinner'
+import { Offcanvas } from '../../components/Offcanvas'
 
-type VoteType = "Skeptic" | "Approve" | "Reject"
+type VoteType = 'Skeptic' | 'Approve' | 'Reject'
 type GroupedVotes = Record<VoteType, AccountId[]>
 
 type Props = {
-  api: ApiPromise,
-  show: boolean,
-  candidateId: AccountId,
+  api: ApiPromise
+  show: boolean
+  candidateId: AccountId
   onClose: () => void
 }
 
@@ -41,23 +41,23 @@ export function CandidateDetailsOffcanvas({ api, candidateId, show, onClose }: P
   )
 }
 
-function CanvasBody({ api, votes }: { api: ApiPromise, votes: GroupedVotes }) {
-  return <>
-    {Object.entries(votes).map(([type, memberIds]) => (
-      memberIds.length === 0
-        ? <></>
-        : <VoterList api={api} type={type} memberIds={memberIds} key={type} />
-    ))}
-  </>
+function CanvasBody({ api, votes }: { api: ApiPromise; votes: GroupedVotes }) {
+  return (
+    <>
+      {Object.entries(votes).map(([type, memberIds]) =>
+        memberIds.length === 0 ? <></> : <VoterList api={api} type={type} memberIds={memberIds} key={type} />
+      )}
+    </>
+  )
 }
 
-function VoterList({ api, type, memberIds }: { api: ApiPromise, type: string, memberIds: AccountId[] }) {
+function VoterList({ api, type, memberIds }: { api: ApiPromise; type: string; memberIds: AccountId[] }) {
   return (
     <div className="mt-4">
       <h4>{type}s</h4>
       {memberIds.map((id) => (
         <div key={id.toString()} className="mb-2 ms-2">
-          <Identicon value={id} size={22} theme="polkadot" className="me-2" />
+          <Identicon value={id.toHuman()} size={22} theme="polkadot" className="me-2" />
           <AccountIdentity api={api} accountId={id} />
         </div>
       ))}
@@ -70,7 +70,7 @@ function groupVotes(
   votesResponse: Option<PalletSocietyVote>[]
 ): GroupedVotes {
   // TODO: fix me
-  const initial = { "Approve": [], "Reject": [], "Skeptic": [] }
+  const initial = { Approve: [], Reject: [], Skeptic: [] }
   return votesResponse.reduce((grouped, vote, idx) => {
     if (vote.isNone) return grouped
 
@@ -79,7 +79,7 @@ function groupVotes(
     return {
       ...grouped,
       // Associate voter id to vote based on list position
-      [type as unknown as string]: Array.of(candidateMemberMap[idx][1], ...grouped["Approve"])
+      [type as unknown as string]: Array.of(candidateMemberMap[idx][1], ...grouped['Approve'])
     }
   }, initial)
 }
