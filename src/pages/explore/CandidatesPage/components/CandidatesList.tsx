@@ -6,17 +6,18 @@ import { useEffect, useRef, useState } from 'react'
 import { Button, Col } from 'react-bootstrap'
 import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
 import { VoteButton } from './VoteButton'
+import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
-import { truncate, truncateMiddle } from '../../../../helpers/truncate'
+import { truncate } from '../../../../helpers/truncate'
 import ApproveIcon from '../../../../static/approve-icon.svg'
 import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
 import { StyledAlert } from '../../components/StyledAlert'
 
 type CandidatesListProps = {
-  api: ApiPromise,
-  activeAccount: accountType,
+  api: ApiPromise
+  activeAccount: accountType
   candidates: SocietyCandidate[]
 }
 
@@ -26,7 +27,7 @@ type VoteResult = {
 }
 
 const AlreadyVotedIcon = () => (
- <>
+  <>
     <img src={CheckAllIcon} className="me-2" />
     <label style={{ color: '#6c757d' }}>Voted</label>
   </>
@@ -77,67 +78,70 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
     setShowCandidateDetailsOffcanvas(true)
   }
 
-  if (candidates.length === 0) return (
-    <>No candidates</>
-  )
+  if (candidates.length === 0) return <>No candidates</>
 
-  return (<>
-    {selectedCandidate &&
-      <CandidateDetailsOffcanvas
-        api={api}
-        candidateId={selectedCandidate}
-        show={showCandidateDetailsOffcanvas}
-        onClose={() => setShowCandidateDetailsOffcanvas(false)} />}
+  return (
+    <>
+      {selectedCandidate && (
+        <CandidateDetailsOffcanvas
+          api={api}
+          candidateId={selectedCandidate}
+          show={showCandidateDetailsOffcanvas}
+          onClose={() => setShowCandidateDetailsOffcanvas(false)}
+        />
+      )}
 
-    <StyledAlert
-      success={voteResult.success}
-      onClose={() => setShowAlert(false)}
-      show={showAlert}
-      dismissible>
-      {voteResult.message}
-    </StyledAlert>
+      <StyledAlert success={voteResult.success} onClose={() => setShowAlert(false)} show={showAlert} dismissible>
+        {voteResult.message}
+      </StyledAlert>
 
-    <DataHeaderRow>
-      <Col xs={1} className="text-center">#</Col>
-      <Col xs={3} className="text-start">Wallet Hash</Col>
-      <Col className="text-start">Bid Kind</Col>
-      <Col></Col>
-      <Col>Vote</Col>
-    </DataHeaderRow>
-
-    {candidates.map((candidate: SocietyCandidate) => (
-      <DataRow key={candidate.accountId.toString()}>
+      <DataHeaderRow>
         <Col xs={1} className="text-center">
-          <Identicon value={candidate.accountId} size={32} theme={'polkadot'} />
+          #
         </Col>
-        <Col xs={3} className="text-start text-truncate">
-          {truncateMiddle(candidate.accountId?.toString())}
+        <Col xs={3} className="text-start">
+          Wallet Hash
         </Col>
-        <Col xs={1}>
-          {candidate.kind.isDeposit ? 'Deposit' : 'Vouch'}
-        </Col>
-        <Col xs={2} className="text-start">
-          {candidate.kind.isDeposit
-            ? <FormatBalance balance={candidate.value} />
-            : (<>
-              Member: {truncate(candidate.kind.asVouch[0].toHuman(), 7)} |
-              Tip: {<FormatBalance balance={candidate.kind.asVouch[1]}></FormatBalance>}
-            </>)}
-        </Col>
-        <Col xs={2} onClick={() => showCandidateDetails(candidate.accountId)}>
-          <Button variant="link">Votes</Button>
-        </Col>
-        <Col xs={3}>
-          {votes.includes(candidate.accountId)
-            ? <AlreadyVotedIcon />
-            : <>
+        <Col className="text-start">Bid Kind</Col>
+        <Col></Col>
+        <Col>Vote</Col>
+      </DataHeaderRow>
+
+      {candidates.map((candidate: SocietyCandidate) => (
+        <DataRow key={candidate.accountId.toString()}>
+          <Col xs={1} className="text-center">
+            <Identicon value={candidate.accountId} size={32} theme={'polkadot'} />
+          </Col>
+          <Col xs={3} className="text-start text-truncate">
+            <AccountIdentity api={api} accountId={candidate.accountId} />
+          </Col>
+          <Col xs={1}>{candidate.kind.isDeposit ? 'Deposit' : 'Vouch'}</Col>
+          <Col xs={2} className="text-start">
+            {candidate.kind.isDeposit ? (
+              <FormatBalance balance={candidate.value} />
+            ) : (
+              <>
+                Member: {truncate(candidate.kind.asVouch[0].toHuman(), 7)} | Tip:{' '}
+                {<FormatBalance balance={candidate.kind.asVouch[1]}></FormatBalance>}
+              </>
+            )}
+          </Col>
+          <Col xs={2} onClick={() => showCandidateDetails(candidate.accountId)}>
+            <Button variant="link">Votes</Button>
+          </Col>
+          <Col xs={3}>
+            {votes.includes(candidate.accountId) ? (
+              <AlreadyVotedIcon />
+            ) : (
+              <>
                 <VoteButton
                   api={api}
                   showMessage={showMessage}
                   successText="Approval vote sent."
                   waitingText="Approval vote request sent. Waiting for response..."
                   vote={{ approve: true, voterAccount: activeAccount, candidateId: candidate.accountId }}
-                  icon={ApproveIcon}>
+                  icon={ApproveIcon}
+                >
                   <u>Approve</u>
                 </VoteButton>
                 <VoteButton
@@ -146,14 +150,17 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
                   successText="Rejection vote sent."
                   waitingText="Rejection vote request sent. Waiting for response..."
                   vote={{ approve: false, voterAccount: activeAccount, candidateId: candidate.accountId }}
-                  icon={RejectIcon}>
+                  icon={RejectIcon}
+                >
                   <u>Reject</u>
                 </VoteButton>
               </>
-          }
-        </Col>
-      </DataRow>))}
-  </>)
+            )}
+          </Col>
+        </DataRow>
+      ))}
+    </>
+  )
 }
 
 export { CandidatesList }
