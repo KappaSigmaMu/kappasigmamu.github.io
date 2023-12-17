@@ -49,7 +49,7 @@ yarn chopsticks
 
 - Private keys for development accounts. Change hard derivation key to switch from `Alice` to `Bob`, `Charlie`, etc. Use this private key to import these development accounts to a wallet of your choice.
 ```
-bottom drive obey lake curtain smoke basket hold race lonely fit walk\\Alice
+bottom drive obey lake curtain smoke basket hold race lonely fit walk//Alice
 ```
 
 ### Building and running your own custom runtime
