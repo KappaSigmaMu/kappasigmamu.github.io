@@ -1,27 +1,16 @@
-import { ApiPromise } from '@polkadot/api'
 import { u32 } from '@polkadot/types'
 import { Time } from '@polkadot/util/types'
 import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import styled from 'styled-components'
-import { useBlockTime } from '../../hooks/useBlockTime'
+import {
+  calculateChallengePercentage,
+  calculateClaimPercentage,
+  calculateVotingPercentage,
+  isVotingPeriod
+} from './helpers/periods'
 import { useKusama } from '../../kusama'
-
-const CurrentRoundProgress = (props: {
-  percentageDone: number
-}): JSX.Element => (
-  <div style={{ width: 100, height: 100 }}>
-    <CircularProgressbar
-      value={props.percentageDone}
-      styles={buildStyles({
-        pathColor: '#E6007A',
-        trailColor: '#fff',
-        strokeLinecap: 'butt'
-      })}
-    />
-  </div>
-)
 
 const CurrentRound = () => {
   const { api } = useKusama()
@@ -32,9 +21,7 @@ const CurrentRound = () => {
 
   useEffect(() => {
     if (api) {
-      const challengePeriod = (
-        api.consts.society.challengePeriod as u32
-      ).toNumber()
+      const challengePeriod = (api.consts.society.challengePeriod as u32).toNumber()
       setChallengePeriod(challengePeriod)
 
       const votingPeriod = (api.consts.society.votingPeriod as u32).toNumber()
@@ -50,9 +37,7 @@ const CurrentRound = () => {
   }, [api])
 
   const isVoting = isVotingPeriod(votingPeriod, claimPeriod, currentBlock)
-  const text = isVoting
-    ? 'Waiting for voting period to end'
-    : 'Waiting for claim period to end'
+  const text = isVoting ? 'Waiting for voting period to end' : 'Waiting for claim period to end'
 
   return (
     <>
@@ -60,18 +45,13 @@ const CurrentRound = () => {
         title="Claim Period"
         inactive={isVoting}
         text={text}
-        info={calculateChallengePercentage(currentBlock, claimPeriod, api)}
+        info={calculateClaimPercentage(currentBlock, votingPeriod, claimPeriod, api)}
       />
       <CurrentRoundItem
         title="Voting Period"
         inactive={!isVoting}
         text={text}
-        info={calculateVotingPercentage(
-          currentBlock,
-          votingPeriod,
-          claimPeriod,
-          api
-        )}
+        info={calculateVotingPercentage(currentBlock, votingPeriod, claimPeriod, api)}
       />
       <CurrentRoundItem
         title="Challenge Period"
@@ -92,12 +72,7 @@ type CurrentRoundItemProps = {
   }
 }
 
-const CurrentRoundItem = ({
-  title,
-  inactive,
-  text,
-  info
-}: CurrentRoundItemProps) => {
+const CurrentRoundItem = ({ title, inactive, text, info }: CurrentRoundItemProps) => {
   const { days, hours, minutes, seconds } = info.time
 
   return (
@@ -109,9 +84,7 @@ const CurrentRoundItem = ({
       </Row>
       <Row>
         <Col sm="auto">
-          <CurrentRoundProgress
-            percentageDone={inactive ? 100 : info.percentageDone}
-          />
+          <CurrentRoundProgress percentageDone={inactive ? 100 : info.percentageDone} />
         </Col>
         <Col className="ps-0">
           {inactive ? (
@@ -133,6 +106,19 @@ const CurrentRoundItem = ({
   )
 }
 
+const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element => (
+  <div style={{ width: 100, height: 100 }}>
+    <CircularProgressbar
+      value={props.percentageDone}
+      styles={buildStyles({
+        pathColor: '#E6007A',
+        trailColor: '#fff',
+        strokeLinecap: 'butt'
+      })}
+    />
+  </div>
+)
+
 const Unit = styled.span`
   color: ${(props) => props.theme.colors.lightGrey};
 `
@@ -140,66 +126,5 @@ const Unit = styled.span`
 const Value = styled.span`
   color: ${(props) => props.theme.colors.white};
 `
-
-// const isVotingPeriod = (
-//   votingPeriod: number,
-//   claimPeriod: number,
-//   currentBlock: number
-// ) => {
-//   const rotationPeriod = votingPeriod + claimPeriod
-//   const phase = currentBlock % rotationPeriod
-
-//   if (phase < votingPeriod) {
-//     return {
-//       type: "Voting",
-//       elapsed: phase,
-//       more: votingPeriod - phase,
-//     }
-//   } else {
-//     return {
-//       type: "Claim",
-//       elapsed: phase - votingPeriod,
-//       more: rotationPeriod - phase,
-//     }
-//   }
-// }
-
-const calculateVotingPercentage = (
-  currentBlock: number,
-  votingPeriod: number,
-  claimPeriod: number,
-  api: ApiPromise | null | undefined
-) => {
-  const periodBlocksDone = currentBlock % (votingPeriod + claimPeriod)
-  const periodBlocksLeft = votingPeriod - periodBlocksDone
-  const percentageDone = 100 - (periodBlocksLeft * 100) / votingPeriod
-  const [, , time] = useBlockTime(periodBlocksLeft, api)
-
-  return { percentageDone, time }
-}
-
-const calculateChallengePercentage = (
-  currentBlock: number,
-  period: number,
-  api: ApiPromise | null | undefined
-) => {
-  const periodBlocksDone = currentBlock % period
-  const periodBlocksLeft = period - periodBlocksDone
-  const percentageDone = 100 - (periodBlocksLeft * 100) / period
-  const [, , time] = useBlockTime(periodBlocksLeft, api)
-
-  return { percentageDone, time }
-}
-
-function isVotingPeriod(
-  votingPeriod: number,
-  claimPeriod: number,
-  currentBlock: number
-) {
-  const rotationPeriod = votingPeriod + claimPeriod
-  const phase = currentBlock % rotationPeriod
-
-  return phase < votingPeriod
-}
 
 export { CurrentRound }
