@@ -1,7 +1,7 @@
 import { Button } from 'react-bootstrap'
 
 type IconButtonProps = {
-  onClick: (event: any) => any
+  onClick: () => any
   icon: string
   children: JSX.Element
 }
