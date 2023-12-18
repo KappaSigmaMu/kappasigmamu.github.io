@@ -1,43 +1,20 @@
 import type { ApiPromise } from '@polkadot/api'
-import { DeriveSocietyCandidate, DeriveSocietyMember } from '@polkadot/api-derive/types'
+import { DeriveSocietyMember } from '@polkadot/api-derive/types'
 import { StorageKey, u32 } from '@polkadot/types'
 import type { AccountId, AccountId32 } from '@polkadot/types/interfaces'
 import { BN } from '@polkadot/util'
 import { combineLatest, firstValueFrom, map, of } from 'rxjs'
 
-async function buildSocietyCandidatesArray(
-  api: ApiPromise,
-  candidates: DeriveSocietyCandidate[]
-): Promise<SocietyCandidate[]> {
-  const candidatesMap: Record<string, SocietyCandidate> = {}
-  candidates.forEach((candidate: DeriveSocietyCandidate) => {
-    candidatesMap[candidate.accountId.toString()] = {
-      accountId: candidate.accountId,
-      kind: candidate.kind,
-      value: candidate.value,
-      isSuspended: candidate.isSuspended,
-      voters: [],
-      skeptics: []
+function buildSocietyCandidatesArray(response: any): SocietyCandidate[] {
+  return response.map((item: any) => (
+    {
+      accountId: item[0].args[0] as AccountId,
+      kind: item[1].unwrap().kind,
+      bid: item[1].unwrap().bid,
+      tally: item[1].unwrap().tally,
+      skepticStruck: item[1].unwrap().skepticStruck,
     }
-  })
-
-  const candidateVotes = candidates.length
-    ? await Promise.all(candidates.map(({ accountId }) => api.query.society.votes.entries(accountId)))
-    : []
-
-  candidateVotes.forEach((votes): void => {
-    votes.forEach(([votesStorage, voteOption]) => {
-      const [candidateAccountId, voterAccountId] = votesStorage.args
-
-      if (voteOption.isSome) {
-        const key = voterAccountId.toString()
-        !candidatesMap[candidateAccountId.toString()].voters.includes(key) &&
-          candidatesMap[candidateAccountId.toString()].voters.push(key)
-      }
-    })
-  })
-
-  return Object.values(candidatesMap)
+  ))
 }
 
 const buildSocietyMembersArray = (

@@ -1,5 +1,4 @@
 import { ApiPromise } from '@polkadot/api'
-import { DeriveSocietyCandidate } from '@polkadot/api-derive/types'
 import { useEffect, useState } from 'react'
 import { CandidatesList } from './components/CandidatesList'
 import { useAccount } from '../../../account/AccountContext'
@@ -12,19 +11,24 @@ type CandidatesPageProps = {
 
 const CandidatesPage = ({ api }: CandidatesPageProps): JSX.Element => {
   const { activeAccount } = useAccount()
-  const society = api?.derive?.society
   const [candidates, setCandidates] = useState<SocietyCandidate[] | null>(null)
+  const [trigger, setTrigger] = useState(false)
+
+  const handleUpdate = () => {
+    setTrigger(true) // Toggle the trigger to query candidates again after voting
+  }
 
   useEffect(() => {
-    society?.candidates((responseCandidates: DeriveSocietyCandidate[]) => {
-      buildSocietyCandidatesArray(api!, responseCandidates).then(setCandidates).catch(console.error)
+    setTrigger(false)
+    api?.query.society.candidates.entries().then((response) => {
+      setCandidates(buildSocietyCandidatesArray(response))
     })
-  }, [society])
+  }, [trigger, api])
 
   return candidates === null ? (
     <LoadingSpinner />
   ) : (
-    <CandidatesList api={api!} activeAccount={activeAccount} candidates={candidates} />
+    <CandidatesList api={api!} activeAccount={activeAccount} candidates={candidates} handleUpdate={handleUpdate} />
   )
 }
 
