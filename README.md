@@ -80,7 +80,7 @@ yarn chopsticks
 
 - You can also access [Polkadotjs pointing to your development node](https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A8000#/society) to interact with it.
 
-### Application:
+## Application:
 
 ```
 yarn start
