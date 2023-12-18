@@ -7,13 +7,23 @@ import { isValidAccount } from '../helpers/validAccount'
 import { useKusama } from '../kusama'
 import { ApiState } from '../kusama/KusamaContext'
 
-const activeAccount = localStorage.getItem('activeAccount')
-const isValid = isValidAccount(activeAccount)
-let storedActiveAccount = isValid ? JSON.parse(activeAccount!) : null
-storedActiveAccount = storedActiveAccount ? (storedActiveAccount as accountType) : { name: '', address: '' }
+const localStorageAccount = localStorage.getItem('activeAccount')
+
+let storedActiveAccount: accountType | null = null
+if (localStorageAccount) {
+  try {
+    storedActiveAccount = JSON.parse(localStorageAccount!)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const defaultActiveAccount = isValidAccount(storedActiveAccount!.address)
+  ? (storedActiveAccount as accountType)
+  : { name: '', address: '' }
 
 const INIT_STATE = {
-  activeAccount: storedActiveAccount,
+  activeAccount: defaultActiveAccount,
   setActiveAccount: () => ({}),
   accounts: [],
   fetchAccounts: () => ({}),
@@ -36,7 +46,7 @@ const emptyActiveAccount = (account: accountType) => {
 
 const AccountContextProvider = ({ children }: any) => {
   const { api, apiState, keyringState, keyring } = useKusama()
-  const [activeAccount, _setActiveAccount] = useState<accountType>(storedActiveAccount)
+  const [activeAccount, _setActiveAccount] = useState<accountType>(defaultActiveAccount)
   const [accounts, setAccounts] = useState<accountType[]>([])
   const [level, setLevel] = useState('human')
 
