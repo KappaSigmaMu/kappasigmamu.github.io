@@ -45,8 +45,7 @@ export function VoteButton({
     handleUpdate()
   }
 
-  const handleVote = async (event: { stopPropagation: () => void }) => {
-    event.stopPropagation()
+  const handleVote = async () => {
     setLoading(true)
     try {
       await doTx(
@@ -66,7 +65,7 @@ export function VoteButton({
   if (loading) return <LoadingSpinner center={false} />
 
   return (
-    <IconButton icon={icon} onClick={(event) => handleVote(event)}>
+    <IconButton icon={icon} onClick={handleVote}>
       <u>{children}</u>
     </IconButton>
   )
