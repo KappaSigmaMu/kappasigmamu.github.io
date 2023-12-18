@@ -27,11 +27,13 @@ const INIT_STATE = {
   setActiveAccount: () => ({}),
   accounts: [],
   fetchAccounts: () => ({}),
-  level: 'human'
+  level: 'human',
+  setLevel: () => ({})
 }
 
 type StateType = {
   level: string
+  setLevel: (level: string) => void
   setActiveAccount: (account: accountType) => void
   activeAccount: accountType
   accounts: accountType[]
@@ -111,7 +113,7 @@ const AccountContextProvider = ({ children }: any) => {
   return loading ? (
     <>{children}</>
   ) : (
-    <AccountContext.Provider value={{ level, activeAccount, setActiveAccount, accounts, fetchAccounts }}>
+    <AccountContext.Provider value={{ level, setLevel, activeAccount, setActiveAccount, accounts, fetchAccounts }}>
       {children}
     </AccountContext.Provider>
   )
