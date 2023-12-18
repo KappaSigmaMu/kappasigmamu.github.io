@@ -32,10 +32,55 @@ import-storage:
       - Candidates
       - Members
     Bids:
-      - { who: "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY", kind: "deposit", value: 1 } # Alice
+      - { who: "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY", kind: "deposit", value: 10000000000000 } # Alice bidding 10 KSM
     Candidates:
-      - [[5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty]] # Bob
+      -
+        -
+          - 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty # Bob
+        - round: 5
+          kind:
+            Deposit: 33333333000
+          bid: 85000000000000
+          tally:
+            approvals: 0
+            rejections: 0
+          skepticStruck: false
+
+      -
+        -
+          - 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y # Charlie
+        - round: 5
+          kind:
+            Deposit: 1666666666660
+          bid: 65000000000000
+          tally:
+            approvals: 1
+            rejections: 1
+          skepticStruck: false
+
+      -
+        -
+          - 5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy # Dave
+        - round: 5
+          kind:
+            Deposit: 33333333000
+          bid: 499000000000000
+          tally:
+            approvals: 10
+            rejections: 0
+          skepticStruck: false
     Members:
-      - [[5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y], rank: 0] # Charlie
+      -
+        -
+          - 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw # Eve
+        - rank: 0
+          strikes: 5
+          index: 0
+      -
+        -
+          - 5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL # Ferdie
+        - rank: 1
+          strikes: 0
+          index: 1
   ParasDisputes:
     $removePrefix: ['disputes'] # those can makes block building super slow
