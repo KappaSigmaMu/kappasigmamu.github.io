@@ -32,7 +32,7 @@ const HumanNextStep = (
       <br />
       To level up you must first Submit a Bid.
     </h5>
-    <Link to="/guide" className="ml-5 btn btn-primary">
+    <Link to="/explore/bidders" className="ml-5 btn btn-primary">
       Submit a Bid
     </Link>
   </>
