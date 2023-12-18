@@ -3,7 +3,7 @@ import BN from 'bn.js'
 import { useState, useEffect } from 'react'
 import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 import styled from 'styled-components'
-import { bid, vouch } from './helper'
+import { bid, vouch, BNtoNumber } from './helper'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 
 type BidVouchProps = { api: ApiPromise; handleResult: any; activeAccount: accountType }
@@ -24,14 +24,14 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
   }
 
   useEffect(() => {
-    if (bidAmount.toNumber() >= 0) {
+    if (BNtoNumber(bidAmount) >= 0) {
       const tx = api.tx.society.bid(bidAmount)
       bid(tx, activeAccount, onStatusChange)
     }
   }, [bidAmount, handleResult])
 
   useEffect(() => {
-    if (vouchAddress && vouchTip.toNumber() >= 0 && vouchValue.toNumber() >= 0) {
+    if (vouchAddress && BNtoNumber(vouchTip) >= 0 && BNtoNumber(vouchValue) >= 0) {
       const tx = api.tx.society.vouch(vouchAddress, vouchValue, vouchTip)
       vouch(tx, activeAccount, onStatusChange)
     }
