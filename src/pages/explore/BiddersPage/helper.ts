@@ -1,6 +1,6 @@
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { doTx } from '../../../helpers/extrinsitcs'
 import BN from 'bn.js'
+import { doTx } from '../../../helpers/extrinsitcs'
 
 export const unbid = async (
   tx: SubmittableExtrinsic<'promise', any>,
