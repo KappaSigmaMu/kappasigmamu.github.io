@@ -15,11 +15,11 @@ const CandidatesPage = ({ api }: CandidatesPageProps): JSX.Element => {
   const [trigger, setTrigger] = useState(false)
 
   const handleUpdate = () => {
-    setTrigger(true) // Toggle the trigger to query candidates again after voting
+    setTrigger((prev) => !prev) // Toggle the trigger to query candidates again after voting
   }
 
   useEffect(() => {
-    setTrigger(false)
+    setTrigger(true)
     api?.query.society.candidates.entries().then((response) => {
       setCandidates(buildSocietyCandidatesArray(response))
     })
