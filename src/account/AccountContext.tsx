@@ -63,18 +63,18 @@ const AccountContextProvider = ({ children }: any) => {
     if (keyringState === 'READY') fetchAccounts()
   }, [keyringState])
 
-  // TODO: this is duplicated in LandingPage
   useEffect(() => {
     const setLevelCheckingAccounts = (accounts: AccountId32[], level: string) => {
-      setLevel('human')
       accounts.forEach((account: AccountId32) => {
-        if (account.toString() === activeAccount?.address) {
+        if (account.toHuman() === activeAccount?.address) {
           setLevel(level)
         }
       })
     }
 
     if (api && activeAccount) {
+      setLevel('human')
+
       api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
         setLevelCheckingAccounts(
           response.map((account) => account.who),
