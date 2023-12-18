@@ -16,9 +16,7 @@ import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
 import { StyledAlert } from '../../components/StyledAlert'
 
-const StyledDataRow = styled(DataRow)`
-  background-color: ${(props) => (props.$isDefender ? '#73003d' : '')};
-  border: ${(props) => (props.$isDefender ? '2px solid #E6007A' : '')};
+const StyledCol = styled(Col)`
   &:hover {
     cursor: pointer;
   }
@@ -88,7 +86,6 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
     setShowCandidateDetailsOffcanvas(true)
   }
 
-  console.info(votes)
   if (candidates.length === 0) return <>No candidates</>
 
   return (
@@ -119,13 +116,17 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
       </DataHeaderRow>
 
       {candidates.map((candidate: SocietyCandidate) => (
-        <StyledDataRow key={candidate.accountId.toString()} onClick={() => showCandidateDetails(candidate.accountId)}>
+        <DataRow key={candidate.accountId.toString()}>
           <Col xs={1} className="text-center">
             <Identicon value={candidate.accountId.toHuman()} size={32} theme={'polkadot'} />
           </Col>
-          <Col xs={2} className="text-start text-truncate">
+          <StyledCol
+            xs={2}
+            className="text-start text-truncate"
+            onClick={() => showCandidateDetails(candidate.accountId)}
+          >
             <AccountIdentity api={api} accountId={candidate.accountId} />
-          </Col>
+          </StyledCol>
           <Col xs={1}>{candidate.kind.isDeposit ? 'Deposit' : 'Vouch'}</Col>
           <Col xs={2} className="text-start">
             {candidate.kind.isDeposit ? (
@@ -137,7 +138,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
               </>
             )}
           </Col>
-          <Col xs={3} onClick={(e) => e.stopPropagation()}>
+          <Col xs={3}>
             {candidate.tally.approvals.toHuman()} approvals and {candidate.tally.rejections.toHuman()} rejections
           </Col>
           <Col xs={3}>
@@ -165,7 +166,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
             </VoteButton>
             {votes.includes(candidate.accountId) ? <AlreadyVotedIcon /> : <></>}
           </Col>
-        </StyledDataRow>
+        </DataRow>
       ))}
     </>
   )
