@@ -118,7 +118,7 @@ const LEVELS: LevelsType = {
 }
 
 const NextStep = () => {
-  const { level } = useAccount()
+  const { level, setLevel } = useAccount()
   const { api } = useKusama()
   const [currentBlock, setCurrentBlock] = useState<number>(0)
   const [votingPeriod, setVotingPeriod] = useState<number>(0)
@@ -148,8 +148,7 @@ const NextStep = () => {
   }
 
   const handleUpdate = () => {
-    // TODO: fix me - trigger a state update instead of reloading
-    window.location.reload()
+    setLevel('cyborg')
   }
 
   return (
@@ -194,7 +193,7 @@ function ClaimMembershipButton({
   const onStatusChange: StatusChangeHandler = ({ loading, message, success }) => {
     setLoading(loading)
     showMessage({ success, message })
-    handleUpdate()
+    if (!loading && success) handleUpdate()
   }
 
   const handleClaim = async () => {
