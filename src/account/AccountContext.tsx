@@ -9,7 +9,7 @@ import { ApiState } from '../kusama/KusamaContext'
 
 const localStorageAccount = localStorage.getItem('activeAccount')
 
-let storedActiveAccount: accountType | null = null
+let storedActiveAccount: accountType | null = { name: '', address: '' }
 if (localStorageAccount) {
   try {
     storedActiveAccount = JSON.parse(localStorageAccount!)
