@@ -79,7 +79,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
         setVotes((votes) => [...votes, candidate.accountId])
       })
     })
-  }, [activeAccount, prevActiveAccount])
+  }, [candidates, activeAccount, prevActiveAccount])
 
   const showCandidateDetails = (candidateId: AccountId) => {
     setSelectedCandidate(candidateId)
