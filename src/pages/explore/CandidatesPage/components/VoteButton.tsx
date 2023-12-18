@@ -62,7 +62,7 @@ export function VoteButton({
     }
   }
 
-  if (loading) return <LoadingSpinner center={false} />
+  if (loading) return <LoadingSpinner center={false} small={true} />
 
   return (
     <IconButton icon={icon} onClick={handleVote}>
