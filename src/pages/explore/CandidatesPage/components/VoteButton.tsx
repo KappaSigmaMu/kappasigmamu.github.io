@@ -10,6 +10,7 @@ type VoteButtonProps = {
   vote: Vote
   showMessage: (args: ShowMessageArgs) => any
   icon: string
+  handleUpdate: () => void
   successText: string
   waitingText: string
   children: JSX.Element
@@ -26,15 +27,26 @@ export interface Vote {
   voterAccount: accountType
 }
 
-export function VoteButton({ api, vote, showMessage, icon, successText, waitingText, children }: VoteButtonProps) {
+export function VoteButton({
+  api,
+  vote,
+  showMessage,
+  icon,
+  handleUpdate,
+  successText,
+  waitingText,
+  children
+}: VoteButtonProps) {
   const [loading, setLoading] = useState(false)
 
   const onStatusChange: StatusChangeHandler = ({ loading, message, success }) => {
     setLoading(loading)
     showMessage({ success, message })
+    handleUpdate()
   }
 
-  const handleVote = async () => {
+  const handleVote = async (event: { stopPropagation: () => void }) => {
+    event.stopPropagation()
     setLoading(true)
     try {
       await doTx(
@@ -54,7 +66,7 @@ export function VoteButton({ api, vote, showMessage, icon, successText, waitingT
   if (loading) return <LoadingSpinner center={false} />
 
   return (
-    <IconButton icon={icon} onClick={handleVote}>
+    <IconButton icon={icon} onClick={(event) => handleVote(event)}>
       <u>{children}</u>
     </IconButton>
   )

@@ -16,11 +16,14 @@ declare class ThreeCanary {
 
 declare interface SocietyCandidate {
   accountId: AccountId
+  round: number
   kind: BidKind
-  value: Balance
-  isSuspended: boolean
-  voters: string[]
-  skeptics: string[]
+  bid: Balance
+  tally: {
+    approvals: u32,
+    rejections: u32
+  },
+  skepticStruck: false
 }
 
 declare interface SuspendedCandidate {

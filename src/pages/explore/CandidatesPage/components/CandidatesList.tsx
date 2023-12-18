@@ -3,7 +3,8 @@ import Identicon from '@polkadot/react-identicon'
 import type { Option } from '@polkadot/types'
 import type { SocietyVote, AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useRef, useState } from 'react'
-import { Button, Col } from 'react-bootstrap'
+import { Col } from 'react-bootstrap'
+import styled from 'styled-components'
 import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
 import { VoteButton } from './VoteButton'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
@@ -15,10 +16,19 @@ import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
 import { StyledAlert } from '../../components/StyledAlert'
 
+const StyledDataRow = styled(DataRow)`
+  background-color: ${(props) => (props.$isDefender ? '#73003d' : '')};
+  border: ${(props) => (props.$isDefender ? '2px solid #E6007A' : '')};
+  &:hover {
+    cursor: pointer;
+  }
+`
+
 type CandidatesListProps = {
   api: ApiPromise
   activeAccount: accountType
   candidates: SocietyCandidate[]
+  handleUpdate: () => void
 }
 
 type VoteResult = {
@@ -35,7 +45,7 @@ const AlreadyVotedIcon = () => (
 
 // TODO: only let members vote
 // TODO: check error/success messages (non-members votes are returning success)
-const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps): JSX.Element => {
+const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: CandidatesListProps): JSX.Element => {
   const [showAlert, setShowAlert] = useState(false)
   const [votes, setVotes] = useState<SocietyCandidate[]>([])
   const [voteResult, setVoteResult] = useState<VoteResult>({ success: false, message: '' })
@@ -68,7 +78,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
           return
         }
 
-        setVotes([candidate.accountId, ...votes])
+        setVotes((votes) => [...votes, candidate.accountId])
       })
     })
   }, [activeAccount, prevActiveAccount])
@@ -78,7 +88,7 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
     setShowCandidateDetailsOffcanvas(true)
   }
 
-  console.info(candidates)
+  console.info(votes)
   if (candidates.length === 0) return <>No candidates</>
 
   return (
@@ -100,26 +110,26 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
         <Col xs={1} className="text-center">
           #
         </Col>
-        <Col xs={3} className="text-start">
+        <Col xs={2} className="text-start">
           Wallet Hash
         </Col>
         <Col className="text-start">Bid Kind</Col>
-        <Col></Col>
+        <Col>Tally</Col>
         <Col>Vote</Col>
       </DataHeaderRow>
 
       {candidates.map((candidate: SocietyCandidate) => (
-        <DataRow key={candidate.accountId.toString()}>
+        <StyledDataRow key={candidate.accountId.toString()} onClick={() => showCandidateDetails(candidate.accountId)}>
           <Col xs={1} className="text-center">
             <Identicon value={candidate.accountId.toHuman()} size={32} theme={'polkadot'} />
           </Col>
-          <Col xs={3} className="text-start text-truncate">
+          <Col xs={2} className="text-start text-truncate">
             <AccountIdentity api={api} accountId={candidate.accountId} />
           </Col>
           <Col xs={1}>{candidate.kind.isDeposit ? 'Deposit' : 'Vouch'}</Col>
           <Col xs={2} className="text-start">
             {candidate.kind.isDeposit ? (
-              <FormatBalance balance={candidate.value} />
+              <FormatBalance balance={candidate.bid} />
             ) : (
               <>
                 Member: {truncate(candidate.kind.asVouch[0].toHuman(), 7)} | Tip:{' '}
@@ -127,38 +137,35 @@ const CandidatesList = ({ api, activeAccount, candidates }: CandidatesListProps)
               </>
             )}
           </Col>
-          <Col xs={2} onClick={() => showCandidateDetails(candidate.accountId)}>
-            <Button variant="link">Votes</Button>
+          <Col xs={3} onClick={(e) => e.stopPropagation()}>
+            {candidate.tally.approvals.toHuman()} approvals and {candidate.tally.rejections.toHuman()} rejections
           </Col>
           <Col xs={3}>
-            {votes.includes(candidate.accountId) ? (
-              <AlreadyVotedIcon />
-            ) : (
-              <>
-                <VoteButton
-                  api={api}
-                  showMessage={showMessage}
-                  successText="Approval vote sent."
-                  waitingText="Approval vote request sent. Waiting for response..."
-                  vote={{ approve: true, voterAccount: activeAccount, candidateId: candidate.accountId }}
-                  icon={ApproveIcon}
-                >
-                  <u>Approve</u>
-                </VoteButton>
-                <VoteButton
-                  api={api}
-                  showMessage={showMessage}
-                  successText="Rejection vote sent."
-                  waitingText="Rejection vote request sent. Waiting for response..."
-                  vote={{ approve: false, voterAccount: activeAccount, candidateId: candidate.accountId }}
-                  icon={RejectIcon}
-                >
-                  <u>Reject</u>
-                </VoteButton>
-              </>
-            )}
+            <VoteButton
+              api={api}
+              showMessage={showMessage}
+              successText="Approval vote sent."
+              waitingText="Approval vote request sent. Waiting for response..."
+              vote={{ approve: true, voterAccount: activeAccount, candidateId: candidate.accountId }}
+              icon={ApproveIcon}
+              handleUpdate={handleUpdate}
+            >
+              <u>Approve</u>
+            </VoteButton>
+            <VoteButton
+              api={api}
+              showMessage={showMessage}
+              successText="Rejection vote sent."
+              waitingText="Rejection vote request sent. Waiting for response..."
+              vote={{ approve: false, voterAccount: activeAccount, candidateId: candidate.accountId }}
+              icon={RejectIcon}
+              handleUpdate={handleUpdate}
+            >
+              <u>Reject</u>
+            </VoteButton>
+            {votes.includes(candidate.accountId) ? <AlreadyVotedIcon /> : <></>}
           </Col>
-        </DataRow>
+        </StyledDataRow>
       ))}
     </>
   )
