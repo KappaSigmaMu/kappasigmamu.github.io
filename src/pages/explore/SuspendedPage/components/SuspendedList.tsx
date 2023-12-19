@@ -9,7 +9,7 @@ type SuspendedListProps = {
 }
 
 const SuspendedList = ({ members }: SuspendedListProps): JSX.Element => {
-  if (members.length === 0) return <>No suspended members or candidates</>
+  if (members.length === 0) return <>No suspended members</>
 
   return (
     <>
