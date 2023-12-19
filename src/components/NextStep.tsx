@@ -199,7 +199,7 @@ function ClaimMembershipButton({
   const handleClaim = async () => {
     setLoading(true)
     try {
-      await doTx(api.tx.society.claimMembership(), successText, waitingText, activeAccount, onStatusChange)
+      await doTx(api, api.tx.society.claimMembership(), successText, waitingText, activeAccount, onStatusChange)
     } catch (e) {
       console.error(e)
     } finally {

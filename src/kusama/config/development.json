@@ -1,0 +1,7 @@
+{
+    "APP_NAME": "[DEVELOPMENT] Kusama Society",
+    "PROVIDER_SOCKET": "ws://0.0.0.0:9944",
+    "DEVELOPMENT_KEYRING": true,
+    "RPC": {}
+  }
+  

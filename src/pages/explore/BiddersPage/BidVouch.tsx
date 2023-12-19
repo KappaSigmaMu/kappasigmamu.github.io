@@ -26,14 +26,14 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
   useEffect(() => {
     if (BNtoNumber(bidAmount) >= 0) {
       const tx = api.tx.society.bid(bidAmount)
-      bid(tx, activeAccount, onStatusChange)
+      bid(tx, api, activeAccount, onStatusChange)
     }
   }, [bidAmount, handleResult])
 
   useEffect(() => {
     if (vouchAddress && BNtoNumber(vouchTip) >= 0 && BNtoNumber(vouchValue) >= 0) {
       const tx = api.tx.society.vouch(vouchAddress, vouchValue, vouchTip)
-      vouch(tx, activeAccount, onStatusChange)
+      vouch(tx, api, activeAccount, onStatusChange)
     }
   }, [vouchAddress, vouchTip, vouchValue])
 
