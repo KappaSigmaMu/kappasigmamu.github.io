@@ -5,6 +5,8 @@ import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-
 import styled from 'styled-components'
 import { bid, vouch, BNtoNumber } from './helper'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
+import { FormatBalance } from '../../../components/FormatBalance'
+import { Balance } from '@polkadot/types/interfaces'
 
 type BidVouchProps = { api: ApiPromise; handleResult: any; activeAccount: accountType }
 type OnStatusChangeProps = { loading: boolean; message: string; success: boolean }
@@ -13,6 +15,7 @@ const ksmMultiplier = new BN(1e12)
 
 const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
   const [bidAmount, setBidAmount] = useState<BN>(new BN(-1))
+  const [pot, setPot] = useState<Balance>()
   const [vouchValue, setVouchValue] = useState<BN>(new BN(-1))
   const [vouchTip, setVouchTip] = useState<BN>(new BN(-1))
   const [vouchAddress, setVouchAddress] = useState<string>()
@@ -24,6 +27,8 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
   }
 
   useEffect(() => {
+    api.query.society.pot(setPot)
+
     if (BNtoNumber(bidAmount) >= 0) {
       const tx = api.tx.society.bid(bidAmount)
       bid(tx, api, activeAccount, onStatusChange)
@@ -76,8 +81,11 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
             <Button disabled={loading} variant="primary" type="submit" className="w-100">
               {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
-            <StyledButtonLabel className="text-muted">*Plus 0.0045 KSM fee</StyledButtonLabel>
           </Form>
+          <hr />
+          <div className="align-self-center">
+            <h6>POT: {<FormatBalance balance={pot!} />}</h6>
+          </div>
           <hr />
           <div className="align-self-center">
             <CurrentRound />
