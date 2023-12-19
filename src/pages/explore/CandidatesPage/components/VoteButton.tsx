@@ -49,6 +49,7 @@ export function VoteButton({
     setLoading(true)
     try {
       await doTx(
+        api,
         api.tx.society.vote(vote.candidateId, vote.approve),
         successText,
         waitingText,
