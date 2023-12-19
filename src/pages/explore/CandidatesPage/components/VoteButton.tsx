@@ -2,7 +2,7 @@ import { ApiPromise } from '@polkadot/api'
 import { AccountId } from '@polkadot/types/interfaces'
 import { useState } from 'react'
 import { IconButton } from '../../../../components/IconButton'
-import { doTx, StatusChangeHandler } from '../../../../helpers/extrinsitcs'
+import { doTx, StatusChangeHandler } from '../../../../helpers/extrinsics'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
 
 type VoteButtonProps = {

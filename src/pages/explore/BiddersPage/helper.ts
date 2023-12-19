@@ -1,6 +1,6 @@
 import { SubmittableExtrinsic } from '@polkadot/api/types'
 import BN from 'bn.js'
-import { doTx } from '../../../helpers/extrinsitcs'
+import { doTx } from '../../../helpers/extrinsics'
 
 export const unbid = async (
   tx: SubmittableExtrinsic<'promise', any>,
@@ -50,7 +50,7 @@ export const vouch = async (
   await doTx(api, tx, finalizedText, waitingText, activeAccount, onStatusChange)
 }
 
-export const BNtoNumber = (bn : BN) => {
+export const BNtoNumber = (bn: BN) => {
   try {
     return bn.toNumber()
   } catch (error) {
