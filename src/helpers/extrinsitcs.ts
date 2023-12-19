@@ -30,17 +30,24 @@ export const doTx = async (
   let done = false
   let hasError = false
 
-  tx.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status, events }: { status: any, events: [] }) => {
-    events.forEach(({ event: { data: [error, info] } }) => {
-      if (error.isModule) {
-        debugger
-        const decoded = api.registry.findMetaError(error.asModule);
-        const { docs, method, section } = decoded;
+  type signAndSendProp = { status: any; events: [] }
 
-        onStatusChange({ loading: false, message: `${section}.${method}: ${docs.join(' ')}`, success: false })
-        hasError = true
+  tx.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status, events }: signAndSendProp) => {
+    events.forEach(
+      ({
+        event: {
+          data: [error, info]
+        }
+      }) => {
+        if (error.isModule) {
+          const decoded = api.registry.findMetaError(error.asModule)
+          const { docs, method, section } = decoded
+
+          onStatusChange({ loading: false, message: `${section}.${method}: ${docs.join(' ')}`, success: false })
+          hasError = true
+        }
       }
-    });
+    )
 
     if (hasError) return
 
