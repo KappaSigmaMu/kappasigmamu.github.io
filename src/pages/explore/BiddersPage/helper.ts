@@ -29,7 +29,7 @@ export const unvouch = async (
 
 export const bid = async (
   tx: SubmittableExtrinsic<'promise', any>,
-  api: any,
+  api: ApiPromise,
   activeAccount: accountType,
   onStatusChange: any
 ) => {
@@ -41,7 +41,7 @@ export const bid = async (
 
 export const vouch = async (
   tx: SubmittableExtrinsic<'promise', any>,
-  api: any,
+  api: ApiPromise,
   activeAccount: accountType,
   onStatusChange: any
 ) => {
