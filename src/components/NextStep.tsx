@@ -99,9 +99,9 @@ const ClaimMembershipStep = ({
 
 const CyborgNextStep = (
   <>
-    <h5 className="mb-4">Welcome to the Society!</h5>
+    <h5 className="mb-4">Welcome to the Kusama Society!</h5>
     <Link to="/explore/bidders" className="btn btn-outline-light-grey">
-      Vouch Bid
+      Vouch for someone
     </Link>
     &nbsp;&nbsp;
     <Link to="/explore/candidates" className="ml-5 btn btn-primary">
@@ -157,7 +157,7 @@ const NextStep = () => {
         {extrinsicResult.message}
       </StyledAlert>
 
-      <StyledP>Next Step</StyledP>
+      <StyledP>{level !== 'cyborg' && 'Next Step'}</StyledP>
       {level === 'candidate' && isClaimPeriod ? (
         <ClaimMembershipStep api={api!} showMessage={showMessage} handleUpdate={handleUpdate} />
       ) : (
