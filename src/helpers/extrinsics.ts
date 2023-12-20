@@ -1,3 +1,4 @@
+import { ApiPromise } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
 import { web3FromAddress } from '@polkadot/extension-dapp'
 
@@ -10,7 +11,7 @@ export interface StatusChangeInfo {
 }
 
 export const doTx = async (
-  api: any,
+  api: ApiPromise,
   tx: SubmittableExtrinsic<'promise', any>,
   finalizedText: string,
   waitingText: string,
