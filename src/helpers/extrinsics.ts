@@ -1,6 +1,5 @@
 import { SubmittableExtrinsic } from '@polkadot/api/types'
 import { web3FromAddress } from '@polkadot/extension-dapp'
-import { useKusama } from '../kusama'
 
 export type StatusChangeHandler = (info: StatusChangeInfo) => any
 
@@ -33,21 +32,17 @@ export const doTx = async (
   type signAndSendProp = { status: any; events: [] }
 
   tx.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status, events }: signAndSendProp) => {
-    events.forEach(
-      ({
-        event: {
-          data: [error, info]
-        }
-      }) => {
-        if (error.isModule) {
-          const decoded = api.registry.findMetaError(error.asModule)
-          const { docs, method, section } = decoded
+    events.map((event) => {
+      const error = event?.['event']?.['data']?.[0] as any
 
-          onStatusChange({ loading: false, message: `${section}.${method}: ${docs.join(' ')}`, success: false })
-          hasError = true
-        }
+      if (error?.isModule) {
+        const decoded = api!.registry.findMetaError(error.asModule)
+        const { docs, method, section } = decoded
+
+        onStatusChange({ loading: false, message: `${section}.${method}: ${docs.join(' ')}`, success: false })
+        hasError = true
       }
-    )
+    })
 
     if (hasError) return
 
