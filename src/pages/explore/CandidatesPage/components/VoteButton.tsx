@@ -23,8 +23,9 @@ export interface ShowMessageArgs {
 
 export interface Vote {
   approve: boolean
-  candidateId: AccountId
+  accountId: AccountId
   voterAccount: accountType
+  type: string
 }
 
 export function VoteButton({
@@ -45,17 +46,15 @@ export function VoteButton({
     handleUpdate()
   }
 
+  const extrinsic =
+    vote.type === 'candidate'
+      ? api.tx.society.vote(vote.accountId, vote.approve)
+      : api.tx.society.defenderVote(vote.approve)
+
   const handleVote = async () => {
     setLoading(true)
     try {
-      await doTx(
-        api,
-        api.tx.society.vote(vote.candidateId, vote.approve),
-        successText,
-        waitingText,
-        vote.voterAccount,
-        onStatusChange
-      )
+      await doTx(api, extrinsic, successText, waitingText, vote.voterAccount, onStatusChange)
     } catch (e) {
       console.error(e)
     } finally {

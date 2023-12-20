@@ -20,9 +20,9 @@ declare interface SocietyCandidate {
   kind: BidKind
   bid: Balance
   tally: {
-    approvals: u32,
+    approvals: u32
     rejections: u32
-  },
+  }
   skepticStruck: false
 }
 
@@ -48,10 +48,12 @@ declare interface SocietyMember {
   strikesCount: number
   vouching?: SocietyMemberVouching
   vote?: PalletSocietyVote
+  rank: u32
 }
 
 type ExtendedDeriveSociety = {
   skeptic?: AccountId32 | undefined
+  rank: u32
 } & DeriveSociety
 
 interface SocietyMemberDetails {

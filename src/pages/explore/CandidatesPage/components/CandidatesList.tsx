@@ -152,7 +152,12 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                   showMessage={showMessage}
                   successText="Approval vote sent."
                   waitingText="Approval vote request sent. Waiting for response..."
-                  vote={{ approve: true, voterAccount: activeAccount, candidateId: candidate.accountId }}
+                  vote={{
+                    approve: true,
+                    voterAccount: activeAccount,
+                    accountId: candidate.accountId,
+                    type: 'candidate'
+                  }}
                   icon={ApproveIcon}
                   handleUpdate={handleUpdate}
                 >
@@ -163,7 +168,12 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                   showMessage={showMessage}
                   successText="Rejection vote sent."
                   waitingText="Rejection vote request sent. Waiting for response..."
-                  vote={{ approve: false, voterAccount: activeAccount, candidateId: candidate.accountId }}
+                  vote={{
+                    approve: false,
+                    voterAccount: activeAccount,
+                    accountId: candidate.accountId,
+                    type: 'candidate'
+                  }}
                   icon={RejectIcon}
                   handleUpdate={handleUpdate}
                 >
