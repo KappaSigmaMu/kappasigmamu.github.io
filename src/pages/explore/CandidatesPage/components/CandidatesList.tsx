@@ -3,10 +3,11 @@ import Identicon from '@polkadot/react-identicon'
 import type { Option } from '@polkadot/types'
 import type { SocietyVote, AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useRef, useState } from 'react'
-import { Col } from 'react-bootstrap'
+import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
 import { VoteButton } from './VoteButton'
+import { useAccount } from '../../../../account/AccountContext'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
@@ -41,8 +42,6 @@ const AlreadyVotedIcon = () => (
   </>
 )
 
-// TODO: only let members vote
-// TODO: check error/success messages (non-members votes are returning success)
 const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: CandidatesListProps): JSX.Element => {
   const [showAlert, setShowAlert] = useState(false)
   const [votes, setVotes] = useState<SocietyCandidate[]>([])
@@ -63,6 +62,10 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
     })
     return ref.current
   }
+
+  const { level } = useAccount()
+  const isCandidate = (candidate: SocietyCandidate) => activeAccount?.address === candidate.accountId.toHuman()
+  const isMember = level === 'cyborg'
 
   const prevActiveAccount = usePrevious(activeAccount)
 
@@ -112,11 +115,11 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
         </Col>
         <Col className="text-start">Bid Kind</Col>
         <Col>Tally</Col>
-        <Col>Vote</Col>
+        <Col>{isMember && 'Vote'}</Col>
       </DataHeaderRow>
 
       {candidates.map((candidate: SocietyCandidate) => (
-        <DataRow key={candidate.accountId.toString()}>
+        <StyledDataRow $isOwner={isCandidate(candidate)} key={candidate.accountId.toString()}>
           <Col xs={1} className="text-center">
             <Identicon value={candidate.accountId.toHuman()} size={32} theme={'polkadot'} />
           </Col>
@@ -142,34 +145,53 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
             {candidate.tally.approvals.toHuman()} approvals and {candidate.tally.rejections.toHuman()} rejections
           </Col>
           <Col xs={3}>
-            <VoteButton
-              api={api}
-              showMessage={showMessage}
-              successText="Approval vote sent."
-              waitingText="Approval vote request sent. Waiting for response..."
-              vote={{ approve: true, voterAccount: activeAccount, candidateId: candidate.accountId }}
-              icon={ApproveIcon}
-              handleUpdate={handleUpdate}
-            >
-              <u>Approve</u>
-            </VoteButton>
-            <VoteButton
-              api={api}
-              showMessage={showMessage}
-              successText="Rejection vote sent."
-              waitingText="Rejection vote request sent. Waiting for response..."
-              vote={{ approve: false, voterAccount: activeAccount, candidateId: candidate.accountId }}
-              icon={RejectIcon}
-              handleUpdate={handleUpdate}
-            >
-              <u>Reject</u>
-            </VoteButton>
+            {isMember ? (
+              <>
+                <VoteButton
+                  api={api}
+                  showMessage={showMessage}
+                  successText="Approval vote sent."
+                  waitingText="Approval vote request sent. Waiting for response..."
+                  vote={{ approve: true, voterAccount: activeAccount, candidateId: candidate.accountId }}
+                  icon={ApproveIcon}
+                  handleUpdate={handleUpdate}
+                >
+                  <u>Approve</u>
+                </VoteButton>
+                <VoteButton
+                  api={api}
+                  showMessage={showMessage}
+                  successText="Rejection vote sent."
+                  waitingText="Rejection vote request sent. Waiting for response..."
+                  vote={{ approve: false, voterAccount: activeAccount, candidateId: candidate.accountId }}
+                  icon={RejectIcon}
+                  handleUpdate={handleUpdate}
+                >
+                  <u>Reject</u>
+                </VoteButton>
+              </>
+            ) : (
+              <>
+                {isCandidate(candidate) && (
+                  <div className="d-flex align-items-center justify-content-end h-100">
+                    <Badge pill bg="primary">
+                      You
+                    </Badge>
+                  </div>
+                )}
+              </>
+            )}
             {votes.includes(candidate.accountId) ? <AlreadyVotedIcon /> : <></>}
           </Col>
-        </DataRow>
+        </StyledDataRow>
       ))}
     </>
   )
 }
+
+const StyledDataRow = styled(DataRow)`
+  background-color: ${(props) => (props.$isOwner ? '#73003d' : '')};
+  border: ${(props) => (props.$isOwner ? '2px solid #E6007A' : '')};
+`
 
 export { CandidatesList }
