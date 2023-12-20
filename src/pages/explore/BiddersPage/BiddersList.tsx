@@ -34,12 +34,12 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
 
   const handleUnbid = () => {
     const tx = api.tx.society.unbid()
-    unbid(tx, activeAccount, onStatusChange)
+    unbid(api, tx, activeAccount, onStatusChange)
   }
 
   const handleUnvouch = () => {
     const tx = api.tx.society.unvouch()
-    unvouch(tx, activeAccount, onStatusChange)
+    unvouch(api, tx, activeAccount, onStatusChange)
   }
 
   const ownerActions = (bid: PalletSocietyBid) => {

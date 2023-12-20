@@ -1,22 +1,23 @@
+import { ApiPromise } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
 import BN from 'bn.js'
 import { doTx } from '../../../helpers/extrinsics'
 
 export const unbid = async (
+  api: ApiPromise,
   tx: SubmittableExtrinsic<'promise', any>,
-  api: any,
   activeAccount: accountType,
   onStatusChange: any
 ) => {
-  const finalizedText = 'Bid removed successfully. You became Human again'
+  const finalizedText = 'Bid removed successfully. You became Human again.'
   const waitingText = 'Unbid request sent. Waiting for response...'
 
   await doTx(api, tx, finalizedText, waitingText, activeAccount, onStatusChange)
 }
 
 export const unvouch = async (
+  api: ApiPromise,
   tx: SubmittableExtrinsic<'promise', any>,
-  api: any,
   activeAccount: accountType,
   onStatusChange: any
 ) => {
@@ -32,7 +33,7 @@ export const bid = async (
   activeAccount: accountType,
   onStatusChange: any
 ) => {
-  const finalizedText = 'Bid submitted successfully. You are now a Bidder'
+  const finalizedText = 'Bid submitted successfully. You are now a Bidder!'
   const waitingText = 'Bid request sent. Waiting for response...'
 
   await doTx(api, tx, finalizedText, waitingText, activeAccount, onStatusChange)
