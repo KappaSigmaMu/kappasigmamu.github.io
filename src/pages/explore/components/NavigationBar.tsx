@@ -2,26 +2,34 @@ import { Nav } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
-const NavigationBar = () => (
+type Totals = {
+  bidders: number
+  candidates: number
+  members: number
+  maxMembers: number
+  suspendedMembers: number
+}
+
+const NavigationBar = ({ totals }: { totals: Totals }) => (
   <StyledNav defaultActiveKey="/explore/bidders" className="py-2 my-4">
     <StyledNavItem>
       <Nav.Link as={NavLink} to="/explore/bidders">
-        Bidders
+        Bidders ({totals.bidders})
       </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
       <Nav.Link as={NavLink} to="/explore/candidates">
-        Candidates
+        Candidates ({totals.candidates})
       </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
       <Nav.Link as={NavLink} to="/explore/members">
-        Members
+        Members ({totals.members}/{totals.maxMembers})
       </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
       <Nav.Link as={NavLink} to="/explore/suspended">
-        Suspended
+        Suspended Members ({totals.suspendedMembers})
       </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
