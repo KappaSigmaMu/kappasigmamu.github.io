@@ -1,4 +1,4 @@
-endpoint: wss://kusama-rpc.polkadot.io
+endpoint: wss://rpc.ibp.network/kusama
 mock-signature-host: true
 block: ${env.KUSAMA_BLOCK_NUMBER}
 db: ./db.sqlite
