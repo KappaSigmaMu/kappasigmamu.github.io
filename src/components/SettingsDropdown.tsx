@@ -1,6 +1,6 @@
 import React from 'react'
 import { Dropdown } from 'react-bootstrap'
-import { FaGear, FaCircleCheck } from 'react-icons/fa6'
+import { FaGear, FaCircleCheck, FaCircle } from 'react-icons/fa6'
 import styled from 'styled-components'
 import { providers, type Provider } from '../helpers/providers'
 
@@ -18,10 +18,16 @@ const SettingsDropdown = () => {
     <>
       {providers.map(({ name, url }, key) => {
         currentUrl.searchParams.set('rpc', url)
-        return (
+
+        return url === currentProvider ? (
+          <Dropdown.ItemText key={key}>
+            {name}
+            <FaCircleCheck size={14} />
+          </Dropdown.ItemText>
+        ) : (
           <Dropdown.Item href={currentUrl.toString()} key={key}>
             {name}
-            {url === currentProvider && <FaCircleCheck />}
+            <FaCircle size={14} />
           </Dropdown.Item>
         )
       })}
@@ -35,7 +41,7 @@ const SettingsDropdown = () => {
         <span>Settings</span>
       </Dropdown.Toggle>
 
-      <StyledDropdownMenu align="end">
+      <StyledDropdownMenu>
         <Dropdown.ItemText>RPC Providers</Dropdown.ItemText>
         <Dropdown.Divider />
         <ProvidersList providers={prodProviders} />
@@ -49,7 +55,8 @@ const SettingsDropdown = () => {
 const StyledDropdownMenu = styled(Dropdown.Menu)`
   background-color: ${(props) => props.theme.colors.darkGrey};
 
-  & a {
+  & a,
+  & span {
     display: flex;
     justify-content: space-between;
     align-items: center;
