@@ -8,7 +8,11 @@ import { cryptoWaitReady } from '@polkadot/util-crypto'
 import React, { useReducer, useContext } from 'react'
 
 const RPC = { ...jsonrpc, ...process.env.REACT_APP_RPC }
-const SOCKET = process.env.REACT_APP_PROVIDER_SOCKET
+
+const queryParams = new URLSearchParams(window.location.search)
+const overrideProviderSocket = queryParams.get('rpc')
+
+const SOCKET = overrideProviderSocket ? overrideProviderSocket : process.env.REACT_APP_PROVIDER_SOCKET
 
 enum ApiState {
   initializing,
