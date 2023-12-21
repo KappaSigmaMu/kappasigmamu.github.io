@@ -36,8 +36,10 @@ const SettingsDropdown = () => {
       </Dropdown.Toggle>
 
       <StyledDropdownMenu align="end">
+        <Dropdown.ItemText>RPC Providers</Dropdown.ItemText>
+        <Dropdown.Divider />
         <ProvidersList providers={prodProviders} />
-        <hr />
+        <Dropdown.Divider />
         <ProvidersList providers={devProviders} />
       </StyledDropdownMenu>
     </Dropdown>
@@ -56,7 +58,8 @@ const StyledDropdownMenu = styled(Dropdown.Menu)`
 
   & a,
   & a:link,
-  & a:visited {
+  & a:visited,
+  & span {
     color: ${(props) => props.theme.colors.white};
   }
 
