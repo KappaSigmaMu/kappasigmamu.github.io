@@ -4,7 +4,7 @@ import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { isMobile } from 'react-device-detect'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from '../components/MemberOffcanvas'
@@ -50,6 +50,9 @@ const LandingPage = () => {
     }
   }
 
+  const { search } = useLocation()
+  const handleButtonClick = (to: string) => navigate(to + search)
+
   useEffect(() => {
     if (api && apiState === ApiState.ready) {
       api.query.society.members.keys().then((members: StorageKey<[AccountId32]>[]) => {
@@ -70,18 +73,6 @@ const LandingPage = () => {
       })
     }
   }, [api, apiState])
-
-  const handleGuideButtonClick = () => {
-    navigate('/guide')
-  }
-
-  const handlePartnershipButtonClick = () => {
-    navigate('/gilbertogil')
-  }
-
-  const handleExploreButtonClick = () => {
-    navigate('/explore/bidders')
-  }
 
   return (
     <>
@@ -106,17 +97,17 @@ const LandingPage = () => {
           <h1 className="d-none d-lg-block">Join the</h1>
           <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <ActionsContainer className="container">
-            <OutlinedPrimaryLgButton xs={0} lg={8} onClick={handleExploreButtonClick}>
+            <OutlinedPrimaryLgButton xs={0} lg={8} onClick={() => handleButtonClick('/explore/bidders')}>
               Explore
               <br />
               Society
             </OutlinedPrimaryLgButton>
-            <OutlinedPrimaryLgButton onClick={handleGuideButtonClick}>
+            <OutlinedPrimaryLgButton onClick={() => handleButtonClick('/guide')}>
               Cyborg
               <br />
               Guide
             </OutlinedPrimaryLgButton>
-            <OutlinedSecondaryLgButton onClick={handlePartnershipButtonClick}>
+            <OutlinedSecondaryLgButton onClick={() => handleButtonClick('/gilbertogil')}>
               Gilberto Gil
               <br />
               Partnership

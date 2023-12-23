@@ -1,6 +1,6 @@
 import { Nav } from 'react-bootstrap'
-import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
+import { LinkWithQuery } from '../../../components/LinkWithQuery'
 
 type Totals = {
   bidders: number
@@ -13,27 +13,27 @@ type Totals = {
 const NavigationBar = ({ totals }: { totals: Totals }) => (
   <StyledNav defaultActiveKey="/explore/bidders" className="py-2 my-4">
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/bidders">
+      <Nav.Link as={LinkWithQuery} to="/explore/bidders">
         Bidders ({totals.bidders})
       </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/candidates">
+      <Nav.Link as={LinkWithQuery} to="/explore/candidates">
         Candidates ({totals.candidates})
       </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/members">
+      <Nav.Link as={LinkWithQuery} to="/explore/members">
         Members ({totals.members}/{totals.maxMembers})
       </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/suspended">
+      <Nav.Link as={LinkWithQuery} to="/explore/suspended">
         Suspended Members ({totals.suspendedMembers})
       </Nav.Link>
     </StyledNavItem>
     <StyledNavItem>
-      <Nav.Link as={NavLink} to="/explore/poi">
+      <Nav.Link as={LinkWithQuery} to="/explore/poi">
         Proof of Ink
       </Nav.Link>
     </StyledNavItem>

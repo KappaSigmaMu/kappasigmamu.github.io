@@ -3,9 +3,8 @@ import { StorageKey } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { LoadingSpinner } from './explore/components/LoadingSpinner'
 import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from '../components/MemberOffcanvas'
 import { useKusama } from '../kusama'
@@ -71,17 +70,8 @@ const GilbertoGilPage = () => {
     }
   }, [api, apiState])
 
-  const handleGuideButtonClick = () => {
-    navigate('/guide')
-  }
-
-  const handlePartnershipButtonClick = () => {
-    navigate('/futurivel')
-  }
-
-  const handleExploreButtonClick = () => {
-    navigate('/explore/bidders')
-  }
+  const { search } = useLocation()
+  const handleButtonClick = (to: string) => navigate(to + search)
 
   return (
     <>
@@ -106,17 +96,17 @@ const GilbertoGilPage = () => {
           <h1 className="d-none d-lg-block">Join the</h1>
           <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <ActionsContainer>
-            <OutlinedPrimaryLgButton onClick={handleExploreButtonClick}>
+            <OutlinedPrimaryLgButton onClick={() => handleButtonClick('/explore/bidders')}>
               Explore
               <br />
               Society
             </OutlinedPrimaryLgButton>
-            <OutlinedPrimaryLgButton onClick={handleGuideButtonClick}>
+            <OutlinedPrimaryLgButton onClick={() => handleButtonClick('/guide')}>
               Cyborg
               <br />
               Guide
             </OutlinedPrimaryLgButton>
-            <OutlinedSecondaryLgButton onClick={handlePartnershipButtonClick}>
+            <OutlinedSecondaryLgButton onClick={() => handleButtonClick('/futurivel')}>
               About the
               <br /> partnership
             </OutlinedSecondaryLgButton>
@@ -169,18 +159,6 @@ const CentralizedCol = styled(Col)`
   margin-bottom: auto;
   margin-top: auto;
   z-index: 1;
-`
-
-const LoadingContainer = styled.div`
-  position: absolute;
-  z-index: 2;
-  width: 300px;
-  top: calc(50% - 70px);
-  left: calc(50% - 150px);
-  padding: 10px;
-  padding-bottom: 15px;
-  background-color: rgba(0, 0, 0, 0.75);
-  border-radius: 10px;
 `
 
 export { GilbertoGilPage }
