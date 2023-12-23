@@ -72,7 +72,7 @@ function reducer(state: StateType, action: ActionType): StateType {
 function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
   const { apiState } = state
 
-  if (apiState !== ApiState.initializing && apiState !== ApiState.disconnected) return
+  if (apiState !== ApiState.initializing) return
 
   dispatch({ type: 'CONNECTING' })
 
