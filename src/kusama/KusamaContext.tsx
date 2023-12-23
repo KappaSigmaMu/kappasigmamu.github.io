@@ -1,11 +1,10 @@
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc'
 import keyring from '@polkadot/ui-keyring'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import React, { useReducer, useContext } from 'react'
+import { LoadingContainer } from '../components/LoadingContainer'
 
 const RPC = { ...jsonrpc, ...process.env.REACT_APP_RPC }
 
@@ -31,7 +30,7 @@ const INIT_STATE: StateType = {
   keyringState: null
 }
 
-type StateType = {
+export type StateType = {
   api: ApiPromise | null
   apiError: string | null
   apiState: ApiState
@@ -140,7 +139,13 @@ function KusamaContextProvider(props: { children: JSX.Element | JSX.Element[] })
   connect(state, dispatch)
   loadAccounts(state, dispatch)
 
-  return <KusamaContext.Provider value={state}>{props.children}</KusamaContext.Provider>
+  return (
+    <KusamaContext.Provider value={state}>
+      <LoadingContainer state={state} />
+
+      {props.children}
+    </KusamaContext.Provider>
+  )
 }
 
 const useKusama = () => {
