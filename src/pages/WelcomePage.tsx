@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Level } from '../components/Level'
 import { SocialIcons } from '../components/SocialIcons'
 import MapIcon from '../static/map-icon.svg'
+import { LinkWithQuery } from '../components/LinkWithQuery'
 
 const WelcomePage = (): JSX.Element => {
   return (
@@ -41,19 +42,19 @@ const WelcomePage = (): JSX.Element => {
             <SocialIcons />
           </Col>
           <Col>
-            <Link to="/guide" className="btn btn-outline-secondary" role="button">
+            <LinkWithQuery to="/guide" className="btn btn-outline-secondary" role="button">
               Cyborg Guide &nbsp;&nbsp;
               <span className="btn-label">
                 <img src={MapIcon} alt="Map Icon" />
               </span>
-            </Link>
+            </LinkWithQuery>
           </Col>
         </Row>
         <Row>
           <Col>
-            <Link to="/journey" className="btn btn-primary" role="button">
+            <LinkWithQuery to="/journey" className="btn btn-primary" role="button">
               Begin Journey
-            </Link>
+            </LinkWithQuery>
           </Col>
         </Row>
       </StyledContainer>

@@ -3,8 +3,8 @@ import { ApiPromise } from '@polkadot/api'
 import { u32 } from '@polkadot/types'
 import { ReactElement, useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { LinkWithQuery } from './LinkWithQuery'
 import { isVotingPeriod } from './rotation-bar/helpers/periods'
 import { useAccount } from '../account/AccountContext'
 import { StatusChangeHandler, doTx } from '../helpers/extrinsics'
@@ -32,18 +32,18 @@ const HumanNextStep = (
       <br />
       To level up you must first Submit a Bid.
     </h5>
-    <Link to="/explore/bidders" className="ml-5 btn btn-primary">
+    <LinkWithQuery to="/explore/bidders" className="ml-5 btn btn-primary">
       Submit a Bid
-    </Link>
+    </LinkWithQuery>
   </>
 )
 
 const BidderNextStep = (
   <>
     <h5 className="mb-4">To become a Candidate your bid must be accepted.</h5>
-    <Link to="/explore/bidders" className="ml-5 btn btn-primary">
+    <LinkWithQuery to="/explore/bidders" className="ml-5 btn btn-primary">
       Check Bids
-    </Link>
+    </LinkWithQuery>
   </>
 )
 
@@ -59,9 +59,9 @@ const CandidateNextStep = (
       Proof of Ink (PoI) Rules
     </a>
     &nbsp;&nbsp;
-    <Link to="/explore/poi" className="btn btn-outline-light-grey">
+    <LinkWithQuery to="/explore/poi" className="btn btn-outline-light-grey">
       Ink Art
-    </Link>
+    </LinkWithQuery>
     &nbsp;&nbsp;
     <a
       href="https://matrix.to/#/!BUmiAAnAYSRGarqwOt:matrix.parity.io?via=matrix.parity.io"
@@ -100,13 +100,13 @@ const ClaimMembershipStep = ({
 const CyborgNextStep = (
   <>
     <h5 className="mb-4">Welcome to the Kusama Society!</h5>
-    <Link to="/explore/bidders" className="btn btn-outline-light-grey">
+    <LinkWithQuery to="/explore/bidders" className="btn btn-outline-light-grey">
       Vouch for someone
-    </Link>
+    </LinkWithQuery>
     &nbsp;&nbsp;
-    <Link to="/explore/candidates" className="ml-5 btn btn-primary">
+    <LinkWithQuery to="/explore/candidates" className="ml-5 btn btn-primary">
       Vote on Candidates
-    </Link>
+    </LinkWithQuery>
   </>
 )
 

@@ -86,12 +86,6 @@ const GilbertoGilPage = () => {
   return (
     <>
       <MemberOffcanvas show={show} handleClose={handleClose} member={selectedMember} />
-      {apiState !== ApiState.ready && (
-        <LoadingContainer>
-          <p className="text-center">Connecting to Kusama network...</p>
-          <LoadingSpinner />
-        </LoadingContainer>
-      )}
       <FullPageHeightRow noGutters>
         <div className="position-absolute h-100">
           {members && (

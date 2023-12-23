@@ -6,7 +6,6 @@ import { Col, Row } from 'react-bootstrap'
 import { isMobile } from 'react-device-detect'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { LoadingSpinner } from './explore/components/LoadingSpinner'
 import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from '../components/MemberOffcanvas'
 import { useKusama } from '../kusama'
@@ -87,12 +86,6 @@ const LandingPage = () => {
   return (
     <>
       <MemberOffcanvas show={show} handleClose={handleClose} member={selectedMember} />
-      {apiState !== ApiState.ready && (
-        <LoadingContainer>
-          <p className="text-center">Connecting to Kusama network...</p>
-          <LoadingSpinner />
-        </LoadingContainer>
-      )}
       <FullPageHeightRow noGutters>
         <div className="position-absolute h-100">
           {members && (
@@ -177,18 +170,6 @@ const CentralizedCol = styled(Col)`
   margin-bottom: auto;
   margin-top: auto;
   z-index: 1;
-`
-
-const LoadingContainer = styled.div`
-  position: absolute;
-  z-index: 2;
-  width: 300px;
-  top: calc(50% - 70px);
-  left: calc(50% - 150px);
-  padding: 10px;
-  padding-bottom: 15px;
-  background-color: rgba(0, 0, 0, 0.75);
-  border-radius: 10px;
 `
 
 export { LandingPage }
