@@ -1,5 +1,5 @@
 import { Col, Container } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ExternalLink, OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
 import GilWireframe from '../static/gil-wireframe.png'
@@ -69,14 +69,8 @@ const CyborgManifestoLink = styled(ExternalLink).attrs(() => ({
 
 const FuturivelPage = () => {
   const navigate = useNavigate()
-
-  const handleHomeButtonClick = () => {
-    navigate('/')
-  }
-
-  const handleGuideButtonClick = () => {
-    navigate('/guide')
-  }
+  const { search } = useLocation()
+  const handleButtonClick = (to: string) => navigate(to + search)
 
   return (
     <Futurable>
@@ -470,12 +464,12 @@ const FuturivelPage = () => {
               <span>Join the</span>
               <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
             </div>
-            <OutlinedPrimaryLgButton onClick={handleGuideButtonClick}>
+            <OutlinedPrimaryLgButton onClick={() => handleButtonClick('/guide')}>
               Cyborg
               <br />
               Guide
             </OutlinedPrimaryLgButton>
-            <OutlinedSecondaryLgButton onClick={handleHomeButtonClick}>
+            <OutlinedSecondaryLgButton onClick={() => handleButtonClick('/')}>
               Return
               <br />
               Home
