@@ -26,10 +26,6 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
     handleResult({ message, success })
   }
 
-  const awaitSignature = () => {
-    onStatusChange({ loading: true, message: 'Awaiting signature.', success: true })
-  }
-
   useEffect(() => {
     api.query.society.pot(setPot)
 
@@ -49,7 +45,6 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
   const handleBidSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const bidVal: BN = new BN((e.currentTarget[0] as HTMLInputElement).value)
     setBidAmount(bidVal.mul(ksmMultiplier))
-    awaitSignature()
     e.preventDefault()
   }
 
@@ -60,7 +55,6 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
     setVouchAddress(address)
     setVouchValue(value.mul(ksmMultiplier))
     setVouchTip(tip.mul(ksmMultiplier))
-    awaitSignature()
     e.preventDefault()
   }
 

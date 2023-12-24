@@ -18,6 +18,8 @@ export const doTx = async (
   activeAccount: accountType,
   onStatusChange: StatusChangeHandler
 ) => {
+  onStatusChange({ loading: true, message: 'Awaiting signature.', success: true })
+
   let injector = null
   try {
     injector = await web3FromAddress(activeAccount.address)
