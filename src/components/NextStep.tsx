@@ -3,6 +3,7 @@ import { ApiPromise } from '@polkadot/api'
 import { u32 } from '@polkadot/types'
 import { ReactElement, useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
+import toast, { Toaster } from 'react-hot-toast'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { LinkWithQuery } from './LinkWithQuery'
@@ -11,7 +12,6 @@ import { useAccount } from '../account/AccountContext'
 import { StatusChangeHandler, doTx } from '../helpers/extrinsics'
 import { useKusama } from '../kusama/KusamaContext'
 import { LoadingSpinner } from '../pages/explore/components/LoadingSpinner'
-import { StyledAlert } from '../pages/explore/components/StyledAlert'
 
 const StyledP = styled.p`
   color: ${(props) => props.theme.colors.lightGrey};
@@ -22,7 +22,7 @@ interface LevelsType {
 }
 
 type ExtrinsicResult = {
-  success: boolean
+  status: 'loading' | 'success' | 'error'
   message: string
 }
 
@@ -121,6 +121,12 @@ const LEVELS: LevelsType = {
   cyborg: CyborgNextStep
 }
 
+const toastByStatus = {
+  success: toast.success,
+  loading: toast.loading,
+  error: toast.error
+}
+
 const NextStep = () => {
   const { level, setLevel } = useAccount()
   const { api } = useKusama()
@@ -128,8 +134,6 @@ const NextStep = () => {
   const [currentBlock, setCurrentBlock] = useState<number>(0)
   const [votingPeriod, setVotingPeriod] = useState<number>(0)
   const [claimPeriod, setClaimPeriod] = useState<number>(0)
-  const [showAlert, setShowAlert] = useState(false)
-  const [extrinsicResult, setExtrinsicResult] = useState<ExtrinsicResult>({ success: false, message: '' })
 
   useEffect(() => {
     if (api && api.consts && api.consts.society) {
@@ -148,9 +152,9 @@ const NextStep = () => {
   const claim = new URLSearchParams(search).get('claim')
   const isClaimPeriod = claim || !isVotingPeriod(votingPeriod, claimPeriod, currentBlock)
 
-  const showMessage = (result: ExtrinsicResult) => {
-    setExtrinsicResult(result)
-    setShowAlert(true)
+  const showMessage = (nextResult: ExtrinsicResult) => {
+    toast.dismiss()
+    toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
   }
 
   const handleUpdate = () => {
@@ -159,10 +163,7 @@ const NextStep = () => {
 
   return (
     <>
-      <StyledAlert success={extrinsicResult.success} onClose={() => setShowAlert(false)} show={showAlert} dismissible>
-        {extrinsicResult.message}
-      </StyledAlert>
-
+      <Toaster position="top-right" reverseOrder={true} />
       <StyledP>{level !== 'cyborg' && 'Next Step'}</StyledP>
       {level === 'candidate' && isClaimPeriod ? (
         <ClaimMembershipStep api={api!} showMessage={showMessage} handleUpdate={handleUpdate} />
@@ -182,7 +183,7 @@ type ClaimMembershipButtonProps = {
 }
 
 interface ShowMessageArgs {
-  success: boolean
+  status: 'loading' | 'success' | 'error'
   message: string
 }
 
@@ -196,10 +197,10 @@ function ClaimMembershipButton({
   const [loading, setLoading] = useState(false)
   const { activeAccount } = useAccount()
 
-  const onStatusChange: StatusChangeHandler = ({ loading, message, success }) => {
+  const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
     setLoading(loading)
-    showMessage({ success, message })
-    if (!loading && success) handleUpdate()
+    showMessage({ status, message })
+    if (!loading && status === 'success') handleUpdate()
   }
 
   const handleClaim = async () => {

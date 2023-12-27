@@ -9,7 +9,7 @@ import { FormatBalance } from '../../../components/FormatBalance'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 
 type BidVouchProps = { api: ApiPromise; handleResult: any; activeAccount: accountType }
-type OnStatusChangeProps = { loading: boolean; message: string; success: boolean }
+type OnStatusChangeProps = { loading: boolean; message: string; status: string }
 
 const ksmMultiplier = new BN(1e12)
 
@@ -21,9 +21,9 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
   const [vouchAddress, setVouchAddress] = useState<string>()
   const [loading, setLoading] = useState(false)
 
-  const onStatusChange = ({ loading, message, success }: OnStatusChangeProps) => {
+  const onStatusChange = ({ loading, message, status }: OnStatusChangeProps) => {
     setLoading(loading)
-    handleResult({ message, success })
+    handleResult({ message, status })
   }
 
   useEffect(() => {

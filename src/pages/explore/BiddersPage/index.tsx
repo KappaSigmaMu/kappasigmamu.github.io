@@ -3,26 +3,30 @@ import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState, useCallback } from 'react'
 import { Row, Col } from 'react-bootstrap'
+import toast, { Toaster } from 'react-hot-toast'
 import { BiddersList } from './BiddersList'
 import { BidVouch } from './BidVouch'
 import { useAccount } from '../../../account/AccountContext'
 import { LoadingSpinner } from '../components/LoadingSpinner'
-import { StyledAlert } from '../components/StyledAlert'
 
 interface BidResult {
   message: string
-  success: boolean
+  status: 'success' | 'loading' | 'error'
 }
 
 type BiddersPageProps = {
   api: ApiPromise | null
 }
 
+const toastByStatus = {
+  'success': toast.success,
+  'loading': toast.loading,
+  'error': toast.error
+}
+
 const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
   const { activeAccount } = useAccount()
   const [bids, setBids] = useState<Vec<PalletSocietyBid> | null>(null)
-  const [result, setResult] = useState<BidResult>()
-  const [showAlert, setShowAlert] = useState(true)
 
   const society = api?.query?.society
 
@@ -32,20 +36,16 @@ const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
     })
   }, [society])
 
-  const handleResult = useCallback((result: BidResult) => {
-    setResult(result)
-    setShowAlert(true)
+  const handleResult = useCallback((nextResult: BidResult) => {
+    toast.dismiss()
+    toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
   }, [])
 
   if (bids === null) return <LoadingSpinner />
 
   return (
     <>
-      {result && showAlert && (
-        <StyledAlert success={result.success} onClose={() => setShowAlert(false)} dismissible>
-          {result.message}
-        </StyledAlert>
-      )}
+      <Toaster position="top-right" reverseOrder={true} />
       <Row>
         <Col>
           <BidVouch api={api!} activeAccount={activeAccount} handleResult={handleResult} />
