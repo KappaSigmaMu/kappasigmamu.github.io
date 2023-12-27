@@ -12,6 +12,7 @@ import ApproveIcon from '../../../../static/approve-icon.svg'
 import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
 import { VoteButton } from '../../CandidatesPage/components/VoteButton'
+import { toastByStatus } from '../../helpers'
 
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => (props.$isDefender ? '#73003d' : '')};
@@ -27,17 +28,6 @@ type MembersListProps = {
   activeAccount: accountType
   onClickMember: (member: SocietyMember) => any
   handleUpdate: () => void
-}
-
-type VoteResult = {
-  status: 'loading' | 'success' | 'error'
-  message: string
-}
-
-const toastByStatus = {
-  'success': toast.success,
-  'loading': toast.loading,
-  'error': toast.error
 }
 
 const AlreadyVotedIcon = () => (
@@ -57,7 +47,7 @@ const MembersList = ({ api, members, activeAccount, onClickMember, handleUpdate 
 
   const [activeAccountIsDefenderVoter, setActiveAccountIsDefenderVoter] = useState(false)
 
-  const showMessage = (nextResult: VoteResult) => {
+  const showMessage = (nextResult: ExtrinsicResult) => {
     toast.dismiss()
     toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
   }

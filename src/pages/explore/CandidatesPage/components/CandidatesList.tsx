@@ -16,6 +16,7 @@ import { truncate } from '../../../../helpers/truncate'
 import ApproveIcon from '../../../../static/approve-icon.svg'
 import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
+import { toastByStatus } from '../../helpers'
 
 const StyledCol = styled(Col)`
   &:hover {
@@ -30,23 +31,12 @@ type CandidatesListProps = {
   handleUpdate: () => void
 }
 
-type VoteResult = {
-  status: 'loading' | 'success' | 'error'
-  message: string
-}
-
 const AlreadyVotedIcon = () => (
   <>
     <img src={CheckAllIcon} className="me-2" />
     <label style={{ color: '#6c757d' }}>Voted</label>
   </>
 )
-
-const toastByStatus = {
-  'success': toast.success,
-  'loading': toast.loading,
-  'error': toast.error
-}
 
 const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: CandidatesListProps): JSX.Element => {
   const [votes, setVotes] = useState<SocietyCandidate[]>([])
@@ -55,7 +45,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   const [selectedCandidate, setSelectedCandidate] = useState<AccountId | null>(null)
   const [showCandidateDetailsOffcanvas, setShowCandidateDetailsOffcanvas] = useState(false)
 
-  const showMessage = (nextResult: VoteResult) => {
+  const showMessage = (nextResult: ExtrinsicResult) => {
     toast.dismiss()
     toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
   }

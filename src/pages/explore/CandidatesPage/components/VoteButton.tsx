@@ -8,17 +8,12 @@ import { LoadingSpinner } from '../../components/LoadingSpinner'
 type VoteButtonProps = {
   api: ApiPromise
   vote: Vote
-  showMessage: (args: ShowMessageArgs) => any
+  showMessage: (args: ExtrinsicResult) => any
   icon: string
   handleUpdate: () => void
   successText: string
   waitingText: string
   children: JSX.Element
-}
-
-export interface ShowMessageArgs {
-  status: 'loading' | 'success' | 'error'
-  message: string
 }
 
 export interface Vote {
@@ -41,7 +36,7 @@ export function VoteButton({
   const [loading, setLoading] = useState(false)
 
   const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
-    setLoading(loading)
+    loading && setLoading(loading)
     showMessage({ status, message })
     handleUpdate()
   }

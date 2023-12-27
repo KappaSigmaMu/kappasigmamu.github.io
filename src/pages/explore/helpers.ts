@@ -2,6 +2,7 @@ import type { ApiPromise } from '@polkadot/api'
 import { StorageKey, u32 } from '@polkadot/types'
 import type { AccountId, AccountId32 } from '@polkadot/types/interfaces'
 import { BN } from '@polkadot/util'
+import toast from 'react-hot-toast'
 import { combineLatest, firstValueFrom, map, of } from 'rxjs'
 
 function buildSocietyCandidatesArray(response: any): SocietyCandidate[] {
@@ -12,6 +13,12 @@ function buildSocietyCandidatesArray(response: any): SocietyCandidate[] {
     tally: item[1].unwrap().tally,
     skepticStruck: item[1].unwrap().skepticStruck
   }))
+}
+
+const toastByStatus = {
+  'success': toast.success,
+  'loading': toast.loading,
+  'error': toast.error
 }
 
 const buildSocietyMembersArray = (
@@ -105,4 +112,4 @@ async function deriveMembersInfo(api: ApiPromise): Promise<ExtendedDeriveSociety
   )
 }
 
-export { buildSocietyCandidatesArray, buildSocietyMembersArray, deriveMembersInfo }
+export { toastByStatus, buildSocietyCandidatesArray, buildSocietyMembersArray, deriveMembersInfo }
