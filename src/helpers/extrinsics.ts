@@ -7,7 +7,7 @@ export type StatusChangeHandler = (info: StatusChangeInfo) => any
 export interface StatusChangeInfo {
   loading: boolean
   message: string
-  success: boolean
+  status: 'loading' | 'success' | 'error'
 }
 
 export const doTx = async (
@@ -18,14 +18,14 @@ export const doTx = async (
   activeAccount: accountType,
   onStatusChange: StatusChangeHandler
 ) => {
-  onStatusChange({ loading: true, message: 'Awaiting signature...', success: true })
+  onStatusChange({ loading: true, message: 'Awaiting signature...', status: 'loading' })
 
   let injector = null
   try {
     injector = await web3FromAddress(activeAccount.address)
   } catch (e) {
     console.error(e)
-    onStatusChange({ loading: false, message: 'Error connecting to wallet', success: false })
+    onStatusChange({ loading: false, message: 'Error connecting to wallet', status: 'error' })
     return
   }
 
@@ -42,7 +42,7 @@ export const doTx = async (
         const decoded = api!.registry.findMetaError(error.asModule)
         const { docs, method, section } = decoded
 
-        onStatusChange({ loading: false, message: `${section}.${method}: ${docs.join(' ')}`, success: false })
+        onStatusChange({ loading: false, message: `${section}.${method}: ${docs.join(' ')}`, status: 'error' })
         hasError = true
       }
     })
@@ -50,12 +50,12 @@ export const doTx = async (
     if (hasError) return
 
     if (status.isInBlock) {
-      onStatusChange({ loading: false, message: finalizedText, success: true })
+      onStatusChange({ loading: false, message: finalizedText, status: 'success' })
       done = true
     } else if (!done) {
-      onStatusChange({ loading: true, message: waitingText, success: true })
+      onStatusChange({ loading: true, message: waitingText, status: 'success' })
     }
   }).catch((err: Error) => {
-    onStatusChange({ loading: false, message: err.message, success: false })
+    onStatusChange({ loading: false, message: err.message, status: 'error' })
   })
 }

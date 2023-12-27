@@ -17,7 +17,7 @@ type VoteButtonProps = {
 }
 
 export interface ShowMessageArgs {
-  success: boolean
+  status: 'loading' | 'success' | 'error'
   message: string
 }
 
@@ -40,9 +40,9 @@ export function VoteButton({
 }: VoteButtonProps) {
   const [loading, setLoading] = useState(false)
 
-  const onStatusChange: StatusChangeHandler = ({ loading, message, success }) => {
+  const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
     setLoading(loading)
-    showMessage({ success, message })
+    showMessage({ status, message })
     handleUpdate()
   }
 

@@ -18,7 +18,7 @@ type Props = {
   handleResult: any
 }
 
-type OnStatusChangeProps = { loading: boolean; message: string; success: boolean }
+type OnStatusChangeProps = { loading: boolean; message: string; status: string }
 
 // TODO: move this to a `components` directory to follow the convention of other pages
 const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Element => {
@@ -27,9 +27,9 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
   const isBidder = (bid: PalletSocietyBid) => activeAccount?.address === bid.who.toString()
   const isVoucher = (bid: PalletSocietyBid) => activeAccount?.address === bid.kind.asVouch?.[0].toString()
 
-  const onStatusChange = ({ loading, message, success }: OnStatusChangeProps) => {
+  const onStatusChange = ({ loading, message, status }: OnStatusChangeProps) => {
     setLoading(loading)
-    handleResult({ message, success })
+    handleResult({ message, status })
   }
 
   const handleUnbid = () => {

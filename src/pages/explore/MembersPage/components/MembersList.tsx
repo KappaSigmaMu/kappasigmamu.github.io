@@ -2,6 +2,7 @@ import type { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
 import { useEffect, useRef, useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
+import toast, { Toaster } from 'react-hot-toast'
 import styled from 'styled-components'
 import { useAccount } from '../../../../account/AccountContext'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
@@ -11,7 +12,6 @@ import ApproveIcon from '../../../../static/approve-icon.svg'
 import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
 import { VoteButton } from '../../CandidatesPage/components/VoteButton'
-import { StyledAlert } from '../../components/StyledAlert'
 
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => (props.$isDefender ? '#73003d' : '')};
@@ -30,8 +30,14 @@ type MembersListProps = {
 }
 
 type VoteResult = {
-  success: boolean
+  status: 'loading' | 'success' | 'error'
   message: string
+}
+
+const toastByStatus = {
+  'success': toast.success,
+  'loading': toast.loading,
+  'error': toast.error
 }
 
 const AlreadyVotedIcon = () => (
@@ -49,13 +55,11 @@ const MembersList = ({ api, members, activeAccount, onClickMember, handleUpdate 
   const { level } = useAccount()
   const activeAccountIsMember = level === 'cyborg'
 
-  const [showAlert, setShowAlert] = useState(false)
   const [activeAccountIsDefenderVoter, setActiveAccountIsDefenderVoter] = useState(false)
-  const [voteResult, setVoteResult] = useState<VoteResult>({ success: false, message: '' })
 
-  const showMessage = (result: VoteResult) => {
-    setVoteResult(result)
-    setShowAlert(true)
+  const showMessage = (nextResult: VoteResult) => {
+    toast.dismiss()
+    toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
   }
 
   const usePrevious = (value: any) => {
@@ -78,10 +82,7 @@ const MembersList = ({ api, members, activeAccount, onClickMember, handleUpdate 
 
   return (
     <>
-      <StyledAlert success={voteResult.success} onClose={() => setShowAlert(false)} show={showAlert} dismissible>
-        {voteResult.message}
-      </StyledAlert>
-
+      <Toaster position="top-right" reverseOrder={true} />
       <DataHeaderRow>
         <Col xs={1} className="text-center">
           #

@@ -4,6 +4,7 @@ import type { Option } from '@polkadot/types'
 import type { SocietyVote, AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useRef, useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
+import toast, { Toaster } from 'react-hot-toast'
 import styled from 'styled-components'
 import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
 import { VoteButton } from './VoteButton'
@@ -15,7 +16,6 @@ import { truncate } from '../../../../helpers/truncate'
 import ApproveIcon from '../../../../static/approve-icon.svg'
 import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
-import { StyledAlert } from '../../components/StyledAlert'
 
 const StyledCol = styled(Col)`
   &:hover {
@@ -31,7 +31,7 @@ type CandidatesListProps = {
 }
 
 type VoteResult = {
-  success: boolean
+  status: 'loading' | 'success' | 'error'
   message: string
 }
 
@@ -42,17 +42,22 @@ const AlreadyVotedIcon = () => (
   </>
 )
 
+const toastByStatus = {
+  'success': toast.success,
+  'loading': toast.loading,
+  'error': toast.error
+}
+
 const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: CandidatesListProps): JSX.Element => {
-  const [showAlert, setShowAlert] = useState(false)
   const [votes, setVotes] = useState<SocietyCandidate[]>([])
-  const [voteResult, setVoteResult] = useState<VoteResult>({ success: false, message: '' })
   const society = api?.query?.society
 
   const [selectedCandidate, setSelectedCandidate] = useState<AccountId | null>(null)
   const [showCandidateDetailsOffcanvas, setShowCandidateDetailsOffcanvas] = useState(false)
-  const showMessage = (result: VoteResult) => {
-    setVoteResult(result)
-    setShowAlert(true)
+
+  const showMessage = (nextResult: VoteResult) => {
+    toast.dismiss()
+    toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
   }
 
   const usePrevious = (value: any) => {
@@ -101,10 +106,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
           onClose={() => setShowCandidateDetailsOffcanvas(false)}
         />
       )}
-
-      <StyledAlert success={voteResult.success} onClose={() => setShowAlert(false)} show={showAlert} dismissible>
-        {voteResult.message}
-      </StyledAlert>
+      <Toaster position="top-right" reverseOrder={true} />
 
       <DataHeaderRow>
         <Col xs={1} className="text-center">
