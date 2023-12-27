@@ -4,7 +4,15 @@ import { AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { truncateMiddle } from '../helpers/truncate'
 
-const AccountIdentity = ({ accountId, api }: { accountId: AccountId; api: ApiPromise }) => {
+const AccountIdentity = ({
+  accountId,
+  api,
+  hideNotSet
+}: {
+  accountId: AccountId
+  api: ApiPromise
+  hideNotSet?: boolean
+}) => {
   const [id, setId] = useState<string>('')
 
   useEffect(() => {
@@ -13,7 +21,9 @@ const AccountIdentity = ({ accountId, api }: { accountId: AccountId; api: ApiPro
     })
   }, [])
 
-  return <>{id ? id : truncateMiddle(accountId?.toString())}</>
+  if (!id && hideNotSet) return <></>
+  if (id) return <>{id}</>
+  return <>{truncateMiddle(accountId?.toString())}</>
 }
 
 export { AccountIdentity }
