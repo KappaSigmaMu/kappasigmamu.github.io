@@ -8,20 +8,10 @@ import { BiddersList } from './BiddersList'
 import { BidVouch } from './BidVouch'
 import { useAccount } from '../../../account/AccountContext'
 import { LoadingSpinner } from '../components/LoadingSpinner'
-
-interface BidResult {
-  message: string
-  status: 'success' | 'loading' | 'error'
-}
+import { toastByStatus } from '../helpers'
 
 type BiddersPageProps = {
   api: ApiPromise | null
-}
-
-const toastByStatus = {
-  'success': toast.success,
-  'loading': toast.loading,
-  'error': toast.error
 }
 
 const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
@@ -36,7 +26,7 @@ const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
     })
   }, [society])
 
-  const handleResult = useCallback((nextResult: BidResult) => {
+  const handleResult = useCallback((nextResult: ExtrinsicResult) => {
     toast.dismiss()
     toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
   }, [])

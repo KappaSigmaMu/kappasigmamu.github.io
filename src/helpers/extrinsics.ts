@@ -2,13 +2,7 @@ import { ApiPromise } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
 import { web3FromAddress } from '@polkadot/extension-dapp'
 
-export type StatusChangeHandler = (info: StatusChangeInfo) => any
-
-export interface StatusChangeInfo {
-  loading: boolean
-  message: string
-  status: 'loading' | 'success' | 'error'
-}
+export type StatusChangeHandler = (info: ExtrinsicResult) => any
 
 export const doTx = async (
   api: ApiPromise,

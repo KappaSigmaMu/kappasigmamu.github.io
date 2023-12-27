@@ -89,3 +89,9 @@ namespace NodeJS {
     REACT_APP_PROVIDER_SOCKET: string
   }
 }
+
+interface ExtrinsicResult {
+  message: string
+  status: 'success' | 'loading' | 'error'
+  loading?: boolean
+}

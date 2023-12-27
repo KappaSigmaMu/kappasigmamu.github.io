@@ -12,6 +12,7 @@ import { useAccount } from '../account/AccountContext'
 import { StatusChangeHandler, doTx } from '../helpers/extrinsics'
 import { useKusama } from '../kusama/KusamaContext'
 import { LoadingSpinner } from '../pages/explore/components/LoadingSpinner'
+import { toastByStatus } from '../pages/explore/helpers'
 
 const StyledP = styled.p`
   color: ${(props) => props.theme.colors.lightGrey};
@@ -19,11 +20,6 @@ const StyledP = styled.p`
 
 interface LevelsType {
   [key: string]: ReactElement
-}
-
-type ExtrinsicResult = {
-  status: 'loading' | 'success' | 'error'
-  message: string
 }
 
 const HumanNextStep = (
@@ -84,7 +80,7 @@ const ClaimMembershipStep = ({
   handleUpdate
 }: {
   api: ApiPromise
-  showMessage: (args: ShowMessageArgs) => any
+  showMessage: (args: ExtrinsicResult) => any
   handleUpdate: () => void
 }) => (
   <>
@@ -119,12 +115,6 @@ const LEVELS: LevelsType = {
   bidder: BidderNextStep,
   candidate: CandidateNextStep,
   cyborg: CyborgNextStep
-}
-
-const toastByStatus = {
-  success: toast.success,
-  loading: toast.loading,
-  error: toast.error
 }
 
 const NextStep = () => {
@@ -176,15 +166,10 @@ const NextStep = () => {
 
 type ClaimMembershipButtonProps = {
   api: ApiPromise
-  showMessage: (args: ShowMessageArgs) => any
+  showMessage: (args: ExtrinsicResult) => any
   handleUpdate: () => void
   successText: string
   waitingText: string
-}
-
-interface ShowMessageArgs {
-  status: 'loading' | 'success' | 'error'
-  message: string
 }
 
 function ClaimMembershipButton({
@@ -198,7 +183,7 @@ function ClaimMembershipButton({
   const { activeAccount } = useAccount()
 
   const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
-    setLoading(loading)
+    loading && setLoading(loading)
     showMessage({ status, message })
     if (!loading && status === 'success') handleUpdate()
   }
