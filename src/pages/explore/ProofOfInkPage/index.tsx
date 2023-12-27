@@ -12,10 +12,12 @@ import { LoadingSpinner } from '../components/LoadingSpinner'
 const CANVAS_STYLE = {
   display: 'block',
   margin: '0 auto',
-  backgroundColor: 'white'
+  backgroundColor: 'white',
+  letterSpacing: '0.015em'
 }
 
-const HEIGHT = SIZE * 2 + PADD * 1
+// TODO: fix me - 3 if index is set, 2 if not
+const HEIGHT = SIZE * 3 + PADD * 1
 const WIDTH = SIZE * 3 + PADD * 2
 
 type ProofOfInkPageProps = {
@@ -26,12 +28,25 @@ const ProofOfInkPage = ({ api }: ProofOfInkPageProps): JSX.Element => {
   const society = api?.query?.society
 
   const [head, setHead] = useState<AccountId | null>(null)
+  const [marginLeft, setMarginLeft] = useState('')
+  const [index, setIndex] = useState('')
+
+  const handleIndex = (index: string) => {
+    setIndex(index)
+  }
+
+  useEffect(() => {
+    const containerElement = document.querySelector('.container')
+
+    if (containerElement) {
+      const style = window.getComputedStyle(containerElement)
+      setMarginLeft(style.marginLeft)
+    }
+  }, [])
 
   useEffect(() => {
     society?.head().then((head) => setHead(head.unwrap()))
   }, [society])
-
-  console.info(head)
 
   return head === null ? (
     <LoadingSpinner />
@@ -61,13 +76,13 @@ const ProofOfInkPage = ({ api }: ProofOfInkPageProps): JSX.Element => {
           {head.toHuman()}
         </Col>
         <Col xs={2} className="text-start text-truncate">
-          <AccountIdentity api={api!} accountId={head} />
+          <AccountIdentity api={api!} accountId={head} hideNotSet />
         </Col>
         <Col xs={2} className="text-start text-truncate">
-          <AccountIndex api={api!} accountId={head} />
+          <AccountIndex api={api!} accountId={head} callback={handleIndex} />
         </Col>
-        <Col xs={2}>
-          <Badge pill bg="dark" className="me-2 p-2">
+        <Col xs={2} className="text-end">
+          <Badge pill bg="primary" className="me-2 p-2">
             Society Head
           </Badge>
         </Col>
@@ -84,16 +99,21 @@ const ProofOfInkPage = ({ api }: ProofOfInkPageProps): JSX.Element => {
 
       <br />
 
-      <div className="align-items-center">
-        <Row>
-          <DesignKusama accountId={head} />
-        </Row>
+      <div
+        className="d-flex justify-content-center"
+        style={{ width: '100vw', padding: '5vw', backgroundColor: 'white', marginLeft: `-${marginLeft}` }}
+      >
+        <div className="align-items-center" style={{ width: '70vw' }}>
+          <DesignKusama accountId={head} accountIndex={index} />
+        </div>
       </div>
+
+      <div style={{ marginTop: '200px' }}></div>
     </>
   )
 }
 
-function DesignKusama({ accountId }: { accountId: AccountId }) {
+function DesignKusama({ accountId, accountIndex }: { accountId: AccountId; accountIndex: string }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   useEffect((): void => {
@@ -101,7 +121,7 @@ function DesignKusama({ accountId }: { accountId: AccountId }) {
       const ctx = canvasRef.current.getContext('2d')
 
       if (ctx) {
-        draw(ctx, accountId)
+        draw(ctx, accountId, accountIndex)
       }
     }
   })
