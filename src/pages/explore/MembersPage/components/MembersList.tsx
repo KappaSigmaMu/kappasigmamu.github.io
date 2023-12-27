@@ -108,7 +108,7 @@ const MembersList = ({ api, members, activeAccount, onClickMember, handleUpdate 
             <AccountIdentity api={api} accountId={member.accountId} />
           </Col>
           <Col xs={2} className="text-start text-truncate">
-            <AccountIndex api={api} member={member} />
+            <AccountIndex api={api} accountId={member.accountId} />
           </Col>
           <Col xs={3}>
             {member.isDefender && activeAccountIsMember && (

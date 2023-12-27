@@ -1,8 +1,12 @@
 import { ApiPromise } from '@polkadot/api'
+import Identicon from '@polkadot/react-identicon'
 import { AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useRef, useState } from 'react'
-import { Row } from 'react-bootstrap'
+import { Badge, Col, Row } from 'react-bootstrap'
 import { draw, PADD, SIZE } from './helpers/draw'
+import { AccountIdentity } from '../../../components/AccountIdentity'
+import { AccountIndex } from '../../../components/AccountIndex'
+import { DataHeaderRow, DataRow } from '../../../components/base'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 
 const CANVAS_STYLE = {
@@ -27,15 +31,64 @@ const ProofOfInkPage = ({ api }: ProofOfInkPageProps): JSX.Element => {
     society?.head().then((head) => setHead(head.unwrap()))
   }, [society])
 
+  console.info(head)
+
   return head === null ? (
     <LoadingSpinner />
   ) : (
     <>
-      <Row className="d-flex align-items-center">Current head is: {head.toHuman()}</Row>
+      <DataHeaderRow>
+        <Col xs={1} className="text-center">
+          #
+        </Col>
+        <Col xs={5} className="text-start">
+          Wallet Hash
+        </Col>
+        <Col xs={2} className="text-start">
+          Identity
+        </Col>
+        <Col xs={2} className="text-start">
+          Index
+        </Col>
+        <Col xs={2} className="text-end"></Col>
+      </DataHeaderRow>
+
+      <DataRow>
+        <Col xs={1} className="text-center">
+          <Identicon value={head.toHuman()} size={32} theme={'polkadot'} />
+        </Col>
+        <Col xs={5} className="text-start text-truncate">
+          {head.toHuman()}
+        </Col>
+        <Col xs={2} className="text-start text-truncate">
+          <AccountIdentity api={api!} accountId={head} />
+        </Col>
+        <Col xs={2} className="text-start text-truncate">
+          <AccountIndex api={api!} accountId={head} />
+        </Col>
+        <Col xs={2}>
+          <Badge pill bg="dark" className="me-2 p-2">
+            Society Head
+          </Badge>
+        </Col>
+      </DataRow>
+
       <br />
-      <Row className="d-flex align-items-center">Proof-of-ink examples (auto-generated based on the current head):</Row>
+
+      <Row className="justify-content-center">
+        <h1 className="text-center">Proof-of-Ink Examples</h1>
+      </Row>
+      <Row className="justify-content-center">
+        <h6 className="text-center">(auto-generated based on the current head)</h6>
+      </Row>
+
       <br />
-      <DesignKusama accountId={head} />
+
+      <div className="align-items-center">
+        <Row>
+          <DesignKusama accountId={head} />
+        </Row>
+      </div>
     </>
   )
 }

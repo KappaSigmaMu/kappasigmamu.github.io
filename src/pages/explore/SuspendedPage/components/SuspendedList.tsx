@@ -20,9 +20,7 @@ const SuspendedList = ({ members }: SuspendedListProps): JSX.Element => {
         <Col xs={3} className="text-start">
           Wallet Hash
         </Col>
-        <Col xs={8} className="text-start">
-          Bid Kind
-        </Col>
+        <Col xs={8} className="text-start"></Col>
       </DataHeaderRow>
       {members.map((accountId: AccountId) => (
         <DataRow key={accountId.toString()}>
@@ -33,8 +31,8 @@ const SuspendedList = ({ members }: SuspendedListProps): JSX.Element => {
             {truncateMiddle(accountId.toString())}
           </Col>
           <Col xs={8} className="text-end">
-            <Badge pill bg="primary" className="me-2 p-2">
-              Member
+            <Badge pill bg="danger" className="me-2 p-2">
+              Suspended Member
             </Badge>
           </Col>
         </DataRow>
