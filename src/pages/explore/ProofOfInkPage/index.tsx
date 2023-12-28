@@ -9,17 +9,6 @@ import { AccountIndex } from '../../../components/AccountIndex'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 
-const CANVAS_STYLE = {
-  display: 'block',
-  margin: '0 auto',
-  backgroundColor: 'white',
-  letterSpacing: '0.015em'
-}
-
-// TODO: fix me - 3 if index is set, 2 if not
-const HEIGHT = SIZE * 3 + PADD * 1
-const WIDTH = SIZE * 3 + PADD * 2
-
 type ProofOfInkPageProps = {
   api: ApiPromise | null
 }
@@ -28,21 +17,11 @@ const ProofOfInkPage = ({ api }: ProofOfInkPageProps): JSX.Element => {
   const society = api?.query?.society
 
   const [head, setHead] = useState<AccountId | null>(null)
-  const [marginLeft, setMarginLeft] = useState('')
   const [index, setIndex] = useState('')
 
   const handleIndex = (index: string) => {
     setIndex(index)
   }
-
-  useEffect(() => {
-    const containerElement = document.querySelector('.container')
-
-    if (containerElement) {
-      const style = window.getComputedStyle(containerElement)
-      setMarginLeft(style.marginLeft)
-    }
-  }, [])
 
   useEffect(() => {
     society?.head().then((head) => setHead(head.unwrap()))
@@ -101,19 +80,28 @@ const ProofOfInkPage = ({ api }: ProofOfInkPageProps): JSX.Element => {
 
       <div
         className="d-flex justify-content-center"
-        style={{ width: '100vw', padding: '5vw', backgroundColor: 'white', marginLeft: `-${marginLeft}` }}
+        style={{ width: '100%', padding: '5vw', backgroundColor: 'white', marginBottom: '100px' }}
       >
         <div className="align-items-center" style={{ width: '70vw' }}>
           <DesignKusama accountId={head} accountIndex={index} />
         </div>
       </div>
-
-      <div style={{ marginTop: '200px' }}></div>
     </>
   )
 }
 
 function DesignKusama({ accountId, accountIndex }: { accountId: AccountId; accountIndex: string }) {
+  const canvasStyle = {
+    display: 'block',
+    margin: '0 auto',
+    backgroundColor: 'white',
+    letterSpacing: '0.015em'
+  }
+
+  const rows = accountIndex ? 3 : 2
+  const height = SIZE * rows + PADD * 1
+  const width = SIZE * 3 + PADD * 2
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   useEffect((): void => {
@@ -126,7 +114,7 @@ function DesignKusama({ accountId, accountIndex }: { accountId: AccountId; accou
     }
   })
 
-  return <canvas height={HEIGHT} ref={canvasRef} style={CANVAS_STYLE} width={WIDTH} />
+  return <canvas height={height} ref={canvasRef} style={canvasStyle} width={width} />
 }
 
 export { ProofOfInkPage }
