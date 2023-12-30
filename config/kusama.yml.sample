@@ -13,26 +13,56 @@ import-storage:
           - 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY
         - providers: 1
           data:
-            free: '10000000000000000000'
+            free: '10000000000000'
       -
         -
           - 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty
         - providers: 1
           data:
-            free: '10000000000000000000'
+            free: '10000000000000'
       -
         -
           - 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y
         - providers: 1
           data:
-            free: '10000000000000000000'
+            free: '10000000000000'
+      -
+        -
+          - 5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy
+        - providers: 1
+          data:
+            free: '10000000000000'
+      -
+        -
+          - 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw
+        - providers: 1
+          data:
+            free: '10000000000000'
+      -
+        -
+          - 5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL
+        - providers: 1
+          data:
+            free: '10000000000000'
+  Indices:
+    Accounts:
+      -
+        -
+          - 0
+        -
+          - 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw
+          - 0
+          - true
   Society:
     $removePrefix:
       - Bids
       - Candidates
       - Members
     Bids:
-      - { who: "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY", kind: "deposit", value: 10000000000000 } # Alice bidding 10 KSM
+      - who: 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY # Alice
+        kind:
+          Deposit: 1
+        value: 299000000000000
     Candidates:
       -
         -
@@ -40,12 +70,11 @@ import-storage:
         - round: 5
           kind:
             Deposit: 33333333000
-          bid: 85000000000000
+          bid: 500000000000000
           tally:
-            approvals: 0
+            approvals: 1
             rejections: 0
           skepticStruck: false
-
       -
         -
           - 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y # Charlie
@@ -54,20 +83,8 @@ import-storage:
             Deposit: 1666666666660
           bid: 65000000000000
           tally:
-            approvals: 1
+            approvals: 0
             rejections: 1
-          skepticStruck: false
-
-      -
-        -
-          - 5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy # Dave
-        - round: 5
-          kind:
-            Deposit: 33333333000
-          bid: 499000000000000
-          tally:
-            approvals: 10
-            rejections: 0
           skepticStruck: false
     Members:
       -
@@ -82,5 +99,9 @@ import-storage:
         - rank: 1
           strikes: 0
           index: 1
+    ChallengeRoundCount: 6
+    RoundCount: 6
+    MemberCount: 2
+    Head: 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw
   ParasDisputes:
     $removePrefix: ['disputes'] # those can makes block building super slow
