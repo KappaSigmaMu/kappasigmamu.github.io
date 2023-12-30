@@ -61,6 +61,11 @@ const NavigationBar = ({ totals }: { totals: Totals }) => {
               Rules
             </Nav.Link>
           </StyledNavItem>
+          <StyledNavItem>
+            <Nav.Link as={LinkWithQuery} to="/explore/poi/gallery">
+              Gallery
+            </Nav.Link>
+          </StyledNavItem>
         </StyledNav>
       )}
     </>
