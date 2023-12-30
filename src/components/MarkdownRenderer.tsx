@@ -13,6 +13,7 @@ const MarkdownRenderer = ({ markdownText }: { markdownText: string }) => {
     renderMarkdown()
   }, [markdownText])
 
+  // This is fine because we control `htmlContent`, it's not an unknown source
   return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
 }
 
