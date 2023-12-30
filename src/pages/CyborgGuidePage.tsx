@@ -1,6 +1,7 @@
 import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { ExternalLink } from '../components/base'
+import { LinkWithQuery } from '../components/LinkWithQuery'
 import CanaryRed from '../static/grid-canary-red.png'
 import CanaryGreen from '../static/spots-canary-green.png'
 
@@ -9,12 +10,6 @@ const SocietyGuideLink = styled(ExternalLink).attrs(() => ({
 }))`
   font-size: 24px;
   font-weight: 700;
-  text-decoration: none;
-`
-
-const TattooRulesLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://polkascan.io/kusama/transaction/0x948d3a4378914341dc7af9220a4c73acb2b3f72a70f14ee8089799da16d94c17'
-}))`
   text-decoration: none;
 `
 
@@ -154,7 +149,7 @@ const CyborgGuidePage = () => {
                   When your bid gets accepted, you become a Candidate. Now it’s time to get tattoed!
                 </p>
                 <p>
-                  <TattooRulesLink>See the rules for your PoI here.</TattooRulesLink>
+                  <LinkWithQuery to="/explore/poi/rules">See the rules for your PoI here.</LinkWithQuery>
                 </p>
                 <strong>
                   <p className="mb-1">Your tattoo, the Proof of Ink (PoI)</p>
@@ -220,7 +215,7 @@ const CyborgGuidePage = () => {
               <SocietyGuideLink>Kusama society guide</SocietyGuideLink>
             </p>
             <p>
-              <TattooRulesLink>Tattoo rules</TattooRulesLink>
+              <LinkWithQuery to="/explore/poi/rules">Tattoo rules</LinkWithQuery>
             </p>
             <p>
               <Motion186Link>Motion 186</Motion186Link>
