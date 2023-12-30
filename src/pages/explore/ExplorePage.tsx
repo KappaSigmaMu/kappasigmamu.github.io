@@ -73,7 +73,7 @@ const ExplorePage = (): JSX.Element => {
               <Route path="/candidates" element={<CandidatesPage api={api} />} />
               <Route path="/members" element={<MembersPage api={api} />} />
               <Route path="/suspended" element={<SuspendedPage api={api} />} />
-              <Route path="/poi" element={<ProofOfInkPage api={api} />} />
+              <Route path="/poi/*" element={<ProofOfInkPage api={api} />} />
             </Routes>
           )}
         </Col>

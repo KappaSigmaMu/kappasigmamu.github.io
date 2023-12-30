@@ -1,4 +1,6 @@
+import { useLayoutEffect, useState } from 'react'
 import { Nav } from 'react-bootstrap'
+import { useLocation } from 'react-router'
 import styled from 'styled-components'
 import { LinkWithQuery } from '../../../components/LinkWithQuery'
 
@@ -10,35 +12,60 @@ type Totals = {
   suspendedMembers: number
 }
 
-const NavigationBar = ({ totals }: { totals: Totals }) => (
-  <StyledNav defaultActiveKey="/explore/bidders" className="py-2 my-4">
-    <StyledNavItem>
-      <Nav.Link as={LinkWithQuery} to="/explore/bidders">
-        Bidders ({totals.bidders})
-      </Nav.Link>
-    </StyledNavItem>
-    <StyledNavItem>
-      <Nav.Link as={LinkWithQuery} to="/explore/candidates">
-        Candidates ({totals.candidates})
-      </Nav.Link>
-    </StyledNavItem>
-    <StyledNavItem>
-      <Nav.Link as={LinkWithQuery} to="/explore/members">
-        Members ({totals.members}/{totals.maxMembers})
-      </Nav.Link>
-    </StyledNavItem>
-    <StyledNavItem>
-      <Nav.Link as={LinkWithQuery} to="/explore/suspended">
-        Suspended Members ({totals.suspendedMembers})
-      </Nav.Link>
-    </StyledNavItem>
-    <StyledNavItem>
-      <Nav.Link as={LinkWithQuery} to="/explore/poi">
-        Proof of Ink
-      </Nav.Link>
-    </StyledNavItem>
-  </StyledNav>
-)
+const NavigationBar = ({ totals }: { totals: Totals }) => {
+  const [showSubNav, setShowSubNav] = useState(false)
+  const location = useLocation()
+
+  useLayoutEffect(() => {
+    setShowSubNav(location.pathname.startsWith('/explore/poi'))
+  }, [location])
+
+  return (
+    <>
+      <StyledNav defaultActiveKey="/explore/bidders" className={showSubNav ? 'py-2 mt-4' : 'py-2 my-4'}>
+        <StyledNavItem>
+          <Nav.Link as={LinkWithQuery} to="/explore/bidders">
+            Bidders ({totals.bidders})
+          </Nav.Link>
+        </StyledNavItem>
+        <StyledNavItem>
+          <Nav.Link as={LinkWithQuery} to="/explore/candidates">
+            Candidates ({totals.candidates})
+          </Nav.Link>
+        </StyledNavItem>
+        <StyledNavItem>
+          <Nav.Link as={LinkWithQuery} to="/explore/members">
+            Members ({totals.members}/{totals.maxMembers})
+          </Nav.Link>
+        </StyledNavItem>
+        <StyledNavItem>
+          <Nav.Link as={LinkWithQuery} to="/explore/suspended">
+            Suspended Members ({totals.suspendedMembers})
+          </Nav.Link>
+        </StyledNavItem>
+        <StyledNavItem>
+          <Nav.Link as={LinkWithQuery} to="/explore/poi">
+            Proof of Ink
+          </Nav.Link>
+        </StyledNavItem>
+      </StyledNav>
+      {showSubNav && (
+        <StyledNav defaultActiveKey="/explore/poi/examples" className="py-2 mb-4">
+          <StyledNavItem>
+            <Nav.Link as={LinkWithQuery} to="/explore/poi/examples">
+              Examples
+            </Nav.Link>
+          </StyledNavItem>
+          <StyledNavItem>
+            <Nav.Link as={LinkWithQuery} to="/explore/poi/rules">
+              Rules
+            </Nav.Link>
+          </StyledNavItem>
+        </StyledNav>
+      )}
+    </>
+  )
+}
 
 const StyledNav = styled(Nav)`
   border-bottom: 1px solid ${(props) => props.theme.colors.darkGrey};
