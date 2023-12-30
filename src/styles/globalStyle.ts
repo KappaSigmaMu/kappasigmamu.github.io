@@ -32,6 +32,7 @@ const GlobalStyle = createGlobalStyle`
 
   a {
     color: #01ffff;
+    text-decoration: none;
   }
 
   a:hover {
