@@ -1,9 +1,11 @@
 import { ApiPromise } from '@polkadot/api'
+import Identicon from '@polkadot/react-identicon'
 import { StorageKey } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
+import { AccountIdentity } from '../../../components/AccountIdentity'
 import { hashToPoI } from '../../../helpers/hashToPoI'
 
 type ExamplesPageProps = {
@@ -27,14 +29,14 @@ const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
     <Container>
       <Row>
         {members.map((member) => (
-          <ProofOfInkImage key={member} member={member} />
+          <ProofOfInkImage key={member} member={member} api={api!} />
         ))}
       </Row>
     </Container>
   )
 }
 
-const ProofOfInkImage = ({ member }: { member: string }): JSX.Element => {
+const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): JSX.Element => {
   if (!hashToPoI[member]) return <></>
 
   const [loading, setLoading] = useState(true)
@@ -55,15 +57,40 @@ const ProofOfInkImage = ({ member }: { member: string }): JSX.Element => {
       <Col xs={6} md={4} lg={3} className="mb-3">
         <ImageContainer onClick={() => handleImageClick(hashToPoI[member])}>
           {loading && <Spinner className="mb-2" animation="border" role="status" variant="secondary"></Spinner>}
-          <StyledImage
-            src={hashToPoI[member]}
-            onLoad={() => setLoading(false)}
-            style={loading ? { display: 'none' } : {}}
-          />
+          <Row>
+            <Col xs={12} className="p-0">
+              <StyledImage
+                src={hashToPoI[member]}
+                onLoad={() => setLoading(false)}
+                style={loading ? { display: 'none' } : {}}
+              />
+            </Col>
+            <MemberInformation>
+              <Row className="d-flex align-items-center">
+                <Col xs={1} className="text-center">
+                  <Identicon value={member} size={32} theme={'polkadot'} />
+                </Col>
+                <Col xs={11} className="text-center text-truncate">
+                  <AccountIdentity api={api} accountId={api.registry.createType('AccountId', member)} />
+                </Col>
+              </Row>
+            </MemberInformation>
+          </Row>
         </ImageContainer>
       </Col>
 
-      <Modal size="lg" show={modalShow} onHide={() => setModalShow(false)} centered>
+      <Modal
+        size="lg"
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        centered
+        style={{
+          width: 'auto',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)'
+        }}
+      >
         <Modal.Body style={{ display: 'flex', justifyContent: 'center' }}>
           {selectedImage && <StyledModalImage src={selectedImage} />}
         </Modal.Body>
@@ -72,11 +99,19 @@ const ProofOfInkImage = ({ member }: { member: string }): JSX.Element => {
   )
 }
 
+const MemberInformation = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 13px 10px 10px 10px;
+  background-color: ${(props) => props.theme.colors.lightGrey};
+`
+
 const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px;
+  height: 300px;
   width: 100%;
   overflow: hidden;
   padding: 5px;
@@ -88,7 +123,6 @@ const ImageContainer = styled.div`
 `
 
 const StyledImage = styled.img`
-  position: absolute;
   max-width: 100%;
   max-height: 100%;
   object-fit: cover;
