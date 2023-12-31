@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { AccountIdentity } from '../../../components/AccountIdentity'
-import { hashToPoI } from '../../../helpers/hashToPoI'
+import { imageUrl } from '../../../helpers/imageUrl'
 
 type ExamplesPageProps = {
   api: ApiPromise | null
@@ -20,9 +20,8 @@ const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
   useEffect(() => {
     society?.members.keys().then((members: StorageKey<[AccountId32]>[]) => {
       const ids = members.map((account) => account.toHuman()!.toString())
-      const membersWithPoI = ids.filter((member) => hashToPoI[member])
-      membersWithPoI.sort((a, b) => a.toString().localeCompare(b.toString()))
-      setMembers(membersWithPoI)
+      ids.sort((a, b) => a.toString().localeCompare(b.toString()))
+      setMembers(ids)
     })
   }, [society])
 
@@ -38,11 +37,13 @@ const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
 }
 
 const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): JSX.Element => {
+  const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState('')
   const [modalShow, setModalShow] = useState(false)
 
   const handleImageClick = (image: string) => {
+    if (loading || error) return
     setSelectedImage(image)
     setModalShow(true)
   }
@@ -53,13 +54,17 @@ const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): 
 
   return (
     <>
-      <Col xs={6} md={6} lg={3} className="mb-3">
-        <ImageContainer onClick={() => handleImageClick(hashToPoI[member])}>
-          {loading && <Spinner className="mb-2" animation="border" role="status" variant="secondary"></Spinner>}
+      <Col xs={12} sm={6} md={6} lg={3} className="mb-3">
+        <ImageContainer onClick={() => handleImageClick(imageUrl(member))} clickable={!error && !loading}>
           <Row>
             <Col xs={12} className="p-0">
+              {loading && !error && (
+                <Spinner className="mb-2" animation="border" role="status" variant="secondary"></Spinner>
+              )}
+              {error && <p>Missing Proof-of-Ink</p>}
               <StyledImage
-                src={hashToPoI[member]}
+                src={imageUrl(member)}
+                onError={() => setError(true)}
                 onLoad={() => setLoading(false)}
                 style={loading ? { display: 'none' } : {}}
               />
@@ -98,6 +103,10 @@ const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): 
   )
 }
 
+interface ImageContainerProps {
+  clickable: boolean
+}
+
 const MemberInformation = styled.div`
   position: absolute;
   bottom: 0;
@@ -106,7 +115,7 @@ const MemberInformation = styled.div`
   background-color: ${(props) => props.theme.colors.lightGrey};
 `
 
-const ImageContainer = styled.div`
+const ImageContainer = styled.div<ImageContainerProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,7 +123,7 @@ const ImageContainer = styled.div`
   width: 100%;
   overflow: hidden;
   padding: 5px;
-  cursor: pointer;
+  cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
   position: relative;
   border: ${(props) => '3px solid ' + props.theme.colors.lightGrey};
   border-radius: 10px;

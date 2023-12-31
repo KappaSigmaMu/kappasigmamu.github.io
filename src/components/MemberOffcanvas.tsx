@@ -2,7 +2,7 @@ import Identicon from '@polkadot/react-identicon'
 import { useEffect, useState } from 'react'
 import { Col, Row, Offcanvas, Container, Badge, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
-import { hashToPoI } from '../helpers/hashToPoI'
+import { imageUrl } from '../helpers/imageUrl'
 
 const formatHash = (str: string) => {
   if (!str) return ''
@@ -17,6 +17,7 @@ const formatHash = (str: string) => {
 const MemberOffcanvas = (props: { show: boolean; handleClose: any; member: any }) => {
   const { member } = props
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -46,7 +47,7 @@ const MemberOffcanvas = (props: { show: boolean; handleClose: any; member: any }
             </Col>
           </StyledRow>
           <StyledRow>
-            {hashToPoI[member?.hash] ? (
+            {!error ? (
               <Col>
                 <p>Proof-of-Ink</p>
 
@@ -59,8 +60,9 @@ const MemberOffcanvas = (props: { show: boolean; handleClose: any; member: any }
                 )}
 
                 <img
-                  src={hashToPoI[member?.hash]}
+                  src={imageUrl(member?.hash)}
                   width={'340px'}
+                  onError={() => setError(true)}
                   onLoad={() => setLoading(false)}
                   style={loading ? { display: 'none' } : {}}
                 />
