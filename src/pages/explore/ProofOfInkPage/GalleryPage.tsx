@@ -20,8 +20,9 @@ const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
   useEffect(() => {
     society?.members.keys().then((members: StorageKey<[AccountId32]>[]) => {
       const ids = members.map((account) => account.toHuman()!.toString())
-      ids.sort((a, b) => a.toString().localeCompare(b.toString()))
-      setMembers(ids)
+      const membersWithPoI = ids.filter((member) => hashToPoI[member])
+      membersWithPoI.sort((a, b) => a.toString().localeCompare(b.toString()))
+      setMembers(membersWithPoI)
     })
   }, [society])
 
@@ -37,8 +38,6 @@ const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
 }
 
 const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): JSX.Element => {
-  if (!hashToPoI[member]) return <></>
-
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState('')
   const [modalShow, setModalShow] = useState(false)
@@ -54,7 +53,7 @@ const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): 
 
   return (
     <>
-      <Col xs={6} md={4} lg={3} className="mb-3">
+      <Col xs={6} md={6} lg={3} className="mb-3">
         <ImageContainer onClick={() => handleImageClick(hashToPoI[member])}>
           {loading && <Spinner className="mb-2" animation="border" role="status" variant="secondary"></Spinner>}
           <Row>
@@ -67,10 +66,10 @@ const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): 
             </Col>
             <MemberInformation>
               <Row className="d-flex align-items-center">
-                <Col xs={1} className="text-center">
+                <Col xs={2} className="text-center">
                   <Identicon value={member} size={32} theme={'polkadot'} />
                 </Col>
-                <Col xs={11} className="text-center text-truncate">
+                <Col xs={9} md={9} lg={10} className="text-center text-truncate">
                   <AccountIdentity api={api} accountId={api.registry.createType('AccountId', member)} />
                 </Col>
               </Row>
