@@ -48,10 +48,6 @@ const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): 
     setModalShow(true)
   }
 
-  useEffect(() => {
-    setLoading(true)
-  }, [member])
-
   return (
     <>
       <Col xs={12} sm={6} md={6} lg={3} className="mb-3">
@@ -85,25 +81,20 @@ const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): 
         </Border>
       </Col>
 
-      <Modal
-        size="lg"
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        centered
-        style={{
-          width: 'auto',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)'
-        }}
-      >
+      <StyledModalContent size="lg" show={modalShow} onHide={() => setModalShow(false)} centered>
         <Modal.Body style={{ display: 'flex', justifyContent: 'center' }}>
           {selectedImage && <StyledModalImage src={selectedImage} />}
         </Modal.Body>
-      </Modal>
+      </StyledModalContent>
     </>
   )
 }
+
+const StyledModalContent = styled(Modal)`
+  .modal-content {
+    background-color: ${(props) => props.theme.colors.lightGrey};
+  }
+`
 
 interface ImageContainerProps {
   clickable: boolean
