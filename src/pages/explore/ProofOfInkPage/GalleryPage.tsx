@@ -55,32 +55,34 @@ const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): 
   return (
     <>
       <Col xs={12} sm={6} md={6} lg={3} className="mb-3">
-        <ImageContainer onClick={() => handleImageClick(imageUrl(member))} clickable={!error && !loading}>
-          <Row>
-            <Col xs={12} className="p-0">
-              {loading && !error && (
-                <Spinner className="mb-2" animation="border" role="status" variant="secondary"></Spinner>
-              )}
-              {error && <p>Missing Proof-of-Ink</p>}
-              <StyledImage
-                src={imageUrl(member)}
-                onError={() => setError(true)}
-                onLoad={() => setLoading(false)}
-                style={loading ? { display: 'none' } : {}}
-              />
-            </Col>
-            <MemberInformation>
-              <Row className="d-flex align-items-center">
-                <Col xs={2} className="text-center">
-                  <Identicon value={member} size={32} theme={'polkadot'} />
-                </Col>
-                <Col xs={9} md={9} lg={10} className="text-center text-truncate">
-                  <AccountIdentity api={api} accountId={api.registry.createType('AccountId', member)} />
-                </Col>
-              </Row>
-            </MemberInformation>
-          </Row>
-        </ImageContainer>
+        <Border>
+          <ImageContainer onClick={() => handleImageClick(imageUrl(member))} clickable={!error && !loading}>
+            <Row>
+              <Col xs={12} className="p-0">
+                {loading && !error && (
+                  <Spinner className="m-0 mt-3" animation="border" role="status" variant="secondary"></Spinner>
+                )}
+                {error && <p className="m-0 mt-3">Missing Proof-of-Ink</p>}
+                <StyledImage
+                  src={imageUrl(member)}
+                  onError={() => setError(true)}
+                  onLoad={() => setLoading(false)}
+                  style={loading ? { display: 'none' } : {}}
+                />
+              </Col>
+            </Row>
+          </ImageContainer>
+          <MemberInformation>
+            <Row className="d-flex align-items-center">
+              <Col xs={2} className="text-center">
+                <Identicon value={member} size={32} theme={'polkadot'} />
+              </Col>
+              <Col xs={9} md={9} lg={10} className="text-center text-truncate">
+                <AccountIdentity api={api} accountId={api.registry.createType('AccountId', member)} />
+              </Col>
+            </Row>
+          </MemberInformation>
+        </Border>
       </Col>
 
       <Modal
@@ -107,10 +109,13 @@ interface ImageContainerProps {
   clickable: boolean
 }
 
+const Border = styled.div`
+  border: ${(props) => '3px solid ' + props.theme.colors.lightGrey};
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+`
+
 const MemberInformation = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
   padding: 13px 10px 10px 10px;
   background-color: ${(props) => props.theme.colors.lightGrey};
 `
@@ -119,15 +124,11 @@ const ImageContainer = styled.div<ImageContainerProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  height: 280px;
   width: 100%;
   overflow: hidden;
-  padding: 5px;
   cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
   position: relative;
-  border: ${(props) => '3px solid ' + props.theme.colors.lightGrey};
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 `
 
 const StyledImage = styled.img`
