@@ -80,6 +80,33 @@ yarn chopsticks
 
 - You can also access [Polkadotjs pointing to your development node](https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A8000#/society) to interact with it.
 
+### Managing Proof-of-Ink images
+
+We use IPFS to host the images and IPNS to resolve to the mutable folder. The images are optimized and renamed to `<member_hash>.jpg`` before getting uploaded. The scripts can be found inside `scripts/poi`.
+
+- Optimize an entire folder:
+```
+python3 optimize_multiple.py <folder_path>
+```
+- Rename and optimize single image:
+```
+python3 rename_and_optimize.py <image_path> <member_hash>
+```
+
+#### Interacting with IPFS/IPNS
+- Install IPFS 0.7.0 using [ipfs-update](https://docs-ipfs-tech.ipns.dweb.link/how-to/ipfs-updater/#install-ipfs-update) and run it:
+```
+ipfs daemon
+```
+- Upload image:
+```
+python3 upload.py <file_path> <ipns_key>
+```
+- Download folder from IPNS:
+```
+python3 download.py <ipns_hash> <download_path>
+```
+
 ## Application:
 
 ```
