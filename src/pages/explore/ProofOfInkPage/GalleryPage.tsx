@@ -125,13 +125,11 @@ const ImageContainer = styled.div<ImageContainerProps>`
 const StyledImage = styled.img`
   max-width: 100%;
   max-height: 100%;
-  object-fit: cover;
 `
 
 const StyledModalImage = styled.img`
   max-width: 100%;
   max-height: 80vh;
-  object-fit: contain;
 `
 
 export { GalleryPage }
