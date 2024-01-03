@@ -19,6 +19,8 @@
 .env.test.local
 .env.production.local
 config/kusama.yml
+scripts/poi/.env
+scripts/poi/images
 
 # misc
 .DS_Store
