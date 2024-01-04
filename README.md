@@ -93,8 +93,8 @@ python3 optimize_multiple.py <folder_path>
 python3 rename_and_optimize.py <image_path> <member_hash>
 ```
 
-#### Interacting with IPFS/IPNS
-- Install IPFS 0.7.0 using [ipfs-update](https://docs-ipfs-tech.ipns.dweb.link/how-to/ipfs-updater/#install-ipfs-update) and run it:
+#### Interacting with IPFS
+- Install IPFS and run it:
 ```
 ipfs daemon
 ```

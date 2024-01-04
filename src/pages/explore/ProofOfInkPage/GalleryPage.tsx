@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { AccountIdentity } from '../../../components/AccountIdentity'
-import { imageUrl } from '../../../helpers/imageUrl'
+import { getLatestPinnedHash, imageUrl } from '../../../helpers/imageUrl'
 
 type ExamplesPageProps = {
   api: ApiPromise | null
@@ -14,6 +14,7 @@ type ExamplesPageProps = {
 
 const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
   const [members, setMembers] = useState<Array<string>>([])
+  const [folderHash, setFolderHash] = useState('')
 
   const society = api?.query?.society
 
@@ -25,18 +26,37 @@ const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
     })
   }, [society])
 
-  return (
+  useEffect(() => {
+    const fetchPinnedHash = async () => {
+      const folderHash = await getLatestPinnedHash()
+      setFolderHash(folderHash)
+    }
+
+    fetchPinnedHash()
+  }, [])
+
+  return !folderHash ? (
+    <Spinner className="mx-auto d-block" animation="border" role="status" variant="primary" />
+  ) : (
     <Container>
       <Row>
         {members.map((member) => (
-          <ProofOfInkImage key={member} member={member} api={api!} />
+          <ProofOfInkImage key={member} folderHash={folderHash} member={member} api={api!} />
         ))}
       </Row>
     </Container>
   )
 }
 
-const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): JSX.Element => {
+const ProofOfInkImage = ({
+  folderHash,
+  member,
+  api
+}: {
+  folderHash: string
+  member: string
+  api: ApiPromise
+}): JSX.Element => {
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState('')
@@ -52,18 +72,21 @@ const ProofOfInkImage = ({ member, api }: { member: string; api: ApiPromise }): 
     <>
       <Col xs={12} sm={6} md={6} lg={3} className="mb-3">
         <Border>
-          <ImageContainer onClick={() => handleImageClick(imageUrl(member))} clickable={!error && !loading}>
+          <ImageContainer onClick={() => handleImageClick(imageUrl(folderHash, member))} clickable={!error && !loading}>
             <Row>
               <Col xs={12} className="p-0">
                 {loading && !error && (
-                  <Spinner className="m-0 mt-3" animation="border" role="status" variant="secondary"></Spinner>
+                  <Spinner className="m-0 mt-3" animation="border" role="status" variant="secondary" />
                 )}
-                {error && <p className="m-0 mt-3">Missing Proof-of-Ink</p>}
+                {!loading && error && <p className="m-0 mt-3">Missing Proof-of-Ink</p>}
                 <StyledImage
-                  src={imageUrl(member)}
-                  onError={() => setError(true)}
+                  src={imageUrl(folderHash, member)}
+                  onError={() => {
+                    setLoading(false)
+                    setError(true)
+                  }}
                   onLoad={() => setLoading(false)}
-                  style={loading ? { display: 'none' } : {}}
+                  style={loading || error ? { display: 'none' } : {}}
                 />
               </Col>
             </Row>

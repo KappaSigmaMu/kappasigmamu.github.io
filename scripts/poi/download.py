@@ -4,16 +4,8 @@ import os
 import json
 
 
-def download(ipns_hash, download_path):
+def download(ipfs_hash, download_path):
     try:
-        resolve_response = requests.post(
-            f'http://127.0.0.1:5001/api/v0/name/resolve?arg={ipns_hash}')
-        if resolve_response.status_code != 200:
-            raise Exception(
-                f"Error resolving IPNS hash: {resolve_response.text}")
-
-        ipfs_hash = json.loads(resolve_response.text)['Path']
-
         ls_response = requests.post(
             f'http://127.0.0.1:5001/api/v0/ls?arg={ipfs_hash}')
         if ls_response.status_code != 200:
@@ -47,13 +39,13 @@ def download(ipns_hash, download_path):
 
 def main():
     if len(sys.argv) != 3:
-        print("Usage: python3 download.py <ipns_hash> <download_path>")
+        print("Usage: python3 download.py <ipfs_hash> <download_path>")
         sys.exit(1)
 
-    ipns_hash = sys.argv[1]
+    ipfs_hash = sys.argv[1]
     download_path = sys.argv[2]
 
-    download(ipns_hash, download_path)
+    download(ipfs_hash, download_path)
 
 
 if __name__ == "__main__":
