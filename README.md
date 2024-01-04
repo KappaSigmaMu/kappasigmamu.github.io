@@ -84,6 +84,13 @@ yarn chopsticks
 
 We use IPFS to host the images and Pinata to pin the folder. The images are optimized and renamed to `<member_hash>.jpg` before getting uploaded. The scripts can be found inside `scripts/poi`.
 
+#### Requirements:
+- Python libraries:
+```
+pip3 install Pillow pillow-heif python-dotenv
+```
+
+#### Optimizing images
 - Optimize an entire folder:
 ```
 python3 optimize_multiple.py <folder_path>

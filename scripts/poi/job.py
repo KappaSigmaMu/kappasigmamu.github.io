@@ -6,7 +6,7 @@ import traceback
 from dotenv import load_dotenv
 from download import download
 from rename_and_optimize import rename_and_optimize
-from upload import upload
+from upload import unpin, upload
 
 load_dotenv()
 
@@ -66,12 +66,14 @@ def move_file_to_folder(file_path, destination_folder, force):
 def job(image_path, member_hash, force):
     try:
         image_folder = 'images'
-        current_folder_hash = get_latest_pinned_hash()
+        current_pinned_hash = get_latest_pinned_hash()
 
-        download(current_folder_hash, image_folder)
+        download(current_pinned_hash, image_folder)
         new_filename = rename_and_optimize(image_path, member_hash)
         move_file_to_folder(new_filename, image_folder, force)
-        upload(image_folder)
+        success, new_pinned_hash = upload(image_folder)
+        if success and new_pinned_hash != current_pinned_hash:
+            unpin(current_pinned_hash)
     except Exception as e:
         tb = traceback.format_exc()
         print(f"An error occurred: {e}")
