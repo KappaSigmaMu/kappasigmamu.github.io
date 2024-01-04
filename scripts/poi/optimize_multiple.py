@@ -1,6 +1,5 @@
 import os
 import sys
-from PIL import Image, UnidentifiedImageError, ExifTags
 from rename_and_optimize import resize_image
 
 
