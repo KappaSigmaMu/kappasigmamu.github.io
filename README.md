@@ -100,8 +100,8 @@ python3 optimize_multiple.py <folder_path>
 python3 rename_and_optimize.py <image_path> <member_hash>
 ```
 
-#### Interacting with IPFS
-- PS: requires a `.env`` inside `scripts/poi` with API KEY and SECRET KEY from Pinata
+#### Interacting with IPFS/Pinata
+- PS: requires a `.env` inside `scripts/poi` with `PINATA_API_KEY` and `PINATA_API_SECRET`
 - Install IPFS and run it:
 ```
 ipfs daemon
@@ -114,7 +114,7 @@ python3 upload.py <file_path>
 ```
 python3 download.py <ipfs_hash> <download_path>
 ```
-- Full job - takes a new image, renames and optimizes it, uploads the new folder to Pinata and pins it. The optional param `force` let's you overwrite an image that already exists.
+- Full job - takes a new image, renames and optimizes it, uploads the new folder to Pinata and pins it, and finally unpins the old folder. The optional param `force` let's you overwrite an image that already exists.
 ```
 python3 job.py <image_path> <member_hash> [optional=force]
 ```
