@@ -82,7 +82,7 @@ yarn chopsticks
 
 ### Managing Proof-of-Ink images
 
-We use IPFS to host the images and IPNS to resolve to the mutable folder. The images are optimized and renamed to `<member_hash>.jpg`` before getting uploaded. The scripts can be found inside `scripts/poi`.
+We use IPFS to host the images and Pinata to pin the folder. The images are optimized and renamed to `<member_hash>.jpg` before getting uploaded. The scripts can be found inside `scripts/poi`.
 
 - Optimize an entire folder:
 ```
@@ -94,17 +94,22 @@ python3 rename_and_optimize.py <image_path> <member_hash>
 ```
 
 #### Interacting with IPFS
+- PS: requires a `.env`` inside `scripts/poi` with API KEY and SECRET KEY from Pinata
 - Install IPFS and run it:
 ```
 ipfs daemon
 ```
-- Upload image:
+- Upload folder to Pinata and pin it:
 ```
-python3 upload.py <file_path> <ipns_key>
+python3 upload.py <file_path>
 ```
-- Download folder from IPNS:
+- Download pinned folder:
 ```
-python3 download.py <ipns_hash> <download_path>
+python3 download.py <ipfs_hash> <download_path>
+```
+- Full job - takes a new image, renames and optimizes it, uploads the new folder to Pinata and pins it. The optional param `force` let's you overwrite an image that already exists.
+```
+python3 job.py <image_path> <member_hash> [optional=force]
 ```
 
 ## Application:
