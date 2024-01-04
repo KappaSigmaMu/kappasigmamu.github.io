@@ -2,7 +2,7 @@ import Identicon from '@polkadot/react-identicon'
 import { useEffect, useState } from 'react'
 import { Col, Row, Offcanvas, Container, Badge, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
-import { imageUrl } from '../helpers/imageUrl'
+import { getLatestPinnedHash, imageUrl } from '../helpers/imageUrl'
 
 const formatHash = (str: string) => {
   if (!str) return ''
@@ -18,6 +18,16 @@ const MemberOffcanvas = (props: { show: boolean; handleClose: any; member: any }
   const { member } = props
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [folderHash, setFolderHash] = useState('')
+
+  useEffect(() => {
+    const fetchPinnedHash = async () => {
+      const folderHash = await getLatestPinnedHash()
+      setFolderHash(folderHash)
+    }
+
+    fetchPinnedHash()
+  }, [])
 
   useEffect(() => {
     setLoading(true)
@@ -53,14 +63,14 @@ const MemberOffcanvas = (props: { show: boolean; handleClose: any; member: any }
 
                 {loading && (
                   <>
-                    <Spinner className="mb-2" animation="border" role="status" variant="secondary"></Spinner>
+                    <Spinner className="mb-2" animation="border" role="status" variant="secondary" />
 
                     <p>Be patient. The proof-of-ink pictures are hosted on IPFS and might take a while to load.</p>
                   </>
                 )}
 
                 <img
-                  src={imageUrl(member?.hash)}
+                  src={imageUrl(folderHash, member?.hash)}
                   width={'340px'}
                   onError={() => setError(true)}
                   onLoad={() => setLoading(false)}

@@ -29,27 +29,15 @@ def resize_image(input_path, output_path):
                 background.paste(img, mask=img.split()[3])
                 img = background
 
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
+
             img.save(output_path, format='JPEG', quality=85, optimize=True)
     except UnidentifiedImageError:
         print(f'File is not an image or cannot be identified: {input_path}')
 
 
-def process_images(folder_path):
-    for filename in os.listdir(folder_path):
-        if filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
-            file_path = os.path.join(folder_path, filename)
-
-            new_filename = os.path.splitext(filename)[0] + '.jpg'
-            new_file_path = os.path.join(folder_path, new_filename)
-
-            resize_image(file_path, new_file_path)
-
-            if new_file_path != file_path:
-                os.remove(file_path)
-            print(f'Optimized {filename}')
-
-
-def process_image(image_path, member_hash):
+def rename_and_optimize(image_path, member_hash):
     if image_path.endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
         directory = os.path.dirname(image_path)
 
@@ -61,8 +49,11 @@ def process_image(image_path, member_hash):
 
         resize_image(new_image_path, new_image_path)
         print(f'Optimized {new_filename}')
+
+        return new_filename
     else:
         print(f'File not supported {image_path}')
+        return None
 
 
 def main():
@@ -73,7 +64,7 @@ def main():
     image_path = sys.argv[1]
     member_hash = sys.argv[2]
 
-    process_image(image_path, member_hash)
+    rename_and_optimize(image_path, member_hash)
 
 
 if __name__ == "__main__":
