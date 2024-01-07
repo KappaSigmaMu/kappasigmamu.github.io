@@ -3,12 +3,13 @@ import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState, useCallback } from 'react'
 import { Row, Col } from 'react-bootstrap'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import { BiddersList } from './BiddersList'
 import { BidVouch } from './BidVouch'
 import { useAccount } from '../../../account/AccountContext'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { toastByStatus } from '../helpers'
+import { Toaster } from '../../../components/Toaster';
 
 type BiddersPageProps = {
   api: ApiPromise | null
@@ -35,7 +36,7 @@ const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={true} />
+      <Toaster />
       <Row>
         <Col>
           <BidVouch api={api!} activeAccount={activeAccount} handleResult={handleResult} />

@@ -4,7 +4,7 @@ import type { Option } from '@polkadot/types'
 import type { SocietyVote, AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useRef, useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import styled from 'styled-components'
 import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
 import { VoteButton } from './VoteButton'
@@ -17,6 +17,7 @@ import ApproveIcon from '../../../../static/approve-icon.svg'
 import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
 import { toastByStatus } from '../../helpers'
+import { Toaster } from '../../../../components/Toaster';
 
 const StyledCol = styled(Col)`
   &:hover {
@@ -96,7 +97,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
           onClose={() => setShowCandidateDetailsOffcanvas(false)}
         />
       )}
-      <Toaster position="top-right" reverseOrder={true} />
+      <Toaster />
 
       <DataHeaderRow>
         <Col xs={1} className="text-center">

@@ -2,7 +2,7 @@ import type { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
 import { useEffect, useRef, useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import styled from 'styled-components'
 import { useAccount } from '../../../../account/AccountContext'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
@@ -13,6 +13,7 @@ import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
 import { VoteButton } from '../../CandidatesPage/components/VoteButton'
 import { toastByStatus } from '../../helpers'
+import { Toaster } from '../../../../components/Toaster';
 
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => (props.$isDefender ? '#73003d' : '')};
@@ -72,7 +73,7 @@ const MembersList = ({ api, members, activeAccount, onClickMember, handleUpdate 
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={true} />
+      <Toaster />
       <DataHeaderRow>
         <Col xs={1} className="text-center">
           #

@@ -153,7 +153,7 @@ const NextStep = () => {
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={true} />
+      <Toaster />
       <StyledP>{level !== 'cyborg' && 'Next Step'}</StyledP>
       {level === 'candidate' && isClaimPeriod ? (
         <ClaimMembershipStep api={api!} showMessage={showMessage} handleUpdate={handleUpdate} />
