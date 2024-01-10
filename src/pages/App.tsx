@@ -10,6 +10,7 @@ import { LandingPage } from './LandingPage'
 import { WelcomePage } from './WelcomePage'
 import { AccountContextProvider } from '../account/AccountContext'
 import { Navbar } from '../components/Navbar'
+import { Toaster } from '../components/Toaster'
 import { KusamaContextProvider } from '../kusama'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
@@ -24,6 +25,7 @@ const AppNavigation = () => {
 
   return (
     <>
+      <Toaster />
       <Navbar showAccount showExploreButton showBrandIcon showSocialIcons />
       <Outlet />
     </>
