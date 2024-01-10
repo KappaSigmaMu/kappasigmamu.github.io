@@ -3,6 +3,7 @@ import { ApiPromise } from '@polkadot/api'
 import { u32 } from '@polkadot/types'
 import { ReactElement, useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { LinkWithQuery } from './LinkWithQuery'
 import { isVotingPeriod } from './rotation-bar/helpers/periods'
@@ -71,6 +72,9 @@ const CandidateNextStep = (
     >
       Submit Proof of Ink
     </a>
+    <br />
+    <br />
+    <LinkWithQuery to="/journey?claim=true">I've already submitted Proof of Ink</LinkWithQuery>
   </>
 )
 
@@ -120,6 +124,7 @@ const LEVELS: LevelsType = {
 const NextStep = () => {
   const { level, setLevel } = useAccount()
   const { api } = useKusama()
+  const { search } = useLocation()
   const [currentBlock, setCurrentBlock] = useState<number>(0)
   const [votingPeriod, setVotingPeriod] = useState<number>(0)
   const [claimPeriod, setClaimPeriod] = useState<number>(0)
@@ -140,7 +145,8 @@ const NextStep = () => {
     }
   }, [api])
 
-  const isClaimPeriod = !isVotingPeriod(votingPeriod, claimPeriod, currentBlock)
+  const claim = new URLSearchParams(search).get('claim')
+  const isClaimPeriod = claim || !isVotingPeriod(votingPeriod, claimPeriod, currentBlock)
 
   const showMessage = (result: ExtrinsicResult) => {
     setExtrinsicResult(result)
