@@ -3,7 +3,6 @@ import { ApiPromise } from '@polkadot/api'
 import { u32 } from '@polkadot/types'
 import { ReactElement, useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
-import toast, { Toaster } from 'react-hot-toast'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { LinkWithQuery } from './LinkWithQuery'
@@ -143,7 +142,6 @@ const NextStep = () => {
   const isClaimPeriod = claim || !isVotingPeriod(votingPeriod, claimPeriod, currentBlock)
 
   const showMessage = (nextResult: ExtrinsicResult) => {
-    toast.dismiss()
     toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
   }
 
@@ -153,7 +151,6 @@ const NextStep = () => {
 
   return (
     <>
-      <Toaster />
       <StyledP>{level !== 'cyborg' && 'Next Step'}</StyledP>
       {level === 'candidate' && isClaimPeriod ? (
         <ClaimMembershipStep api={api!} showMessage={showMessage} handleUpdate={handleUpdate} />

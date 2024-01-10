@@ -16,9 +16,15 @@ function buildSocietyCandidatesArray(response: any): SocietyCandidate[] {
 }
 
 const toastByStatus = {
-  'success': toast.success,
-  'loading': toast.loading,
-  'error': toast.error
+  success: (message: string, params: object) => {
+    toast.dismiss('Awaiting signature...')
+    return toast.success(message, params)
+  },
+  loading: toast.loading,
+  error: (message: string, params: object) => {
+    toast.dismiss('Awaiting signature...')
+    return toast.error(message, params)
+  }
 }
 
 const buildSocietyMembersArray = (
