@@ -2,7 +2,7 @@ import Identicon from '@polkadot/react-identicon'
 import { useEffect, useState } from 'react'
 import { Col, Row, Offcanvas, Container, Badge, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
-import { getLatestPinnedHash, imageUrl } from '../helpers/imageUrl'
+import { fastestGateway, getLatestPinnedHash, imageUrl } from '../helpers/ipfs'
 
 const formatHash = (str: string) => {
   if (!str) return ''
@@ -19,11 +19,14 @@ const MemberOffcanvas = (props: { show: boolean; handleClose: any; member: any }
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [folderHash, setFolderHash] = useState('')
+  const [gateway, setGateway] = useState('')
 
   useEffect(() => {
     const fetchPinnedHash = async () => {
       const folderHash = await getLatestPinnedHash()
       setFolderHash(folderHash)
+      const gateway = await fastestGateway(folderHash)
+      setGateway(gateway)
     }
 
     fetchPinnedHash()
@@ -70,7 +73,7 @@ const MemberOffcanvas = (props: { show: boolean; handleClose: any; member: any }
                 )}
 
                 <img
-                  src={imageUrl(folderHash, member?.hash)}
+                  src={imageUrl({ gateway, folderHash, member: member?.hash })}
                   width={'340px'}
                   onError={() => setError(true)}
                   onLoad={() => setLoading(false)}

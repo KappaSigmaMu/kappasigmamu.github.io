@@ -37,9 +37,22 @@ async function getLatestPinnedHash(): Promise<string> {
   }
 }
 
-const imageUrl = (folderHash: string, member: string) => {
-  const ipfsGateway = process.env.REACT_APP_PINATA_GATEWAY
+async function fastestGateway(folderHash: string) {
+  const publicGateways = ['https://ipfs.rmrk.link', 'https://ipfs2.rmrk.link', 'https://dweb.link']
+
+  try {
+    const fetchPromises = publicGateways.map((gateway) =>
+      fetch(`${gateway}/ipfs/${folderHash}`).then((response) => (response.ok ? gateway : Promise.reject()))
+    )
+    return await Promise.race(fetchPromises)
+  } catch (error) {
+    return ''
+  }
+}
+
+const imageUrl = ({ gateway, folderHash, member }: { gateway: string; folderHash: string; member: string }) => {
+  const ipfsGateway = gateway ? gateway : process.env.REACT_APP_PINATA_GATEWAY
   return `${ipfsGateway}/ipfs/${folderHash}/${member}.jpg`
 }
 
-export { getLatestPinnedHash, imageUrl }
+export { getLatestPinnedHash, fastestGateway, imageUrl }
