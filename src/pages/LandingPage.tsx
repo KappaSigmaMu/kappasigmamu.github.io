@@ -77,7 +77,7 @@ const LandingPage = () => {
   return (
     <>
       <MemberOffcanvas show={show} handleClose={handleClose} member={selectedMember} />
-      <FullPageHeightRow noGutters>
+      <FullPageHeightRow nogutters="true">
         <div className="position-absolute h-100">
           {members && (
             <ThreeCanary
@@ -97,7 +97,7 @@ const LandingPage = () => {
           <h1 className="d-none d-lg-block">Join the</h1>
           <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
           <ActionsContainer className="container">
-            <OutlinedPrimaryLgButton xs={0} lg={8} onClick={() => handleButtonClick('/explore/bidders')}>
+            <OutlinedPrimaryLgButton onClick={() => handleButtonClick('/explore/bidders')}>
               Explore
               <br />
               Society

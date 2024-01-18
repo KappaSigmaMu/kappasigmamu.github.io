@@ -137,9 +137,7 @@ type PropsUnbid = {
   disabled: boolean
 }
 
-const StyledUndo = styled.a.attrs((props: PropsUnbid) => ({
-  disabled: props.disabled
-}))<PropsUnbid>`
+const StyledUndo = styled.a<PropsUnbid>`
   color: ${(props) => (props.disabled ? 'grey' : '#E6007A')};
   margin-right: 3%;
   font-weight: 800;

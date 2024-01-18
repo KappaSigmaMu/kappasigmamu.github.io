@@ -76,7 +76,7 @@ const GilbertoGilPage = () => {
   return (
     <>
       <MemberOffcanvas show={show} handleClose={handleClose} member={selectedMember} />
-      <FullPageHeightRow noGutters>
+      <FullPageHeightRow nogutters="true">
         <div className="position-absolute h-100">
           {members && (
             <ThreeCanary

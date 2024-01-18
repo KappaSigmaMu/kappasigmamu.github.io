@@ -20,7 +20,6 @@ const Title = ({ activeAccount }: { activeAccount: accountType }) => {
   const { level } = useAccount()
   const account = activeAccount.name
 
-  // TODO: Title not working
   return (
     <>
       <div className="align-top d-inline-block me-3" style={{ marginTop: 6 }}>
@@ -49,7 +48,7 @@ const Main = () => {
   return (
     <StyledDropdownButton
       variant="outline-light-grey"
-      onSelect={(eventKey: string) => onChange(eventKey)}
+      onSelect={(eventKey: string | null) => onChange(eventKey!)}
       title={<Title activeAccount={activeAccount} />}
     >
       {accounts.map((option: accountType) => (

@@ -2,6 +2,7 @@ import { ApiPromise, WsProvider } from '@polkadot/api'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc'
 import keyring from '@polkadot/ui-keyring'
+import { HexString } from '@polkadot/util/types'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import React, { useReducer, useContext } from 'react'
 import { LoadingContainer } from '../components/LoadingContainer'
@@ -97,10 +98,12 @@ function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
     dispatch({ type: 'KEYRING_LOADING' })
     try {
       await web3Enable(process.env.REACT_APP_NAME)
-      let allAccounts = await web3Accounts()
-      allAccounts = allAccounts.map(({ address, meta }) => ({
+      const allAccounts = await web3Accounts()
+
+      const mappedAccounts = allAccounts.map(({ address, meta, type }) => ({
         address,
-        meta: { ...meta, name: `${meta.name} (${meta.source})` }
+        meta: { ...meta, genesisHash: meta.genesisHash as HexString, name: `${meta.name} (${meta.source})` },
+        type
       }))
 
       const genericPrefix = 42
@@ -113,7 +116,7 @@ function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
           type: 'ed25519',
           genesisHash: state?.api?.genesisHash
         },
-        allAccounts
+        mappedAccounts
       )
       _keyring = keyring
       dispatch({ type: 'KEYRING_READY', payload: _keyring })

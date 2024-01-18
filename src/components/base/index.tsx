@@ -1,4 +1,5 @@
-import { Button, Row } from 'react-bootstrap'
+import { FC } from 'react'
+import { Button, ButtonProps, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 
 const DataHeaderRow = styled(Row)`
@@ -30,7 +31,10 @@ const ExternalLink = styled.a.attrs(() => ({
 
 const PrimaryButton = styled(Button).attrs(() => ({ variant: 'primary' }))``
 const PrimaryLgButton = styled(PrimaryButton).attrs(() => ({ size: 'lg' }))``
-const OutlinedPrimaryLgButton = styled(Button).attrs(() => ({ variant: 'outline-primary', size: 'lg' }))`
+const OutlinedPrimaryLgButton: FC<ButtonProps> = styled(Button).attrs(() => ({
+  variant: 'outline-primary',
+  size: 'lg'
+}))`
   text-shadow: 2px 2px #000;
   &:hover {
     text-shadow: none;
@@ -38,7 +42,10 @@ const OutlinedPrimaryLgButton = styled(Button).attrs(() => ({ variant: 'outline-
 `
 
 const SecondaryLgButton = styled(Button).attrs(() => ({ variant: 'secondary', size: 'lg' }))``
-const OutlinedSecondaryLgButton = styled(Button).attrs(() => ({ variant: 'outline-secondary', size: 'lg' }))`
+const OutlinedSecondaryLgButton: FC<ButtonProps> = styled(Button).attrs(() => ({
+  variant: 'outline-secondary',
+  size: 'lg'
+}))`
   text-shadow: 2px 2px #000;
   &:hover {
     text-shadow: none;
