@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "homepage": "https://KappaSigmaMu.github.io/",
   "types": "src/types.d.ts",
+  "type": "module",
   "dependencies": {
     "@kappasigmamu/canary-component": "^0.4.7",
     "@polkadot/api": "^10.11.2",
@@ -126,8 +127,8 @@
     "ci": "yarn install --immutable",
     "cy:open": "cypress open",
     "deploy": "gh-pages -d build",
-    "eslint:fix": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\" --fix",
-    "eslint": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\"",
+    "eslint:fix": "eslint \"{src,scripts,apps,libs,test}/**/*.{ts,tsx}\" --fix",
+    "eslint": "eslint \"{src,scripts,apps,libs,test}/**/*.{ts,tsx}\"",
     "lint:fix": "yarn eslint:fix",
     "lint": "yarn eslint",
     "start": "NODE_OPTIONS=--openssl-legacy-provider node scripts/start.js",
