@@ -46,6 +46,10 @@ const GlobalStyle = createGlobalStyle`
   p {
     color: #c4c4c4;
   }
+
+  div[role="status"] {
+    justify-content: flex-start;
+  }
 `
 
 export { GlobalStyle }

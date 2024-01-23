@@ -29,6 +29,10 @@ export const doTx = async (
   type signAndSendProp = { status: any; events: [] }
 
   tx.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status, events }: signAndSendProp) => {
+    if (status.isInBlock) {
+      onStatusChange({ loading: false, message: 'Transaction submitted.', status: 'success' })
+    }
+
     events.map((event) => {
       const error = event?.['event']?.['data']?.[0] as any
 
@@ -43,10 +47,12 @@ export const doTx = async (
 
     if (hasError) return
 
-    if (status.isInBlock) {
+    if (status.isFinalized) {
       onStatusChange({ loading: false, message: finalizedText, status: 'success' })
       done = true
-    } else if (!done) {
+    }
+
+    if (!done) {
       onStatusChange({ loading: true, message: waitingText, status: 'success' })
     }
   }).catch((err: Error) => {
