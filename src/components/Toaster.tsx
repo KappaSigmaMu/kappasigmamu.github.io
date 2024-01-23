@@ -32,7 +32,7 @@ const Toaster = () => (
     }}
   >
     {(t) => (
-      <ToastBar toast={t}>
+      <ToastBar style={{ width: '80vw', minHeight: '7vh' }} toast={t}>
         {({ icon, message }) => (
           <>
             {icon}
