@@ -83,14 +83,14 @@ const ClaimMembershipStep = ({
   handleUpdate: () => void
 }) => (
   <>
-    <h5>It's claim period!</h5>
+    <h5>It's claim time!</h5>
     <p>If you were approved, go ahead and claim your membership:</p>
     &nbsp;&nbsp;
     <ClaimMembershipButton
       api={api!}
       showMessage={showMessage}
       successText="Claim request sent."
-      waitingText="Claim request sent. Waiting for response..."
+      waitingText="Request sent. Waiting for response..."
       handleUpdate={handleUpdate}
     ></ClaimMembershipButton>
   </>
@@ -180,9 +180,9 @@ function ClaimMembershipButton({
   const { activeAccount } = useAccount()
 
   const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
-    loading && setLoading(loading)
+    setLoading(loading!)
     showMessage({ status, message })
-    if (!loading && status === 'success') handleUpdate()
+    if (!loading && message !== 'Transaction submitted.' && status === 'success') handleUpdate()
   }
 
   const handleClaim = async () => {
