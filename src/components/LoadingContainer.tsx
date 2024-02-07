@@ -20,13 +20,13 @@ const LoadingContainer = ({ state }: any) => {
 
 const StyledLoadingContainer = styled.div`
   position: absolute;
-  z-index: 2;
+  z-index: 2147483647;
   width: 300px;
   top: calc(50% - 70px);
   left: calc(50% - 150px);
   padding: 10px;
   padding-bottom: 15px;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.8);
   border-radius: 10px;
 `
 
