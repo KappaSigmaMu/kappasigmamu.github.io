@@ -48,6 +48,11 @@ const NavigationBar = ({ totals }: { totals: Totals }) => {
             Proof of Ink
           </Nav.Link>
         </StyledNavItem>
+        <StyledNavItem>
+          <Nav.Link as={LinkWithQuery} to="/journey">
+            Journey
+          </Nav.Link>
+        </StyledNavItem>
       </StyledNav>
       {showSubNav && (
         <StyledNav defaultActiveKey="/explore/poi/examples" className="py-2 mb-4">

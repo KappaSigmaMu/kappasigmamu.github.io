@@ -8,21 +8,20 @@ const Toaster = () => (
     reverseOrder={true}
     toastOptions={{
       success: {
-        duration: 100000,
+        duration: 15000,
         style: {
           background: '#363636',
           color: '#fff'
         }
       },
       error: {
-        duration: 100000,
+        duration: 15000,
         style: {
           background: '#363636',
           color: '#fff'
         }
       },
       loading: {
-        duration: 100000,
         icon: <Spinner size="sm" animation="border" variant="primary" />,
         style: {
           background: '#363636',

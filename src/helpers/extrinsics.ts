@@ -53,7 +53,7 @@ export const doTx = async (
     }
 
     if (!done) {
-      onStatusChange({ loading: true, message: waitingText, status: 'success' })
+      onStatusChange({ loading: true, message: waitingText, status: 'loading' })
     }
   }).catch((err: Error) => {
     onStatusChange({ loading: false, message: err.message, status: 'error' })
