@@ -1,3 +1,4 @@
+import { useWallets } from '@polkadot-onboard/react'
 import { Suspense, useLayoutEffect } from 'react'
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
@@ -11,6 +12,7 @@ import { WelcomePage } from './WelcomePage'
 import { AccountContextProvider } from '../account/AccountContext'
 import { Navbar } from '../components/Navbar'
 import { Toaster } from '../components/Toaster'
+import { WalletProvider } from '../contexts/WalletContext'
 import { KusamaContextProvider } from '../kusama'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
@@ -53,15 +55,17 @@ const AppRouter = () => {
 
 const App = () => (
   <KusamaContextProvider>
-    <AccountContextProvider>
-      <GlobalStyle />
-      <ThemeProvider theme={Theme}>
+    <WalletProvider>
+      <AccountContextProvider>
         <GlobalStyle />
-        <Suspense fallback={<p>ERROR/LOADING...</p>}>
-          <AppRouter />
-        </Suspense>
-      </ThemeProvider>
-    </AccountContextProvider>
+        <ThemeProvider theme={Theme}>
+          <GlobalStyle />
+          <Suspense fallback={<p>ERROR/LOADING...</p>}>
+            <AppRouter />
+          </Suspense>
+        </ThemeProvider>
+      </AccountContextProvider>
+    </WalletProvider>
   </KusamaContextProvider>
 )
 
