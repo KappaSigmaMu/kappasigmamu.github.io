@@ -5,6 +5,10 @@
   "types": "src/types.d.ts",
   "dependencies": {
     "@kappasigmamu/canary-component": "^0.4.7",
+    "@polkadot-onboard/core": "^1.1.0",
+    "@polkadot-onboard/injected-wallets": "^1.1.0",
+    "@polkadot-onboard/react": "^1.1.0",
+    "@polkadot-onboard/wallet-connect": "^1.1.0",
     "@polkadot/api": "^10.11.2",
     "@polkadot/api-derive": "^10.11.2",
     "@polkadot/extension-dapp": "^0.46.6",
