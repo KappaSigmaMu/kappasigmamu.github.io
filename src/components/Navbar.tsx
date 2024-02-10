@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { Button, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
 import { isMobile } from 'react-device-detect'
 import { AccountSelector } from './AccountSelector'
 import { LinkWithQuery } from './LinkWithQuery'
 import { SettingsDropdown } from './SettingsDropdown'
 import { SocialIcons } from './SocialIcons'
+import { Wallets } from './Wallets'
 import { useAccount } from '../account/AccountContext'
 import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 
@@ -44,13 +46,17 @@ const NavbarBrand = () => (
 
 const AccountNavbar = () => {
   const { activeAccount, fetchAccounts } = useAccount()
+  const [showWallets, setShowWallets] = useState(false)
 
-  return activeAccount ? (
+  return !activeAccount && !activeAccount?.address ? (
     <AccountSelector />
   ) : (
-    <Button variant="outline-secondary" onClick={fetchAccounts}>
-      Connect Wallet
-    </Button>
+    <>
+      <Button variant="outline-secondary" onClick={() => setShowWallets(true)}>
+        Connect Wallet
+      </Button>
+      {showWallets && <Wallets show={showWallets} setShow={setShowWallets} />}
+    </>
   )
 }
 

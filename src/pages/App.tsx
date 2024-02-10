@@ -1,3 +1,4 @@
+import { getWallets } from '@talismn/connect-wallets'
 import { Suspense, useLayoutEffect } from 'react'
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
@@ -16,6 +17,10 @@ import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 
 const AppNavigation = () => {
+  console.info(getWallets())
+  const installedWallets = getWallets().filter((wallet) => wallet.installed)
+  console.info(installedWallets)
+
   const location = useLocation()
 
   useLayoutEffect(() => {
