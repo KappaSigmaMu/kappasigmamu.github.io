@@ -1,4 +1,4 @@
-import { Wallet as WalletType, BaseDotsamaWallet, getWallets } from '@talismn/connect-wallets'
+import { Wallet as WalletType, BaseDotsamaWallet, getWallets, WalletAccount } from '@talismn/connect-wallets'
 import { Modal } from 'react-bootstrap'
 import { FaChevronRight, FaDownload, FaXmark } from 'react-icons/fa6'
 import styled from 'styled-components'
@@ -26,14 +26,23 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
   )
 }
 
-function handleClick(wallet: WalletType) {
+async function handleClick(wallet: WalletType) {
   console.info(wallet)
   console.info(wallet.installed)
+  if (!wallet.installed) {
+    window.open(wallet.installUrl, '_blank')
+    return
+  }
+  await wallet.enable(process.env.REACT_APP_NAME)
+  const unsubscribe = await wallet.subscribeAccounts((accounts: WalletAccount[] | undefined) => {
+    console.info(accounts)
+  })
+  console.info(unsubscribe)
   // wallet.installed ? enable() : openInstallUrl(wallet.installUrl)
 }
 
 const Wallet = ({ wallet }: { wallet: WalletType }) => (
-  <WalletRow onClick={() => handleClick(wallet)}>
+  <WalletRow onClick={async () => handleClick(wallet)}>
     <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} />
     <div>{wallet.title}</div>
     <div className="ms-auto">

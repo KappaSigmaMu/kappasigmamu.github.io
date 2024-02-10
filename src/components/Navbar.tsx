@@ -52,7 +52,7 @@ const AccountNavbar = () => {
     <AccountSelector />
   ) : (
     <>
-      <Button variant="outline-secondary" onClick={() => setShowWallets(true)}>
+      <Button variant="outline-primary" onClick={() => setShowWallets(true)}>
         Connect Wallet
       </Button>
       {showWallets && <Wallets show={showWallets} setShow={setShowWallets} />}
