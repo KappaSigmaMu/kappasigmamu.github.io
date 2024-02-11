@@ -123,7 +123,8 @@
     "postprocessing": "6.24.1",
     "styled-components": "^6.1.1",
     "three": "0.136.0",
-    "**/node-forge": "^1.3.0"
+    "**/node-forge": "^1.3.0",
+    "react-error-overlay": "6.0.9"
   },
   "scripts": {
     "build": "NODE_OPTIONS=--openssl-legacy-provider node scripts/build.js",
