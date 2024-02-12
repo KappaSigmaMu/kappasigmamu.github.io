@@ -1,11 +1,10 @@
 import Identicon from '@polkadot/react-identicon'
 import { Wallet as WalletType, BaseDotsamaWallet, getWallets, WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
-import { Col, Modal, Row } from 'react-bootstrap'
+import { Col, Modal } from 'react-bootstrap'
 import { FaChevronRight, FaDownload, FaXmark } from 'react-icons/fa6'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
-import { truncateMiddle } from '../helpers/truncate'
 import { toastByStatus } from '../pages/explore/helpers'
 import NovaWalletLogo from '../static/nova-wallet-logo.svg'
 
@@ -99,7 +98,7 @@ const Wallet = ({ wallet, setSelectedWallet }: { wallet: WalletType; setSelected
         </>
       ) : (
         <>
-          Download
+          Install
           <FaDownload className="ms-2" />
         </>
       )}
