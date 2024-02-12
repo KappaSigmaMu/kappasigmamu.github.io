@@ -2,25 +2,25 @@ import Identicon from '@polkadot/react-identicon'
 import { Wallet as WalletType, BaseDotsamaWallet, getWallets, WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
 import { Col, Modal } from 'react-bootstrap'
-import { FaChevronRight, FaDownload, FaXmark } from 'react-icons/fa6'
+import { FaChevronLeft, FaChevronRight, FaDownload, FaXmark } from 'react-icons/fa6'
 import styled from 'styled-components'
-import { useAccount } from '../account/AccountContext'
+import { useKusama } from '../kusama'
 import { toastByStatus } from '../pages/explore/helpers'
 import NovaWalletLogo from '../static/nova-wallet-logo.svg'
 
-interface LevelStatusType {
-  [key: string]: string
-}
+// interface LevelStatusType {
+//   [key: string]: string
+// }
 
-const LEVELSTATUS: LevelStatusType = {
-  human: 'WAITING BID',
-  bidder: 'BID SUBMITTED',
-  candidate: 'WAITING POI',
-  cyborg: ''
-}
+// const LEVELSTATUS: LevelStatusType = {
+//   human: 'WAITING BID',
+//   bidder: 'BID SUBMITTED',
+//   candidate: 'WAITING POI',
+//   cyborg: ''
+// }
 
 function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) => void }) {
-  const { level } = useAccount()
+  const { keyring, keyringState } = useKusama()
 
   const [accounts, setAccounts] = useState<WalletAccount[] | undefined>(undefined)
 
@@ -29,18 +29,22 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
 
   const handleClose = () => setShow(false)
 
-  if (selectedWallet) {
+  if (selectedWallet && keyringState === 'READY') {
     selectedWallet.subscribeAccounts((accounts: WalletAccount[] | undefined) => {
-      setAccounts(accounts)
+      const mappedAccounts = accounts?.map((account) => ({
+        ...account,
+        address: keyring.encodeAddress(account.address)
+      }))
+      setAccounts(mappedAccounts)
     })
   }
 
   return (
     <>
-      <StyledModal show={show} onHide={handleClose} centered>
+      <StyledModal show={show} onHide={handleClose} centered scrollable>
         <Modal.Header className="px-4" style={{ borderBottom: '0px' }}>
-          <Modal.Title>Wallets</Modal.Title>
-          <FaXmark onClick={() => setShow(false)} style={{ cursor: 'pointer' }} />
+          <Modal.Title>{!selectedWallet ? 'Wallets' : 'Accounts'}</Modal.Title>
+          <FaXmark onClick={() => setShow(false)} role="button" />
         </Modal.Header>
         <Modal.Body className="px-0 py-2">
           {!selectedWallet &&
@@ -57,14 +61,30 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
                 <Col xs={10}>
                   <span>{account.name}</span>
                   <Address className="text-start mb-1">{account.address}</Address>
+
+                  {/* @TODO: fix me - show the correct level of each account
                   <LevelStatusDiv>
                     <label className="pe-3">JOURNEY: {level.toUpperCase()}</label>
                     <label>{LEVELSTATUS[level]}</label>
-                  </LevelStatusDiv>
+                  </LevelStatusDiv> */}
                 </Col>
               </AccountRow>
             ))}
         </Modal.Body>
+        <Modal.Footer style={{ borderTop: '0px' }}>
+          {selectedWallet && (
+            <Col
+              xs={4}
+              className="d-flex align-items-center justify-content-end"
+              onClick={() => setSelectedWallet(undefined)}
+              role="button"
+            >
+              <WalletLogo src={selectedWallet.logo.src} alt={selectedWallet.logo.alt} size={30} />
+              <div>{selectedWallet.title}</div>
+              <FaChevronLeft className="mx-2" />
+            </Col>
+          )}
+        </Modal.Footer>
       </StyledModal>
     </>
   )
@@ -92,15 +112,13 @@ const Wallet = ({ wallet, setSelectedWallet }: { wallet: WalletType; setSelected
     <div>{wallet.title}</div>
     <div className="ms-auto">
       {wallet.installed ? (
-        <>
-          Select
-          <FaChevronRight className="ms-2" />
-        </>
+        <label>
+          Use <FaChevronRight className="ms-2" />
+        </label>
       ) : (
-        <>
-          Install
-          <FaDownload className="ms-2" />
-        </>
+        <label>
+          Install <FaDownload className="ms-2" />
+        </label>
       )}
     </div>
   </WalletRow>
@@ -128,9 +146,13 @@ const StyledModal = styled(Modal)`
   }
 `
 
-const WalletLogo = styled.img`
-  width: 50px;
-  height: 50px;
+type WalletLogoProps = {
+  size?: number
+}
+
+const WalletLogo = styled.img<WalletLogoProps>`
+  width: ${(props) => (props.size ? `${props.size}px` : '50px')};
+  height: ${(props) => (props.size ? `${props.size}px` : '50px')};
   margin-right: 15px;
 `
 
@@ -165,15 +187,15 @@ const Address = styled.div`
   font-size: 12px;
 `
 
-const LevelStatusDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
+// const LevelStatusDiv = styled.div`
+//   display: flex;
+//   justify-content: space-between;
 
-  label {
-    color: ${(props) => props.theme.colors.grey};
-    font-weight: 700;
-    font-size: 12px;
-  }
-`
+//   label {
+//     color: ${(props) => props.theme.colors.grey};
+//     font-weight: 700;
+//     font-size: 12px;
+//   }
+// `
 
 export { Wallets }
