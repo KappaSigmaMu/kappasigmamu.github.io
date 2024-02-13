@@ -13,6 +13,11 @@ export const doTx = async (
   activeAccount: WalletAccount | undefined,
   onStatusChange: StatusChangeHandler
 ) => {
+  if (!activeAccount) {
+    onStatusChange({ loading: false, message: 'No wallet connected', status: 'error' })
+    return
+  }
+
   onStatusChange({ loading: true, message: 'Awaiting signature...', status: 'loading' })
 
   let signer = undefined

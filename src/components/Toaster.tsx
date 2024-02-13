@@ -31,12 +31,12 @@ const Toaster = () => (
     }}
   >
     {(t) => (
-      <ToastBar style={{ width: '80vw', minHeight: '7vh' }} toast={t}>
+      <ToastBar style={{ minHeight: '7vh' }} toast={t}>
         {({ icon, message }) => (
           <>
             {icon}
             {message}
-            {<FaXmark onClick={() => toast.dismiss(t.id)}></FaXmark>}
+            {<FaXmark role="button" onClick={() => toast.dismiss(t.id)} style={{ flexShrink: 0 }}></FaXmark>}
           </>
         )}
       </ToastBar>
