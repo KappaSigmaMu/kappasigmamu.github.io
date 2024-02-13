@@ -28,9 +28,9 @@ const Navbar = ({
           </Nav.Link>
         )}
         &nbsp;
-        {showSocialIcons && <SocialIcons />}
+        {showSocialIcons && !isMobile && <SocialIcons />}
         &nbsp;
-        {showAccount && !isMobile && <AccountNavbar />}
+        {showAccount && <AccountNavbar />}
       </Nav>
     </Container>
   </RBNavbar>
