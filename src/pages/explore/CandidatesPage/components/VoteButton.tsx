@@ -1,10 +1,10 @@
 import { ApiPromise } from '@polkadot/api'
 import { AccountId } from '@polkadot/types/interfaces'
+import { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
 import { IconButton } from '../../../../components/IconButton'
 import { doTx, StatusChangeHandler } from '../../../../helpers/extrinsics'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { WalletAccount } from '@talismn/connect-wallets'
 
 type VoteButtonProps = {
   api: ApiPromise

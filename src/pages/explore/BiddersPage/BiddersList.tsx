@@ -2,6 +2,7 @@ import { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
 import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
+import { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
 import { Col, Badge } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -10,7 +11,6 @@ import { AccountIdentity } from '../../../components/AccountIdentity'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { FormatBalance } from '../../../components/FormatBalance'
 import { humanizeBidKind } from '../../../helpers/humanize'
-import { WalletAccount } from '@talismn/connect-wallets'
 
 type Props = {
   api: ApiPromise

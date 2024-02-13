@@ -7,7 +7,6 @@ import { FaChevronLeft, FaChevronRight, FaDownload, FaPowerOff, FaXmark } from '
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { wallets } from '../helpers/wallets'
-import { toastByStatus } from '../pages/explore/helpers'
 
 // interface LevelStatusType {
 //   [key: string]: string
@@ -20,7 +19,6 @@ import { toastByStatus } from '../pages/explore/helpers'
 //   cyborg: ''
 // }
 
-const APP_NAME = process.env.REACT_APP_NAME
 const KUSAMA_PREFIX = process.env.REACT_APP_KEYRING_PREFIX
 
 function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) => void }) {
