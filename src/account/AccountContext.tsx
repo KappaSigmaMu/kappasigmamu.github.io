@@ -7,11 +7,12 @@ import { wallets } from '../helpers/wallets'
 import { useKusama } from '../kusama'
 import { ApiState } from '../kusama/KusamaContext'
 import { toastByStatus } from '../pages/explore/helpers'
+import { account } from '@polkadot/api-derive/balances'
 
 const localStorageAccount = localStorage.getItem('activeAccount')
 
 let storedActiveAccount: WalletAccount | undefined
-if (localStorageAccount) {
+if (localStorageAccount && localStorageAccount !== 'undefined') {
   try {
     storedActiveAccount = JSON.parse(localStorageAccount!)
   } catch (error) {
@@ -52,10 +53,13 @@ const AccountContextProvider = ({ children }: any) => {
   }
 
   useEffect(() => {
+    if (!activeAccount) return
+
     const enableWallet = async () => {
       const wallet = wallets.find((wallet) => wallet.extensionName === activeAccount?.source)
       try {
         await wallet?.enable(APP_NAME)
+        _setActiveAccount((account: any) => ({ ...account, signer: wallet?.signer }))
       } catch (e) {
         toastByStatus['error']((e as Error).message, {})
         return

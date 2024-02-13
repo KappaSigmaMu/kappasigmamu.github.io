@@ -7,6 +7,7 @@ import { FaChevronLeft, FaChevronRight, FaDownload, FaPowerOff, FaXmark } from '
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { wallets } from '../helpers/wallets'
+import { toastByStatus } from '../pages/explore/helpers'
 
 // interface LevelStatusType {
 //   [key: string]: string
@@ -19,13 +20,12 @@ import { wallets } from '../helpers/wallets'
 //   cyborg: ''
 // }
 
+const APP_NAME = process.env.REACT_APP_NAME
 const KUSAMA_PREFIX = process.env.REACT_APP_KEYRING_PREFIX
 
 function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) => void }) {
   const { activeAccount, setActiveAccount } = useAccount()
-
   const [accounts, setAccounts] = useState<WalletAccount[] | undefined>(undefined)
-
   const [selectedWallet, setSelectedWallet] = useState<WalletType | undefined>(undefined)
 
   const handleDisconnect = () => {
@@ -111,6 +111,13 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
 async function handleClick(wallet: WalletType, setSelectedWallet: any) {
   if (!wallet.installed) {
     window.open(wallet.installUrl, '_blank')
+    return
+  }
+
+  try {
+    await wallet?.enable(APP_NAME)
+  } catch (e) {
+    toastByStatus['error']((e as Error).message, {})
     return
   }
 
