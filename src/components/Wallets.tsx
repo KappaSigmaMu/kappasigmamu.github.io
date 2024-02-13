@@ -3,7 +3,7 @@ import { decodeAddress, encodeAddress } from '@polkadot/util-crypto'
 import { Wallet as WalletType, WalletAccount } from '@talismn/connect-wallets'
 import { useEffect, useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
-import { FaChevronLeft, FaChevronRight, FaDownload, FaPowerOff, FaXmark } from 'react-icons/fa6'
+import { FaChevronLeft, FaChevronRight, FaCircleCheck, FaDownload, FaPowerOff, FaXmark } from 'react-icons/fa6'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { wallets } from '../helpers/wallets'
@@ -41,8 +41,13 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
   useEffect(() => {
     if (!selectedWallet) return
 
+    function isSubstrateAccount(account: any): account is WalletAccount & { type: string } {
+      return account?.type !== 'ethereum'
+    }
+
     selectedWallet.subscribeAccounts((accounts: WalletAccount[] | undefined) => {
-      const mappedAccounts = accounts?.map((account) => ({
+      const substrateAccounts = accounts?.filter(isSubstrateAccount)
+      const mappedAccounts = substrateAccounts?.map((account) => ({
         ...account,
         address: encodeAddress(decodeAddress(account.address), KUSAMA_PREFIX)
       }))
@@ -70,9 +75,9 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
                   <Identicon value={account.address} size={50} theme={'polkadot'} />
                 </Col>
                 <Col xs={10}>
-                  <div className="d-flex justify-content-between">
+                  <div className="d-flex justify-content-start align-items-center">
                     <span>{account.name}</span>
-                    {activeAccount && activeAccount.address === account.address && <span>Selected</span>}
+                    {activeAccount && activeAccount.address === account.address && <FaCircleCheck className="ms-2" />}
                   </div>
                   <Address className="text-start mb-1">{account.address}</Address>
 
