@@ -1,12 +1,13 @@
 import Identicon from '@polkadot/react-identicon'
-import { Wallet as WalletType, BaseDotsamaWallet, getWallets, WalletAccount } from '@talismn/connect-wallets'
-import { useState } from 'react'
-import { Col, Modal } from 'react-bootstrap'
-import { FaChevronLeft, FaChevronRight, FaDownload, FaXmark } from 'react-icons/fa6'
+import { decodeAddress, encodeAddress } from '@polkadot/util-crypto'
+import { Wallet as WalletType, WalletAccount } from '@talismn/connect-wallets'
+import { useEffect, useState } from 'react'
+import { Col, Modal, Row } from 'react-bootstrap'
+import { FaChevronLeft, FaChevronRight, FaDownload, FaPowerOff, FaXmark } from 'react-icons/fa6'
 import styled from 'styled-components'
-import { useKusama } from '../kusama'
+import { useAccount } from '../account/AccountContext'
+import { wallets } from '../helpers/wallets'
 import { toastByStatus } from '../pages/explore/helpers'
-import NovaWalletLogo from '../static/nova-wallet-logo.svg'
 
 // interface LevelStatusType {
 //   [key: string]: string
@@ -19,34 +20,46 @@ import NovaWalletLogo from '../static/nova-wallet-logo.svg'
 //   cyborg: ''
 // }
 
+const APP_NAME = process.env.REACT_APP_NAME
+const KUSAMA_PREFIX = process.env.REACT_APP_KEYRING_PREFIX
+
 function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) => void }) {
-  const { keyring, keyringState } = useKusama()
+  const { activeAccount, setActiveAccount } = useAccount()
 
   const [accounts, setAccounts] = useState<WalletAccount[] | undefined>(undefined)
 
   const [selectedWallet, setSelectedWallet] = useState<WalletType | undefined>(undefined)
-  const wallets = [...getWallets(), new NovaWallet()]
 
-  const handleClose = () => setShow(false)
+  const handleDisconnect = () => {
+    setShow(false)
+    setActiveAccount(undefined)
+  }
 
-  if (selectedWallet && keyringState === 'READY') {
+  const handleClick = (account: WalletAccount) => {
+    setShow(false)
+    setActiveAccount(account)
+  }
+
+  useEffect(() => {
+    if (!selectedWallet) return
+
     selectedWallet.subscribeAccounts((accounts: WalletAccount[] | undefined) => {
       const mappedAccounts = accounts?.map((account) => ({
         ...account,
-        address: keyring.encodeAddress(account.address)
+        address: encodeAddress(decodeAddress(account.address), KUSAMA_PREFIX)
       }))
       setAccounts(mappedAccounts)
     })
-  }
+  }, [selectedWallet, activeAccount, setActiveAccount])
 
   return (
     <>
-      <StyledModal show={show} onHide={handleClose} centered scrollable>
+      <StyledModal show={show} onHide={() => setShow(false)} centered scrollable>
         <Modal.Header className="px-4" style={{ borderBottom: '0px' }}>
           <Modal.Title>{!selectedWallet ? 'Wallets' : 'Accounts'}</Modal.Title>
           <FaXmark onClick={() => setShow(false)} role="button" />
         </Modal.Header>
-        <Modal.Body className="px-0 py-2">
+        <Modal.Body>
           {!selectedWallet &&
             wallets.map((wallet) => (
               <Wallet wallet={wallet} setSelectedWallet={setSelectedWallet} key={wallet.title} />
@@ -54,12 +67,15 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
           {selectedWallet &&
             accounts &&
             accounts.map((account) => (
-              <AccountRow key={account.address}>
+              <AccountRow key={account.address} onClick={() => handleClick(account)}>
                 <Col xs={2}>
                   <Identicon value={account.address} size={50} theme={'polkadot'} />
                 </Col>
                 <Col xs={10}>
-                  <span>{account.name}</span>
+                  <div className="d-flex justify-content-between">
+                    <span>{account.name}</span>
+                    {activeAccount && activeAccount.address === account.address && <span>Selected</span>}
+                  </div>
                   <Address className="text-start mb-1">{account.address}</Address>
 
                   {/* @TODO: fix me - show the correct level of each account
@@ -72,18 +88,22 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
             ))}
         </Modal.Body>
         <Modal.Footer style={{ borderTop: '0px' }}>
-          {selectedWallet && (
-            <Col
-              xs={4}
-              className="d-flex align-items-center justify-content-end"
-              onClick={() => setSelectedWallet(undefined)}
-              role="button"
-            >
-              <WalletLogo src={selectedWallet.logo.src} alt={selectedWallet.logo.alt} size={30} />
-              <div>{selectedWallet.title}</div>
-              <FaChevronLeft className="mx-2" />
+          <Row className="d-flex w-100 align-items-center justify-content-between">
+            <Col className="d-flex align-items-center justify-content-start" onClick={handleDisconnect} role="button">
+              Disconnect <FaPowerOff className="mx-2" />
             </Col>
-          )}
+            {selectedWallet && (
+              <Col
+                className="d-flex align-items-center justify-content-end"
+                onClick={() => setSelectedWallet(undefined)}
+                role="button"
+              >
+                <WalletLogo src={selectedWallet.logo.src} alt={selectedWallet.logo.alt} size={30} />
+                <div>{selectedWallet.title}</div>
+                <FaChevronLeft className="mx-2" />
+              </Col>
+            )}
+          </Row>
         </Modal.Footer>
       </StyledModal>
     </>
@@ -93,13 +113,6 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
 async function handleClick(wallet: WalletType, setSelectedWallet: any) {
   if (!wallet.installed) {
     window.open(wallet.installUrl, '_blank')
-    return
-  }
-
-  try {
-    await wallet.enable(process.env.REACT_APP_NAME)
-  } catch (e) {
-    toastByStatus['error']((e as Error).message, {})
     return
   }
 
@@ -124,25 +137,16 @@ const Wallet = ({ wallet, setSelectedWallet }: { wallet: WalletType; setSelected
   </WalletRow>
 )
 
-class NovaWallet extends BaseDotsamaWallet {
-  public extensionName = 'polkadot-js'
-  public title = 'Nova Wallet'
-  public installUrl = 'https://novawallet.io'
-  public logo = {
-    src: NovaWalletLogo,
-    alt: 'Nova Wallet Logo'
-  }
-  public get installed() {
-    const injectedExtension = (window as any)?.injectedWeb3?.[this.extensionName]
-    const isNovaWallet = (window as any)?.walletExtension?.isNovaWallet
-
-    return !!(injectedExtension && isNovaWallet)
-  }
-}
-
 const StyledModal = styled(Modal)`
   .modal-content {
+    max-height: 65vh;
     background-color: ${(props) => props.theme.colors.darkGrey};
+
+    .modal-body {
+      background-color: #3e454c;
+      padding: 0;
+      margin: 0;
+    }
   }
 `
 

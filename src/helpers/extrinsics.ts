@@ -1,6 +1,7 @@
 import { ApiPromise } from '@polkadot/api'
 import { SubmittableExtrinsic } from '@polkadot/api/types'
-import { web3FromAddress } from '@polkadot/extension-dapp'
+import { WalletAccount } from '@talismn/connect-wallets'
+// import { wallets } from './wallets'
 
 export type StatusChangeHandler = (info: ExtrinsicResult) => any
 
@@ -9,18 +10,14 @@ export const doTx = async (
   tx: SubmittableExtrinsic<'promise', any>,
   finalizedText: string,
   waitingText: string,
-  activeAccount: accountType,
+  activeAccount: WalletAccount | undefined,
   onStatusChange: StatusChangeHandler
 ) => {
   onStatusChange({ loading: true, message: 'Awaiting signature...', status: 'loading' })
 
-  let injector = null
-  try {
-    injector = await web3FromAddress(activeAccount.address)
-  } catch (e) {
-    console.error(e)
-    onStatusChange({ loading: false, message: 'Error connecting to wallet', status: 'error' })
-    return
+  let signer = undefined
+  if (activeAccount?.signer) {
+    signer = activeAccount.signer
   }
 
   let done = false
@@ -28,7 +25,7 @@ export const doTx = async (
 
   type signAndSendProp = { status: any; events: [] }
 
-  tx.signAndSend(activeAccount.address, { signer: injector.signer }, ({ status, events }: signAndSendProp) => {
+  tx.signAndSend(activeAccount!.address, { signer }, ({ status, events }: signAndSendProp) => {
     if (status.isInBlock) {
       onStatusChange({ loading: false, message: 'Transaction submitted.', status: 'success' })
     }

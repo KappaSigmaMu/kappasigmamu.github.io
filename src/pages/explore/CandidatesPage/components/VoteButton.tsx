@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { IconButton } from '../../../../components/IconButton'
 import { doTx, StatusChangeHandler } from '../../../../helpers/extrinsics'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
+import { WalletAccount } from '@talismn/connect-wallets'
 
 type VoteButtonProps = {
   api: ApiPromise
@@ -19,7 +20,7 @@ type VoteButtonProps = {
 export interface Vote {
   approve: boolean
   accountId: AccountId
-  voterAccount: accountType
+  voterAccount: WalletAccount
   type: string
 }
 

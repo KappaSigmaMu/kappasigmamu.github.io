@@ -10,11 +10,12 @@ import { AccountIdentity } from '../../../components/AccountIdentity'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { FormatBalance } from '../../../components/FormatBalance'
 import { humanizeBidKind } from '../../../helpers/humanize'
+import { WalletAccount } from '@talismn/connect-wallets'
 
 type Props = {
   api: ApiPromise
   bids: Vec<PalletSocietyBid>
-  activeAccount: accountType
+  activeAccount: WalletAccount | undefined
   handleResult: any
 }
 
