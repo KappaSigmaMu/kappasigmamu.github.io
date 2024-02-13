@@ -1,9 +1,5 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
-import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc'
-import keyring from '@polkadot/ui-keyring'
-import { HexString } from '@polkadot/util/types'
-import { cryptoWaitReady } from '@polkadot/util-crypto'
 import React, { useReducer, useContext } from 'react'
 import { LoadingContainer } from '../components/LoadingContainer'
 
@@ -26,17 +22,13 @@ enum ApiState {
 const INIT_STATE: StateType = {
   api: null,
   apiError: null,
-  apiState: ApiState.initializing,
-  keyring: null,
-  keyringState: null
+  apiState: ApiState.initializing
 }
 
 export type StateType = {
   api: ApiPromise | null
   apiError: string | null
   apiState: ApiState
-  keyring: any | null
-  keyringState: string | null
 }
 
 type ActionType =
@@ -45,9 +37,6 @@ type ActionType =
   | { type: 'READY' }
   | { type: 'DISCONNECTED' }
   | { type: 'ERROR'; payload: any }
-  | { type: 'KEYRING_LOADING' }
-  | { type: 'KEYRING_ERROR' }
-  | { type: 'KEYRING_READY'; payload: any }
 
 function reducer(state: StateType, action: ActionType): StateType {
   switch (action.type) {
@@ -59,12 +48,6 @@ function reducer(state: StateType, action: ActionType): StateType {
       return { ...state, apiState: ApiState.ready }
     case 'DISCONNECTED':
       return { ...state, apiState: ApiState.disconnected }
-    case 'KEYRING_LOADING':
-      return { ...state, keyringState: 'LOADING' }
-    case 'KEYRING_READY':
-      return { ...state, keyringState: 'READY', keyring: action.payload }
-    case 'KEYRING_ERROR':
-      return { ...state, keyringState: 'ERROR', keyring: null }
     case 'ERROR':
       return { ...state, apiState: ApiState.error, apiError: action.payload }
   }
@@ -88,59 +71,12 @@ function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
   api.on('ready', () => dispatch({ type: 'READY' }))
 }
 
-let loadAccts = false
-function loadAccounts(state: StateType, dispatch: React.Dispatch<ActionType>) {
-  let _keyring = keyring
-
-  const asyncLoadAccounts = async () => {
-    await cryptoWaitReady()
-
-    dispatch({ type: 'KEYRING_LOADING' })
-    try {
-      await web3Enable(process.env.REACT_APP_NAME)
-      const allAccounts = await web3Accounts()
-
-      const mappedAccounts = allAccounts.map(({ address, meta, type }) => ({
-        address,
-        meta: { ...meta, genesisHash: meta.genesisHash as HexString, name: `${meta.name} (${meta.source})` },
-        type
-      }))
-
-      const genericPrefix = 42
-      const prefix = process.env.REACT_APP_KEYRING_PREFIX ? process.env.REACT_APP_KEYRING_PREFIX : genericPrefix
-
-      keyring.loadAll(
-        {
-          isDevelopment: process.env.NODE_ENV === 'development',
-          ss58Format: prefix,
-          type: 'ed25519',
-          genesisHash: state?.api?.genesisHash
-        },
-        mappedAccounts
-      )
-      _keyring = keyring
-      dispatch({ type: 'KEYRING_READY', payload: _keyring })
-    } catch (e) {
-      console.error(e)
-      dispatch({ type: 'KEYRING_ERROR' })
-    }
-  }
-
-  const { keyringState, apiState } = state
-  if (keyringState || apiState != ApiState.ready) return
-  if (loadAccts) return dispatch({ type: 'KEYRING_READY', payload: _keyring })
-
-  loadAccts = true
-  asyncLoadAccounts()
-}
-
 const KusamaContext = React.createContext<StateType>(INIT_STATE)
 
 function KusamaContextProvider(props: { children: JSX.Element | JSX.Element[] }) {
   const [state, dispatch] = useReducer(reducer, INIT_STATE)
 
   connect(state, dispatch)
-  loadAccounts(state, dispatch)
 
   return (
     <KusamaContext.Provider value={state}>

@@ -1,8 +1,9 @@
-import { useState } from 'react'
-import { Button, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
+import { FC, useState } from 'react'
+import { Button, ButtonProps, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
 import { isMobile } from 'react-device-detect'
-import { AccountSelector } from './AccountSelector'
+import { styled } from 'styled-components'
 import { LinkWithQuery } from './LinkWithQuery'
+import { SelectedAccount } from './SelectedAccount'
 import { SettingsDropdown } from './SettingsDropdown'
 import { SocialIcons } from './SocialIcons'
 import { Wallets } from './Wallets'
@@ -45,19 +46,25 @@ const NavbarBrand = () => (
 )
 
 const AccountNavbar = () => {
-  const { activeAccount, fetchAccounts } = useAccount()
+  const { activeAccount } = useAccount()
   const [showWallets, setShowWallets] = useState(false)
 
-  return !activeAccount && !activeAccount?.address ? (
-    <AccountSelector />
-  ) : (
+  return (
     <>
-      <Button variant="outline-primary" onClick={() => setShowWallets(true)}>
-        Connect Wallet
-      </Button>
+      <AccountSelector variant="outline-primary" onClick={() => setShowWallets(true)}>
+        {activeAccount ? <SelectedAccount /> : 'Connect Wallet'}
+      </AccountSelector>
       {showWallets && <Wallets show={showWallets} setShow={setShowWallets} />}
     </>
   )
 }
+
+const AccountSelector: FC<ButtonProps> = styled(Button)`
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    background-color: transparent !important;
+  }
+`
 
 export { Navbar }

@@ -1,15 +1,16 @@
 import { StorageKey, Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
-import type { KeyringAddress } from '@polkadot/ui-keyring/types'
+import { WalletAccount } from '@talismn/connect-wallets'
 import React, { useContext, useEffect, useState } from 'react'
-import { isValidAccount } from '../helpers/validAccount'
+import { wallets } from '../helpers/wallets'
 import { useKusama } from '../kusama'
 import { ApiState } from '../kusama/KusamaContext'
+import { toastByStatus } from '../pages/explore/helpers'
 
 const localStorageAccount = localStorage.getItem('activeAccount')
 
-let storedActiveAccount: accountType | null = { name: '', address: '' }
+let storedActiveAccount: WalletAccount | undefined
 if (localStorageAccount) {
   try {
     storedActiveAccount = JSON.parse(localStorageAccount!)
@@ -18,15 +19,11 @@ if (localStorageAccount) {
   }
 }
 
-const defaultActiveAccount = isValidAccount(storedActiveAccount!.address)
-  ? (storedActiveAccount as accountType)
-  : { name: '', address: '' }
+const APP_NAME = process.env.REACT_APP_NAME
 
 const INIT_STATE = {
-  activeAccount: defaultActiveAccount,
+  activeAccount: storedActiveAccount,
   setActiveAccount: () => ({}),
-  accounts: [],
-  fetchAccounts: () => ({}),
   level: 'human',
   setLevel: () => ({})
 }
@@ -34,46 +31,39 @@ const INIT_STATE = {
 type StateType = {
   level: string
   setLevel: (level: string) => void
-  setActiveAccount: (account: accountType) => void
-  activeAccount: accountType
-  accounts: accountType[]
-  fetchAccounts: () => void
+  setActiveAccount: (account: WalletAccount | undefined) => void
+
+  activeAccount: WalletAccount | undefined
 }
 
 const AccountContext = React.createContext<StateType>(INIT_STATE)
 
-const emptyActiveAccount = (account: accountType) => {
-  return account?.name === '' && account?.address === ''
-}
-
 const AccountContextProvider = ({ children }: any) => {
-  const { api, apiState, keyringState, keyring } = useKusama()
-  const [activeAccount, _setActiveAccount] = useState<accountType>(defaultActiveAccount)
-  const [accounts, setAccounts] = useState<accountType[]>([])
+  const { api, apiState } = useKusama()
+  const [activeAccount, _setActiveAccount] = useState<WalletAccount | undefined>(storedActiveAccount)
   const [level, setLevel] = useState('human')
 
-  const loading = apiState !== ApiState.ready || keyringState !== 'READY'
+  const loading = apiState !== ApiState.ready
+  const society = api?.query.society
 
-  const fetchAccounts = () => {
-    const storedAccounts = keyring.getAccounts().map((account: KeyringAddress) => ({
-      name: account.meta.name,
-      address: keyring.encodeAddress(account.address)
-    }))
-
-    if (storedAccounts.length == 0) return
-
-    setAccounts(storedAccounts)
-    emptyActiveAccount(activeAccount) && setActiveAccount(storedAccounts[0])
-  }
-
-  const setActiveAccount = (account: accountType) => {
+  const setActiveAccount = (account: WalletAccount | undefined) => {
     _setActiveAccount(account)
     localStorage.setItem('activeAccount', JSON.stringify(account))
   }
 
   useEffect(() => {
-    if (keyringState === 'READY') fetchAccounts()
-  }, [keyringState])
+    const enableWallet = async () => {
+      const wallet = wallets.find((wallet) => wallet.extensionName === activeAccount?.source)
+      try {
+        await wallet?.enable(APP_NAME)
+      } catch (e) {
+        toastByStatus['error']((e as Error).message, {})
+        return
+      }
+    }
+
+    enableWallet()
+  }, [])
 
   useEffect(() => {
     const setLevelCheckingAccounts = (accounts: AccountId32[], level: string) => {
@@ -84,36 +74,36 @@ const AccountContextProvider = ({ children }: any) => {
       })
     }
 
-    if (api && activeAccount) {
+    if (society && activeAccount) {
       setLevel('human')
 
-      api.query.society.bids().then((response: Vec<PalletSocietyBid>) => {
+      society.bids().then((response: Vec<PalletSocietyBid>) => {
         setLevelCheckingAccounts(
           response.map((account) => account.who),
           'bidder'
         )
       })
 
-      api.query.society.candidates.keys().then((response: StorageKey<[AccountId32]>[]) => {
+      society.candidates.keys().then((response: StorageKey<[AccountId32]>[]) => {
         setLevelCheckingAccounts(
           response.map((account) => account.args[0] as AccountId32),
           'candidate'
         )
       })
 
-      api.query.society.members.keys().then((response: StorageKey<[AccountId32]>[]) => {
+      society.members.keys().then((response: StorageKey<[AccountId32]>[]) => {
         setLevelCheckingAccounts(
           response.map((account) => account.args[0] as AccountId32),
           'cyborg'
         )
       })
     }
-  }, [accounts, activeAccount])
+  }, [society, activeAccount])
 
   return loading ? (
     <>{children}</>
   ) : (
-    <AccountContext.Provider value={{ level, setLevel, activeAccount, setActiveAccount, accounts, fetchAccounts }}>
+    <AccountContext.Provider value={{ level, setLevel, activeAccount, setActiveAccount }}>
       {children}
     </AccountContext.Provider>
   )

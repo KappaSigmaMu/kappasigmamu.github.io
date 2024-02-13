@@ -1,5 +1,6 @@
 import Identicon from '@polkadot/react-identicon'
-import { Dropdown, DropdownButton, Spinner } from 'react-bootstrap'
+import { WalletAccount } from '@talismn/connect-wallets'
+import { Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { truncateMiddle } from '../helpers/truncate'
@@ -16,7 +17,7 @@ const LEVELSTATUS: LevelStatusType = {
   cyborg: ''
 }
 
-const Title = ({ activeAccount }: { activeAccount: accountType }) => {
+const Title = ({ activeAccount }: { activeAccount: WalletAccount }) => {
   const { level } = useAccount()
   const account = activeAccount.name
 
@@ -38,29 +39,12 @@ const Title = ({ activeAccount }: { activeAccount: accountType }) => {
 }
 
 const Main = () => {
-  const { activeAccount, setActiveAccount, accounts } = useAccount()
+  const { activeAccount } = useAccount()
 
-  const onChange = (account: string) => {
-    const activeAccount = accounts.filter((acc) => acc.address.includes(account))[0]
-    setActiveAccount(activeAccount)
-  }
-
-  return (
-    <StyledDropdownButton
-      variant="outline-light-grey"
-      onSelect={(eventKey: string | null) => onChange(eventKey!)}
-      title={<Title activeAccount={activeAccount} />}
-    >
-      {accounts.map((option: accountType) => (
-        <Dropdown.Item style={{ fontSize: '12px' }} eventKey={option.address} key={option.address} href="#">
-          {option.name ? option.name : option.address}
-        </Dropdown.Item>
-      ))}
-    </StyledDropdownButton>
-  )
+  return <Title activeAccount={activeAccount!} />
 }
 
-const AccountSelector = () => {
+const SelectedAccount = () => {
   const { api } = useKusama()
   const loading = !api?.query
   return loading ? <Spinner animation="border" variant="primary" /> : <Main />
@@ -82,11 +66,4 @@ const SelectedAccountDiv = styled.div`
   font-size: 14px;
 `
 
-const StyledDropdownButton = styled(DropdownButton)`
-  background-color: ${(props) => props.theme.colors.darkGrey};
-  & ::after {
-    margin-bottom: 10px;
-  }
-`
-
-export { AccountSelector }
+export { SelectedAccount }

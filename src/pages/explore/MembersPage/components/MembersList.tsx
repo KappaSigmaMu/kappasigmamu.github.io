@@ -1,5 +1,6 @@
 import type { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
+import { WalletAccount } from '@talismn/connect-wallets'
 import { useEffect, useRef, useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -24,7 +25,7 @@ const StyledDataRow = styled(DataRow)`
 type MembersListProps = {
   api: ApiPromise
   members: SocietyMember[]
-  activeAccount: accountType
+  activeAccount: WalletAccount | undefined
   onClickMember: (member: SocietyMember) => any
   handleUpdate: () => void
 }
@@ -64,7 +65,7 @@ const MembersList = ({ api, members, activeAccount, onClickMember, handleUpdate 
     if (members.length === 0) return
 
     setActiveAccountIsDefenderVoter(
-      members.some((member) => member.accountId.toHuman() === activeAccount.address && member.isDefenderVoter)
+      members.some((member) => member.accountId.toHuman() === activeAccount!.address && member.isDefenderVoter)
     )
   }, [members, activeAccount, prevActiveAccount])
 
@@ -106,7 +107,7 @@ const MembersList = ({ api, members, activeAccount, onClickMember, handleUpdate 
                   showMessage={showMessage}
                   successText="Approval vote sent."
                   waitingText="Approval vote request sent. Waiting for response..."
-                  vote={{ approve: true, voterAccount: activeAccount, accountId: member.accountId, type: 'defender' }}
+                  vote={{ approve: true, voterAccount: activeAccount!, accountId: member.accountId, type: 'defender' }}
                   icon={ApproveIcon}
                   handleUpdate={handleUpdate}
                 >
@@ -117,7 +118,7 @@ const MembersList = ({ api, members, activeAccount, onClickMember, handleUpdate 
                   showMessage={showMessage}
                   successText="Rejection vote sent."
                   waitingText="Rejection vote request sent. Waiting for response..."
-                  vote={{ approve: false, voterAccount: activeAccount, accountId: member.accountId, type: 'defender' }}
+                  vote={{ approve: false, voterAccount: activeAccount!, accountId: member.accountId, type: 'defender' }}
                   icon={RejectIcon}
                   handleUpdate={handleUpdate}
                 >

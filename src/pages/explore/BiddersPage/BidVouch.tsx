@@ -1,5 +1,6 @@
 import { ApiPromise } from '@polkadot/api'
 import { Balance } from '@polkadot/types/interfaces'
+import { WalletAccount } from '@talismn/connect-wallets'
 import BN from 'bn.js'
 import { useState, useEffect } from 'react'
 import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-bootstrap'
@@ -8,7 +9,7 @@ import { bid, vouch, BNtoNumber } from './helper'
 import { FormatBalance } from '../../../components/FormatBalance'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 
-type BidVouchProps = { api: ApiPromise; handleResult: any; activeAccount: accountType }
+type BidVouchProps = { api: ApiPromise; handleResult: any; activeAccount: WalletAccount | undefined }
 type OnStatusChangeProps = { loading: boolean; message: string; status: string }
 
 const ksmMultiplier = new BN(1e12)

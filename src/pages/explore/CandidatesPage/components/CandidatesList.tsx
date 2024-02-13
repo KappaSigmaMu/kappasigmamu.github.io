@@ -2,6 +2,7 @@ import { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
 import type { Option } from '@polkadot/types'
 import type { SocietyVote, AccountId } from '@polkadot/types/interfaces'
+import { WalletAccount } from '@talismn/connect-wallets'
 import { useEffect, useRef, useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -25,7 +26,7 @@ const StyledCol = styled(Col)`
 
 type CandidatesListProps = {
   api: ApiPromise
-  activeAccount: accountType
+  activeAccount: WalletAccount | undefined
   candidates: SocietyCandidate[]
   handleUpdate: () => void
 }
@@ -63,10 +64,10 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   const prevActiveAccount = usePrevious(activeAccount)
 
   useEffect(() => {
-    if (candidates.length === 0) return
+    if (!activeAccount || candidates.length === 0) return
 
     candidates.forEach((candidate) => {
-      society.votes(candidate.accountId, activeAccount.address, (vote: Option<SocietyVote>) => {
+      society.votes(candidate.accountId, activeAccount!.address, (vote: Option<SocietyVote>) => {
         if (vote.isEmpty) {
           if (prevActiveAccount != activeAccount) setVotes([])
           return
@@ -143,7 +144,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                   waitingText="Approval vote request sent. Waiting for response..."
                   vote={{
                     approve: true,
-                    voterAccount: activeAccount,
+                    voterAccount: activeAccount!,
                     accountId: candidate.accountId,
                     type: 'candidate'
                   }}
@@ -159,7 +160,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                   waitingText="Rejection vote request sent. Waiting for response..."
                   vote={{
                     approve: false,
-                    voterAccount: activeAccount,
+                    voterAccount: activeAccount!,
                     accountId: candidate.accountId,
                     type: 'candidate'
                   }}
