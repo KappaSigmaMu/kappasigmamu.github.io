@@ -7,7 +7,6 @@ import { wallets } from '../helpers/wallets'
 import { useKusama } from '../kusama'
 import { ApiState } from '../kusama/KusamaContext'
 import { toastByStatus } from '../pages/explore/helpers'
-import { account } from '@polkadot/api-derive/balances'
 
 const localStorageAccount = localStorage.getItem('activeAccount')
 
