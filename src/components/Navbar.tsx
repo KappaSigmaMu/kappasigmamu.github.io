@@ -1,7 +1,6 @@
-import { FC, useState } from 'react'
-import { Button, ButtonProps, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
+import { useState } from 'react'
+import { Button, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
 import { isMobile } from 'react-device-detect'
-import { styled } from 'styled-components'
 import { LinkWithQuery } from './LinkWithQuery'
 import { SelectedAccount } from './SelectedAccount'
 import { SettingsDropdown } from './SettingsDropdown'
@@ -51,20 +50,12 @@ const AccountNavbar = () => {
 
   return (
     <>
-      <AccountSelector variant="outline-primary" onClick={() => setShowWallets(true)}>
+      <Button className={activeAccount && 'p-0 px-2'} variant="primary" onClick={() => setShowWallets(true)}>
         {activeAccount ? <SelectedAccount /> : 'Connect Wallet'}
-      </AccountSelector>
+      </Button>
       {showWallets && <Wallets show={showWallets} setShow={setShowWallets} />}
     </>
   )
 }
-
-const AccountSelector: FC<ButtonProps> = styled(Button)`
-  cursor: pointer;
-  &:hover,
-  &:focus {
-    background-color: transparent !important;
-  }
-`
 
 export { Navbar }
