@@ -84,6 +84,11 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
                 </Col>
               </AccountRow>
             ))}
+          {selectedWallet && accounts?.length === 0 && (
+            <div className="text-center mt-3">
+              <p>No accounts connected</p>
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer style={{ borderTop: '0px' }}>
           <Row className="d-flex w-100 align-items-center justify-content-between">
