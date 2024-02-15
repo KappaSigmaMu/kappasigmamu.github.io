@@ -50,7 +50,12 @@ const AccountNavbar = () => {
 
   return (
     <>
-      <Button className={activeAccount && 'p-0 px-2'} variant="primary" onClick={() => setShowWallets(true)}>
+      <Button
+        className={activeAccount && 'p-0 px-2'}
+        variant="primary"
+        onClick={() => setShowWallets(true)}
+        style={{ minHeight: '38px' }}
+      >
         {activeAccount ? <SelectedAccount /> : 'Connect Wallet'}
       </Button>
       {showWallets && <Wallets show={showWallets} setShow={setShowWallets} />}

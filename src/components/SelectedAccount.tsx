@@ -17,10 +17,10 @@ const Title = ({ activeAccount }: { activeAccount: WalletAccount }) => {
         <Identicon value={activeAccount.address} size={30} theme={'polkadot'} />
       </div>
 
-      <label style={{ fontSize: '10px', cursor: 'pointer' }}>
+      <label style={{ fontSize: '10px', cursor: 'pointer', lineHeight: '15px' }}>
         <SelectedAccountDiv className="text-start">{truncateMiddle(account || '')}</SelectedAccountDiv>
         <LevelStatusDiv>
-          <label>JOURNEY: {level.toUpperCase()}</label>
+          <label>{level.toUpperCase()}</label>
         </LevelStatusDiv>
       </label>
 
