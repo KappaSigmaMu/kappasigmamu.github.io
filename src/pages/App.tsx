@@ -8,6 +8,7 @@ import { GilbertoGilPage } from './GilbertoGilPage'
 import { JourneyPage } from './JourneyPage'
 import { LandingPage } from './LandingPage'
 import { WelcomePage } from './WelcomePage'
+import { WikiPage } from './WikiPage'
 import { AccountContextProvider } from '../account/AccountContext'
 import { Navbar } from '../components/Navbar'
 import { Toaster } from '../components/Toaster'
@@ -44,6 +45,7 @@ const AppRouter = () => {
           <Route path="/explore/*" element={<ExplorePage />} />
           <Route path="/guide" element={<CyborgGuidePage />} />
           <Route path="/futurivel" element={<FuturivelPage />} />
+          <Route path="/wiki" element={<WikiPage />} />
           <Route path="*" element={<>NOT FOUND</>} />
         </Route>
       </Routes>
