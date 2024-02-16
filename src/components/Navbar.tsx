@@ -23,9 +23,15 @@ const Navbar = ({
       </Nav>
       <Nav className="align-items-center align-self-center">
         {showExploreButton && !isMobile && (
-          <Nav.Link to="/explore" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
-            Explore
-          </Nav.Link>
+          <>
+            <Nav.Link to="/journey" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+              Journey
+            </Nav.Link>
+            •
+            <Nav.Link to="/explore" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+              Explore
+            </Nav.Link>
+          </>
         )}
         &nbsp;
         {showSocialIcons && !isMobile && <SocialIcons />}
@@ -52,7 +58,7 @@ const AccountNavbar = () => {
     <>
       <Button
         className={activeAccount && 'p-0 px-2'}
-        variant="primary"
+        variant={activeAccount ? 'outline-primary' : 'primary'}
         onClick={() => setShowWallets(true)}
         style={{ minHeight: '38px' }}
       >

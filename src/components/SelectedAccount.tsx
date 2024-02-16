@@ -14,7 +14,7 @@ const Title = ({ activeAccount }: { activeAccount: WalletAccount }) => {
   return (
     <div className="d-flex align-items-center" role="button">
       <div className="align-top d-inline-block me-2">
-        <Identicon value={activeAccount.address} size={30} theme={'polkadot'} />
+        <Identicon value={activeAccount.address} size={26} theme={'polkadot'} />
       </div>
 
       <label style={{ fontSize: '10px', cursor: 'pointer', lineHeight: '15px' }}>
@@ -48,15 +48,16 @@ const LevelStatusDiv = styled.div`
 
   label {
     color: ${(props) => props.theme.colors.white};
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
   }
 `
 
 const SelectedAccountDiv = styled.div`
   color: ${(props) => props.theme.colors.white};
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
+  letter-spacing: -0.5px;
 `
 
 export { SelectedAccount }
