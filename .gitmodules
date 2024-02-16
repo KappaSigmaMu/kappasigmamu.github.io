@@ -1,0 +1,3 @@
+[submodule "public/wiki"]
+	path = public/wiki
+	url = https://github.com/KappaSigmaMu/kappasigmamu.github.io.wiki.git
