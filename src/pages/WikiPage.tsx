@@ -21,11 +21,9 @@ const WikiPage = () => {
       <Row>
         <CanaryImg src={CanaryRed} className="float-end" alt="Grid Canary Red" />
         <Col xs={12} className="px-0">
-          <GuideTitleRow className="mb-5">
-            <GuideTitle xs className="text-uppercase text-center d-flex align-items-center">
-              Wiki
-            </GuideTitle>
-          </GuideTitleRow>
+          <WikiTitle xs className="text-uppercase text-center d-flex align-items-center">
+            Wiki
+          </WikiTitle>
           <ScrollContainer>
             <MarkdownRenderer markdownText={content} />
           </ScrollContainer>
@@ -42,18 +40,10 @@ const Guide = styled(Container)`
   padding-bottom: 5vh;
 `
 
-const GuideTitleRow = styled(Container)`
-  display: flex;
-  justify-content: space-between;
-  padding-left: 12px;
-  padding-bottom: 20px;
-`
-
-const GuideTitle = styled(Col)`
+const WikiTitle = styled(Col)`
   font-size: 500%;
   color: white;
   font-weight: bolder;
-  height: 340px;
 `
 
 const ScrollContainer = styled(Container)`
@@ -95,13 +85,11 @@ const ScrollContainer = styled(Container)`
 
 const CanaryImg = styled.img`
   position: fixed;
-  top: 45%;
   width: 500px;
   left: 50%;
   opacity: 0.5;
   right: unset;
   top: unset;
-  bottom: -1%;
 `
 
 export { WikiPage }
