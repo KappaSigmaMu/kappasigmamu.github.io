@@ -5,8 +5,8 @@ import { LinkWithQuery } from '../components/LinkWithQuery'
 import CanaryRed from '../static/grid-canary-red.png'
 import CanaryGreen from '../static/spots-canary-green.png'
 
-const SocietyGuideLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://wiki.polkadot.network/docs/maintain-guides-society-kusama'
+const WikiLink = styled(ExternalLink).attrs(() => ({
+  href: '/wiki'
 }))`
   font-size: 24px;
   font-weight: 700;
@@ -15,42 +15,6 @@ const SocietyGuideLink = styled(ExternalLink).attrs(() => ({
 
 const SocietyElementLink = styled(ExternalLink).attrs(() => ({
   href: 'https://riot.im/app/#/room/#kappasigmamulounge:matrix.parity.io'
-}))`
-  text-decoration: none;
-`
-
-const Motion186Link = styled(ExternalLink).attrs(() => ({
-  href: 'https://kusama.polkassembly.io/motion/186'
-}))`
-  text-decoration: none;
-`
-
-const ThirdGenerationLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://www.youtube.com/watch?v=-JfQ2vCipWU'
-}))`
-  text-decoration: none;
-`
-
-const BrandingDriveLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://drive.google.com/drive/u/1/folders/1ReG63yRvPgIRRyryDTbrACHELcZoMkA3'
-}))`
-  text-decoration: none;
-`
-
-const BrandingIPFSLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://cloudflare-ipfs.com/ipfs/QmTvCsRfGXhPN4kqu19hhYV2zR7dCB1RFR6D7JUaxRpkxF#x-ipfs-companion-no-redirect'
-}))`
-  text-decoration: none;
-`
-
-const CodeRepositoryLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://github.com/KappaSigmaMu'
-}))`
-  text-decoration: none;
-`
-
-const TrelloLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://trello.com/b/aqOYaoD0/ksm-society-website'
 }))`
   text-decoration: none;
 `
@@ -74,7 +38,7 @@ const CyborgGuidePage = () => {
                 <div className="h1 text-uppercase font-weight-bold">The journey</div>
                 <p className="mb-1">To become a Cyborg means to get a membership in the Kappa Sigma Mu Society.</p>
                 <div className="mb-5">
-                  <SocietyGuideLink>You can learn more about it here.</SocietyGuideLink>
+                  <WikiLink>You can learn more about it here.</WikiLink>
                 </div>
               </Col>
             </GuideRow>
@@ -209,34 +173,6 @@ const CyborgGuidePage = () => {
             </GuideRow>
           </TimelineContainer>
         </Col>
-        <Col xs={12} lg={6} className="text-uppercase text-end ms-auto pt-5">
-          <LinksContainer className="position-relative">
-            <p>
-              <SocietyGuideLink>Kusama society guide</SocietyGuideLink>
-            </p>
-            <p>
-              <LinkWithQuery to="/explore/poi/rules">Tattoo rules</LinkWithQuery>
-            </p>
-            <p>
-              <Motion186Link>Motion 186</Motion186Link>
-            </p>
-            <p>
-              <ThirdGenerationLink>The Third Generation</ThirdGenerationLink>
-            </p>
-            <p>
-              <BrandingDriveLink>Brand Book (Google Drive)</BrandingDriveLink>
-            </p>
-            <p>
-              <BrandingIPFSLink>Brand Book (IPFS)</BrandingIPFSLink>
-            </p>
-            <p>
-              <CodeRepositoryLink>Code Repository</CodeRepositoryLink>
-            </p>
-            <p>
-              <TrelloLink>Trello</TrelloLink>
-            </p>
-          </LinksContainer>
-        </Col>
       </Row>
     </Guide>
   )
@@ -269,7 +205,6 @@ const GuideTitle = styled(Col)`
   font-size: 500%;
   color: white;
   font-weight: bolder;
-  display: inline-block;
   height: 340px;
 `
 
@@ -300,14 +235,6 @@ const TimelineContainer = styled(Container)`
     text-shadow: none;
   }
 }
-`
-
-const LinksContainer = styled(Container)`
-  padding-right: 0;
-  @media (max-width: 1024px) {
-    text-align: center;
-    text-shadow: 2px 2px #000;
-  }
 `
 
 const CanaryImg = styled.img`
