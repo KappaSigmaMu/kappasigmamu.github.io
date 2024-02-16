@@ -24,6 +24,14 @@ const Navbar = ({
       <Nav className="align-items-center align-self-center">
         {showExploreButton && !isMobile && (
           <>
+            <Nav.Link to="/guide" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+              Guide
+            </Nav.Link>
+            •
+            <Nav.Link to="/wiki" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+              Wiki
+            </Nav.Link>
+            •
             <Nav.Link to="/journey" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
               Journey
             </Nav.Link>

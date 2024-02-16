@@ -3,7 +3,6 @@ import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { MarkdownRenderer } from '../components/MarkdownRenderer'
 import CanaryRed from '../static/grid-canary-red.png'
-import CanaryGreen from '../static/spots-canary-green.png'
 
 const WikiPage = () => {
   const [content, setContent] = useState('')
@@ -23,8 +22,8 @@ const WikiPage = () => {
         <CanaryImg src={CanaryRed} className="float-end" alt="Grid Canary Red" />
         <Col xs={12} className="px-0">
           <GuideTitleRow className="mb-5">
-            <GuideTitle xs className="display-1 text-uppercase text-center d-flex align-items-center">
-              Cyborg Guide
+            <GuideTitle xs className="text-uppercase text-center d-flex align-items-center">
+              Wiki
             </GuideTitle>
           </GuideTitleRow>
           <ScrollContainer>
@@ -51,13 +50,9 @@ const GuideTitleRow = styled(Container)`
 `
 
 const GuideTitle = styled(Col)`
-  background: url(${CanaryGreen});
-  background-size: contain;
-  background-repeat: no-repeat;
   font-size: 500%;
   color: white;
   font-weight: bolder;
-  display: inline-block;
   height: 340px;
 `
 
