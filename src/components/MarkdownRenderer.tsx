@@ -1,5 +1,16 @@
 import { marked } from 'marked'
 import { useEffect, useState } from 'react'
+import slugify from 'slugify'
+
+const renderer = new marked.Renderer()
+renderer.heading = function (text, level) {
+  const slug = slugify(text, { lower: true, strict: true, remove: /[*+~.()'"!:@]/g })
+  return `<h${level} id="${slug}">${text}</h${level}>`
+}
+
+marked.setOptions({
+  renderer
+})
 
 const MarkdownRenderer = ({ markdownText }: { markdownText: string }) => {
   const [htmlContent, setHtmlContent] = useState('')
