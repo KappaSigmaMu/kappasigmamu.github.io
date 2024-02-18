@@ -2,9 +2,9 @@ import { ApiPromise } from '@polkadot/api'
 import { Route, Routes } from 'react-router-dom'
 import { ExamplesPage } from './ExamplesPage'
 import { GalleryPage } from './GalleryPage'
+import { NextHeadPage } from './NextHeadPage'
 import { RulesPage } from './RulesPage'
 import { NavigateWithQuery } from '../../../components/NavigateWithQuery'
-import { NextHeadPage } from './NextHeadPage'
 
 type ProofOfInkPageProps = {
   api: ApiPromise | null
