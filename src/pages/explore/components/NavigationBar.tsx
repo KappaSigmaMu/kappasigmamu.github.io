@@ -71,6 +71,11 @@ const NavigationBar = ({ totals }: { totals: Totals }) => {
               Gallery
             </Nav.Link>
           </StyledNavItem>
+          <StyledNavItem>
+            <Nav.Link as={LinkWithQuery} to="/explore/poi/next-head">
+              Next Head
+            </Nav.Link>
+          </StyledNavItem>
         </StyledNav>
       )}
     </>
