@@ -19,10 +19,9 @@ const NextHeadPage = ({ api }: NextHeadPageProps): JSX.Element => {
   const [head, setNextHead] = useState<AccountId | null>(null)
 
   useEffect(() => {
-    society?.head().then((head) => setNextHead(head.unwrap()))
-    // society?.nextHead().then((head) => {
-    //   head.isSome && setNextHead(head.unwrap().who)
-    // })
+    society?.nextHead().then((head) => {
+      head.isSome && setNextHead(head.unwrap().who)
+    })
   }, [society])
 
   return head === null ? (
