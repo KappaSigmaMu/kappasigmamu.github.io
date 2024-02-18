@@ -1,13 +1,13 @@
 import { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
+import { AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { Col, Badge } from 'react-bootstrap'
-import { AccountIdentity } from '../../../components/AccountIdentity'
-import { AccountId } from '@polkadot/types/interfaces'
-import { DataHeaderRow, DataRow } from '../../../components/base'
-import { AccountIndex } from '../../../components/AccountIndex'
-import { LoadingSpinner } from '../components/LoadingSpinner'
 import Alert from 'react-bootstrap/Alert'
+import { AccountIdentity } from '../../../components/AccountIdentity'
+import { AccountIndex } from '../../../components/AccountIndex'
+import { DataHeaderRow, DataRow } from '../../../components/base'
+import { LoadingSpinner } from '../components/LoadingSpinner'
 
 type NextHeadPageProps = {
   api: ApiPromise | null
