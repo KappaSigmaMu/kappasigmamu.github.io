@@ -6,6 +6,8 @@ declare module 'styled-components' {
     lightBg: string
 
     colors: {
+      danger: string
+      success: string
       primary: string
       secondary: string
       white: string

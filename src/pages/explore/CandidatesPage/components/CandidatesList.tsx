@@ -1,5 +1,4 @@
 import { ApiPromise } from '@polkadot/api'
-import Identicon from '@polkadot/react-identicon'
 import type { Option } from '@polkadot/types'
 import type { SocietyVote, AccountId } from '@polkadot/types/interfaces'
 import { WalletAccount } from '@talismn/connect-wallets'
@@ -16,6 +15,7 @@ import { truncate } from '../../../../helpers/truncate'
 import ApproveIcon from '../../../../static/approve-icon.svg'
 import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
+import { Identicon } from '../../components/Identicon'
 import { toastByStatus } from '../../helpers'
 
 const StyledCol = styled(Col)`
@@ -42,10 +42,12 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   const [votes, setVotes] = useState<SocietyCandidate[]>([])
   const society = api?.query?.society
 
+  const [disabledVote, setDisabledVote] = useState<boolean>(false)
   const [selectedCandidate, setSelectedCandidate] = useState<AccountId | null>(null)
   const [showCandidateDetailsOffcanvas, setShowCandidateDetailsOffcanvas] = useState(false)
 
   const showMessage = (nextResult: ExtrinsicResult) => {
+    setDisabledVote(nextResult.status === 'loading')
     toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
   }
 
@@ -138,10 +140,11 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
             {isMember ? (
               <>
                 <VoteButton
+                  disabled={disabledVote}
                   api={api}
                   showMessage={showMessage}
                   successText="Approval vote sent."
-                  waitingText="Approval vote request sent. Waiting for response..."
+                  waitingText="Request sent. Waiting for response..."
                   vote={{
                     approve: true,
                     voterAccount: activeAccount!,
@@ -150,14 +153,13 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                   }}
                   icon={ApproveIcon}
                   handleUpdate={handleUpdate}
-                >
-                  <u>Approve</u>
-                </VoteButton>
+                ></VoteButton>
                 <VoteButton
+                  disabled={disabledVote}
                   api={api}
                   showMessage={showMessage}
                   successText="Rejection vote sent."
-                  waitingText="Rejection vote request sent. Waiting for response..."
+                  waitingText="Request sent. Waiting for response..."
                   vote={{
                     approve: false,
                     voterAccount: activeAccount!,
@@ -166,9 +168,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                   }}
                   icon={RejectIcon}
                   handleUpdate={handleUpdate}
-                >
-                  <u>Reject</u>
-                </VoteButton>
+                ></VoteButton>
               </>
             ) : (
               <>

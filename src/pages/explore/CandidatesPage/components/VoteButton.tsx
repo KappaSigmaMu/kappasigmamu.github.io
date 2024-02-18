@@ -14,7 +14,7 @@ type VoteButtonProps = {
   handleUpdate: () => void
   successText: string
   waitingText: string
-  children: JSX.Element
+  disabled: boolean
 }
 
 export interface Vote {
@@ -27,17 +27,17 @@ export interface Vote {
 export function VoteButton({
   api,
   vote,
+  disabled,
   showMessage,
   icon,
   handleUpdate,
   successText,
-  waitingText,
-  children
+  waitingText
 }: VoteButtonProps) {
   const [loading, setLoading] = useState(false)
 
   const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
-    loading && setLoading(loading)
+    loading !== undefined && setLoading(loading)
     showMessage({ status, message })
     handleUpdate()
   }
@@ -58,11 +58,12 @@ export function VoteButton({
     }
   }
 
-  if (loading) return <LoadingSpinner center={false} small={true} />
+  if (loading)
+    return (
+      <label style={{ paddingRight: '0.7em', paddingLeft: 0 }}>
+        <LoadingSpinner center={false} small={true} />
+      </label>
+    )
 
-  return (
-    <IconButton icon={icon} onClick={handleVote}>
-      <u>{children}</u>
-    </IconButton>
-  )
+  return <IconButton disabled={disabled} icon={icon} onClick={handleVote} />
 }

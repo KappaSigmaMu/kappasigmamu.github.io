@@ -1,5 +1,4 @@
 import { ApiPromise } from '@polkadot/api'
-import Identicon from '@polkadot/react-identicon'
 import { StorageKey } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
@@ -7,6 +6,7 @@ import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { AccountIdentity } from '../../../components/AccountIdentity'
 import { getLatestPinnedHash, fastestGateway, imageUrl } from '../../../helpers/ipfs'
+import { Identicon } from '../components/Identicon'
 
 type ExamplesPageProps = {
   api: ApiPromise | null

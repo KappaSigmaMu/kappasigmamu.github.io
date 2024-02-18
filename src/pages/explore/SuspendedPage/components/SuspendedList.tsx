@@ -1,8 +1,8 @@
-import Identicon from '@polkadot/react-identicon'
 import { AccountId } from '@polkadot/types/interfaces'
 import { Col, Badge } from 'react-bootstrap'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { truncateMiddle } from '../../../../helpers/truncate'
+import { Identicon } from '../../components/Identicon'
 
 type SuspendedListProps = {
   members: AccountId[]

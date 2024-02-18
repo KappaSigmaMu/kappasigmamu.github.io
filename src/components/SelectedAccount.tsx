@@ -1,4 +1,3 @@
-import Identicon from '@polkadot/react-identicon'
 import { WalletAccount } from '@talismn/connect-wallets'
 import { Spinner } from 'react-bootstrap'
 import { FaChevronDown } from 'react-icons/fa6'
@@ -6,6 +5,7 @@ import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { truncateMiddle } from '../helpers/truncate'
 import { useKusama } from '../kusama'
+import { Identicon } from '../pages/explore/components/Identicon'
 
 const Title = ({ activeAccount }: { activeAccount: WalletAccount }) => {
   const { level } = useAccount()
