@@ -1,8 +1,8 @@
-import Identicon from '@polkadot/react-identicon'
 import { useEffect, useState } from 'react'
 import { Col, Row, Offcanvas, Container, Badge, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { fastestGateway, getLatestPinnedHash, imageUrl } from '../helpers/ipfs'
+import { Identicon } from '../pages/explore/components/Identicon'
 
 const formatHash = (str: string) => {
   if (!str) return ''

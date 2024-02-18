@@ -1,4 +1,3 @@
-import Identicon from '@polkadot/react-identicon'
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto'
 import { Wallet as WalletType, WalletAccount } from '@talismn/connect-wallets'
 import { useEffect, useState } from 'react'
@@ -7,6 +6,7 @@ import { FaChevronLeft, FaChevronRight, FaCircleCheck, FaDownload, FaPowerOff, F
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
 import { wallets } from '../helpers/wallets'
+import { Identicon } from '../pages/explore/components/Identicon'
 import { toastByStatus } from '../pages/explore/helpers'
 
 // interface LevelStatusType {

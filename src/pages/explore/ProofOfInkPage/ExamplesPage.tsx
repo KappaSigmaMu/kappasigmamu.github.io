@@ -1,5 +1,4 @@
 import { ApiPromise } from '@polkadot/api'
-import Identicon from '@polkadot/react-identicon'
 import { AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useRef, useState } from 'react'
 import { Badge, Col, Row } from 'react-bootstrap'
@@ -7,6 +6,7 @@ import { draw, PADD, SIZE } from './helpers/draw'
 import { AccountIdentity } from '../../../components/AccountIdentity'
 import { AccountIndex } from '../../../components/AccountIndex'
 import { DataHeaderRow, DataRow } from '../../../components/base'
+import { Identicon } from '../components/Identicon'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 
 type ExamplesPageProps = {

@@ -1,11 +1,11 @@
 import { ApiPromise } from '@polkadot/api'
-import Identicon from '@polkadot/react-identicon'
 import { Option, StorageKey } from '@polkadot/types'
 import { AccountId, AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyVote } from '@polkadot/types/lookup'
 import { useEffect, useState } from 'react'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { AccountHeader } from '../../components/AccountHeader'
+import { Identicon } from '../../components/Identicon'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
 import { Offcanvas } from '../../components/Offcanvas'
 

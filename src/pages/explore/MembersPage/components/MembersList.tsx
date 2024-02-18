@@ -1,5 +1,4 @@
 import type { ApiPromise } from '@polkadot/api'
-import Identicon from '@polkadot/react-identicon'
 import { WalletAccount } from '@talismn/connect-wallets'
 import { useEffect, useRef, useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
@@ -12,6 +11,7 @@ import ApproveIcon from '../../../../static/approve-icon.svg'
 import CheckAllIcon from '../../../../static/check-all-icon.svg'
 import RejectIcon from '../../../../static/reject-icon.svg'
 import { VoteButton } from '../../CandidatesPage/components/VoteButton'
+import { Identicon } from '../../components/Identicon'
 import { toastByStatus } from '../../helpers'
 
 const StyledDataRow = styled(DataRow)`
@@ -46,8 +46,10 @@ const MembersList = ({ api, members, activeAccount, onClickMember, handleUpdate 
   const activeAccountIsMember = level === 'cyborg'
 
   const [activeAccountIsDefenderVoter, setActiveAccountIsDefenderVoter] = useState(false)
+  const [disabledVote, setDisabledVote] = useState<boolean>(false)
 
   const showMessage = (nextResult: ExtrinsicResult) => {
+    setDisabledVote(nextResult.status === 'loading')
     toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
   }
 
@@ -103,27 +105,25 @@ const MembersList = ({ api, members, activeAccount, onClickMember, handleUpdate 
             {member.isDefender && activeAccountIsMember && (
               <>
                 <VoteButton
+                  disabled={disabledVote}
                   api={api}
                   showMessage={showMessage}
                   successText="Approval vote sent."
-                  waitingText="Approval vote request sent. Waiting for response..."
+                  waitingText="Request sent. Waiting for response..."
                   vote={{ approve: true, voterAccount: activeAccount!, accountId: member.accountId, type: 'defender' }}
                   icon={ApproveIcon}
                   handleUpdate={handleUpdate}
-                >
-                  <u>Approve</u>
-                </VoteButton>
+                ></VoteButton>
                 <VoteButton
+                  disabled={disabledVote}
                   api={api}
                   showMessage={showMessage}
                   successText="Rejection vote sent."
-                  waitingText="Rejection vote request sent. Waiting for response..."
+                  waitingText="Request sent. Waiting for response..."
                   vote={{ approve: false, voterAccount: activeAccount!, accountId: member.accountId, type: 'defender' }}
                   icon={RejectIcon}
                   handleUpdate={handleUpdate}
-                >
-                  <u>Reject</u>
-                </VoteButton>
+                ></VoteButton>
               </>
             )}
             {member.isDefender && activeAccountIsDefenderVoter ? <AlreadyVotedIcon /> : <></>}
