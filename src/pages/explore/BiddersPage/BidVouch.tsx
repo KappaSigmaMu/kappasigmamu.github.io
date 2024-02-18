@@ -75,7 +75,7 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
             <Form.Group className="mb-3">
               <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm type="number" step="any" placeholder="0.0000" aria-label="Bid amount" />
+                <StyledForm type="number" step="1" placeholder="0" aria-label="Bid amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
@@ -104,14 +104,14 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
             <Form.Group className="mb-3">
               <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm type="number" step="any" placeholder="0.0000" aria-label="Bid amount" />
+                <StyledForm type="number" step="1" placeholder="0" aria-label="Bid amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
             <Form.Group className="mb-3">
               <StyledFormLabel>Tip amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm type="number" step="any" placeholder="0.0000" aria-label="Tip amount" />
+                <StyledForm type="number" step="1" placeholder="0" aria-label="Tip amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
