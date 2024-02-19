@@ -9,12 +9,10 @@ import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
 import { VoteButton } from './VoteButton'
 import { useAccount } from '../../../../account/AccountContext'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
+import { AlreadyVotedIcon } from '../../../../components/AlreadyVotedIcon'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
 import { truncate } from '../../../../helpers/truncate'
-import ApproveIcon from '../../../../static/approve-icon.svg'
-import CheckAllIcon from '../../../../static/check-all-icon.svg'
-import RejectIcon from '../../../../static/reject-icon.svg'
 import { Identicon } from '../../components/Identicon'
 import { toastByStatus } from '../../helpers'
 
@@ -30,13 +28,6 @@ type CandidatesListProps = {
   candidates: SocietyCandidate[]
   handleUpdate: () => void
 }
-
-const AlreadyVotedIcon = () => (
-  <>
-    <img src={CheckAllIcon} className="me-2" />
-    <label style={{ color: '#6c757d' }}>Voted</label>
-  </>
-)
 
 const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: CandidatesListProps): JSX.Element => {
   const [votes, setVotes] = useState<SocietyCandidate[]>([])
@@ -136,7 +127,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
           <Col xs={3}>
             {candidate.tally.approvals.toHuman()} approvals and {candidate.tally.rejections.toHuman()} rejections
           </Col>
-          <Col xs={3} className="d-flex">
+          <Col xs={3} className="d-flex align-items-center">
             {isMember ? (
               <>
                 <VoteButton
@@ -151,7 +142,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                     accountId: candidate.accountId,
                     type: 'candidate'
                   }}
-                  icon={ApproveIcon}
+                  icon={'approve'}
                   handleUpdate={handleUpdate}
                 ></VoteButton>
                 <VoteButton
@@ -166,7 +157,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                     accountId: candidate.accountId,
                     type: 'candidate'
                   }}
-                  icon={RejectIcon}
+                  icon={'reject'}
                   handleUpdate={handleUpdate}
                 ></VoteButton>
               </>
