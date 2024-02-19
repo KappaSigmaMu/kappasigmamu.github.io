@@ -8,10 +8,8 @@ import { MemberDetailsOffCanvas } from './MemberDetailsOffcanvas'
 import { useAccount } from '../../../../account/AccountContext'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { AccountIndex } from '../../../../components/AccountIndex'
+import { AlreadyVotedIcon } from '../../../../components/AlreadyVotedIcon'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
-import ApproveIcon from '../../../../static/approve-icon.svg'
-import CheckAllIcon from '../../../../static/check-all-icon.svg'
-import RejectIcon from '../../../../static/reject-icon.svg'
 import { VoteButton } from '../../CandidatesPage/components/VoteButton'
 import { Identicon } from '../../components/Identicon'
 import { toastByStatus } from '../../helpers'
@@ -30,13 +28,6 @@ type MembersListProps = {
   activeAccount: WalletAccount | undefined
   handleUpdate: () => void
 }
-
-const AlreadyVotedIcon = () => (
-  <>
-    <img src={CheckAllIcon} className="me-2" />
-    <label style={{ color: '#6c757d' }}>Voted</label>
-  </>
-)
 
 const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListProps): JSX.Element => {
   // Likely impossible to happen but if it does, better to show a
@@ -113,7 +104,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
           <Col xs={2} className="text-start text-truncate">
             <AccountIndex api={api} accountId={member.accountId} />
           </Col>
-          <Col xs={3} className="d-flex">
+          <Col xs={3} className="d-flex align-items-center">
             {member.isDefender && activeAccountIsMember && (
               <>
                 <VoteButton
@@ -123,7 +114,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
                   successText="Approval vote sent."
                   waitingText="Request sent. Waiting for response..."
                   vote={{ approve: true, voterAccount: activeAccount!, accountId: member.accountId, type: 'defender' }}
-                  icon={ApproveIcon}
+                  icon={'approve'}
                   handleUpdate={handleUpdate}
                 ></VoteButton>
                 <VoteButton
@@ -133,7 +124,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
                   successText="Rejection vote sent."
                   waitingText="Request sent. Waiting for response..."
                   vote={{ approve: false, voterAccount: activeAccount!, accountId: member.accountId, type: 'defender' }}
-                  icon={RejectIcon}
+                  icon={'reject'}
                   handleUpdate={handleUpdate}
                 ></VoteButton>
               </>

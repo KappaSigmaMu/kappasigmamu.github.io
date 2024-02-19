@@ -1,4 +1,6 @@
 import { Button } from 'react-bootstrap'
+import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6'
+import { styled } from 'styled-components'
 
 type IconButtonProps = {
   onClick: () => any
@@ -6,10 +8,28 @@ type IconButtonProps = {
   disabled: boolean
 }
 
-export function IconButton({ onClick, icon, disabled }: IconButtonProps) {
+function IconButton({ onClick, icon, disabled }: IconButtonProps) {
   return (
-    <Button disabled={disabled} variant="link" onClick={onClick} style={{ paddingRight: '0.5em', paddingLeft: 0 }}>
-      <img src={icon} />
+    <Button disabled={disabled} variant="link" onClick={onClick} className="p-0 pe-2">
+      {icon === 'approve' ? <StyledApproveIcon /> : <StyledRejectIcon />}
     </Button>
   )
 }
+
+const StyledApproveIcon = styled(FaCircleCheck)`
+  flex-shrink: 0;
+
+  & path {
+    fill: ${(props) => props.theme.colors.success};
+  }
+`
+
+const StyledRejectIcon = styled(FaCircleXmark)`
+  flex-shrink: 0;
+
+  & path {
+    fill: ${(props) => props.theme.colors.danger};
+  }
+`
+
+export { IconButton }
