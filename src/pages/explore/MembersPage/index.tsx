@@ -1,7 +1,6 @@
 import { ApiPromise } from '@polkadot/api'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
-import { MemberDetailsOffCanvas } from './components/MemberDetailsOffcanvas'
 import { MembersList } from './components/MembersList'
 import { useAccount } from '../../../account/AccountContext'
 import { useConsts } from '../../../hooks/useConsts'
@@ -15,15 +14,11 @@ type MembersPageProps = {
 const MembersPage = ({ api }: MembersPageProps): JSX.Element => {
   const { activeAccount } = useAccount()
   const [members, setMembers] = useState<SocietyMember[] | null>(null)
-  const [selectedMember, setSelectedMember] = useState<SocietyMember | null>(null)
   const [trigger, setTrigger] = useState(false)
   const society = api?.derive.society
 
   const { graceStrikes } = useConsts()
 
-  const onClickMember = (member: SocietyMember) => {
-    setSelectedMember(member)
-  }
   const handleUpdate = () => {
     setTrigger((prev) => !prev) // Toggle the trigger to query the defender again after voting
   }
@@ -50,23 +45,7 @@ const MembersPage = ({ api }: MembersPageProps): JSX.Element => {
 
   if (members === null) return <LoadingSpinner />
 
-  return (
-    <>
-      <MemberDetailsOffCanvas
-        api={api!}
-        accountId={selectedMember?.accountId}
-        show={selectedMember !== null}
-        onClose={() => setSelectedMember(null)}
-      />
-      <MembersList
-        api={api!}
-        members={members}
-        activeAccount={activeAccount}
-        onClickMember={onClickMember}
-        handleUpdate={handleUpdate}
-      />
-    </>
-  )
+  return <MembersList api={api!} members={members} activeAccount={activeAccount} handleUpdate={handleUpdate} />
 }
 
 export { MembersPage }
