@@ -39,10 +39,10 @@ const ExamplesPage = ({ api }: ExamplesPageProps): JSX.Element => {
           Wallet Hash
         </Col>
         <Col xs={2} className="text-start">
-          Identity
+          Index
         </Col>
         <Col xs={2} className="text-start">
-          Index
+          Identity
         </Col>
         <Col xs={2} className="text-end"></Col>
       </DataHeaderRow>
@@ -55,10 +55,10 @@ const ExamplesPage = ({ api }: ExamplesPageProps): JSX.Element => {
           {head.toHuman()}
         </Col>
         <Col xs={2} className="text-start text-truncate">
-          <AccountIdentity api={api!} accountId={head} hideNotSet />
+          <AccountIndex api={api!} accountId={head} callback={handleIndex} />
         </Col>
         <Col xs={2} className="text-start text-truncate">
-          <AccountIndex api={api!} accountId={head} callback={handleIndex} />
+          <AccountIdentity api={api!} accountId={head} hideNotSet />
         </Col>
         <Col xs={2} className="text-end">
           <Badge pill bg="primary" className="me-2 p-2">
