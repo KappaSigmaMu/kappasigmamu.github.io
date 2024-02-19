@@ -136,7 +136,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
           <Col xs={3}>
             {candidate.tally.approvals.toHuman()} approvals and {candidate.tally.rejections.toHuman()} rejections
           </Col>
-          <Col xs={3}>
+          <Col xs={3} className="d-flex">
             {isMember ? (
               <>
                 <VoteButton
