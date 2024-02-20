@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import { Dropdown } from 'react-bootstrap'
-import { isMobile } from 'react-device-detect'
 import { FaGear, FaCircleCheck, FaCircle } from 'react-icons/fa6'
-import styled from 'styled-components'
+import { StyledDropdownMenu } from './StyledDropdownMenu'
 import { providers, type Provider } from '../helpers/providers'
 import { useKusama } from '../kusama/KusamaContext'
-import { StyledDropdownMenu } from './StyledDropdownMenu'
 
 const SettingsDropdown = () => {
   const queryParams = new URLSearchParams(window.location.search)
@@ -57,7 +55,7 @@ const SettingsDropdown = () => {
     <Dropdown>
       <Dropdown.Toggle variant="success" id="dropdown-basic">
         <FaGear className="m-1 mt-0" />
-        {!isMobile && <span>Settings</span>}
+        <span className="d-none d-lg-inline">Settings</span>
       </Dropdown.Toggle>
 
       <StyledDropdownMenu>

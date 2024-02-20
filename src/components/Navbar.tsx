@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Button, Container, Dropdown, Nav, Navbar as RBNavbar } from 'react-bootstrap'
-import { isMobile } from 'react-device-detect'
 import { FaBars } from 'react-icons/fa6'
 import { LinkWithQuery } from './LinkWithQuery'
 import { SelectedAccount } from './SelectedAccount'
@@ -65,22 +64,22 @@ const Navbar = ({
                 <Nav.Link to="/guide" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
                   Guide
                 </Nav.Link>
-                •
+                <span>•</span>
                 <Nav.Link to="/wiki" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
                   Wiki
                 </Nav.Link>
-                •
+                <span>•</span>
                 <Nav.Link to="/journey" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
                   Journey
                 </Nav.Link>
-                •
+                <span>•</span>
                 <Nav.Link to="/explore" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
                   Explore
                 </Nav.Link>
               </div>
             </>
           )}
-          {showSocialIcons && !isMobile && <SocialIcons />}
+          {showSocialIcons && <SocialIcons />}
           {showAccount && <AccountNavbar />}
         </Nav>
       </Container>

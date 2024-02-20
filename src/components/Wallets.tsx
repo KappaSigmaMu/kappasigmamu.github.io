@@ -39,6 +39,13 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
   }
 
   useEffect(() => {
+    if (!activeAccount) return
+
+    const selectedWallet = wallets.find((wallet) => wallet.title === activeAccount.wallet?.title)
+    setSelectedWallet(selectedWallet)
+  }, [])
+
+  useEffect(() => {
     if (!selectedWallet) return
 
     function isSubstrateAccount(account: any): account is WalletAccount & { type: string } {
@@ -72,7 +79,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
             accounts.map((account) => (
               <AccountRow key={account.address} onClick={() => handleClick(account)}>
                 <Col xs={2}>
-                  <Identicon value={account.address} size={50} theme={'polkadot'} />
+                  <Identicon value={account.address} size={42} theme={'polkadot'} />
                 </Col>
                 <Col xs={10}>
                   <div className="d-flex justify-content-start align-items-center">
@@ -179,7 +186,7 @@ const AccountRow = styled.div`
   display: flex;
   align-items: center;
   padding-block: 1rem;
-  padding-inline: 2rem;
+  padding-inline: 5%;
   cursor: pointer;
   color: ${(props) => props.theme.colors.primary} !important;
 
@@ -204,6 +211,9 @@ const WalletRow = styled.div`
 const Address = styled.div`
   color: ${(props) => props.theme.colors.secondary};
   font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 // const LevelStatusDiv = styled.div`
