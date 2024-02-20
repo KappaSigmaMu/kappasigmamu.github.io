@@ -27,7 +27,7 @@ const AppNavigation = () => {
   return (
     <>
       <Toaster />
-      <Navbar showAccount showExploreButton showBrandIcon showSocialIcons />
+      <Navbar showAccount showNavLinks showBrandIcon showSocialIcons />
       <Outlet />
     </>
   )

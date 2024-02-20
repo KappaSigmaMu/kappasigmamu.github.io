@@ -2,7 +2,7 @@ declare interface NavRouteProps {
   children?: React.ReactElement
   showAccount?: boolean
   showBrandIcon?: boolean
-  showExploreButton?: boolean
+  showNavLinks?: boolean
   showSocialIcons?: boolean
 }
 
