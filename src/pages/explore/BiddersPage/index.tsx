@@ -34,10 +34,10 @@ const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
   return (
     <>
       <Row>
-        <Col>
+        <Col xs={12} lg={3}>
           <BidVouch api={api!} activeAccount={activeAccount} handleResult={handleResult} />
         </Col>
-        <Col xs={9}>
+        <Col xs={12} lg={9}>
           <BiddersList api={api!} bids={bids} activeAccount={activeAccount} handleResult={handleResult} />
         </Col>
       </Row>
