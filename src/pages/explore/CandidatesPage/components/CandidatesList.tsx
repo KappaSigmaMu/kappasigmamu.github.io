@@ -89,32 +89,29 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
         />
       )}
 
-      <DataHeaderRow>
-        <Col xs={1} className="text-center">
-          #
+      <DataHeaderRow className="d-none d-lg-flex text-center">
+        <Col lg={1}>#</Col>
+        <Col lg={2}>Wallet Hash</Col>
+        <Col lg={1} className="d-none d-lg-inline ">
+          Bid Kind
         </Col>
-        <Col xs={2} className="text-start">
-          Wallet Hash
-        </Col>
-        <Col className="text-start">Bid Kind</Col>
-        <Col>Tally</Col>
-        <Col>{isMember && 'Vote'}</Col>
+        <Col lg={2}>Amount</Col>
+        <Col lg={3}>Tally</Col>
+        <Col lg={3}>{isMember && 'Vote'}</Col>
       </DataHeaderRow>
 
       {candidates.map((candidate: SocietyCandidate) => (
-        <StyledDataRow $isOwner={isCandidate(candidate)} key={candidate.accountId.toString()}>
-          <Col xs={1} className="text-center">
+        <StyledDataRow className="text-center" $isOwner={isCandidate(candidate)} key={candidate.accountId.toString()}>
+          <Col lg={1} className="text-center">
             <Identicon value={candidate.accountId.toHuman()} size={32} theme={'polkadot'} />
           </Col>
-          <StyledCol
-            xs={2}
-            className="text-start text-truncate"
-            onClick={() => showCandidateDetails(candidate.accountId)}
-          >
+          <StyledCol lg={2} className=" text-truncate" onClick={() => showCandidateDetails(candidate.accountId)}>
             <AccountIdentity api={api} accountId={candidate.accountId} />
           </StyledCol>
-          <Col xs={1}>{candidate.kind.isDeposit ? 'Deposit' : 'Vouch'}</Col>
-          <Col xs={2} className="text-start">
+          <Col lg={1} className="d-none d-lg-inline">
+            {candidate.kind.isDeposit ? 'Deposit' : 'Vouch'}
+          </Col>
+          <Col lg={2}>
             {candidate.kind.isDeposit ? (
               <FormatBalance balance={candidate.bid} />
             ) : (
@@ -124,10 +121,10 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
               </>
             )}
           </Col>
-          <Col xs={3}>
+          <Col lg={3}>
             {candidate.tally.approvals.toHuman()} approvals and {candidate.tally.rejections.toHuman()} rejections
           </Col>
-          <Col xs={3} className="d-flex align-items-center">
+          <Col lg={3} className="d-flex align-items-center justify-content-center">
             {isMember ? (
               <>
                 <VoteButton

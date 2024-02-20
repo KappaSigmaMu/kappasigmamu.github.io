@@ -83,7 +83,7 @@ const CurrentRoundItem = ({ title, inactive, text, info }: CurrentRoundItemProps
         </Col>
       </Row>
       <Row>
-        <Col sm="auto">
+        <Col>
           <CurrentRoundProgress percentageDone={inactive ? 100 : info.percentageDone} />
         </Col>
         <Col className="ps-0">

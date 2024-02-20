@@ -23,7 +23,7 @@ const AccountIdentity = ({
 
   if (!id && hideNotSet) return <></>
   if (id) return <>{id}</>
-  return <>{truncateMiddle(accountId?.toString())}</>
+  return <>{truncateMiddle(accountId?.toString(), 20)}</>
 }
 
 export { AccountIdentity }
