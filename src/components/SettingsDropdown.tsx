@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Dropdown } from 'react-bootstrap'
+import { isMobile } from 'react-device-detect'
 import { FaGear, FaCircleCheck, FaCircle } from 'react-icons/fa6'
 import styled from 'styled-components'
 import { providers, type Provider } from '../helpers/providers'
 import { useKusama } from '../kusama/KusamaContext'
+import { StyledDropdownMenu } from './StyledDropdownMenu'
 
 const SettingsDropdown = () => {
   const queryParams = new URLSearchParams(window.location.search)
@@ -55,7 +57,7 @@ const SettingsDropdown = () => {
     <Dropdown>
       <Dropdown.Toggle variant="success" id="dropdown-basic">
         <FaGear className="m-1 mt-0" />
-        <span>Settings</span>
+        {!isMobile && <span>Settings</span>}
       </Dropdown.Toggle>
 
       <StyledDropdownMenu>
@@ -68,39 +70,5 @@ const SettingsDropdown = () => {
     </Dropdown>
   )
 }
-
-const StyledDropdownMenu = styled(Dropdown.Menu)`
-  background-color: ${(props) => props.theme.colors.darkGrey};
-
-  & a,
-  & span {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-
-    & svg {
-      margin-right: 5px;
-    }
-  }
-
-  & a,
-  & a:link,
-  & a:visited,
-  & span {
-    color: ${(props) => props.theme.colors.white};
-  }
-
-  & a:hover,
-  & a:active {
-    color: ${(props) => props.theme.colors.darkGrey};
-    & svg {
-      flex-shrink: 0;
-
-      & path {
-        fill: ${(props) => props.theme.colors.black};
-      }
-    }
-  }
-`
 
 export { SettingsDropdown }

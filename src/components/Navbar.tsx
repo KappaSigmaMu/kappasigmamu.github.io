@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { Button, Container, Nav, Navbar as RBNavbar } from 'react-bootstrap'
+import { Button, Container, Dropdown, Nav, Navbar as RBNavbar } from 'react-bootstrap'
 import { isMobile } from 'react-device-detect'
+import { FaBars } from 'react-icons/fa6'
 import { LinkWithQuery } from './LinkWithQuery'
 import { SelectedAccount } from './SelectedAccount'
 import { SettingsDropdown } from './SettingsDropdown'
 import { SocialIcons } from './SocialIcons'
+import { StyledDropdownMenu } from './StyledDropdownMenu'
 import { Wallets } from './Wallets'
 import { useAccount } from '../account/AccountContext'
 import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
@@ -12,43 +14,79 @@ import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 const Navbar = ({
   showAccount = false,
   showBrandIcon = false,
-  showExploreButton = false,
+  showNavLinks = false,
   showSocialIcons = false
-}: NavRouteProps) => (
-  <RBNavbar className="pt-4">
-    <Container>
-      <Nav className="align-items-center align-self-center">
-        {showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}
-        <SettingsDropdown />
-      </Nav>
-      <Nav className="align-items-center align-self-center">
-        {showExploreButton && !isMobile && (
-          <>
-            <Nav.Link to="/guide" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
-              Guide
-            </Nav.Link>
-            •
-            <Nav.Link to="/wiki" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
-              Wiki
-            </Nav.Link>
-            •
-            <Nav.Link to="/journey" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
-              Journey
-            </Nav.Link>
-            •
-            <Nav.Link to="/explore" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
-              Explore
-            </Nav.Link>
-          </>
-        )}
-        &nbsp;
-        {showSocialIcons && !isMobile && <SocialIcons />}
-        &nbsp;
-        {showAccount && <AccountNavbar />}
-      </Nav>
-    </Container>
-  </RBNavbar>
-)
+}: NavRouteProps) => {
+  const [showMenu, setShowMenu] = useState(false)
+
+  return (
+    <RBNavbar className="pt-4">
+      <Container>
+        <Nav className="align-items-center align-self-center">
+          {showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}
+          <SettingsDropdown />
+        </Nav>
+        <Nav className="align-items-center align-self-center">
+          {showNavLinks && (
+            <>
+              <div className="d-lg-none">
+                <Dropdown show={showMenu} onToggle={() => setShowMenu(!showMenu)}>
+                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    <FaBars role="button" />
+                  </Dropdown.Toggle>
+
+                  <StyledDropdownMenu>
+                    <Dropdown.Item as="button">
+                      <Nav.Link to="/guide" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                        Guide
+                      </Nav.Link>
+                    </Dropdown.Item>
+                    <Dropdown.Item as="button">
+                      <Nav.Link to="/wiki" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                        Wiki
+                      </Nav.Link>
+                    </Dropdown.Item>
+                    <Dropdown.Item as="button">
+                      <Nav.Link to="/journey" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                        Journey
+                      </Nav.Link>
+                    </Dropdown.Item>
+                    <Dropdown.Item as="button">
+                      <Nav.Link to="/explore" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                        Explore
+                      </Nav.Link>
+                    </Dropdown.Item>
+                  </StyledDropdownMenu>
+                </Dropdown>
+              </div>
+
+              {/* Desktop Links */}
+              <div className="d-none d-lg-flex me-2 align-items-center">
+                <Nav.Link to="/guide" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                  Guide
+                </Nav.Link>
+                •
+                <Nav.Link to="/wiki" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                  Wiki
+                </Nav.Link>
+                •
+                <Nav.Link to="/journey" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                  Journey
+                </Nav.Link>
+                •
+                <Nav.Link to="/explore" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                  Explore
+                </Nav.Link>
+              </div>
+            </>
+          )}
+          {showSocialIcons && !isMobile && <SocialIcons />}
+          {showAccount && <AccountNavbar />}
+        </Nav>
+      </Container>
+    </RBNavbar>
+  )
+}
 
 const BrandPlaceholder = () => <div style={{ height: 82, width: 106 }}></div>
 
