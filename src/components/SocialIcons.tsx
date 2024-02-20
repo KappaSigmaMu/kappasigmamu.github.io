@@ -4,7 +4,7 @@ import ElementLogo from '../static/element-logo.svg'
 import TwitterLogo from '../static/twitter-logo.svg'
 
 const SocialIcons = () => (
-  <div>
+  <div className="me-1">
     <ExternalLink href="https://kusa.ma/discord">
       <img src={DiscordLogo} alt="Discord Logo" />
     </ExternalLink>
