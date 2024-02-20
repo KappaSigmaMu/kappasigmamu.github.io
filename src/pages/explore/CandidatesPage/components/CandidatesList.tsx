@@ -180,6 +180,9 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => (props.$isOwner ? '#73003d' : '')};
   border: ${(props) => (props.$isOwner ? '2px solid #E6007A' : '')};
+  @media (max-width: 992px) {
+    padding-block: 12px;
+  }
 `
 
 export { CandidatesList }

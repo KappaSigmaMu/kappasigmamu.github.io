@@ -22,7 +22,10 @@ const NavigationBar = ({ totals }: { totals: Totals }) => {
 
   return (
     <>
-      <StyledNav defaultActiveKey="/explore/bidders" className={showSubNav ? 'py-2 mt-4' : 'py-2 my-4'}>
+      <StyledNav
+        defaultActiveKey="/explore/bidders"
+        className={showSubNav ? 'd-block d-lg-flex py-2 mt-4' : 'd-block d-lg-flex py-2 my-4'}
+      >
         <StyledNavItem>
           <Nav.Link as={LinkWithQuery} to="/explore/bidders">
             Bidders ({totals.bidders})
