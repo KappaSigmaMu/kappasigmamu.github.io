@@ -12,7 +12,7 @@ type IdenticonProps = {
 const Identicon = ({ value, size, theme, className = '' }: IdenticonProps) => {
   const showMessage = () => {
     const msg = 'Address copied.'
-    toastByStatus['success'](msg, { id: msg })
+    toastByStatus['success'](msg, { id: msg, duration: 2500 })
   }
 
   return <IIdenticon value={value} size={size} theme={theme} className={className} onCopy={showMessage} />

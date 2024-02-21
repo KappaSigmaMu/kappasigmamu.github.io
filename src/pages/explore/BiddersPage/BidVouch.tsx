@@ -8,6 +8,8 @@ import styled from 'styled-components'
 import { bid, vouch, BNtoNumber } from './helper'
 import { FormatBalance } from '../../../components/FormatBalance'
 import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
+import { isValidAddress } from '../../../helpers/validAccount'
+import { toastByStatus } from '../helpers'
 
 type BidVouchProps = { api: ApiPromise; handleResult: any; activeAccount: WalletAccount | undefined }
 type OnStatusChangeProps = { loading: boolean; message: string; status: string }
@@ -43,23 +45,34 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
     }
   }, [vouchAddress, vouchTip, vouchValue])
 
+  const scaleInputValue = (value: string) => {
+    const scaleFactor = 100
+    return Math.floor(parseFloat(value) * scaleFactor)
+  }
+
   const handleBidSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const value = (e.currentTarget[0] as HTMLInputElement).value
-    const scaleFactor = 100 // Use 100 for 2 decimal places, adjust as needed
-    const integerValue = Math.floor(parseFloat(value) * scaleFactor)
-    const bidVal: BN = new BN(integerValue.toString())
-    setBidAmount(bidVal.mul(ksmMultiplierWithDecimals))
     e.preventDefault()
+    const value = (e.currentTarget[0] as HTMLInputElement).value
+    const bidVal: BN = new BN(scaleInputValue(value))
+    setBidAmount(bidVal.mul(ksmMultiplierWithDecimals))
   }
 
   const handleVouchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
     const address = (e.currentTarget[0] as HTMLInputElement).value
-    const value: BN = new BN((e.currentTarget[1] as HTMLInputElement).value)
-    const tip: BN = new BN((e.currentTarget[2] as HTMLInputElement).value)
+    if (!isValidAddress(address)) {
+      toastByStatus['error']('The provided address is not a valid Kusama address.', {
+        duration: 5000
+      })
+      return
+    }
+
+    const value: BN = new BN(scaleInputValue((e.currentTarget[1] as HTMLInputElement).value))
+    const tip: BN = new BN(scaleInputValue((e.currentTarget[2] as HTMLInputElement).value))
     setVouchAddress(address)
     setVouchValue(value.mul(ksmMultiplierWithDecimals))
     setVouchTip(tip.mul(ksmMultiplierWithDecimals))
-    e.preventDefault()
   }
 
   return (
@@ -78,7 +91,7 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
             <Form.Group className="mb-3">
               <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm type="number" step="0.01" placeholder="0" aria-label="Bid amount" />
+                <StyledFormControl type="number" step="0.01" placeholder="0" aria-label="Bid amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
@@ -100,21 +113,21 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
             <Form.Group className="mb-3">
               <StyledFormLabel>Vouch for</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm type="text" step="any" placeholder="Address to vouch for" aria-label="Address" />
+                <StyledFormControl type="text" step="any" placeholder="Address to vouch for" aria-label="Address" />
               </StyledFormInput>
             </Form.Group>
 
             <Form.Group className="mb-3">
               <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm type="number" step="1" placeholder="0" aria-label="Bid amount" />
+                <StyledFormControl type="number" step="0.01" placeholder="0" aria-label="Bid amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
             <Form.Group className="mb-3">
               <StyledFormLabel>Tip amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm type="number" step="1" placeholder="0" aria-label="Tip amount" />
+                <StyledFormControl type="number" step="0.01" placeholder="0" aria-label="Tip amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
@@ -137,7 +150,7 @@ const StyledFormLabel = styled(Form.Label)`
   color: #6c757d;
 `
 
-const StyledForm = styled(FormControl)`
+const StyledFormControl = styled(FormControl)`
   border-color: #495057 transparent #495057 #495057;
   background-color: black;
   color: #6c757d;

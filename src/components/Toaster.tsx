@@ -4,7 +4,7 @@ import { FaXmark } from 'react-icons/fa6'
 
 const Toaster = () => (
   <TToaster
-    position="top-right"
+    position="top-center"
     reverseOrder={true}
     toastOptions={{
       success: {

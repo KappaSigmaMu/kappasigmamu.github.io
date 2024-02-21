@@ -1,7 +1,7 @@
 import { decodeAddress, encodeAddress } from '@polkadot/keyring'
 import { hexToU8a, isHex } from '@polkadot/util'
 
-export const isValidAccount = (address: string | null) => {
+export const isValidAddress = (address: string | null) => {
   if (address === null) return false
 
   try {

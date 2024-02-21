@@ -6,13 +6,16 @@ import toast from 'react-hot-toast'
 import { combineLatest, firstValueFrom, map, of } from 'rxjs'
 
 function buildSocietyCandidatesArray(response: any): SocietyCandidate[] {
-  return response.map((item: any) => ({
-    accountId: item[0].args[0] as AccountId,
-    kind: item[1].unwrap().kind,
-    bid: item[1].unwrap().bid,
-    tally: item[1].unwrap().tally,
-    skepticStruck: item[1].unwrap().skepticStruck
-  }))
+  return response.map((item: any) => {
+    const candidate = item.option.unwrap()
+    return {
+      accountId: item.accountId as AccountId,
+      kind: candidate.kind,
+      bid: candidate.bid,
+      tally: candidate.tally,
+      skepticStruck: candidate.skepticStruck
+    }
+  })
 }
 
 const toastByStatus = {
