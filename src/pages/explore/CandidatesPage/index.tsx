@@ -5,7 +5,6 @@ import { CandidatesList } from './components/CandidatesList'
 import { useAccount } from '../../../account/AccountContext'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { buildSocietyCandidatesArray } from '../helpers'
-import { PalletSocietyCandidacy } from '@polkadot/types/lookup'
 
 type CandidatesPageProps = {
   api: ApiPromise | null
