@@ -12,7 +12,7 @@ import { CurrentRound } from '../../../components/rotation-bar/CurrentRound'
 type BidVouchProps = { api: ApiPromise; handleResult: any; activeAccount: WalletAccount | undefined }
 type OnStatusChangeProps = { loading: boolean; message: string; status: string }
 
-const ksmMultiplier = new BN(1e12)
+const ksmMultiplierWithDecimals = new BN(1e10)
 
 const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
   const [bidAmount, setBidAmount] = useState<BN>(new BN(-1))
@@ -44,8 +44,11 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
   }, [vouchAddress, vouchTip, vouchValue])
 
   const handleBidSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const bidVal: BN = new BN((e.currentTarget[0] as HTMLInputElement).value)
-    setBidAmount(bidVal.mul(ksmMultiplier))
+    const value = (e.currentTarget[0] as HTMLInputElement).value
+    const scaleFactor = 100 // Use 100 for 2 decimal places, adjust as needed
+    const integerValue = Math.floor(parseFloat(value) * scaleFactor)
+    const bidVal: BN = new BN(integerValue.toString())
+    setBidAmount(bidVal.mul(ksmMultiplierWithDecimals))
     e.preventDefault()
   }
 
@@ -54,8 +57,8 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
     const value: BN = new BN((e.currentTarget[1] as HTMLInputElement).value)
     const tip: BN = new BN((e.currentTarget[2] as HTMLInputElement).value)
     setVouchAddress(address)
-    setVouchValue(value.mul(ksmMultiplier))
-    setVouchTip(tip.mul(ksmMultiplier))
+    setVouchValue(value.mul(ksmMultiplierWithDecimals))
+    setVouchTip(tip.mul(ksmMultiplierWithDecimals))
     e.preventDefault()
   }
 
@@ -75,7 +78,7 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
             <Form.Group className="mb-3">
               <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledForm type="number" step="1" placeholder="0" aria-label="Bid amount" />
+                <StyledForm type="number" step="0.01" placeholder="0" aria-label="Bid amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
