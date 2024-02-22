@@ -11,7 +11,6 @@ const K_LENGTH = 3 + 1
 type ValueType = Compact<any> | BN | string
 
 const applyFormatBalance = (value: ValueType, withCurrency = true, isShort = false): React.ReactNode => {
-  console.info(value)
   const [decimals, token] = DEFAULT_KSM_PROPERTIES
   const [prefix, postfix] = formatBalance(value, { decimals, forceUnit: '-', withSi: false }).split('.')
   const _isShort = isShort || prefix.length >= K_LENGTH
