@@ -66,7 +66,7 @@ const ProofOfInkImage = ({
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState('')
   const [modalShow, setModalShow] = useState(false)
-  const loadingTimeout = 3000
+  const loadingTimeout = 10000
 
   useEffect(() => {
     const timer = setTimeout(() => {
