@@ -66,6 +66,18 @@ const ProofOfInkImage = ({
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState('')
   const [modalShow, setModalShow] = useState(false)
+  const loadingTimeout = 3000
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (loading && !error) {
+        setError(true)
+        setLoading(false)
+      }
+    }, loadingTimeout)
+
+    return () => clearTimeout(timer)
+  }, [loading, error])
 
   const handleImageClick = (image: string) => {
     if (loading || error) return
@@ -89,11 +101,10 @@ const ProofOfInkImage = ({
                 {!loading && error && <p className="m-0 mt-3">Missing Proof-of-Ink</p>}
                 <StyledImage
                   src={imageUrl({ gateway, folderHash, member })}
-                  onError={() => {
+                  onLoad={() => {
+                    setError(false)
                     setLoading(false)
-                    setError(true)
                   }}
-                  onLoad={() => setLoading(false)}
                   style={loading || error ? { display: 'none' } : {}}
                 />
               </Col>
