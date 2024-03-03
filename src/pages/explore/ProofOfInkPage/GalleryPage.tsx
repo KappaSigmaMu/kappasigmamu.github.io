@@ -20,10 +20,13 @@ const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
   const society = api?.query?.society
 
   useEffect(() => {
+    let founderHash: string
+    society?.founder().then((hash) => (founderHash = hash.toString()))
+
     society?.members.keys().then((members: StorageKey<[AccountId32]>[]) => {
-      const ids = members.map((account) => account.toHuman()!.toString())
-      ids.sort((a, b) => a.toString().localeCompare(b.toString()))
-      setMembers(ids)
+      const hashes = members.map((account) => account.toHuman()!.toString()).filter((hash) => hash !== founderHash)
+      hashes.sort((a, b) => a.toString().localeCompare(b.toString()))
+      setMembers(hashes)
     })
   }, [society])
 
