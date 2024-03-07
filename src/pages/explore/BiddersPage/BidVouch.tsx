@@ -87,15 +87,15 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
       </StyledNav>
       <StyledTabContent>
         <Tab.Pane eventKey="bid">
-          <Form onSubmit={handleBidSubmit}>
-            <Form.Group className="mb-3">
+          <Form onSubmit={handleBidSubmit} className="d-flex flex-lg-column flex-row align-items-center">
+            <Form.Group className="me-3 me-lg-0">
               <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
                 <StyledFormControl type="number" step="0.01" placeholder="0" aria-label="Bid amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
-            <Button disabled={loading} variant="primary" type="submit" className="w-100">
+            <Button disabled={loading} variant="primary" type="submit" className="w-100 mt-lg-0 mt-3">
               {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
           </Form>
@@ -208,6 +208,10 @@ const StyledTabContent = styled(Tab.Content)`
   border-bottom-left-radius: 6px;
   background-color: #343a40;
   padding: 10% 7%;
+
+  @media (max-width: 992px) {
+    padding: 3% 3%;
+  }
 `
 
 export { BidVouch }
