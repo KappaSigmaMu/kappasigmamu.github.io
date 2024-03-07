@@ -105,7 +105,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
           <Col lg={1} className="text-center">
             <Identicon value={candidate.accountId.toHuman()} size={32} theme={'polkadot'} />
           </Col>
-          <StyledCol lg={2} className=" text-truncate" onClick={() => showCandidateDetails(candidate.accountId)}>
+          <StyledCol lg={2} className="text-truncate" onClick={() => showCandidateDetails(candidate.accountId)}>
             <AccountIdentity api={api} accountId={candidate.accountId} />
           </StyledCol>
           <Col lg={1} className="d-none d-lg-inline">

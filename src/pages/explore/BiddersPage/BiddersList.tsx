@@ -3,7 +3,7 @@ import type { Vec } from '@polkadot/types'
 import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
-import { Col, Badge } from 'react-bootstrap'
+import { Col, Badge, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { unbid, unvouch } from './helper'
 import { AccountIdentity } from '../../../components/AccountIdentity'
@@ -64,9 +64,13 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
 
     return (
       <>
-        <Col xs={2}>{<FormatBalance balance={bid.value} />}</Col>
-        <Col xs={2}>{bid.kind.isVouch && <FormatBalance balance={bid.kind.asVouch?.[1]} />}</Col>
-        <Col xs={2}>
+        <Col lg={2} className="text-center text-lg-start text-truncate">
+          {<FormatBalance balance={bid.value} />}
+        </Col>
+        <Col lg={2} className="text-center text-lg-start text-truncate">
+          {bid.kind.isVouch && <FormatBalance balance={bid.kind.asVouch?.[1]} />}
+        </Col>
+        <Col lg={2} className="text-center text-lg-start">
           {badgeText && (
             <>
               <StyledUndo disabled={loading} onClick={() => handleUndo(index)} href="#">
@@ -94,32 +98,31 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
 
   return (
     <>
-      <DataHeaderRow>
-        <Col xs={1} className="text-center">
-          #
-        </Col>
-        <Col xs={3} className="text-start">
+      <DataHeaderRow className="d-none d-lg-flex text-center">
+        <Col lg={1}>#</Col>
+        <Col lg={3} className="text-center text-lg-start">
           Wallet Hash
         </Col>
-        <Col xs={2} className="text-start">
+        <Col lg={2} className="text-center text-lg-start">
           Bid Kind
         </Col>
-        <Col xs={2} className="text-start">
+        <Col lg={2} className="text-center text-lg-start">
           Value
         </Col>
-        <Col xs={4} className="text-start">
+        <Col lg={2} className="text-center text-lg-start">
           Tip
         </Col>
       </DataHeaderRow>
+
       {bids.map((bid: PalletSocietyBid, index: any) => (
         <StyledDataRow $isOwner={isOwner(bid)} key={bid.who?.toString()}>
-          <Col xs={1} className="text-center">
+          <Col lg={1} className="text-center">
             <Identicon value={bid.who.toHuman()} size={32} theme={'polkadot'} />
           </Col>
-          <Col xs={3} className="text-start text-truncate">
+          <Col lg={3} className="text-center text-lg-start text-truncate">
             <AccountIdentity api={api} accountId={bid.who} />
           </Col>
-          <Col xs={2} className="text-start text-truncate">
+          <Col lg={2} className="text-center text-lg-start text-truncate">
             {humanizeBidKind(bid.kind)}
           </Col>
           <BidVouchIdentifier bid={bid} index={index} />
