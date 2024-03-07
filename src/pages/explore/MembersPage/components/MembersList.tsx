@@ -66,7 +66,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
     if (members.length === 0) return
 
     setActiveAccountIsDefenderVoter(
-      members.some((member) => member.accountId.toHuman() === activeAccount!.address && member.isDefenderVoter)
+      members.some((member) => member.accountId.toHuman() === activeAccount?.address && member.isDefenderVoter)
     )
   }, [members, activeAccount, prevActiveAccount])
 
