@@ -87,15 +87,20 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
       </StyledNav>
       <StyledTabContent>
         <Tab.Pane eventKey="bid">
-          <Form onSubmit={handleBidSubmit} className="d-flex flex-lg-column flex-row align-items-center">
+          <Form onSubmit={handleBidSubmit} className="d-flex flex-lg-column flex-row align-items-center parent">
             <Form.Group className="me-3 me-lg-0">
               <StyledFormLabel>Bid amount</StyledFormLabel>
-              <StyledFormInput className="mb-3">
+              <StyledFormInput>
                 <StyledFormControl type="number" step="0.01" placeholder="0" aria-label="Bid amount" />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
-            <Button disabled={loading} variant="primary" type="submit" className="w-100 mt-lg-0 mt-3">
+            <Button
+              disabled={loading}
+              variant="primary"
+              type="submit"
+              className="w-100 mt-0 mt-lg-3 child align-self-end"
+            >
               {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
           </Form>
