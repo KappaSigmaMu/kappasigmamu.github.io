@@ -10,7 +10,7 @@ type IconButtonProps = {
 
 function IconButton({ onClick, icon, disabled }: IconButtonProps) {
   return (
-    <Button disabled={disabled} variant="link" onClick={onClick} className="p-0 pe-2">
+    <Button disabled={disabled} variant="link" onClick={onClick} className={icon === 'approve' ? 'p-0 pe-2' : 'p-0'}>
       {icon === 'approve' ? <StyledApproveIcon size={20} /> : <StyledRejectIcon size={20} />}
     </Button>
   )

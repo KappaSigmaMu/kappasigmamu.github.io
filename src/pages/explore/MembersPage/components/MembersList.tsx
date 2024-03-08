@@ -20,6 +20,10 @@ const StyledDataRow = styled(DataRow)`
   &:hover {
     cursor: pointer;
   }
+  @media (max-width: 992px) {
+    padding-block: 12px;
+    margin-inline: 2px;
+  }
 `
 
 type MembersListProps = {
@@ -80,31 +84,45 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
           onClose={() => setShowMemberDetailsOffcanvas(false)}
         />
       )}
-      <DataHeaderRow>
-        <Col xs={1} className="text-center">
-          #
-        </Col>
-        <Col xs={3} className="text-start">
+
+      <DataHeaderRow className="d-none d-lg-flex text-center">
+        <Col lg={1}>#</Col>
+        <Col lg={3} className="text-center text-lg-start">
           Wallet Hash
         </Col>
-        <Col xs={2} className="text-start">
+        <Col lg={2} className="text-center text-lg-start">
           Index
         </Col>
-        <Col xs={3}>{activeAccountIsMember && 'Defender Vote'}</Col>
-        <Col xs={2} className="text-end"></Col>
+        <Col lg={2} className="text-center text-lg-start">
+          {activeAccountIsMember && 'Defender Vote'}
+        </Col>
+        <Col lg={1} className="text-center text-lg-start">
+          Strikes
+        </Col>
+        <Col lg={3}></Col>
       </DataHeaderRow>
+
       {members.map((member: SocietyMember) => (
         <StyledDataRow key={member.accountId.toString()} $isDefender={member.isDefender}>
-          <Col xs={1} className="text-center">
+          <Col lg={1} className="text-center">
             <Identicon value={member.accountId.toHuman()} size={32} theme={'polkadot'} />
           </Col>
-          <Col xs={3} className="text-start text-truncate" onClick={() => showMemberDetails(member.accountId)}>
+          <Col
+            lg={3}
+            className="text-center text-lg-start text-truncate"
+            onClick={() => showMemberDetails(member.accountId)}
+          >
             <AccountIdentity api={api} accountId={member.accountId} />
           </Col>
-          <Col xs={2} className="text-start text-truncate">
+          <Col lg={2} className="text-center text-lg-start text-truncate">
             <AccountIndex api={api} accountId={member.accountId} />
           </Col>
-          <Col xs={3} className="d-flex align-items-center">
+          <Col
+            lg={2}
+            className={`d-flex justify-content-lg-start justify-content-center align-items-center py-2 ${
+              member.isDefender && activeAccountIsMember ? 'd-inline' : 'd-none d-lg-inline p-0'
+            }`}
+          >
             {member.isDefender && activeAccountIsMember && (
               <>
                 <VoteButton
@@ -131,7 +149,15 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
             )}
             {member.isDefender && activeAccountIsDefenderVoter ? <AlreadyVotedIcon /> : <></>}
           </Col>
-          <Col xs={3} className="text-end">
+          <Col lg={1} className="text-center text-lg-start">
+            <span style={{ color: member.strikes.toNumber() > 5 ? 'red' : 'white' }}>
+              {member.strikes.toNumber()}
+              <span style={{ color: member.strikes.toNumber() > 5 ? 'red' : 'white' }} className="d-inline d-lg-none">
+                &nbsp;strikes
+              </span>
+            </span>
+          </Col>
+          <Col lg={3} className="text-center text-lg-end">
             {member.isDefender && (
               <Badge pill bg="primary" className="me-2 p-2">
                 Defender
