@@ -185,6 +185,7 @@ const StyledDataRow = styled(DataRow)`
   border: ${(props) => (props.$isOwner ? '2px solid #E6007A' : '')};
   @media (max-width: 992px) {
     padding-block: 12px;
+    margin-inline: 2px;
   }
 `
 

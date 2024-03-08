@@ -135,6 +135,10 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => (props.$isOwner ? '#73003d' : '')};
   border: ${(props) => (props.$isOwner ? '2px solid #E6007A' : '')};
+  @media (max-width: 992px) {
+    padding-block: 12px;
+    margin-inline: 2px;
+  }
 `
 
 type PropsUnbid = {
