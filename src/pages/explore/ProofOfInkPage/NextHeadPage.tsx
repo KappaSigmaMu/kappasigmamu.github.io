@@ -4,11 +4,11 @@ import { AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { Col, Badge } from 'react-bootstrap'
 import Alert from 'react-bootstrap/Alert'
+import { styled } from 'styled-components'
 import { AccountIdentity } from '../../../components/AccountIdentity'
 import { AccountIndex } from '../../../components/AccountIndex'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { LoadingSpinner } from '../components/LoadingSpinner'
-import { styled } from 'styled-components'
 
 type NextHeadPageProps = {
   api: ApiPromise | null
