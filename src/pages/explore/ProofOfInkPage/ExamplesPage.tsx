@@ -2,6 +2,7 @@ import { ApiPromise } from '@polkadot/api'
 import { AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useRef, useState } from 'react'
 import { Badge, Col, Row } from 'react-bootstrap'
+import { styled } from 'styled-components'
 import { draw, PADD, SIZE } from './helpers/draw'
 import { AccountIdentity } from '../../../components/AccountIdentity'
 import { AccountIndex } from '../../../components/AccountIndex'
@@ -31,41 +32,41 @@ const ExamplesPage = ({ api }: ExamplesPageProps): JSX.Element => {
     <LoadingSpinner />
   ) : (
     <>
-      <DataHeaderRow>
-        <Col xs={1} className="text-center">
+      <DataHeaderRow className="d-none d-lg-flex text-center">
+        <Col lg={1} className="text-center">
           #
         </Col>
-        <Col xs={5} className="text-start">
+        <Col lg={5} className="text-center text-lg-start">
           Wallet Hash
         </Col>
-        <Col xs={2} className="text-start">
+        <Col lg={2} className="text-center text-lg-start">
           Index
         </Col>
-        <Col xs={2} className="text-start">
+        <Col lg={2} className="text-center text-lg-start">
           Identity
         </Col>
-        <Col xs={2} className="text-end"></Col>
+        <Col lg={2}></Col>
       </DataHeaderRow>
 
-      <DataRow>
-        <Col xs={1} className="text-center">
+      <StyledDataRow>
+        <Col lg={1} className="text-center">
           <Identicon value={head.toHuman()} size={32} theme={'polkadot'} />
         </Col>
-        <Col xs={5} className="text-start text-truncate">
+        <Col lg={5} className="text-center text-lg-start text-truncate">
           {head.toHuman()}
         </Col>
-        <Col xs={2} className="text-start text-truncate">
+        <Col lg={2} className="text-center text-lg-start">
           <AccountIndex api={api!} accountId={head} callback={handleIndex} />
         </Col>
-        <Col xs={2} className="text-start text-truncate">
+        <Col lg={2} className="text-center text-lg-start text-truncate">
           <AccountIdentity api={api!} accountId={head} hideNotSet />
         </Col>
-        <Col xs={2} className="text-end">
+        <Col lg={2} className="text-center text-lg-end">
           <Badge pill bg="primary" className="me-2 p-2">
             Society Head
           </Badge>
         </Col>
-      </DataRow>
+      </StyledDataRow>
 
       <br />
 
@@ -95,7 +96,8 @@ function DesignKusama({ accountId, accountIndex }: { accountId: AccountId; accou
     display: 'block',
     margin: '0 auto',
     backgroundColor: 'white',
-    letterSpacing: '0.015em'
+    letterSpacing: '0.015em',
+    width: '100%'
   }
 
   const rows = accountIndex ? 3 : 2
@@ -116,5 +118,12 @@ function DesignKusama({ accountId, accountIndex }: { accountId: AccountId; accou
 
   return <canvas height={height} ref={canvasRef} style={canvasStyle} width={width} />
 }
+
+const StyledDataRow = styled(DataRow)`
+  @media (max-width: 992px) {
+    padding-block: 12px;
+    margin-inline: 2px;
+  }
+`
 
 export { ExamplesPage }
