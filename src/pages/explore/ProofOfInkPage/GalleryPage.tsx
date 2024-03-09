@@ -94,7 +94,7 @@ const ProofOfInkImage = ({
         <Border>
           <ImageContainer
             onClick={() => handleImageClick(imageUrl({ gateway, folderHash, member }))}
-            clickable={!error && !loading}
+            $clickable={!error && !loading}
           >
             <Row>
               <Col xs={12} className="p-0">
@@ -142,7 +142,7 @@ const StyledModalContent = styled(Modal)`
 `
 
 interface ImageContainerProps {
-  clickable: boolean
+  $clickable: boolean
 }
 
 const Border = styled.div`
@@ -163,7 +163,7 @@ const ImageContainer = styled.div<ImageContainerProps>`
   height: 280px;
   width: 100%;
   overflow: hidden;
-  cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
+  cursor: ${(props) => (props.$clickable ? 'pointer' : 'default')};
   position: relative;
 `
 
