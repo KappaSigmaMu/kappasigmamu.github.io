@@ -1,8 +1,8 @@
 import { AccountId } from '@polkadot/types/interfaces'
 import { Col, Badge } from 'react-bootstrap'
+import { styled } from 'styled-components'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { Identicon } from '../../components/Identicon'
-import { styled } from 'styled-components'
 
 type SuspendedListProps = {
   members: AccountId[]
