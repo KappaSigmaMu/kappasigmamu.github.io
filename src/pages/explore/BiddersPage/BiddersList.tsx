@@ -73,7 +73,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
         <Col lg={2} className="text-center text-lg-start">
           {badgeText && (
             <>
-              <StyledUndo disabled={loading} onClick={() => handleUndo(index)} href="#">
+              <StyledUndo $disabled={loading} onClick={() => handleUndo(index)} href="#">
                 {badgeText}
               </StyledUndo>
               <Badge pill bg="primary">
@@ -142,15 +142,15 @@ const StyledDataRow = styled(DataRow)`
 `
 
 type PropsUnbid = {
-  disabled: boolean
+  $disabled: boolean
 }
 
 const StyledUndo = styled.a<PropsUnbid>`
-  color: ${(props) => (props.disabled ? 'grey' : '#E6007A')};
+  color: ${(props) => (props.$disabled ? 'grey' : '#E6007A')};
   margin-right: 3%;
   font-weight: 800;
   font-size: 13px;
-  pointer-events: ${(props) => (props.disabled ? 'none' : '')};
+  pointer-events: ${(props) => (props.$disabled ? 'none' : '')};
 `
 
 export { BiddersList }
