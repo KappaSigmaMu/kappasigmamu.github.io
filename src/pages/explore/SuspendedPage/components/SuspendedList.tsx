@@ -1,8 +1,8 @@
 import { AccountId } from '@polkadot/types/interfaces'
 import { Col, Badge } from 'react-bootstrap'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
-import { truncateMiddle } from '../../../../helpers/truncate'
 import { Identicon } from '../../components/Identicon'
+import { styled } from 'styled-components'
 
 type SuspendedListProps = {
   members: AccountId[]
@@ -13,32 +13,40 @@ const SuspendedList = ({ members }: SuspendedListProps): JSX.Element => {
 
   return (
     <>
-      <DataHeaderRow>
-        <Col xs={1} className="text-center">
+      <DataHeaderRow className="d-none d-lg-flex text-center">
+        <Col lg={1} className="text-center">
           #
         </Col>
-        <Col xs={3} className="text-start">
+        <Col lg={7} className="text-center text-lg-start">
           Wallet Hash
         </Col>
-        <Col xs={8} className="text-start"></Col>
+        <Col lg={4} className="text-center text-lg-start"></Col>
       </DataHeaderRow>
+
       {members.map((accountId: AccountId) => (
-        <DataRow key={accountId.toString()}>
-          <Col xs={1} className="text-center">
+        <StyledDataRow key={accountId.toString()}>
+          <Col lg={1} className="text-center">
             <Identicon value={accountId.toHuman()} size={32} theme="polkadot" />
           </Col>
-          <Col xs={3} className="text-start text-truncate">
-            {truncateMiddle(accountId.toString())}
+          <Col lg={7} className="text-center text-lg-start text-truncate">
+            {accountId.toString()}
           </Col>
-          <Col xs={8} className="text-end">
+          <Col lg={4} className="text-center text-lg-end">
             <Badge pill bg="danger" className="me-2 p-2">
               Suspended Member
             </Badge>
           </Col>
-        </DataRow>
+        </StyledDataRow>
       ))}
     </>
   )
 }
+
+const StyledDataRow = styled(DataRow)`
+  @media (max-width: 992px) {
+    padding-block: 12px;
+    margin-inline: 2px;
+  }
+`
 
 export { SuspendedList }
