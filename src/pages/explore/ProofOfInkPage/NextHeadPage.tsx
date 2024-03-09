@@ -8,6 +8,7 @@ import { AccountIdentity } from '../../../components/AccountIdentity'
 import { AccountIndex } from '../../../components/AccountIndex'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { LoadingSpinner } from '../components/LoadingSpinner'
+import { styled } from 'styled-components'
 
 type NextHeadPageProps = {
   api: ApiPromise | null
@@ -28,41 +29,41 @@ const NextHeadPage = ({ api }: NextHeadPageProps): JSX.Element => {
     <LoadingSpinner />
   ) : (
     <>
-      <DataHeaderRow>
-        <Col xs={1} className="text-center">
+      <DataHeaderRow className="d-none d-lg-flex text-center">
+        <Col lg={1} className="text-center">
           #
         </Col>
-        <Col xs={5} className="text-start">
+        <Col lg={5} className="text-center text-lg-start">
           Wallet Hash
         </Col>
-        <Col xs={2} className="text-start">
+        <Col lg={2} className="text-center text-lg-start">
           Index
         </Col>
-        <Col xs={2} className="text-start">
+        <Col lg={2} className="text-center text-lg-start">
           Identity
         </Col>
-        <Col xs={2} className="text-end"></Col>
+        <Col lg={2}></Col>
       </DataHeaderRow>
 
-      <DataRow>
-        <Col xs={1} className="text-center">
+      <StyledDataRow>
+        <Col lg={1} className="text-center">
           <Identicon value={head.toHuman()} size={32} theme={'polkadot'} />
         </Col>
-        <Col xs={5} className="text-start text-truncate">
+        <Col lg={5} className="text-center text-lg-start text-truncate">
           {head.toHuman()}
         </Col>
-        <Col xs={2} className="text-start text-truncate">
+        <Col lg={2} className="text-center text-lg-start">
           <AccountIndex api={api!} accountId={head} />
         </Col>
-        <Col xs={2} className="text-start text-truncate">
+        <Col lg={2} className="text-center text-lg-start text-truncate">
           <AccountIdentity api={api!} accountId={head} hideNotSet />
         </Col>
-        <Col xs={2} className="text-end">
+        <Col lg={2} className="text-center text-lg-end">
           <Badge pill bg="primary" className="me-2 p-2">
             Society Next Head
           </Badge>
         </Col>
-      </DataRow>
+      </StyledDataRow>
 
       <Alert variant="warning" style={{ textAlign: 'center' }}>
         <b>This may change if new members are approved</b>
@@ -70,5 +71,12 @@ const NextHeadPage = ({ api }: NextHeadPageProps): JSX.Element => {
     </>
   )
 }
+
+const StyledDataRow = styled(DataRow)`
+  @media (max-width: 992px) {
+    padding-block: 12px;
+    margin-inline: 2px;
+  }
+`
 
 export { NextHeadPage }
