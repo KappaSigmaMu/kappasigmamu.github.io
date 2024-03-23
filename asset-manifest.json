@@ -1,9 +1,9 @@
 {
   "files": {
     "main.css": "/static/css/main.7095b70d.css",
-    "main.js": "/static/js/main.2079f97a.js",
+    "main.js": "/static/js/main.791cee3f.js",
     "runtime-main.js": "/static/js/runtime-main.896a5fb2.js",
-    "vendors.js": "/static/js/vendors.a020ce77.js",
+    "vendors.js": "/static/js/vendors.b486e87d.js",
     "static/media/grid-canary-red.png": "/static/media/grid-canary-red.45dcb14f.png",
     "static/media/spots-canary-green.png": "/static/media/spots-canary-green.1349f64f.png",
     "static/media/gil-wireframe.png": "/static/media/gil-wireframe.ee982c58.png",
@@ -20,14 +20,14 @@
     "static/media/copy-icon.svg": "/static/media/copy-icon.36929213.svg",
     "static/media/svg%3e": "/static/media/svg%3e.69aa1495.bin",
     "static/media/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;": "/static/media/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74f.bin",
-    "main.2079f97a.js.map": "/static/js/main.2079f97a.js.map",
+    "main.791cee3f.js.map": "/static/js/main.791cee3f.js.map",
     "runtime-main.896a5fb2.js.map": "/static/js/runtime-main.896a5fb2.js.map",
-    "vendors.a020ce77.js.map": "/static/js/vendors.a020ce77.js.map"
+    "vendors.b486e87d.js.map": "/static/js/vendors.b486e87d.js.map"
   },
   "entrypoints": [
     "static/js/runtime-main.896a5fb2.js",
-    "static/js/vendors.a020ce77.js",
+    "static/js/vendors.b486e87d.js",
     "static/css/main.7095b70d.css",
-    "static/js/main.2079f97a.js"
+    "static/js/main.791cee3f.js"
   ]
 }
