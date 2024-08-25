@@ -22,7 +22,15 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn ci
+
+    - name: Enable Corepack
+      run: corepack enable
+
+    - name: Prepare Yarn 4.1.1
+      run: corepack prepare yarn@4.1.1 --activate
+
+    - name: Install dependencies
+      run: yarn ci
 
     - name: Run the tests and generate coverage report
       run: yarn test --coverage
