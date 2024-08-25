@@ -30,7 +30,7 @@ jobs:
       run: corepack prepare yarn@4.1.1 --activate
 
     - name: Install dependencies
-      run: yarn ci
+      run: yarn install --immutable
 
     - name: Run the tests and generate coverage report
       run: yarn test --coverage
