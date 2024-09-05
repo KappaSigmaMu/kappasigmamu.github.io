@@ -8,15 +8,14 @@ import { MemberDetailsOffCanvas } from './MemberDetailsOffcanvas'
 import { useAccount } from '../../../../account/AccountContext'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { AccountIndex } from '../../../../components/AccountIndex'
-import { AlreadyVotedIcon } from '../../../../components/AlreadyVotedIcon'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { VoteButton } from '../../CandidatesPage/components/VoteButton'
 import { Identicon } from '../../components/Identicon'
 import { toastByStatus } from '../../helpers'
 
 const StyledDataRow = styled(DataRow)`
-  background-color: ${(props) => (props.$isDefender ? '#73003d' : '')};
-  border: ${(props) => (props.$isDefender ? '2px solid #E6007A' : '')};
+  background-color: ${(props) => (props.$isDefender ? props.theme.colors.black : '')};
+  border: ${(props) => (props.$isDefender ? `2px solid ${props.theme.colors.secondary}` : '')};
   &:hover {
     cursor: pointer;
   }
@@ -147,7 +146,6 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
                 ></VoteButton>
               </>
             )}
-            {member.isDefender && activeAccountIsDefenderVoter ? <AlreadyVotedIcon /> : <></>}
           </Col>
           <Col lg={1} className="text-center text-lg-start">
             <span style={{ color: member.strikes.toNumber() > 5 ? 'red' : 'white' }}>
@@ -181,6 +179,11 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
             {member.rank.toNumber() > 0 && (
               <Badge pill bg="dark" className="me-2 p-2">
                 Ranked
+              </Badge>
+            )}
+            {member.isDefender && activeAccountIsDefenderVoter && (
+              <Badge bg="secondary" text="black">
+                Voted
               </Badge>
             )}
           </Col>

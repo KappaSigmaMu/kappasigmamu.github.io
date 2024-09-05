@@ -191,8 +191,6 @@ function ClaimMembershipButton({
       await doTx(api, api.tx.society.claimMembership(), successText, waitingText, activeAccount!, onStatusChange)
     } catch (e) {
       console.error(e)
-    } finally {
-      setLoading(false)
     }
   }
 
