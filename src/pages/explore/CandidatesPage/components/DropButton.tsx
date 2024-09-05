@@ -48,16 +48,14 @@ export function DropButton({
       await doTx(api, extrinsic, successText, waitingText, drop.callerAccount, onStatusChange)
     } catch (e) {
       console.error(e)
-    } finally {
-      setLoading(false)
     }
   }
 
   if (loading)
     return (
-      <label style={{ paddingRight: '0.7em', paddingLeft: 0 }}>
-        <LoadingSpinner center={false} small={true} />
-      </label>
+      <div className="mx-2">
+        <LoadingSpinner center={true} small={true} />
+      </div>
     )
 
   return (
@@ -69,7 +67,7 @@ export function DropButton({
         </Tooltip>
       }
     >
-      <Button disabled={disabled} variant="link" onClick={handleDrop}>
+      <Button disabled={disabled} variant="link" onClick={handleDrop} size="sm" className="p-2">
         <StyledDropIcon size={20} />
       </Button>
     </OverlayTrigger>

@@ -53,17 +53,8 @@ export function VoteButton({
       await doTx(api, extrinsic, successText, waitingText, vote.voterAccount, onStatusChange)
     } catch (e) {
       console.error(e)
-    } finally {
-      setLoading(false)
     }
   }
 
-  if (loading)
-    return (
-      <label style={{ paddingRight: '0.7em', paddingLeft: 0 }}>
-        <LoadingSpinner center={false} small={true} />
-      </label>
-    )
-
-  return <IconButton disabled={disabled} icon={icon} onClick={handleVote} />
+  return <IconButton disabled={disabled} loading={loading} icon={icon} onClick={handleVote} />
 }
