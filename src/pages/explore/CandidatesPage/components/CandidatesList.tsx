@@ -57,7 +57,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   const isMember = level === 'cyborg'
   const isDroppable = (candidate: SocietyCandidate) => {
     return (
-      candidate.tally.rejections.toNumber() * 2 >= candidate.tally.approvals.toNumber() &&
+      candidate.tally.rejections.toNumber() >= candidate.tally.approvals.toNumber() * 2 &&
       roundCount > Number(candidate.round) + 1
     )
   }
