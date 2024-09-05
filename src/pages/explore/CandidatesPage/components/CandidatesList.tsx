@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
+import { DropButton } from './DropButton'
 import { VoteButton } from './VoteButton'
 import { useAccount } from '../../../../account/AccountContext'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
@@ -53,6 +54,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   const { level } = useAccount()
   const isCandidate = (candidate: SocietyCandidate) => activeAccount?.address === candidate.accountId.toHuman()
   const isMember = level === 'cyborg'
+  const isDroppable = true // # TODO: check conditions
 
   const prevActiveAccount = usePrevious(activeAccount)
 
@@ -173,6 +175,22 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
               </>
             )}
             {votes.includes(candidate.accountId) ? <AlreadyVotedIcon /> : <></>}
+            {isDroppable && (
+              <div className="d-flex align-items-center justify-content-end h-100">
+                <DropButton
+                  disabled={false}
+                  api={api}
+                  showMessage={showMessage}
+                  successText="Candidate dropped."
+                  waitingText="Request sent. Waiting for response..."
+                  drop={{
+                    callerAccount: activeAccount!,
+                    accountId: candidate.accountId
+                  }}
+                  handleUpdate={handleUpdate}
+                />
+              </div>
+            )}
           </Col>
         </StyledDataRow>
       ))}
