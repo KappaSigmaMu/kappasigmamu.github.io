@@ -30,6 +30,8 @@ type CandidatesListProps = {
 }
 
 const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: CandidatesListProps): JSX.Element => {
+  const [roundCount, setRoundCount] = useState<number>(0)
+
   const [votes, setVotes] = useState<SocietyCandidate[]>([])
   const society = api?.query?.society
 
@@ -53,9 +55,23 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   const { level } = useAccount()
   const isCandidate = (candidate: SocietyCandidate) => activeAccount?.address === candidate.accountId.toHuman()
   const isMember = level === 'cyborg'
-  const isDroppable = true // # TODO: check conditions
+  const isDroppable = (candidate: SocietyCandidate) => {
+    return (
+      candidate.tally.rejections.toNumber() * 2 >= candidate.tally.approvals.toNumber() &&
+      roundCount > Number(candidate.round) + 1
+    )
+  }
 
   const prevActiveAccount = usePrevious(activeAccount)
+
+  useEffect(() => {
+    const fetchRoundCount = async () => {
+      const roundCount = await api.query.society.roundCount()
+      setRoundCount(roundCount.toNumber())
+    }
+
+    fetchRoundCount()
+  }, [])
 
   useEffect(() => {
     if (!activeAccount || candidates.length === 0) return
@@ -164,7 +180,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                 ></VoteButton>
               </>
             )}
-            {isDroppable && (
+            {isDroppable(candidate) && (
               <DropButton
                 disabled={disabledAction}
                 api={api}
