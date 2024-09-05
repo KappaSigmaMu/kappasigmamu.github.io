@@ -4,7 +4,6 @@ import { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
 import { IconButton } from '../../../../components/IconButton'
 import { doTx, StatusChangeHandler } from '../../../../helpers/extrinsics'
-import { LoadingSpinner } from '../../components/LoadingSpinner'
 
 type VoteButtonProps = {
   api: ApiPromise
