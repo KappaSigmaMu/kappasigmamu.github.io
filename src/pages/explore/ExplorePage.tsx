@@ -31,9 +31,16 @@ const initialState = {
 const ExplorePage = (): JSX.Element => {
   const { api, apiState } = useKusama()
   const [totals, setTotals] = useState<Totals>(initialState)
+  const [trigger, setTrigger] = useState(false)
+
+  const handleUpdateTotal = () => {
+    setTrigger((prev) => !prev)
+  }
+
   const society = api?.query?.society
 
   useEffect(() => {
+    setTrigger(true)
     if (society) {
       const biddersPromise = society.bids()
       const candidatesPromise = society.candidates.keys()
@@ -53,7 +60,7 @@ const ExplorePage = (): JSX.Element => {
         }
       )
     }
-  }, [])
+  }, [trigger, society])
 
   return (
     <Container>
@@ -70,7 +77,7 @@ const ExplorePage = (): JSX.Element => {
             <Routes>
               <Route path="/" element={<NavigateWithQuery to="/explore/bidders" replace />} />
               <Route path="/bidders" element={<BiddersPage api={api} />} />
-              <Route path="/candidates" element={<CandidatesPage api={api} />} />
+              <Route path="/candidates" element={<CandidatesPage api={api} handleUpdateTotal={handleUpdateTotal} />} />
               <Route path="/members" element={<MembersPage api={api} />} />
               <Route path="/suspended" element={<SuspendedPage api={api} />} />
               <Route path="/poi/*" element={<ProofOfInkPage api={api} />} />

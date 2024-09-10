@@ -6,10 +6,10 @@ import { useEffect, useRef, useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
+import { DropButton } from './DropButton'
 import { VoteButton } from './VoteButton'
 import { useAccount } from '../../../../account/AccountContext'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
-import { AlreadyVotedIcon } from '../../../../components/AlreadyVotedIcon'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
 // import { truncate } from '../../../../helpers/truncate'
@@ -30,15 +30,17 @@ type CandidatesListProps = {
 }
 
 const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: CandidatesListProps): JSX.Element => {
+  const [roundCount, setRoundCount] = useState<number>(0)
+
   const [votes, setVotes] = useState<SocietyCandidate[]>([])
   const society = api?.query?.society
 
-  const [disabledVote, setDisabledVote] = useState<boolean>(false)
+  const [disabledAction, setDisabledAction] = useState<boolean>(false)
   const [selectedCandidate, setSelectedCandidate] = useState<AccountId | null>(null)
   const [showCandidateDetailsOffcanvas, setShowCandidateDetailsOffcanvas] = useState(false)
 
   const showMessage = (nextResult: ExtrinsicResult) => {
-    setDisabledVote(nextResult.status === 'loading')
+    setDisabledAction(nextResult.status === 'loading')
     toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
   }
 
@@ -53,8 +55,23 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   const { level } = useAccount()
   const isCandidate = (candidate: SocietyCandidate) => activeAccount?.address === candidate.accountId.toHuman()
   const isMember = level === 'cyborg'
+  const isDroppable = (candidate: SocietyCandidate) => {
+    return (
+      candidate.tally.rejections.toNumber() >= Math.max(candidate.tally.approvals.toNumber() * 2, 1) &&
+      roundCount > Number(candidate.round) + 1
+    )
+  }
 
   const prevActiveAccount = usePrevious(activeAccount)
+
+  useEffect(() => {
+    const fetchRoundCount = async () => {
+      const roundCount = await api.query.society.roundCount()
+      setRoundCount(roundCount.toNumber())
+    }
+
+    fetchRoundCount()
+  }, [])
 
   useEffect(() => {
     if (!activeAccount || candidates.length === 0) return
@@ -97,7 +114,8 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
         </Col>
         <Col lg={2}>Amount</Col>
         <Col lg={3}>Tally</Col>
-        <Col lg={3}>{isMember && 'Vote'}</Col>
+        <Col lg={2}>{isMember && 'Vote'}</Col>
+        <Col lg={1}>Status</Col>
       </DataHeaderRow>
 
       {candidates.map((candidate: SocietyCandidate) => (
@@ -127,11 +145,11 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
           <Col lg={3}>
             {candidate.tally.approvals.toHuman()} approvals and {candidate.tally.rejections.toHuman()} rejections
           </Col>
-          <Col lg={3} className="d-flex align-items-center justify-content-center">
-            {isMember ? (
+          <Col lg={2} className="d-flex align-items-center justify-content-center">
+            {isMember && (
               <>
                 <VoteButton
-                  disabled={disabledVote}
+                  disabled={disabledAction}
                   api={api}
                   showMessage={showMessage}
                   successText="Approval vote sent."
@@ -146,7 +164,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                   handleUpdate={handleUpdate}
                 ></VoteButton>
                 <VoteButton
-                  disabled={disabledVote}
+                  disabled={disabledAction}
                   api={api}
                   showMessage={showMessage}
                   successText="Rejection vote sent."
@@ -161,18 +179,29 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                   handleUpdate={handleUpdate}
                 ></VoteButton>
               </>
-            ) : (
-              <>
-                {isCandidate(candidate) && (
-                  <div className="d-flex align-items-center justify-content-end h-100">
-                    <Badge pill bg="primary">
-                      You
-                    </Badge>
-                  </div>
-                )}
-              </>
             )}
-            {votes.includes(candidate.accountId) ? <AlreadyVotedIcon /> : <></>}
+            {isDroppable(candidate) && (
+              <DropButton
+                disabled={disabledAction}
+                api={api}
+                showMessage={showMessage}
+                successText="Candidate dropped."
+                waitingText="Request sent. Waiting for response..."
+                drop={{
+                  callerAccount: activeAccount!,
+                  accountId: candidate.accountId
+                }}
+                handleUpdate={handleUpdate}
+              />
+            )}
+          </Col>
+          <Col lg={1} className="d-flex align-items-center justify-content-center">
+            {votes.includes(candidate.accountId) && (
+              <Badge bg="secondary" text="black">
+                Voted
+              </Badge>
+            )}
+            {isCandidate(candidate) && <Badge bg="primary">You</Badge>}
           </Col>
         </StyledDataRow>
       ))}

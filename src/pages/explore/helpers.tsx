@@ -10,6 +10,7 @@ function buildSocietyCandidatesArray(response: any): SocietyCandidate[] {
     const candidate = item.option.unwrap()
     return {
       accountId: item.accountId as AccountId,
+      round: candidate.round,
       kind: candidate.kind,
       bid: candidate.bid,
       tally: candidate.tally,

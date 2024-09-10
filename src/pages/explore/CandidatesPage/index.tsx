@@ -8,15 +8,17 @@ import { buildSocietyCandidatesArray } from '../helpers'
 
 type CandidatesPageProps = {
   api: ApiPromise | null
+  handleUpdateTotal: () => void
 }
 
-const CandidatesPage = ({ api }: CandidatesPageProps): JSX.Element => {
+const CandidatesPage = ({ api, handleUpdateTotal }: CandidatesPageProps): JSX.Element => {
   const { activeAccount } = useAccount()
   const [candidates, setCandidates] = useState<SocietyCandidate[] | null>(null)
   const [trigger, setTrigger] = useState(false)
 
   const handleUpdate = () => {
-    setTrigger((prev) => !prev) // Toggle the trigger to query candidates again after voting
+    handleUpdateTotal()
+    setTrigger((prev) => !prev)
   }
 
   useEffect(() => {
