@@ -17,6 +17,13 @@ class NovaWallet extends BaseDotsamaWallet {
   }
 }
 
-const wallets = [...getWallets(), new NovaWallet()]
+// Define supported wallet extensions to ensure compatibility.
+// We introduced the SUPPORTED_WALLETS constant to filter out unsupported wallets returned by getWallets(),
+// reducing the risk of errors from untested or incompatible wallets.
+const SUPPORTED_WALLETS = ['talisman', 'subwallet-js', 'polkadot-js', 'enkrypt', 'polkagate']
+
+const filteredWallets = getWallets().filter(({ extensionName }) => SUPPORTED_WALLETS.includes(extensionName))
+
+const wallets = [...filteredWallets, new NovaWallet()]
 
 export { wallets }
