@@ -115,7 +115,7 @@
     "pnp-webpack-plugin": "1.7.0",
     "react-test-renderer": "^18.2.0",
     "terser-webpack-plugin": "5.3.10",
-    "webpack": "5.90.1",
+    "webpack": "5.94.0",
     "webpack-dev-server": "4.15.1",
     "webpack-manifest-plugin": "5.0.0",
     "workbox-webpack-plugin": "7.0.0"
@@ -152,5 +152,5 @@
     "not dead",
     "not op_mini all"
   ],
-  "packageManager": "yarn@4.1.1+sha512.ec40d0639bb307441b945d9467139cbb88d14394baac760b52eca038b330d16542d66fef61574271534ace5a200518dabf3b53a85f1f9e4bfa37141b538a9590"
+  "packageManager": "yarn@4.5.0"
 }
