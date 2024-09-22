@@ -24,8 +24,8 @@ export function useBlockTime(blocks: number | BN = BN_ONE, apiOverride?: ApiProm
       (a.consts.timestamp?.minimumPeriod.gte(THRESHOLD)
         ? a.consts.timestamp.minimumPeriod.mul(BN_TWO)
         : a.query.parachainSystem
-          ? DEFAULT_TIME.mul(BN_TWO)
-          : DEFAULT_TIME)
+        ? DEFAULT_TIME.mul(BN_TWO)
+        : DEFAULT_TIME)
     const value = blockTime.mul(bnToBn(blocks)).toNumber()
     const time = extractTime(Math.abs(value))
     const { days, hours, minutes, seconds } = time

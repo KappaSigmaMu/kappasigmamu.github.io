@@ -56,6 +56,11 @@ const NavigationBar = ({ totals }: { totals: Totals }) => {
             Journey
           </Nav.Link>
         </StyledNavItem>
+        <StyledNavItem>
+          <Nav.Link as={LinkWithQuery} to="/explore/payouts">
+            Payouts
+          </Nav.Link>
+        </StyledNavItem>
       </StyledNav>
       {showSubNav && (
         <StyledNav defaultActiveKey="/explore/poi/examples" className="py-2 mb-4">
