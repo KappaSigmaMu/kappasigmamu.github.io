@@ -1,5 +1,4 @@
 import { ApiPromise } from '@polkadot/api'
-import { Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyPayoutRecord } from '@polkadot/types/lookup'
 import { useEffect, useState } from 'react'

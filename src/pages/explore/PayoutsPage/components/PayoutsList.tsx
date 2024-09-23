@@ -1,9 +1,11 @@
 import type { ApiPromise } from '@polkadot/api'
 import { WalletAccount } from '@talismn/connect-wallets'
+import { useState, useEffect } from 'react'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
+import { useBlockTime } from '../../../../hooks/useBlockTime'
 import { Identicon } from '../../components/Identicon'
 
 const StyledDataRow = styled(DataRow)`
@@ -25,10 +27,57 @@ type PayoutsListProps = {
   handleUpdate: () => void
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const TimeRemaining = ({ block, latestBlock, api }: { block: number; latestBlock: number | null; api: ApiPromise }) => {
+  if (!latestBlock)
+    return (
+      <Badge pill bg="black" className="me-2 p-2">
+        Calculating...
+      </Badge>
+    )
+
+  const blocksLeft = block - latestBlock
+  const [, time] = useBlockTime(blocksLeft, api)
+
+  if (!time)
+    return (
+      <Badge pill bg="black" className="me-2 p-2">
+        Calculating...
+      </Badge>
+    )
+
+  if (blocksLeft <= 0)
+    return (
+      <Badge pill bg="primary" className="me-2 p-2">
+        Matured
+      </Badge>
+    )
+
+  return (
+    <Badge pill bg="secondary" text="black" className="me-2 p-2">
+      Maturing in {time}
+    </Badge>
+  )
+}
+
 const PayoutsList = ({ api, members }: PayoutsListProps): JSX.Element => {
-  // Likely impossible to happen but if it does, better to show a
-  // clear message than an empty list which may look like a loading state
+  const [latestBlock, setLatestBlock] = useState<number | null>(null)
+
+  useEffect(() => {
+    const fetchLatestBlock = async () => {
+      const header = await api.rpc.chain.getHeader()
+      setLatestBlock(header.number.toNumber())
+    }
+
+    fetchLatestBlock()
+    const unsub = api.rpc.chain.subscribeNewHeads((header) => {
+      setLatestBlock(header.number.toNumber())
+    })
+
+    return () => {
+      unsub.then((u) => u())
+    }
+  }, [api])
+
   if (members.length === 0) return <>No members</>
 
   return (
@@ -73,18 +122,18 @@ const PayoutsList = ({ api, members }: PayoutsListProps): JSX.Element => {
               </Badge>
             )}
             {member.hasPayouts && (
-              <Badge pill bg="primary" className="me-2 p-2">
-                Maturing in block {member.extendedPayouts.block}
-              </Badge>
+              <>
+                <TimeRemaining block={member.extendedPayouts.block} latestBlock={latestBlock} api={api} />
+              </>
             )}
             {member.extendedPayouts.pending == 0 && member.extendedPayouts.paid > 0 && (
-              <Badge pill bg="secondary" text="black" className="me-2 p-2">
+              <Badge pill bg="black" className="me-2 p-2">
                 Paid
               </Badge>
             )}
             {!member.hasPayouts && member.extendedPayouts.paid == 0 && (
               <Badge pill bg="black" className="me-2 p-2">
-                V1
+                Paid before V2
               </Badge>
             )}
           </Col>
