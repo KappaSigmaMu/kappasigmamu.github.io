@@ -54,6 +54,10 @@ type ExtendedDeriveSociety = {
   rank: u32
 } & DeriveSociety
 
+interface ExtendedSocietyMember extends SocietyMember {
+  extendedPayouts: any
+}
+
 interface SocietyMemberDetails {
   accountId: AccountId
   index?: string
