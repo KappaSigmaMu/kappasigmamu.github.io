@@ -1,25 +1,25 @@
 {
   "name": "ksm-app",
-  "version": "0.2.0",
+  "version": "2.0.1",
   "homepage": "https://KappaSigmaMu.github.io/",
   "types": "src/types.d.ts",
   "dependencies": {
     "@kappasigmamu/canary-component": "^0.4.7",
-    "@polkadot/api": "^11.3.1",
-    "@polkadot/api-derive": "^11.3.1",
-    "@polkadot/extension-dapp": "^0.47.5",
-    "@polkadot/extension-inject": "^0.47.5",
-    "@polkadot/keyring": "^12.6.2",
-    "@polkadot/networks": "^12.6.2",
-    "@polkadot/react-identicon": "^3.6.6",
-    "@polkadot/rpc-core": "^11.3.1",
-    "@polkadot/types": "^11.3.1",
-    "@polkadot/types-augment": "^11.3.1",
-    "@polkadot/types-support": "^11.3.1",
-    "@polkadot/ui-keyring": "^3.6.6",
-    "@polkadot/ui-settings": "^3.6.6",
-    "@polkadot/util": "^12.6.2",
-    "@polkadot/util-crypto": "^12.6.2",
+    "@polkadot/api": "^14.3.1",
+    "@polkadot/api-derive": "^14.3.1",
+    "@polkadot/extension-dapp": "^0.56.2",
+    "@polkadot/extension-inject": "^0.56.2",
+    "@polkadot/keyring": "^13.2.3",
+    "@polkadot/networks": "^13.2.3",
+    "@polkadot/react-identicon": "^3.11.3",
+    "@polkadot/rpc-core": "^14.3.1",
+    "@polkadot/types": "^14.3.1",
+    "@polkadot/types-augment": "^14.3.1",
+    "@polkadot/types-support": "^14.3.1",
+    "@polkadot/ui-keyring": "^3.11.3",
+    "@polkadot/ui-settings": "^3.11.3",
+    "@polkadot/util": "^13.2.3",
+    "@polkadot/util-crypto": "^13.2.3",
     "@popperjs/core": "^2.11.8",
     "@talismn/connect-wallets": "1.2.5",
     "bfj": "^8.0.0",
@@ -69,6 +69,7 @@
     "web-vitals": "^3.5.2"
   },
   "devDependencies": {
+    "@acala-network/chopsticks": "^1.0.1",
     "@babel/core": "^7.23.9",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.23.9",
@@ -129,7 +130,7 @@
   },
   "scripts": {
     "build": "NODE_OPTIONS=--openssl-legacy-provider node scripts/build.js",
-    "chopsticks": "npx @acala-network/chopsticks@latest --config=config/kusama.yml",
+    "chopsticks": "chopsticks --config=config/kusama.yml",
     "cy:open": "cypress open",
     "deploy": "gh-pages -d build",
     "eslint:fix": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\" --fix",
@@ -152,5 +153,5 @@
     "not dead",
     "not op_mini all"
   ],
-  "packageManager": "yarn@4.5.0"
+  "packageManager": "yarn@4.5.1"
 }
