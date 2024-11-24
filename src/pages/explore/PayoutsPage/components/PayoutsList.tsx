@@ -59,8 +59,10 @@ const TimeRemaining = ({ block, latestBlock, api }: { block: number; latestBlock
   )
 }
 
-const PayoutsList = ({ api, members }: PayoutsListProps): JSX.Element => {
+const PayoutsList = ({ api, members, activeAccount }: PayoutsListProps): JSX.Element => {
   const [latestBlock, setLatestBlock] = useState<number | null>(null)
+
+  const isMember = (member: ExtendedSocietyMember) => activeAccount?.address === member.accountId.toHuman()
 
   useEffect(() => {
     const fetchLatestBlock = async () => {
@@ -136,6 +138,8 @@ const PayoutsList = ({ api, members }: PayoutsListProps): JSX.Element => {
                 Paid before V2
               </Badge>
             )}
+
+            {isMember(member) && <Badge bg="primary" className="me-2 p-2">You</Badge>}
           </Col>
         </StyledDataRow>
       ))}
