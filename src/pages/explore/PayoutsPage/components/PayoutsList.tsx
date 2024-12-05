@@ -1,19 +1,22 @@
 import type { ApiPromise } from '@polkadot/api'
 import { WalletAccount } from '@talismn/connect-wallets'
 import { useState, useEffect } from 'react'
-import { Badge, Col } from 'react-bootstrap'
+import { Badge, Button, Col } from 'react-bootstrap'
 import styled from 'styled-components'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
 import { useBlockTime } from '../../../../hooks/useBlockTime'
 import { Identicon } from '../../components/Identicon'
+import { payout } from '../helper'
 
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => (props.$isDefender ? props.theme.colors.black : '')};
   border: ${(props) => (props.$isDefender ? `2px solid ${props.theme.colors.secondary}` : '')};
+
   &:hover {
     cursor: pointer;
   }
+
   @media (max-width: 992px) {
     padding-block: 12px;
     margin-inline: 2px;
@@ -27,7 +30,14 @@ type PayoutsListProps = {
   handleUpdate: () => void
 }
 
-const TimeRemaining = ({ block, latestBlock, api }: { block: number; latestBlock: number | null; api: ApiPromise }) => {
+type TimeRemainingProps = {
+  api: ApiPromise
+  block: number
+  latestBlock: number | null
+  onClainPayout: () => void
+}
+
+const TimeRemaining = ({ block, latestBlock, api, onClainPayout }: TimeRemainingProps) => {
   if (!latestBlock)
     return (
       <Badge pill bg="black" className="me-2 p-2">
@@ -47,9 +57,14 @@ const TimeRemaining = ({ block, latestBlock, api }: { block: number; latestBlock
 
   if (blocksLeft <= 0)
     return (
-      <Badge pill bg="primary" className="me-2 p-2">
-        Matured
-      </Badge>
+      <>
+        <Badge pill bg="primary" className="me-2 p-2">
+          Matured
+        </Badge>
+        <Button variant="primary" onClick={onClainPayout}>
+          Claim Payout
+        </Button>
+      </>
     )
 
   return (
@@ -81,6 +96,21 @@ const PayoutsList = ({ api, members, activeAccount }: PayoutsListProps): JSX.Ele
   }, [api])
 
   if (members.length === 0) return <>No members</>
+
+  const onClainPayout = () => {
+    const tx = api.tx.society.payout()
+
+    const notReallySure = () => {
+      console.log('oiii ??????')
+    }
+
+    payout(tx, api, activeAccount, notReallySure)
+  }
+
+  members[members.length - 1] = {
+    ...members[members.length - 1],
+    hasPayouts: true
+  }
 
   return (
     <>
@@ -124,9 +154,12 @@ const PayoutsList = ({ api, members, activeAccount }: PayoutsListProps): JSX.Ele
               </Badge>
             )}
             {member.hasPayouts && (
-              <>
-                <TimeRemaining block={member.extendedPayouts.block} latestBlock={latestBlock} api={api} />
-              </>
+              <TimeRemaining
+                block={member.extendedPayouts.block}
+                latestBlock={latestBlock}
+                api={api}
+                onClainPayout={onClainPayout}
+              />
             )}
             {member.extendedPayouts.pending == 0 && member.extendedPayouts.paid > 0 && (
               <Badge pill bg="black" className="me-2 p-2">
