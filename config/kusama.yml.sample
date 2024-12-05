@@ -99,6 +99,12 @@ import-storage:
         - rank: 1
           strikes: 0
           index: 1
+      -
+        -
+          - 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y # Charlie
+        - rank: 2
+          strikes: 0
+          index: 2
     ChallengeRoundCount: 6
     RoundCount: 6
     MemberCount: 2
