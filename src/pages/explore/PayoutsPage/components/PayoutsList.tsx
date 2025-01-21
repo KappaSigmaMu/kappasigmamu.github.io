@@ -61,6 +61,7 @@ const TimeRemaining = ({ block, latestBlock, api, onClainPayout }: TimeRemaining
         <Badge pill bg="primary" className="me-2 p-2">
           Matured
         </Badge>
+        {/* @TODO: Only show claim button if it's the current address */}
         <Button variant="primary" onClick={onClainPayout}>
           Claim Payout
         </Button>
@@ -105,11 +106,6 @@ const PayoutsList = ({ api, members, activeAccount }: PayoutsListProps): JSX.Ele
     }
 
     payout(tx, api, activeAccount, notReallySure)
-  }
-
-  members[members.length - 1] = {
-    ...members[members.length - 1],
-    hasPayouts: true
   }
 
   return (
@@ -172,7 +168,11 @@ const PayoutsList = ({ api, members, activeAccount }: PayoutsListProps): JSX.Ele
               </Badge>
             )}
 
-            {isMember(member) && <Badge bg="primary" className="me-2 p-2">You</Badge>}
+            {isMember(member) && (
+              <Badge bg="primary" className="me-2 p-2">
+                You
+              </Badge>
+            )}
           </Col>
         </StyledDataRow>
       ))}
