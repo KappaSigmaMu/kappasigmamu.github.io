@@ -52,13 +52,13 @@ const NavigationBar = ({ totals }: { totals: Totals }) => {
           </Nav.Link>
         </StyledNavItem>
         <StyledNavItem>
-          <Nav.Link as={LinkWithQuery} to="/journey">
-            Journey
+          <Nav.Link as={LinkWithQuery} to="/explore/payouts">
+            Payouts
           </Nav.Link>
         </StyledNavItem>
         <StyledNavItem>
-          <Nav.Link as={LinkWithQuery} to="/explore/payouts">
-            Payouts
+          <Nav.Link as={LinkWithQuery} to="/journey">
+            Journey
           </Nav.Link>
         </StyledNavItem>
       </StyledNav>
