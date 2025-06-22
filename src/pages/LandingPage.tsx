@@ -92,10 +92,16 @@ const LandingPage = () => {
             />
           )}
         </div>
-        <CentralizedCol xs={0} lg={8} />
-        <CentralizedCol xs={12} lg={4}>
+        <CentralizedCol xs={0} lg={7} />
+        <CentralizedCol xs={12} lg={5}>
           <h1 className="d-none d-lg-block">Join the</h1>
-          <KappaSigmaMu className="d-none d-lg-block" src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
+          <KappaSigmaMu
+            className="d-none d-lg-block"
+            src={KappaSigmaMuTitle}
+            alt="Kappa Sigma Mu Title"
+            width={800}
+            style={{ margin: '-140px -180px' }}
+          />
           <ActionsContainer className="container">
             <OutlinedPrimaryLgButton onClick={() => handleButtonClick('/explore/bidders')}>
               Explore

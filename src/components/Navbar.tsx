@@ -19,7 +19,7 @@ const Navbar = ({
   const [showMenu, setShowMenu] = useState(false)
 
   return (
-    <RBNavbar className="pt-4">
+    <RBNavbar className="pt-3">
       <Container>
         <Nav className="align-items-center align-self-center">
           {showBrandIcon ? <NavbarBrand /> : <BrandPlaceholder />}
@@ -91,7 +91,7 @@ const BrandPlaceholder = () => <div style={{ height: 82, width: 106 }}></div>
 
 const NavbarBrand = () => (
   <RBNavbar.Brand as={LinkWithQuery} to="/">
-    <img width={90} src={KappaSigmaMu} alt="KappaSigmaMu Logo" />
+    <img width={200} src={KappaSigmaMu} alt="KappaSigmaMu Logo" style={{ margin: '-40px' }} />
   </RBNavbar.Brand>
 )
 
