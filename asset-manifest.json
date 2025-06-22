@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.c65f2477.css",
-    "main.js": "/static/js/main.5929a422.js",
-    "runtime-main.js": "/static/js/runtime-main.1d796c02.js",
-    "vendors.js": "/static/js/vendors.6dad6c02.js",
+    "main.css": "/static/css/main.3c5eeef1.css",
+    "main.js": "/static/js/main.a8ebbc05.js",
+    "runtime-main.js": "/static/js/runtime-main.26092489.js",
+    "vendors.js": "/static/js/vendors.5982bb57.js",
     "static/media/grid-canary-red.png": "/static/media/grid-canary-red.45dcb14f.png",
     "static/media/spots-canary-green.png": "/static/media/spots-canary-green.1349f64f.png",
     "static/media/gil-wireframe.png": "/static/media/gil-wireframe.ee982c58.png",
-    "static/css/main.c65f2477.css.map": "/static/css/main.c65f2477.css.map",
-    "static/media/kappa-sigma-mu-title.svg": "/static/media/kappa-sigma-mu-title.ca479de5.svg",
-    "static/media/kappa-sigma-mu-logo.svg": "/static/media/kappa-sigma-mu-logo.192858ee.svg",
+    "static/css/main.3c5eeef1.css.map": "/static/css/main.3c5eeef1.css.map",
+    "static/media/kappa-sigma-mu-logo.svg": "/static/media/kappa-sigma-mu-logo.0283b668.svg",
+    "static/media/kappa-sigma-mu-title.svg": "/static/media/kappa-sigma-mu-title.0283b668.svg",
     "static/media/element-logo.svg": "/static/media/element-logo.9a5a405c.svg",
     "index.html": "/index.html",
     "static/media/canary-level-1.svg": "/static/media/canary-level-1.d3390cc2.svg",
@@ -20,14 +20,14 @@
     "static/media/copy-icon.svg": "/static/media/copy-icon.36929213.svg",
     "static/media/svg%3e": "/static/media/svg%3e.69aa1495.bin",
     "static/media/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;": "/static/media/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74f.bin",
-    "main.5929a422.js.map": "/static/js/main.5929a422.js.map",
-    "runtime-main.1d796c02.js.map": "/static/js/runtime-main.1d796c02.js.map",
-    "vendors.6dad6c02.js.map": "/static/js/vendors.6dad6c02.js.map"
+    "main.a8ebbc05.js.map": "/static/js/main.a8ebbc05.js.map",
+    "runtime-main.26092489.js.map": "/static/js/runtime-main.26092489.js.map",
+    "vendors.5982bb57.js.map": "/static/js/vendors.5982bb57.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.1d796c02.js",
-    "static/js/vendors.6dad6c02.js",
-    "static/css/main.c65f2477.css",
-    "static/js/main.5929a422.js"
+    "static/js/runtime-main.26092489.js",
+    "static/js/vendors.5982bb57.js",
+    "static/css/main.3c5eeef1.css",
+    "static/js/main.a8ebbc05.js"
   ]
 }
