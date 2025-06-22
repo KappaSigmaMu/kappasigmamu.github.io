@@ -1,37 +1,21 @@
 import { ApiPromise } from '@polkadot/api'
-import { AccountId } from '@polkadot/types/interfaces'
 import { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { FaUserXmark } from 'react-icons/fa6'
+import { FaMoneyBillTransfer } from 'react-icons/fa6'
 import { styled } from 'styled-components'
 import { doTx, StatusChangeHandler } from '../../../../helpers/extrinsics'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
 
-type DropButtonProps = {
+type ClaimPayoutButtonProps = {
   api: ApiPromise
-  drop: Drop
+  activeAccount: WalletAccount | undefined
   showMessage: (args: ExtrinsicResult) => any
   handleUpdate: () => void
-  successText: string
-  waitingText: string
   disabled: boolean
 }
 
-export interface Drop {
-  accountId: AccountId
-  callerAccount: WalletAccount
-}
-
-export function DropButton({
-  api,
-  drop,
-  disabled,
-  showMessage,
-  handleUpdate,
-  successText,
-  waitingText
-}: DropButtonProps) {
+export function ClaimPayoutButton({ api, activeAccount, disabled, showMessage, handleUpdate }: ClaimPayoutButtonProps) {
   const [loading, setLoading] = useState(false)
 
   const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
@@ -40,41 +24,45 @@ export function DropButton({
     handleUpdate()
   }
 
-  const extrinsic = api.tx.society.dropCandidate(drop.accountId)
+  const handleClaimPayout = async () => {
+    if (!activeAccount) {
+      showMessage({ status: 'error', message: 'No wallet connected' })
+      return
+    }
 
-  const handleDrop = async () => {
     setLoading(true)
     try {
-      await doTx(api, extrinsic, successText, waitingText, drop.callerAccount, onStatusChange)
+      const extrinsic = api.tx.society.payout()
+      const successText = 'Payout claimed successfully!'
+      const waitingText = 'Request sent. Waiting for response...'
+
+      await doTx(api, extrinsic, successText, waitingText, activeAccount, onStatusChange)
     } catch (e) {
       console.error(e)
+      showMessage({ status: 'error', message: 'Failed to claim payout' })
     }
   }
 
   if (loading)
     return (
-      <div className="mx-2">
+      <span className="mx-2">
         <LoadingSpinner center={false} small={true} />
-      </div>
+      </span>
     )
 
   return (
     <OverlayTrigger
       placement="top"
-      overlay={
-        <Tooltip id="button-tooltip">
-          This candidate can be dropped, this action will remove the candidate from the list.
-        </Tooltip>
-      }
+      overlay={<Tooltip id="claim-payout-tooltip">Claim your matured payout from the society.</Tooltip>}
     >
-      <Button disabled={disabled} variant="link" onClick={handleDrop} size="sm" className="p-2">
-        <StyledDropIcon size={20} />
+      <Button disabled={disabled} variant="link" onClick={handleClaimPayout} size="sm" className="p-2">
+        <StyledClaimIcon size={16} />
       </Button>
     </OverlayTrigger>
   )
 }
 
-const StyledDropIcon = styled(FaUserXmark)`
+const StyledClaimIcon = styled(FaMoneyBillTransfer)`
   flex-shrink: 0;
 
   & path {

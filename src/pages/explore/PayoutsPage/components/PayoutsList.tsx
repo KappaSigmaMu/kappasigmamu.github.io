@@ -1,13 +1,14 @@
 import type { ApiPromise } from '@polkadot/api'
 import { WalletAccount } from '@talismn/connect-wallets'
 import { useState, useEffect } from 'react'
-import { Badge, Button, Col } from 'react-bootstrap'
+import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
+import { ClaimPayoutButton } from './ClaimPayoutButton'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
 import { useBlockTime } from '../../../../hooks/useBlockTime'
 import { Identicon } from '../../components/Identicon'
-import { payout } from '../helper'
+import { toastByStatus } from '../../helpers'
 
 const StyledDataRow = styled(DataRow)`
   background-color: ${(props) => (props.$isDefender ? props.theme.colors.black : '')};
@@ -34,10 +35,12 @@ type TimeRemainingProps = {
   api: ApiPromise
   block: number
   latestBlock: number | null
-  onClainPayout: () => void
+  member: ExtendedSocietyMember
+  activeAccount: WalletAccount | undefined
+  handleUpdate: () => void
 }
 
-const TimeRemaining = ({ block, latestBlock, api, onClainPayout }: TimeRemainingProps) => {
+const TimeRemaining = ({ block, latestBlock, api, member, activeAccount, handleUpdate }: TimeRemainingProps) => {
   if (!latestBlock)
     return (
       <Badge pill bg="black" className="me-2 p-2">
@@ -55,18 +58,26 @@ const TimeRemaining = ({ block, latestBlock, api, onClainPayout }: TimeRemaining
       </Badge>
     )
 
-  if (blocksLeft <= 0)
+  if (blocksLeft <= 0) {
+    const isCurrentUser = activeAccount?.address === member.accountId.toHuman()
+
     return (
       <>
         <Badge pill bg="primary" className="me-2 p-2">
           Matured
         </Badge>
-        {/* @TODO: Only show claim button if it's the current address */}
-        <Button variant="primary" onClick={onClainPayout}>
-          Claim Payout
-        </Button>
+        {isCurrentUser && (
+          <ClaimPayoutButton
+            api={api}
+            activeAccount={activeAccount}
+            showMessage={(result) => toastByStatus[result.status](result.message, { id: result.message })}
+            handleUpdate={handleUpdate}
+            disabled={false}
+          />
+        )}
       </>
     )
+  }
 
   return (
     <Badge pill bg="secondary" text="black" className="me-2 p-2">
@@ -75,10 +86,8 @@ const TimeRemaining = ({ block, latestBlock, api, onClainPayout }: TimeRemaining
   )
 }
 
-const PayoutsList = ({ api, members, activeAccount }: PayoutsListProps): JSX.Element => {
+const PayoutsList = ({ api, members, activeAccount, handleUpdate }: PayoutsListProps): JSX.Element => {
   const [latestBlock, setLatestBlock] = useState<number | null>(null)
-
-  const isMember = (member: ExtendedSocietyMember) => activeAccount?.address === member.accountId.toHuman()
 
   useEffect(() => {
     const fetchLatestBlock = async () => {
@@ -97,16 +106,6 @@ const PayoutsList = ({ api, members, activeAccount }: PayoutsListProps): JSX.Ele
   }, [api])
 
   if (members.length === 0) return <>No members</>
-
-  const onClainPayout = () => {
-    const tx = api.tx.society.payout()
-
-    const notReallySure = () => {
-      console.log('oiii ??????')
-    }
-
-    payout(tx, api, activeAccount, notReallySure)
-  }
 
   return (
     <>
@@ -154,7 +153,9 @@ const PayoutsList = ({ api, members, activeAccount }: PayoutsListProps): JSX.Ele
                 block={member.extendedPayouts.block}
                 latestBlock={latestBlock}
                 api={api}
-                onClainPayout={onClainPayout}
+                member={member}
+                activeAccount={activeAccount}
+                handleUpdate={handleUpdate}
               />
             )}
             {member.extendedPayouts.pending == 0 && member.extendedPayouts.paid > 0 && (
@@ -164,13 +165,7 @@ const PayoutsList = ({ api, members, activeAccount }: PayoutsListProps): JSX.Ele
             )}
             {!member.hasPayouts && member.extendedPayouts.paid == 0 && (
               <Badge pill bg="black" className="me-2 p-2">
-                Paid before V2
-              </Badge>
-            )}
-
-            {isMember(member) && (
-              <Badge bg="primary" className="me-2 p-2">
-                You
+                Paid V1
               </Badge>
             )}
           </Col>
