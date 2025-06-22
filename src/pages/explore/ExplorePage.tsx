@@ -6,6 +6,7 @@ import { CandidatesPage } from './CandidatesPage'
 import { LoadingSpinner } from './components/LoadingSpinner'
 import { NavigationBar } from './components/NavigationBar'
 import { MembersPage } from './MembersPage'
+import { PayoutsPage } from './PayoutsPage'
 import { ProofOfInkPage } from './ProofOfInkPage'
 import { SuspendedPage } from './SuspendedPage'
 import { NavigateWithQuery } from '../../components/NavigateWithQuery'
@@ -54,7 +55,7 @@ const ExplorePage = (): JSX.Element => {
             bidders: bidders.length,
             candidates: candidates.length,
             members: members.toNumber(),
-            maxMembers: params.unwrap().maxMembers.toNumber(),
+            maxMembers: params.isSome ? params.unwrap().maxMembers.toNumber() : 0,
             suspendedMembers: suspendedMembers.length
           })
         }
@@ -79,6 +80,7 @@ const ExplorePage = (): JSX.Element => {
               <Route path="/bidders" element={<BiddersPage api={api} />} />
               <Route path="/candidates" element={<CandidatesPage api={api} handleUpdateTotal={handleUpdateTotal} />} />
               <Route path="/members" element={<MembersPage api={api} />} />
+              <Route path="/payouts" element={<PayoutsPage api={api} />} />
               <Route path="/suspended" element={<SuspendedPage api={api} />} />
               <Route path="/poi/*" element={<ProofOfInkPage api={api} />} />
             </Routes>

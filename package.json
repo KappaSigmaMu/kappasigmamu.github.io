@@ -1,6 +1,6 @@
 {
   "name": "ksm-app",
-  "version": "0.2.0",
+  "version": "2.0.1",
   "homepage": "https://KappaSigmaMu.github.io/",
   "types": "src/types.d.ts",
   "dependencies": {
@@ -129,7 +129,7 @@
   },
   "scripts": {
     "build": "NODE_OPTIONS=--openssl-legacy-provider node scripts/build.js",
-    "chopsticks": "npx @acala-network/chopsticks@latest --config=config/kusama.yml",
+    "chopsticks": "npx @acala-network/chopsticks@1.0.6 --config=config/kusama.yml",
     "cy:open": "cypress open",
     "deploy": "gh-pages -d build",
     "eslint:fix": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\" --fix",
@@ -152,5 +152,5 @@
     "not dead",
     "not op_mini all"
   ],
-  "packageManager": "yarn@4.5.2"
+  "packageManager": "yarn@4.5.1"
 }

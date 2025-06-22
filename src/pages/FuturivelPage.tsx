@@ -462,7 +462,13 @@ const FuturivelPage = () => {
           <ActionsContainer>
             <div className="">
               <span>Join the</span>
-              <KappaSigmaMu src={KappaSigmaMuTitle} alt="Kappa Sigma Mu Title" />
+              <KappaSigmaMu
+                className="d-none d-lg-block"
+                src={KappaSigmaMuTitle}
+                alt="Kappa Sigma Mu Title"
+                width={800}
+                style={{ margin: '-140px -180px' }}
+              />
             </div>
             <OutlinedPrimaryLgButton onClick={() => handleButtonClick('/guide')}>
               Cyborg

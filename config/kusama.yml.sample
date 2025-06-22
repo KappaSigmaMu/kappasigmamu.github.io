@@ -58,6 +58,7 @@ import-storage:
       - Bids
       - Candidates
       - Members
+      - Payouts
     Bids:
       - who: 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY # Alice
         kind:
@@ -102,6 +103,15 @@ import-storage:
     ChallengeRoundCount: 6
     RoundCount: 6
     MemberCount: 2
-    Head: 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw
+    Head: 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw # Eve
+    Payouts:
+      -
+        -
+          - 5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL # Ferdie
+        - paid: 0
+          payouts:
+            -
+              - 20000000
+              - 15000000000000
   ParasDisputes:
     $removePrefix: ['disputes'] # those can makes block building super slow

@@ -12,7 +12,6 @@ import { useAccount } from '../../../../account/AccountContext'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
-// import { truncate } from '../../../../helpers/truncate'
 import { Identicon } from '../../components/Identicon'
 import { toastByStatus } from '../../helpers'
 
