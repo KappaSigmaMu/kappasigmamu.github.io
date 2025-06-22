@@ -34,8 +34,11 @@ const PayoutsPage = ({ api }: PayoutsPageProps): JSX.Element => {
       const info: ExtendedDeriveSociety = await society.info()
       const defending = await api.query.society.defending()
 
-      defender = defending.unwrap()[0]
-      skeptic = defending.unwrap()[1]
+      if (defending.isSome) {
+        const defendingValue = defending.unwrap()
+        defender = defendingValue[0]
+        skeptic = defendingValue[1]
+      }
 
       info.defender = defender
       info.skeptic = skeptic

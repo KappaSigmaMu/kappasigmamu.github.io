@@ -55,7 +55,7 @@ const ExplorePage = (): JSX.Element => {
             bidders: bidders.length,
             candidates: candidates.length,
             members: members.toNumber(),
-            maxMembers: params.unwrap().maxMembers.toNumber(),
+            maxMembers: params.isSome ? params.unwrap().maxMembers.toNumber() : 0,
             suspendedMembers: suspendedMembers.length
           })
         }
