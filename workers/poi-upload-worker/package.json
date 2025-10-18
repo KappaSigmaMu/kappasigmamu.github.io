@@ -1,0 +1,28 @@
+{
+  "name": "poi-upload-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for secure Proof-of-Ink image uploads to Apillon",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:dev": "wrangler deploy --env development",
+    "deploy:prod": "wrangler deploy --env production",
+    "tail": "wrangler tail",
+    "tail:dev": "wrangler tail --env development",
+    "tail:prod": "wrangler tail --env production"
+  },
+  "keywords": [
+    "cloudflare",
+    "worker",
+    "apillon",
+    "upload",
+    "proxy"
+  ],
+  "author": "Kappa Sigma Mu",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "wrangler": "^4.43.0"
+  }
+}

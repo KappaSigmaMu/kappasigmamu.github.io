@@ -1,0 +1,27 @@
+# Cloudflare Worker Configuration for POI Upload Proxy
+name = "poi-upload-worker"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+# Environment Variables (set via `wrangler secret put <KEY>`)
+# Required secrets:
+# - APILLON_API_KEY
+# - APILLON_API_SECRET
+# - APILLON_BUCKET_UUID
+# - ALLOWED_ORIGINS (comma-separated, e.g., "https://kappasigmamu.github.io,http://localhost:3000")
+
+# Development Configuration
+[env.development]
+name = "poi-upload-worker-dev"
+vars = { ENVIRONMENT = "development" }
+
+# Production Configuration
+[env.production]
+name = "poi-upload-worker-prod"
+vars = { ENVIRONMENT = "production" }
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
