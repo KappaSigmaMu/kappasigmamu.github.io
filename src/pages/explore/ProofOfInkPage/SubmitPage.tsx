@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { ApiPromise } from '@polkadot/api'
+import { useState, useEffect } from 'react'
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap'
 import toast from 'react-hot-toast'
 import styled from 'styled-components'
@@ -7,10 +8,48 @@ import { apillonClient } from '../../../services/apillonClient'
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB in bytes
 
-const SubmitPage = (): JSX.Element => {
+type SubmitPageProps = {
+  api: ApiPromise | null
+}
+
+const SubmitPage = ({ api }: SubmitPageProps): JSX.Element => {
   const { activeAccount } = useAccount()
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [isCandidate, setIsCandidate] = useState(false)
+  const [isMember, setIsMember] = useState(false)
+  const [checkingStatus, setCheckingStatus] = useState(true)
+
+  // Check if user is a candidate or member
+  useEffect(() => {
+    const checkMembershipStatus = async () => {
+      if (!api || !activeAccount) {
+        setCheckingStatus(false)
+        return
+      }
+
+      try {
+        setCheckingStatus(true)
+
+        // Check if user is a member
+        const memberEntry = await api.query.society.members(activeAccount.address)
+        const isMemberResult = memberEntry.isSome
+        setIsMember(isMemberResult)
+
+        // Check if user is a candidate
+        const candidatesEntries = await api.query.society.candidates.entries()
+        const candidateAddresses = candidatesEntries.map(([key]) => key.args[0].toString())
+        const isCandidateResult = candidateAddresses.includes(activeAccount.address)
+        setIsCandidate(isCandidateResult)
+      } catch (error) {
+        // Silent fail - user will see "not eligible" message
+      } finally {
+        setCheckingStatus(false)
+      }
+    }
+
+    checkMembershipStatus()
+  }, [api, activeAccount])
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -36,6 +75,12 @@ const SubmitPage = (): JSX.Element => {
       return
     }
 
+    // Validate user is candidate or member
+    if (!isCandidate && !isMember) {
+      toast.error('Only Society candidates and members can submit proof-of-ink')
+      return
+    }
+
     setUploading(true)
 
     try {
@@ -55,11 +100,12 @@ const SubmitPage = (): JSX.Element => {
         (file: any) => file.name === fileName && (file.path === 'pending/' || file.path?.startsWith('pending/'))
       )
 
-      // Step 2: Determine upload path based on existing files
+      // Step 2: Determine upload path based on membership status and existing files
       let directoryPath: 'pending' | 'approved'
       let successMessage: string
 
       if (existingApproved) {
+        // Replace existing approved tattoo
         const confirmed = window.confirm('Replace your existing tattoo?')
         if (!confirmed) {
           setUploading(false)
@@ -71,9 +117,8 @@ const SubmitPage = (): JSX.Element => {
         directoryPath = 'approved'
         successMessage = 'Tattoo updated!'
       } else if (existingPending) {
-        const confirmed = window.confirm(
-          'You already have a pending submission. Replace it with this new image?'
-        )
+        // Replace existing pending submission
+        const confirmed = window.confirm('You already have a pending submission. Replace it with this new image?')
         if (!confirmed) {
           setUploading(false)
           setSelectedFile(null)
@@ -81,11 +126,18 @@ const SubmitPage = (): JSX.Element => {
           if (fileInput) fileInput.value = ''
           return
         }
-        directoryPath = 'pending'
-        successMessage = 'Pending submission updated!'
+        // Members upload directly to approved, candidates to pending
+        directoryPath = isMember ? 'approved' : 'pending'
+        successMessage = isMember ? 'Tattoo submitted to approved!' : 'Pending submission updated!'
       } else {
-        directoryPath = 'pending'
-        successMessage = 'Submitted for approval! Check back soon.'
+        // New submission: Members go to approved, candidates to pending
+        if (isMember) {
+          directoryPath = 'approved'
+          successMessage = 'Tattoo submitted to approved folder!'
+        } else {
+          directoryPath = 'pending'
+          successMessage = 'Submitted for approval! Your tattoo will be approved after you become a member.'
+        }
       }
 
       // Step 3: Upload via Cloudflare Worker
@@ -109,7 +161,7 @@ const SubmitPage = (): JSX.Element => {
     }
   }
 
-  const isFormDisabled = !activeAccount || uploading
+  const isFormDisabled = !activeAccount || uploading || checkingStatus || (!isCandidate && !isMember)
 
   return (
     <Container>
@@ -123,6 +175,30 @@ const SubmitPage = (): JSX.Element => {
                 <strong>Wallet Not Connected</strong>
                 <br />
                 Please connect your wallet to submit your tattoo.
+              </Alert>
+            )}
+
+            {activeAccount && !checkingStatus && !isCandidate && !isMember && (
+              <Alert variant="danger">
+                <strong>Not Eligible</strong>
+                <br />
+                Only Society candidates and members can submit proof-of-ink. Please apply to join the Society first.
+              </Alert>
+            )}
+
+            {activeAccount && !checkingStatus && isCandidate && !isMember && (
+              <Alert variant="info">
+                <strong>Candidate</strong>
+                <br />
+                Your submission will be reviewed when you become a member.
+              </Alert>
+            )}
+
+            {activeAccount && !checkingStatus && isMember && (
+              <Alert variant="success">
+                <strong>Member</strong>
+                <br />
+                Your tattoo will appear in the gallery after upload.
               </Alert>
             )}
 

@@ -54,11 +54,6 @@ export default {
       return handleCORS(request, env)
     }
 
-    // Only allow POST requests
-    if (request.method !== 'POST') {
-      return jsonResponse({ error: 'Method not allowed' }, 405)
-    }
-
     // Validate Origin
     const origin = request.headers.get('Origin')
     const allowedOrigins = env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
@@ -72,6 +67,8 @@ export default {
         return handleInitiateUpload(request, env, origin)
       } else if (path === '/complete') {
         return handleCompleteUpload(request, env, origin)
+      } else if (path === '/sync-approved-members') {
+        return handleSyncApprovedMembers(request, env, origin)
       } else {
         return jsonResponse({ error: 'Invalid endpoint' }, 404, origin)
       }
@@ -219,6 +216,244 @@ async function apillonCompleteUpload(
   }
 
   return await response.json()
+}
+
+/**
+ * Handle sync approved members request - moves images from pending to approved
+ */
+async function handleSyncApprovedMembers(
+  request: Request,
+  env: Env,
+  origin: string
+): Promise<Response> {
+  if (request.method !== 'POST') {
+    return jsonResponse({ error: 'Method not allowed' }, 405, origin)
+  }
+
+  try {
+    const body = await request.json() as { addresses?: string[] }
+    const addresses: string[] = body.addresses || []
+
+    if (!Array.isArray(addresses) || addresses.length === 0) {
+      return jsonResponse({ error: 'Invalid addresses array' }, 400, origin)
+    }
+
+    // Limit to 50 addresses per request
+    const limitedAddresses = addresses.slice(0, 50)
+
+    // First, list all files in pending folder to find which addresses have images
+    const pendingFiles = await listFilesInFolder(env, 'pending')
+
+    // Extract address from each filename (format: {address}.{ext})
+    const pendingMap = new Map<string, {
+      fileName: string
+      fileUuid: string
+      extension: string
+      link?: string
+    }>()
+    for (const file of pendingFiles) {
+      const match = file.name.match(/^(.+)\.([^.]+)$/)
+      if (match) {
+        const [, address, extension] = match
+        pendingMap.set(address, {
+          fileName: file.name,
+          fileUuid: file.uuid,
+          extension,
+          link: file.link
+        })
+      }
+    }
+
+    const results: {
+      moved: Array<{ address: string; from: string; to: string }>
+      skipped: Array<{ address: string; reason: string }>
+      errors: Array<{ address: string; error: string }>
+    } = {
+      moved: [],
+      skipped: [],
+      errors: []
+    }
+
+    for (const address of limitedAddresses) {
+      try {
+        const fileInfo = pendingMap.get(address)
+
+        if (!fileInfo) {
+          results.skipped.push({
+            address,
+            reason: 'No pending image found'
+          })
+          continue
+        }
+
+        // Move file from pending to approved
+        await moveFile(
+          env,
+          `pending/${fileInfo.fileName}`,
+          `approved/${fileInfo.fileName}`,
+          fileInfo.fileUuid,
+          fileInfo.link
+        )
+
+        results.moved.push({
+          address,
+          from: `pending/${fileInfo.fileName}`,
+          to: `approved/${fileInfo.fileName}`
+        })
+      } catch (error) {
+        results.errors.push({
+          address,
+          error: (error as Error).message
+        })
+      }
+    }
+
+    return jsonResponse(
+      {
+        success: true,
+        ...results
+      },
+      200,
+      origin
+    )
+  } catch (error) {
+    return jsonResponse(
+      {
+        success: false,
+        error: 'Sync failed',
+        details: (error as Error).message
+      },
+      500,
+      origin
+    )
+  }
+}
+
+/**
+ * List files in a specific folder (pending or approved)
+ */
+async function listFilesInFolder(
+  env: Env,
+  folder: string
+): Promise<Array<{ name: string; uuid: string; link?: string; cid?: string }>> {
+  const url = `https://api.apillon.io/storage/buckets/${env.APILLON_BUCKET_UUID}/files`
+  const auth = btoa(`${env.APILLON_API_KEY}:${env.APILLON_API_SECRET}`)
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Basic ${auth}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`Failed to list files: ${errorText}`)
+  }
+
+  const data = await response.json() as { data: { items: Array<{
+    name: string
+    fileUuid: string
+    path?: string
+    link?: string
+    CID?: string
+    CIDv1?: string
+  }> } }
+
+  // Filter files by folder path (Apillon uses "pending/", "approved/" format)
+  return data.data.items
+    .filter(file => {
+      const filePath = file.path || ''
+      // Match "pending/" or "approved/"
+      return filePath === `${folder}/`
+    })
+    .map(file => ({
+      name: file.name,
+      uuid: file.fileUuid,
+      link: file.link,
+      cid: file.CIDv1 || file.CID
+    }))
+}
+
+/**
+ * Move file from one location to another
+ * Note: Apillon doesn't have a native move operation, so we:
+ * 1. Download the file from its current IPFS location (using authenticated link)
+ * 2. Upload to new location (approved folder)
+ * 3. Delete from old location (pending folder)
+ */
+async function moveFile(
+  env: Env,
+  _fromPath: string,
+  toPath: string,
+  fileUuid: string,
+  fileLink?: string
+): Promise<void> {
+  // Step 1: Download the file content using the authenticated link from Apillon
+  if (!fileLink) {
+    throw new Error('File link is required to download file')
+  }
+
+  const fileResponse = await fetch(fileLink)
+  if (!fileResponse.ok) {
+    throw new Error(`Failed to download file: ${fileResponse.statusText}`)
+  }
+  const fileBlob = await fileResponse.blob()
+
+  // Step 2: Extract filename and content type
+  const fileName = toPath.split('/').pop() || 'unknown'
+  const contentType = fileResponse.headers.get('content-type') || 'application/octet-stream'
+
+  // Step 3: Upload to new location
+  const targetFolder = toPath.split('/')[0]
+  const uploadSession = await apillonInitiateUpload(env, fileName, contentType, targetFolder)
+
+  if (!uploadSession.data?.sessionUuid || !uploadSession.data?.files?.[0]?.url) {
+    throw new Error('Failed to initiate upload to new location')
+  }
+
+  const uploadUrl = uploadSession.data.files[0].url
+
+  // Step 4: Upload the file to the signed URL
+  const uploadResponse = await fetch(uploadUrl, {
+    method: 'PUT',
+    body: fileBlob,
+    headers: {
+      'Content-Type': contentType
+    }
+  })
+
+  if (!uploadResponse.ok) {
+    throw new Error(`Failed to upload file: ${uploadResponse.statusText}`)
+  }
+
+  // Step 5: Complete the upload session
+  await apillonCompleteUpload(env, uploadSession.data.sessionUuid)
+
+  // Step 6: Delete from old location (pending folder)
+  await deleteApillonFile(env, fileUuid)
+}
+
+/**
+ * Delete a file from Apillon storage
+ */
+async function deleteApillonFile(env: Env, fileUuid: string): Promise<void> {
+  const url = `https://api.apillon.io/storage/buckets/${env.APILLON_BUCKET_UUID}/files/${fileUuid}`
+  const auth = btoa(`${env.APILLON_API_KEY}:${env.APILLON_API_SECRET}`)
+
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Basic ${auth}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`Failed to delete file: ${errorText}`)
+  }
 }
 
 /**

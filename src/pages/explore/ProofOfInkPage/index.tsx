@@ -20,7 +20,7 @@ const ProofOfInkPage = ({ api }: ProofOfInkPageProps): JSX.Element => {
         <Route path="/rules" element={<RulesPage />} />
         <Route path="/gallery" element={<GalleryPage api={api} />} />
         <Route path="/next-head" element={<NextHeadPage api={api} />} />
-        <Route path="/submit" element={<SubmitPage />} />
+        <Route path="/submit" element={<SubmitPage api={api} />} />
       </Routes>
     </>
   )

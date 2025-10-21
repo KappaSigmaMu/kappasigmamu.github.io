@@ -3,19 +3,24 @@ import { StorageKey } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
+import toast from 'react-hot-toast'
 import styled from 'styled-components'
 import { AccountIdentity } from '../../../components/AccountIdentity'
 import { getLatestPinnedHash, fastestGateway, imageUrl } from '../../../helpers/ipfs'
+import { apillonClient } from '../../../services/apillonClient'
 import { Identicon } from '../components/Identicon'
 
 type ExamplesPageProps = {
   api: ApiPromise | null
 }
 
+const WORKER_URL = process.env.REACT_APP_CLOUDFLARE_WORKER_URL
+
 const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
   const [members, setMembers] = useState<Array<string>>([])
   const [folderHash, setFolderHash] = useState('')
   const [gateway, setGateway] = useState('')
+  const [syncAttempted, setSyncAttempted] = useState(false)
 
   const society = api?.query?.society
 
@@ -40,6 +45,61 @@ const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
 
     fetchPinnedHash()
   }, [])
+
+  // Auto-sync: Move pending tattoos to approved for members
+  useEffect(() => {
+    if (members.length === 0 || syncAttempted) return
+
+    const syncApprovedMembers = async () => {
+      try {
+        // Fetch pending files from Apillon
+        const listData = await apillonClient.listFiles()
+        const allFiles = listData.data?.items || []
+
+        // Extract addresses from pending files
+        const pendingAddresses = allFiles
+          .filter((file: any) => file.path === 'pending/' || file.path?.startsWith('pending/'))
+          .map((file: any) => file.name.replace(/\.(jpg|png|heic|webp)$/i, ''))
+          .filter((addr: string) => addr && addr.length > 0)
+
+        // Cross-reference: find members with pending files
+        const toSync = members.filter((member) => pendingAddresses.includes(member))
+
+        if (toSync.length > 0) {
+          // Limit to 50 addresses per request (backend limit)
+          const addresses = toSync.slice(0, 50)
+
+          // Call worker to move files
+          const response = await fetch(`${WORKER_URL}/sync-approved-members`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Origin: window.location.origin
+            },
+            body: JSON.stringify({ addresses })
+          })
+
+          const result = await response.json()
+
+          if (result.success && result.moved && result.moved.length > 0) {
+            // Notify user and reload page to show new tattoos
+            toast.success(
+              `${result.moved.length} new tattoo${result.moved.length > 1 ? 's' : ''} approved! Reloading gallery...`
+            )
+            setTimeout(() => {
+              window.location.reload()
+            }, 2000)
+          }
+        }
+      } catch (error) {
+        // Silent fail - will retry on next page load
+      } finally {
+        setSyncAttempted(true)
+      }
+    }
+
+    syncApprovedMembers()
+  }, [members, syncAttempted])
 
   return !folderHash && !gateway ? (
     <Spinner className="mx-auto d-block" animation="border" role="status" variant="primary" />

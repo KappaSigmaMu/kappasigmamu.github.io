@@ -1,112 +1,70 @@
-# Proof-of-Ink Upload Worker
+# POI Upload Worker
 
-Cloudflare Worker that acts as a secure proxy for uploading Proof-of-Ink images to Apillon Storage.
+Cloudflare Worker for Proof-of-Ink image uploads to Apillon Storage.
 
-## Architecture
+## Features
 
+- Secure proxy for Apillon API (protects credentials)
+- Two-phase upload workflow (initiate → upload → complete)
+- Auto-sync: moves approved member images from `pending/` to `approved/`
+- CORS-enabled for frontend access
+
+## Endpoints
+
+### POST /initiate
+
+Returns a signed upload URL.
+
+**Request:**
+```json
+{
+  "fileName": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY.jpg",
+  "contentType": "image/jpeg",
+  "directoryPath": "pending"
+}
 ```
-Frontend (DApp)
-    │
-    │ POST /upload (with base64 image)
-    ├──> Cloudflare Worker (this)
-         │
-         ├──> Apillon API (initiate upload)
-         ├──> S3 (direct upload via signed URL)
-         └──> Apillon API (complete upload)
+
+### POST /complete
+
+Finalizes an upload session.
+
+**Request:**
+```json
+{
+  "sessionUuid": "..."
+}
 ```
 
-## Security Model
+### POST /sync-approved-members
 
-- **Frontend**: Uses read-only Apillon API key (can only list files)
-- **Worker**: Uses write-enabled Apillon API key (server-side, secrets protected, only allowed origins can call the worker)
+Moves images from `pending/` to `approved/` for provided addresses.
 
-## Prerequisites
+**Request:**
+```json
+{
+  "addresses": ["5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"]
+}
+```
 
-1. **Cloudflare Account**: Sign up at [cloudflare.com](https://cloudflare.com)
-2. **Wrangler CLI**: Install globally
-   ```bash
-   npm install -g wrangler
-   ```
-3. **Apillon API Credentials**: Get from [apillon.io](https://apillon.io)
+**Note:** Frontend validates membership before calling this endpoint.
 
-## Installation
+## Environment Variables
+
+Set via `wrangler secret put`:
+- `APILLON_API_KEY`
+- `APILLON_API_SECRET`
+- `APILLON_BUCKET_UUID`
+- `ALLOWED_ORIGINS`
+
+## Development
 
 ```bash
-cd workers/poi-upload-worker
 npm install
+npm run dev          # Run locally
+npm run deploy:prod  # Deploy to production
+npm run tail:prod    # View logs
 ```
 
-## Configuration
+## File Naming
 
-### 1. Authenticate with Cloudflare
-
-```bash
-wrangler login
-```
-
-### 2. Set Environment Secrets
-
-**Production:**
-
-```bash
-wrangler secret put APILLON_API_KEY --env production
-wrangler secret put APILLON_API_SECRET --env production
-wrangler secret put APILLON_BUCKET_UUID --env production
-wrangler secret put ALLOWED_ORIGINS --env production
-```
-
-**ALLOWED_ORIGINS Format:**
-
-```
-https://kappasigmamu.github.io,http://localhost:3000
-```
-
-### 3. Test Locally
-
-```bash
-npm run dev
-```
-
-This starts a local development server at `http://localhost:8787`
-
-## Deployment
-
-### Deploy to Development
-
-```bash
-npm run deploy:dev
-```
-
-### Deploy to Production
-
-```bash
-npm run deploy:prod
-```
-
-### View Deployment Info
-
-```bash
-wrangler deployments list
-```
-
-### View Real-time Logs
-
-**Development:**
-
-```bash
-npm run tail:dev
-```
-
-**Production:**
-
-```bash
-npm run tail:prod
-```
-
-### Cloudflare Dashboard
-
-Monitor worker metrics at:
-
-```
-https://dash.cloudflare.com > Workers & Pages > poi-upload-worker
-```
+Format: `{address}.{ext}` (e.g., `5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY.jpg`)
