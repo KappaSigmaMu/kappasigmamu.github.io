@@ -13,8 +13,8 @@ const WikiLink = styled(ExternalLink).attrs(() => ({
   text-decoration: none;
 `
 
-const SocietyElementLink = styled(ExternalLink).attrs(() => ({
-  href: 'https://riot.im/app/#/room/#kappasigmamulounge:matrix.parity.io'
+const SubmitPoiLink = styled(LinkWithQuery).attrs(() => ({
+  to: '/explore/poi/submit'
 }))`
   text-decoration: none;
 `
@@ -119,8 +119,8 @@ const CyborgGuidePage = () => {
                   <p className="mb-1">Your tattoo, the Proof of Ink (PoI)</p>
                 </strong>
                 <p>
-                  After getting your PoI, it’s time to show it to the world! You can submit a photo or video of it&nbsp;
-                  <SocietyElementLink>here on our Kappa Sigma Mu Lounge.</SocietyElementLink>
+                  After getting your PoI, it's time to show it to the world! You can submit a photo of it&nbsp;
+                  <SubmitPoiLink>here on our submission page.</SubmitPoiLink> Society members get automatically approved!
                 </p>
                 <strong>
                   <p className="mb-1">Getting votes on your Proof of Ink</p>
