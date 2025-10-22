@@ -6,7 +6,6 @@ import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
 import toast from 'react-hot-toast'
 import styled from 'styled-components'
 import { AccountIdentity } from '../../../components/AccountIdentity'
-import { getLatestPinnedHash, fastestGateway, imageUrl } from '../../../helpers/ipfs'
 import { apillonClient } from '../../../services/apillonClient'
 import { Identicon } from '../components/Identicon'
 
@@ -18,8 +17,7 @@ const WORKER_URL = process.env.REACT_APP_CLOUDFLARE_WORKER_URL
 
 const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
   const [members, setMembers] = useState<Array<string>>([])
-  const [folderHash, setFolderHash] = useState('')
-  const [gateway, setGateway] = useState('')
+  const [tattooMap, setTattooMap] = useState<Map<string, string>>(new Map())
   const [syncAttempted, setSyncAttempted] = useState(false)
 
   const society = api?.query?.society
@@ -36,14 +34,30 @@ const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
   }, [society])
 
   useEffect(() => {
-    const fetchPinnedHash = async () => {
-      const folderHash = await getLatestPinnedHash()
-      setFolderHash(folderHash)
-      const gateway = await fastestGateway(folderHash)
-      setGateway(gateway)
+    const fetchApprovedTattoos = async () => {
+      try {
+        const listData = await apillonClient.listFiles()
+        const allFiles = listData.data?.items || []
+
+        // Filter approved folder files
+        const approvedFiles = allFiles.filter(
+          (file: any) => file.path === 'approved/' || file.path?.startsWith('approved/')
+        )
+
+        // Build map: address -> CDN link
+        const map = new Map<string, string>()
+        approvedFiles.forEach((file: any) => {
+          const address = file.name.replace(/\.(jpg|png|heic|webp)$/i, '')
+          map.set(address, file.link)
+        })
+
+        setTattooMap(map)
+      } catch (error) {
+        console.error('Failed to fetch tattoos:', error)
+      }
     }
 
-    fetchPinnedHash()
+    fetchApprovedTattoos()
   }, [])
 
   // Auto-sync: Move pending tattoos to approved for members
@@ -101,37 +115,42 @@ const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
     syncApprovedMembers()
   }, [members, syncAttempted])
 
-  return !folderHash && !gateway ? (
+  return tattooMap.size === 0 ? (
     <Spinner className="mx-auto d-block" animation="border" role="status" variant="primary" />
   ) : (
     <Container>
       <Row>
-        {members.map((member) => (
-          <ProofOfInkImage key={member} gateway={gateway} folderHash={folderHash} member={member} api={api!} />
-        ))}
+        {members.map((member) => {
+          const imageUrl = tattooMap.get(member)
+          return <ProofOfInkImage key={member} member={member} imageUrl={imageUrl} api={api!} />
+        })}
       </Row>
     </Container>
   )
 }
 
 const ProofOfInkImage = ({
-  gateway,
-  folderHash,
   member,
+  imageUrl,
   api
 }: {
-  gateway: string
-  folderHash: string
   member: string
+  imageUrl: string | undefined
   api: ApiPromise
 }): JSX.Element => {
-  const [error, setError] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(!imageUrl)
+  const [loading, setLoading] = useState(!!imageUrl)
   const [selectedImage, setSelectedImage] = useState('')
   const [modalShow, setModalShow] = useState(false)
   const loadingTimeout = 10000
 
   useEffect(() => {
+    if (!imageUrl) {
+      setError(true)
+      setLoading(false)
+      return
+    }
+
     const timer = setTimeout(() => {
       if (loading && !error) {
         setError(true)
@@ -140,7 +159,7 @@ const ProofOfInkImage = ({
     }, loadingTimeout)
 
     return () => clearTimeout(timer)
-  }, [loading, error])
+  }, [loading, error, imageUrl])
 
   const handleImageClick = (image: string) => {
     if (loading || error) return
@@ -152,24 +171,23 @@ const ProofOfInkImage = ({
     <>
       <Col xs={12} sm={6} md={6} lg={3} className="mb-3">
         <Border>
-          <ImageContainer
-            onClick={() => handleImageClick(imageUrl({ gateway, folderHash, member }))}
-            $clickable={!error && !loading}
-          >
+          <ImageContainer onClick={() => imageUrl && handleImageClick(imageUrl)} $clickable={!error && !loading}>
             <Row>
               <Col xs={12} className="p-0">
                 {loading && !error && (
                   <Spinner className="m-0 mt-3" animation="border" role="status" variant="secondary" />
                 )}
                 {!loading && error && <p className="m-0 mt-3">Missing Proof-of-Ink</p>}
-                <StyledImage
-                  src={imageUrl({ gateway, folderHash, member })}
-                  onLoad={() => {
-                    setError(false)
-                    setLoading(false)
-                  }}
-                  style={loading || error ? { display: 'none' } : {}}
-                />
+                {imageUrl && (
+                  <StyledImage
+                    src={imageUrl}
+                    onLoad={() => {
+                      setError(false)
+                      setLoading(false)
+                    }}
+                    style={loading || error ? { display: 'none' } : {}}
+                  />
+                )}
               </Col>
             </Row>
           </ImageContainer>

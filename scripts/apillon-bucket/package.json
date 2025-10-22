@@ -1,0 +1,15 @@
+{
+  "name": "poi-scripts",
+  "version": "1.0.0",
+  "description": "Proof-of-Ink management scripts",
+  "type": "module",
+  "scripts": {
+    "setup": "node setup-apillon.js",
+    "migrate": "node migrate-pinata-to-apillon.js"
+  },
+  "dependencies": {
+    "@apillon/sdk": "^2.0.0",
+    "dotenv": "^16.0.0",
+    "node-fetch": "^3.0.0"
+  }
+}

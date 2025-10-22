@@ -47,9 +47,11 @@ class ApillonClient {
 
   /**
    * List all files in the bucket (read-only operation)
+   * @param limit - Number of items per page (max 1000)
+   * @param page - Page number (default 1)
    */
-  async listFiles(): Promise<ApillonListResponse> {
-    const url = `${APILLON_API_BASE}/storage/buckets/${this.bucketUuid}/files`
+  async listFiles(limit = 1000, page = 1): Promise<ApillonListResponse> {
+    const url = `${APILLON_API_BASE}/storage/buckets/${this.bucketUuid}/files?limit=${limit}&page=${page}`
 
     const response = await fetch(url, {
       method: 'GET',

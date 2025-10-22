@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Col, Row, Offcanvas, Container, Badge, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
-import { fastestGateway, getLatestPinnedHash, imageUrl } from '../helpers/ipfs'
 import { Identicon } from '../pages/explore/components/Identicon'
+import { apillonClient } from '../services/apillonClient'
 
 const formatHash = (str: string) => {
   if (!str) return ''
@@ -18,22 +18,44 @@ const MemberOffcanvas = (props: { show: boolean; handleClose: any; member: any }
   const { member } = props
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
-  const [folderHash, setFolderHash] = useState('')
-  const [gateway, setGateway] = useState('')
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined)
 
   useEffect(() => {
-    const fetchPinnedHash = async () => {
-      const folderHash = await getLatestPinnedHash()
-      setFolderHash(folderHash)
-      const gateway = await fastestGateway(folderHash)
-      setGateway(gateway)
+    const fetchTattooImage = async () => {
+      if (!member?.hash) {
+        setError(true)
+        setLoading(false)
+        return
+      }
+
+      try {
+        setLoading(true)
+        setError(false)
+        const listData = await apillonClient.listFiles(1000) // Fetch up to 1000 files
+        const allFiles = listData.data?.items || []
+
+        // Find the approved tattoo for this member
+        const approvedFile = allFiles.find((file: any) => {
+          const fileAddress = file.name.replace(/\.(jpg|png|heic|webp)$/i, '')
+          return (
+            (file.path === 'approved/' || file.path?.startsWith('approved/')) && fileAddress === member.hash
+          )
+        })
+
+        if (approvedFile) {
+          setImageUrl(approvedFile.link)
+        } else {
+          setError(true)
+        }
+      } catch (error) {
+        console.error('Failed to fetch tattoo:', error)
+        setError(true)
+      } finally {
+        setLoading(false)
+      }
     }
 
-    fetchPinnedHash()
-  }, [])
-
-  useEffect(() => {
-    setLoading(true)
+    fetchTattooImage()
   }, [member])
 
   return (
@@ -68,17 +90,19 @@ const MemberOffcanvas = (props: { show: boolean; handleClose: any; member: any }
                   <>
                     <Spinner className="mb-2" animation="border" role="status" variant="secondary" />
 
-                    <p>Be patient. The proof-of-ink pictures are hosted on IPFS and might take a while to load.</p>
+                    <p>Loading proof-of-ink from Apillon...</p>
                   </>
                 )}
 
-                <img
-                  src={imageUrl({ gateway, folderHash, member: member?.hash })}
-                  width={'340px'}
-                  onError={() => setError(true)}
-                  onLoad={() => setLoading(false)}
-                  style={loading ? { display: 'none' } : {}}
-                />
+                {imageUrl && (
+                  <img
+                    src={imageUrl}
+                    width={'340px'}
+                    onError={() => setError(true)}
+                    onLoad={() => setLoading(false)}
+                    style={loading ? { display: 'none' } : {}}
+                  />
+                )}
               </Col>
             ) : (
               <Col>
