@@ -119,8 +119,9 @@ const CyborgGuidePage = () => {
                   <p className="mb-1">Your tattoo, the Proof of Ink (PoI)</p>
                 </strong>
                 <p>
-                  After getting your PoI, it's time to show it to the world! You can submit a photo of it&nbsp;
-                  <SubmitPoiLink>here on our submission page.</SubmitPoiLink> Society members get automatically approved!
+                  After getting your PoI, it’s time to show it to the world! You can submit a photo of it&nbsp;
+                  <SubmitPoiLink>here on our submission page.</SubmitPoiLink> Society members get automatically
+                  approved!
                 </p>
                 <strong>
                   <p className="mb-1">Getting votes on your Proof of Ink</p>

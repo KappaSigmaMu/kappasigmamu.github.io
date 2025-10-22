@@ -38,25 +38,17 @@ class ApillonClient {
   }
 
   /**
-   * Get Basic Auth header
-   */
-  private getAuthHeader(): string {
-    const credentials = btoa(`${this.apiKey}:${this.apiSecret}`)
-    return `Basic ${credentials}`
-  }
-
-  /**
    * List all files in the bucket (read-only operation)
    * @param limit - Number of items per page (max 1000)
    * @param page - Page number (default 1)
    */
-  async listFiles(limit = 1000, page = 1): Promise<ApillonListResponse> {
+  public async listFiles(limit = 1000, page = 1): Promise<ApillonListResponse> {
     const url = `${APILLON_API_BASE}/storage/buckets/${this.bucketUuid}/files?limit=${limit}&page=${page}`
 
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'Authorization': this.getAuthHeader(),
+        Authorization: this.getAuthHeader(),
         'Content-Type': 'application/json'
       }
     })
@@ -81,7 +73,7 @@ class ApillonClient {
    * @param fileName - Target filename
    * @param directoryPath - Target directory ('pending' or 'approved')
    */
-  async uploadFile(
+  public async uploadFile(
     file: File,
     fileName: string,
     directoryPath: 'pending' | 'approved'
@@ -128,7 +120,7 @@ class ApillonClient {
 
       // Step 3: Complete upload session via worker
       // Add a small delay to allow S3 to process the file
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      await new Promise((resolve) => setTimeout(resolve, 2000))
 
       const completeResponse = await fetch(`${workerUrl}/complete`, {
         method: 'POST',
@@ -156,6 +148,14 @@ class ApillonClient {
     } catch (error) {
       throw error
     }
+  }
+
+  /**
+   * Get Basic Auth header
+   */
+  private getAuthHeader(): string {
+    const credentials = btoa(`${this.apiKey}:${this.apiSecret}`)
+    return `Basic ${credentials}`
   }
 }
 
