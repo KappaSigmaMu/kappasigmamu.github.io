@@ -1,4 +1,4 @@
-name: E2E Infrastructure Validation
+name: E2E Test Suite
 
 on:
   pull_request:
@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  infrastructure-validation:
+  e2e-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout code
@@ -90,19 +90,51 @@ jobs:
           }
           echo "✓ Dev server is running and responding"
 
-      - name: Infrastructure validation summary
+      - name: Run Cypress E2E tests
         run: |
-          echo "=== E2E Infrastructure Validation Summary ==="
-          echo "✓ Node.js and npm configured"
-          echo "✓ Dependencies installed"
-          echo "✓ Cypress installed and verified"
-          echo "✓ Test configuration files present"
-          echo "✓ Test utilities validated"
-          echo "✓ Chopsticks blockchain fork running"
-          echo "✓ React dev server running"
-          echo ""
-          echo "Infrastructure is ready for E2E tests!"
-          echo "Next step: Run actual Cypress tests (Story 3.3)"
+          echo "Running E2E test suite..."
+          npx cypress run --config video=true --reporter json --reporter-options "output=cypress/results/results.json"
+        env:
+          CYPRESS_BASE_URL: http://localhost:3000/ksm-app
+
+      - name: Upload test artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/screenshots/
+            cypress/videos/
+            cypress/results/
+          retention-days: 7
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: cypress/results/
+          retention-days: 30
+
+      - name: Generate test summary
+        if: always()
+        run: |
+          echo "=== E2E Test Suite Summary ===" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f cypress/results/results.json ]; then
+            echo "Test results generated successfully" >> $GITHUB_STEP_SUMMARY
+            # Parse results and display summary
+            npx node -e "
+              const results = require('./cypress/results/results.json');
+              const stats = results.stats || {};
+              console.log(\`- **Tests**: \${stats.tests || 0}\`);
+              console.log(\`- **Passes**: \${stats.passes || 0}\`);
+              console.log(\`- **Failures**: \${stats.failures || 0}\`);
+              console.log(\`- **Duration**: \${(stats.duration / 1000).toFixed(2)}s\`);
+            " >> $GITHUB_STEP_SUMMARY || echo "Could not parse test results" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No test results file found" >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Cleanup
         if: always()

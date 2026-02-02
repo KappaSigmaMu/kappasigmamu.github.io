@@ -1,0 +1,26 @@
+{
+  "sampleImages": [
+    {
+      "id": "poi-001",
+      "memberAddress": "CffzJo8UPWwvwPF73VcbEv4jSG4ckvGwNePL9V52hYh743X",
+      "memberName": "Eve",
+      "imageUrl": "https://example.com/poi/eve-tattoo.jpg",
+      "ipfsHash": "QmExampleHashForEveTattoo123",
+      "submittedAt": "2024-01-15T10:30:00Z",
+      "verified": true
+    },
+    {
+      "id": "poi-002",
+      "memberAddress": "CrcpvEZP2Z82iYFUPConih1t46VFwttrX7Tv19NW6hoCzKG",
+      "memberName": "Ferdie",
+      "imageUrl": "https://example.com/poi/ferdie-tattoo.jpg",
+      "ipfsHash": "QmExampleHashForFerdieTattoo456",
+      "submittedAt": "2024-02-01T14:45:00Z",
+      "verified": true
+    }
+  ],
+  "emptyState": {
+    "message": "No Proof of Ink submissions yet",
+    "action": "Be the first to submit your tattoo!"
+  }
+}
