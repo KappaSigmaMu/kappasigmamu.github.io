@@ -1,0 +1,91 @@
+endpoint: wss://rpc.ibp.network/kusama
+mock-signature-host: true
+block: 25000000
+db: ./db.sqlite
+# wasm-override: ./custom-kusama-runtime.wasm
+runtime-log-level: 5
+
+import-storage:
+  System:
+    Account:
+      - - - 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY
+        - providers: 1
+          data:
+            free: '10000000000000'
+      - - - 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty
+        - providers: 1
+          data:
+            free: '10000000000000'
+      - - - 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y
+        - providers: 1
+          data:
+            free: '10000000000000'
+      - - - 5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy
+        - providers: 1
+          data:
+            free: '10000000000000'
+      - - - 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw
+        - providers: 1
+          data:
+            free: '10000000000000'
+      - - - 5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL
+        - providers: 1
+          data:
+            free: '10000000000000'
+  Indices:
+    Accounts:
+      - - - 0
+        - - 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw
+          - 0
+          - true
+  Society:
+    $removePrefix:
+      - Bids
+      - Candidates
+      - Members
+      - Payouts
+    Bids:
+      - who: 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY # Alice
+        kind:
+          Deposit: 1
+        value: 299000000000000
+    Candidates:
+      - - - 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty # Bob
+        - round: 5
+          kind:
+            Deposit: 33333333000
+          bid: 500000000000000
+          tally:
+            approvals: 1
+            rejections: 0
+          skepticStruck: false
+      - - - 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y # Charlie
+        - round: 5
+          kind:
+            Deposit: 1666666666660
+          bid: 65000000000000
+          tally:
+            approvals: 0
+            rejections: 1
+          skepticStruck: false
+    Members:
+      - - - CffzJo8UPWwvwPF73VcbEv4jSG4ckvGwNePL9V52hYh743X # Eve
+        - rank: 0
+          strikes: 5
+          index: 0
+      - - - CrcpvEZP2Z82iYFUPConih1t46VFwttrX7Tv19NW6hoCzKG # Ferdie
+        - rank: 1
+          strikes: 0
+          index: 1
+    ChallengeRoundCount: 6
+    RoundCount: 6
+    MemberCount: 2
+    Head: 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw # Eve
+    Payouts:
+      - - - 5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL # Ferdie
+        - paid: 0
+          payouts:
+            - - 20000000
+              - 15000000000000
+  ParasDisputes:
+    $removePrefix: ['disputes'] # those can makes block building super slow

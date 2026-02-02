@@ -1,0 +1,51 @@
+{
+  "members": [
+    {
+      "address": "CffzJo8UPWwvwPF73VcbEv4jSG4ckvGwNePL9V52hYh743X",
+      "friendlyName": "Eve",
+      "rank": 0,
+      "strikes": 5,
+      "index": 0
+    },
+    {
+      "address": "CrcpvEZP2Z82iYFUPConih1t46VFwttrX7Tv19NW6hoCzKG",
+      "friendlyName": "Ferdie",
+      "rank": 1,
+      "strikes": 0,
+      "index": 1
+    }
+  ],
+  "candidates": [
+    {
+      "address": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "friendlyName": "Bob",
+      "round": 5,
+      "bid": "500000000000000",
+      "approvals": 1,
+      "rejections": 0,
+      "skepticStruck": false
+    },
+    {
+      "address": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+      "friendlyName": "Charlie",
+      "round": 5,
+      "bid": "65000000000000",
+      "approvals": 0,
+      "rejections": 1,
+      "skepticStruck": false
+    }
+  ],
+  "bids": [
+    {
+      "address": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "friendlyName": "Alice",
+      "value": "299000000000000"
+    }
+  ],
+  "metadata": {
+    "challengeRoundCount": 6,
+    "roundCount": 6,
+    "memberCount": 2,
+    "head": "5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw"
+  }
+}

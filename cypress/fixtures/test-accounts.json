@@ -1,0 +1,38 @@
+{
+  "alice": {
+    "address": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+    "name": "Alice",
+    "type": "sr25519",
+    "role": "Bidder"
+  },
+  "bob": {
+    "address": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+    "name": "Bob",
+    "type": "sr25519",
+    "role": "Candidate"
+  },
+  "charlie": {
+    "address": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+    "name": "Charlie",
+    "type": "sr25519",
+    "role": "Candidate"
+  },
+  "dave": {
+    "address": "5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy",
+    "name": "Dave",
+    "type": "sr25519",
+    "role": "Test Account"
+  },
+  "eve": {
+    "address": "5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw",
+    "name": "Eve",
+    "type": "sr25519",
+    "role": "Member (Head)"
+  },
+  "ferdie": {
+    "address": "5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL",
+    "name": "Ferdie",
+    "type": "sr25519",
+    "role": "Member"
+  }
+}
