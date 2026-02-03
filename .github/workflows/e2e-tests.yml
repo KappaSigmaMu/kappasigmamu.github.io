@@ -1,0 +1,132 @@
+name: E2E Test Suite
+
+on:
+  pull_request:
+    branches:
+      - main
+      - test-setup
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare Yarn 4.1.1
+        run: corepack prepare yarn@4.1.1 --activate
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Verify Cypress installation
+        run: npx cypress verify
+
+      - name: Setup Chopsticks config
+        run: |
+          cat > config/kusama.yml << 'EOF'
+          endpoint: wss://rpc.ibp.network/kusama
+          mock-signature-host: true
+          db: ./db.sqlite
+          runtime-log-level: 0
+          EOF
+
+      - name: Start Chopsticks (background)
+        run: |
+          echo "Starting Chopsticks blockchain fork..."
+          nohup yarn chopsticks > chopsticks.log 2>&1 &
+          CHOPSTICKS_PID=$!
+          echo "CHOPSTICKS_PID=$CHOPSTICKS_PID" >> $GITHUB_ENV
+          echo "Chopsticks started with PID: $CHOPSTICKS_PID"
+          sleep 5
+          echo "Chopsticks output:"
+          cat chopsticks.log || true
+
+      - name: Wait for Chopsticks to be ready
+        run: |
+          echo "Waiting for Chopsticks to respond on http://localhost:8000..."
+          timeout 120 bash -c 'until curl -sf http://localhost:8000 > /dev/null 2>&1; do sleep 2; done' || {
+            echo "Chopsticks did not start within 120 seconds"
+            echo "Chopsticks log:"
+            cat chopsticks.log || true
+            exit 1
+          }
+          echo "✓ Chopsticks is running and responding"
+
+      - name: Start dev server (background)
+        run: |
+          echo "Starting React dev server..."
+          nohup yarn start > dev-server.log 2>&1 &
+          DEV_SERVER_PID=$!
+          echo "DEV_SERVER_PID=$DEV_SERVER_PID" >> $GITHUB_ENV
+          echo "Dev server started with PID: $DEV_SERVER_PID"
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+          CI: true
+
+      - name: Wait for dev server to be ready
+        run: |
+          echo "Waiting for dev server to respond on http://localhost:3000/ksm-app..."
+          timeout 120 bash -c 'until curl -sf http://localhost:3000/ksm-app > /dev/null 2>&1; do sleep 3; done' || {
+            echo "Dev server did not start within 120 seconds"
+            exit 1
+          }
+          echo "✓ Dev server is running and responding"
+
+      - name: Run Cypress E2E tests
+        run: |
+          echo "Running E2E test suite..."
+          npx cypress run --config video=true --reporter json --reporter-options "output=cypress/results/results.json"
+        env:
+          CYPRESS_BASE_URL: http://localhost:3000/ksm-app
+
+      - name: Upload test artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/screenshots/
+            cypress/videos/
+            cypress/results/
+          retention-days: 7
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: cypress/results/
+          retention-days: 30
+
+      - name: Generate test summary
+        if: always()
+        run: |
+          echo "## E2E Test Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f cypress/results/results.json ]; then
+            echo "✓ Tests completed - see artifacts for details" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠ No test results generated" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          echo "Cleaning up background processes..."
+          if [ ! -z "$CHOPSTICKS_PID" ]; then
+            kill $CHOPSTICKS_PID 2>/dev/null || true
+          fi
+          if [ ! -z "$DEV_SERVER_PID" ]; then
+            kill $DEV_SERVER_PID 2>/dev/null || true
+          fi
