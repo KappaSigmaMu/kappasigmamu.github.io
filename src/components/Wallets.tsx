@@ -104,7 +104,12 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
         </Modal.Body>
         <Modal.Footer style={{ borderTop: '0px' }}>
           <Row className="d-flex w-100 align-items-center justify-content-between">
-            <Col className="d-flex align-items-center justify-content-start" onClick={handleDisconnect} role="button" data-testid="disconnect-button">
+            <Col
+              className="d-flex align-items-center justify-content-start"
+              onClick={handleDisconnect}
+              role="button"
+              data-testid="disconnect-button"
+            >
               Disconnect <FaPowerOff className="mx-2" />
             </Col>
             {selectedWallet && (
