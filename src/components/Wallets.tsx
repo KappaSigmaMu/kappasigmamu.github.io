@@ -77,7 +77,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
           {selectedWallet &&
             accounts &&
             accounts.map((account) => (
-              <AccountRow key={account.address} onClick={() => handleClick(account)}>
+              <AccountRow key={account.address} onClick={() => handleClick(account)} data-testid="account-switcher">
                 <Col xs={2}>
                   <Identicon value={account.address} size={42} theme={'polkadot'} />
                 </Col>
@@ -104,7 +104,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
         </Modal.Body>
         <Modal.Footer style={{ borderTop: '0px' }}>
           <Row className="d-flex w-100 align-items-center justify-content-between">
-            <Col className="d-flex align-items-center justify-content-start" onClick={handleDisconnect} role="button">
+            <Col className="d-flex align-items-center justify-content-start" onClick={handleDisconnect} role="button" data-testid="disconnect-button">
               Disconnect <FaPowerOff className="mx-2" />
             </Col>
             {selectedWallet && (
@@ -141,23 +141,28 @@ async function handleClick(wallet: WalletType, setSelectedWallet: any) {
   setSelectedWallet(wallet)
 }
 
-const Wallet = ({ wallet, setSelectedWallet }: { wallet: WalletType; setSelectedWallet: any }) => (
-  <WalletRow onClick={async () => handleClick(wallet, setSelectedWallet)}>
-    <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} />
-    <div>{wallet.title}</div>
-    <div className="ms-auto">
-      {wallet.installed ? (
-        <label>
-          Use <FaChevronRight className="ms-2" />
-        </label>
-      ) : (
-        <label>
-          Install <FaDownload className="ms-2" />
-        </label>
-      )}
-    </div>
-  </WalletRow>
-)
+const Wallet = ({ wallet, setSelectedWallet }: { wallet: WalletType; setSelectedWallet: any }) => {
+  // Generate data-testid based on wallet title (e.g., "polkadot-js" -> "wallet-polkadot")
+  const testId = `wallet-${wallet.title.toLowerCase().replace(/[.\s]+/g, '-').replace(/-js$/, '')}`
+
+  return (
+    <WalletRow onClick={async () => handleClick(wallet, setSelectedWallet)} data-testid={testId}>
+      <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} />
+      <div>{wallet.title}</div>
+      <div className="ms-auto">
+        {wallet.installed ? (
+          <label>
+            Use <FaChevronRight className="ms-2" />
+          </label>
+        ) : (
+          <label>
+            Install <FaDownload className="ms-2" />
+          </label>
+        )}
+      </div>
+    </WalletRow>
+  )
+}
 
 const StyledModal = styled(Modal)`
   .modal-content {

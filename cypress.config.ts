@@ -27,10 +27,10 @@ export default defineConfig({
       openMode: 0,     // No retries in interactive mode
     },
 
-    // Timeouts
-    defaultCommandTimeout: 10000,
-    requestTimeout: 10000,
-    responseTimeout: 10000,
+    // Timeouts (increased for blockchain operations)
+    defaultCommandTimeout: 15000,
+    requestTimeout: 20000,
+    responseTimeout: 20000,
 
     // Environment variables
     env: {
