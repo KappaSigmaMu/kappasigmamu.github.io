@@ -59,12 +59,12 @@ describe('Explore Routes Smoke Tests', () => {
   ]
 
   beforeEach(() => {
-    cy.visit('/', { timeout: 15000 })
+    cy.visit('/')
   })
 
   exploreRoutes.forEach(({ path, name }) => {
     it(`should load ${name} page (${path})`, () => {
-      cy.visit(`${path}?rpc=ws://localhost:8000`, { timeout: 10000 })
+      cy.visit(`${path}?rpc=ws://localhost:8000`)
 
       cy.get('body').should('be.visible')
       cy.get('nav').should('exist')
@@ -73,27 +73,27 @@ describe('Explore Routes Smoke Tests', () => {
   })
 
   it('should redirect /explore to /explore/bidders', () => {
-    cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore?rpc=ws://localhost:8000')
 
     cy.url().should('include', '/explore/bidders')
     cy.get('body').should('be.visible')
   })
 
   it('should navigate between explore sub-routes', () => {
-    cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore/bidders?rpc=ws://localhost:8000')
     cy.url().should('include', '/explore/bidders')
 
-    cy.visit('/explore/members?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore/members?rpc=ws://localhost:8000')
     cy.url().should('include', '/explore/members')
     cy.get('body').should('be.visible')
 
-    cy.visit('/explore/candidates?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore/candidates?rpc=ws://localhost:8000')
     cy.url().should('include', '/explore/candidates')
     cy.get('body').should('be.visible')
   })
 
   it('should maintain query parameter during navigation', () => {
-    cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore/bidders?rpc=ws://localhost:8000')
 
     cy.url().should('include', 'rpc=ws://localhost:8000')
   })
@@ -108,12 +108,12 @@ describe('Proof of Ink Routes Smoke Tests', () => {
   ]
 
   beforeEach(() => {
-    cy.visit('/?rpc=ws://localhost:8000', { timeout: 15000 })
+    cy.visit('/?rpc=ws://localhost:8000')
   })
 
   poiRoutes.forEach(({ path, name }) => {
     it(`should load ${name} page (${path})`, () => {
-      cy.visit(`${path}?rpc=ws://localhost:8000`, { timeout: 10000 })
+      cy.visit(`${path}?rpc=ws://localhost:8000`)
 
       cy.get('body').should('be.visible')
       cy.get('nav').should('exist')
@@ -122,45 +122,45 @@ describe('Proof of Ink Routes Smoke Tests', () => {
   })
 
   it('should redirect /explore/poi to /explore/poi/examples', () => {
-    cy.visit('/explore/poi?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore/poi?rpc=ws://localhost:8000')
 
     cy.url().should('include', '/explore/poi/examples')
     cy.get('body').should('be.visible')
   })
 
   it('should navigate between POI sub-routes', () => {
-    cy.visit('/explore/poi/examples?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore/poi/examples?rpc=ws://localhost:8000')
     cy.url().should('include', '/explore/poi/examples')
     cy.get('body').should('be.visible')
 
-    cy.visit('/explore/poi/rules?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore/poi/rules?rpc=ws://localhost:8000')
     cy.url().should('include', '/explore/poi/rules')
     cy.get('body').should('be.visible')
 
-    cy.visit('/explore/poi/gallery?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore/poi/gallery?rpc=ws://localhost:8000')
     cy.url().should('include', '/explore/poi/gallery')
     cy.get('body').should('be.visible')
 
-    cy.visit('/explore/poi/next-head?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore/poi/next-head?rpc=ws://localhost:8000')
     cy.url().should('include', '/explore/poi/next-head')
     cy.get('body').should('be.visible')
   })
 
   it('should maintain query parameter in POI routes', () => {
-    cy.visit('/explore/poi/examples?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore/poi/examples?rpc=ws://localhost:8000')
 
     cy.url().should('include', 'rpc=ws://localhost:8000')
 
-    cy.visit('/explore/poi/gallery?rpc=ws://localhost:8000', { timeout: 10000 })
+    cy.visit('/explore/poi/gallery?rpc=ws://localhost:8000')
     cy.url().should('include', 'rpc=ws://localhost:8000')
   })
 })
 
 describe('API Connection Smoke Tests', () => {
   it('should connect to Chopsticks successfully', () => {
-    cy.visit('/explore/members?rpc=ws://localhost:8000', { timeout: 15000 })
+    cy.visit('/explore/members?rpc=ws://localhost:8000')
 
-    cy.get('body', { timeout: 15000 }).should('be.visible')
+    cy.get('body').should('be.visible')
 
     cy.get('body').then(($body) => {
       const bodyText = $body.text()
@@ -174,17 +174,17 @@ describe('API Connection Smoke Tests', () => {
   })
 
   it('should display chain information', () => {
-    cy.visit('/explore/members?rpc=ws://localhost:8000', { timeout: 15000 })
+    cy.visit('/explore/members?rpc=ws://localhost:8000')
 
-    cy.get('body', { timeout: 15000 }).should('be.visible')
+    cy.get('body').should('be.visible')
     cy.get('nav').should('exist')
     cy.url().should('include', 'explore')
   })
 
   it('should initialize API without crashing', () => {
-    cy.visit('/explore/members?rpc=ws://localhost:8000', { timeout: 15000 })
+    cy.visit('/explore/members?rpc=ws://localhost:8000')
 
-    cy.wait(10000)
+    cy.wait(5000)
 
     cy.get('body').should('be.visible')
     cy.get('nav').should('exist')
@@ -202,24 +202,24 @@ describe('Query Parameter Preservation Smoke Tests', () => {
   })
 
   it('should preserve ?rpc parameter through redirects', () => {
-    cy.visit(`/explore?rpc=${testRpc}`, { timeout: 15000 })
+    cy.visit(`/explore?rpc=${testRpc}`)
 
     cy.url().should('include', '/explore/bidders')
     cy.url().should('include', `rpc=${testRpc}`)
 
-    cy.visit(`/explore/poi?rpc=${testRpc}`, { timeout: 15000 })
+    cy.visit(`/explore/poi?rpc=${testRpc}`)
 
     cy.url().should('include', '/explore/poi/examples')
     cy.url().should('include', `rpc=${testRpc}`)
   })
 
   it('should preserve params in deeply nested routes', () => {
-    cy.visit(`/explore/poi/gallery?rpc=${testRpc}`, { timeout: 15000 })
+    cy.visit(`/explore/poi/gallery?rpc=${testRpc}`)
 
     cy.url().should('include', '/explore/poi/gallery')
     cy.url().should('include', `rpc=${testRpc}`)
 
-    cy.visit(`/explore/poi/rules?rpc=${testRpc}`, { timeout: 15000 })
+    cy.visit(`/explore/poi/rules?rpc=${testRpc}`)
 
     cy.url().should('include', '/explore/poi/rules')
     cy.url().should('include', `rpc=${testRpc}`)

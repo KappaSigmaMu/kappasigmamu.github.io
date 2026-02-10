@@ -13,23 +13,18 @@ export default defineConfig({
     viewportWidth: 1280,
     viewportHeight: 720,
 
-    // Video and screenshot settings
-    video: true,
-    videoCompression: 32,
-    videosFolder: 'cypress/videos',
+    video: false,
     screenshotOnRunFailure: true,
     screenshotsFolder: 'cypress/screenshots',
 
-    // Retry logic for flaky test mitigation
     retries: {
-      runMode: 2,      // Retry failed tests 2 times in CI
-      openMode: 0,     // No retries in interactive mode
+      runMode: 2,
+      openMode: 0,
     },
 
-    // Timeouts (increased for blockchain operations)
-    defaultCommandTimeout: 15000,
-    requestTimeout: 20000,
-    responseTimeout: 20000,
+    defaultCommandTimeout: 10000,
+    requestTimeout: 15000,
+    responseTimeout: 15000,
 
     // Environment variables
     env: {

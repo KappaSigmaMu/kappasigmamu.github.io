@@ -7,13 +7,13 @@ Cypress.on('uncaught:exception', (err) => {
 });
 
 Cypress.Commands.add('connectWallet', (accountAddress: string) => {
-  cy.contains('button', /connect/i, { timeout: 15000 }).should('be.visible').click();
-  cy.wait(1000);
-  cy.get('[data-testid="wallet-polkadot"]', { timeout: 10000 }).should('be.visible').click();
-  cy.wait(5000);
-  cy.get('.modal-body').contains(accountAddress, { timeout: 10000 }).should('be.visible').click();
-  cy.wait(1000);
-  cy.contains(/5[A-Za-z0-9]{4}…[A-Za-z0-9]{4}/, { timeout: 15000 }).should('be.visible');
+  cy.contains('button', /connect/i).should('be.visible').click();
+  cy.wait(500);
+  cy.get('[data-testid="wallet-polkadot"]').should('be.visible').click();
+  cy.wait(2000);
+  cy.get('.modal-body').contains(accountAddress).should('be.visible').click();
+  cy.wait(500);
+  cy.contains(/5[A-Za-z0-9]{4}…[A-Za-z0-9]{4}/).should('be.visible');
 });
 
 declare global {
