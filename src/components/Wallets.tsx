@@ -5,6 +5,7 @@ import { Col, Modal, Row } from 'react-bootstrap'
 import { FaChevronLeft, FaChevronRight, FaCircleCheck, FaDownload, FaPowerOff, FaXmark } from 'react-icons/fa6'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
+import { walletTestId } from '../helpers/test-utils/testIds'
 import { wallets } from '../helpers/wallets'
 import { Identicon } from '../pages/explore/components/Identicon'
 import { toastByStatus } from '../pages/explore/helpers'
@@ -147,11 +148,8 @@ async function handleClick(wallet: WalletType, setSelectedWallet: any) {
 }
 
 const Wallet = ({ wallet, setSelectedWallet }: { wallet: WalletType; setSelectedWallet: any }) => {
-  // Generate data-testid based on wallet title (e.g., "polkadot-js" -> "wallet-polkadot")
-  const testId = `wallet-${wallet.title.toLowerCase().replace(/[.\s]+/g, '-').replace(/-js$/, '')}`
-
   return (
-    <WalletRow onClick={async () => handleClick(wallet, setSelectedWallet)} data-testid={testId}>
+    <WalletRow onClick={async () => handleClick(wallet, setSelectedWallet)} data-testid={walletTestId(wallet.title)}>
       <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} />
       <div>{wallet.title}</div>
       <div className="ms-auto">
