@@ -9,7 +9,6 @@ export default defineConfig({
     specPattern: 'cypress/e2e/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'cypress/support/e2e.ts',
 
-    // Viewport configuration for responsive testing
     viewportWidth: 1280,
     viewportHeight: 720,
 
@@ -26,7 +25,6 @@ export default defineConfig({
     requestTimeout: 15000,
     responseTimeout: 15000,
 
-    // Environment variables
     env: {
       chopsticks_url: 'ws://localhost:8000',
     },
