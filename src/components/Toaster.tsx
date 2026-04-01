@@ -30,17 +30,31 @@ const Toaster = () => (
       }
     }}
   >
-    {(t) => (
-      <ToastBar style={{ minHeight: '7vh' }} toast={t}>
-        {({ icon, message }) => (
-          <>
-            {icon}
-            {message}
-            {<FaXmark role="button" onClick={() => toast.dismiss(t.id)} style={{ flexShrink: 0 }}></FaXmark>}
-          </>
-        )}
-      </ToastBar>
-    )}
+    {(t) => {
+      const isSigningMessage = typeof t.message === 'string' && t.message.includes('Awaiting signature')
+      const testId =
+        t.type === 'success'
+          ? 'tx-success'
+          : t.type === 'error'
+            ? 'tx-error'
+            : t.type === 'loading'
+              ? isSigningMessage
+                ? 'tx-signing'
+                : 'tx-pending'
+              : undefined
+
+      return (
+        <ToastBar style={{ minHeight: '7vh' }} toast={t}>
+          {({ icon, message }) => (
+            <div data-testid={testId} style={{ display: 'contents' }}>
+              {icon}
+              <span data-testid="tx-message">{message}</span>
+              {<FaXmark role="button" onClick={() => toast.dismiss(t.id)} style={{ flexShrink: 0 }}></FaXmark>}
+            </div>
+          )}
+        </ToastBar>
+      )
+    }}
   </TToaster>
 )
 

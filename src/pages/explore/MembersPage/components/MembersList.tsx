@@ -74,14 +74,16 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
   }, [members, activeAccount, prevActiveAccount])
 
   return (
-    <>
+    <div data-testid="members-list">
       {selectedMember && (
-        <MemberDetailsOffCanvas
-          api={api}
-          accountId={selectedMember}
-          show={showMemberDetailsOffcanvas}
-          onClose={() => setShowMemberDetailsOffcanvas(false)}
-        />
+        <div data-testid="member-detail-panel">
+          <MemberDetailsOffCanvas
+            api={api}
+            accountId={selectedMember}
+            show={showMemberDetailsOffcanvas}
+            onClose={() => setShowMemberDetailsOffcanvas(false)}
+          />
+        </div>
       )}
 
       <DataHeaderRow className="d-none d-lg-flex text-center">
@@ -102,7 +104,11 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
       </DataHeaderRow>
 
       {members.map((member: SocietyMember) => (
-        <StyledDataRow key={member.accountId.toString()} $isDefender={member.isDefender}>
+        <StyledDataRow
+          key={member.accountId.toString()}
+          $isDefender={member.isDefender}
+          data-testid={`member-row-${member.accountId.toString()}`}
+        >
           <Col lg={1} className="text-center">
             <Identicon value={member.accountId.toHuman()} size={32} theme={'polkadot'} />
           </Col>
@@ -121,6 +127,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
             className={`d-flex justify-content-lg-start justify-content-center align-items-center py-2 ${
               member.isDefender && activeAccountIsMember ? 'd-inline' : 'd-none d-lg-inline p-0'
             }`}
+            data-testid={member.isDefender ? 'defender-section' : undefined}
           >
             {member.isDefender && activeAccountIsMember && (
               <>
@@ -133,6 +140,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
                   vote={{ approve: true, voterAccount: activeAccount!, accountId: member.accountId, type: 'defender' }}
                   icon={'approve'}
                   handleUpdate={handleUpdate}
+                  data-testid="defender-approve-btn"
                 ></VoteButton>
                 <VoteButton
                   disabled={disabledVote}
@@ -143,11 +151,16 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
                   vote={{ approve: false, voterAccount: activeAccount!, accountId: member.accountId, type: 'defender' }}
                   icon={'reject'}
                   handleUpdate={handleUpdate}
+                  data-testid="defender-reject-btn"
                 ></VoteButton>
               </>
             )}
           </Col>
-          <Col lg={1} className="text-center text-lg-start">
+          <Col
+            lg={1}
+            className="text-center text-lg-start"
+            data-testid={`member-strikes-${member.accountId.toString()}`}
+          >
             <span style={{ color: member.strikes.toNumber() > 5 ? 'red' : 'white' }}>
               {member.strikes.toNumber()}
               <span style={{ color: member.strikes.toNumber() > 5 ? 'red' : 'white' }} className="d-inline d-lg-none">
@@ -155,7 +168,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
               </span>
             </span>
           </Col>
-          <Col lg={3} className="text-center text-lg-end">
+          <Col lg={3} className="text-center text-lg-end" data-testid={`member-badges-${member.accountId.toString()}`}>
             {member.isDefender && (
               <Badge pill bg="primary" className="me-2 p-2">
                 Defender
@@ -189,7 +202,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
           </Col>
         </StyledDataRow>
       ))}
-    </>
+    </div>
   )
 }
 

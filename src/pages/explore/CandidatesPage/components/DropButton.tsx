@@ -16,6 +16,7 @@ type DropButtonProps = {
   successText: string
   waitingText: string
   disabled: boolean
+  'data-testid'?: string
 }
 
 export interface Drop {
@@ -30,7 +31,8 @@ export function DropButton({
   showMessage,
   handleUpdate,
   successText,
-  waitingText
+  waitingText,
+  'data-testid': dataTestId
 }: DropButtonProps) {
   const [loading, setLoading] = useState(false)
 
@@ -67,7 +69,14 @@ export function DropButton({
         </Tooltip>
       }
     >
-      <Button disabled={disabled} variant="link" onClick={handleDrop} size="sm" className="p-2">
+      <Button
+        disabled={disabled}
+        variant="link"
+        onClick={handleDrop}
+        size="sm"
+        className="p-2"
+        data-testid={dataTestId}
+      >
         <StyledDropIcon size={20} />
       </Button>
     </OverlayTrigger>

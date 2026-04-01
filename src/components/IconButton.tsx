@@ -8,9 +8,10 @@ type IconButtonProps = {
   icon: string
   disabled: boolean
   loading: boolean
+  'data-testid'?: string
 }
 
-function IconButton({ onClick, icon, disabled, loading }: IconButtonProps) {
+function IconButton({ onClick, icon, disabled, loading, 'data-testid': dataTestId }: IconButtonProps) {
   if (loading)
     return (
       <div className="mx-2">
@@ -19,7 +20,7 @@ function IconButton({ onClick, icon, disabled, loading }: IconButtonProps) {
     )
 
   return (
-    <Button disabled={disabled} variant="link" onClick={onClick} size="sm">
+    <Button disabled={disabled} variant="link" onClick={onClick} size="sm" data-testid={dataTestId}>
       {icon === 'approve' ? <StyledApproveIcon size={20} /> : <StyledRejectIcon size={20} />}
     </Button>
   )
