@@ -1,10 +1,12 @@
 name: E2E Test Suite
 
 on:
+  push:
+    branches:
+      - e2e-tests/**
   pull_request:
     branches:
       - main
-      - test-setup
   workflow_dispatch:
 
 jobs:
@@ -32,15 +34,6 @@ jobs:
 
       - name: Verify Cypress installation
         run: npx cypress verify
-
-      - name: Setup Chopsticks config
-        run: |
-          cat > config/kusama.yml << 'EOF'
-          endpoint: wss://rpc.ibp.network/kusama
-          mock-signature-host: true
-          db: ./db.sqlite
-          runtime-log-level: 0
-          EOF
 
       - name: Start Chopsticks (background)
         run: |

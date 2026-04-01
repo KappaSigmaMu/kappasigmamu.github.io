@@ -4,6 +4,26 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',
     setupNodeEvents(on, config) {
+      on('task', {
+        async resetChopsticks() {
+          try {
+            const response = await fetch('http://localhost:8000', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                jsonrpc: '2.0',
+                id: 1,
+                method: 'dev_newBlock',
+                params: [],
+              }),
+            });
+            await response.json();
+          } catch (e) {
+            console.log('Chopsticks reset skipped:', (e as Error).message);
+          }
+          return null;
+        },
+      });
       return config;
     },
     specPattern: 'cypress/e2e/*.cy.{js,jsx,ts,tsx}',
