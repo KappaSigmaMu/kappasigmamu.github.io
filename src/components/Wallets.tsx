@@ -65,7 +65,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
 
   return (
     <>
-      <StyledModal show={show} onHide={() => setShow(false)} centered scrollable>
+      <StyledModal show={show} onHide={() => setShow(false)} centered scrollable data-testid="wallet-modal">
         <Modal.Header className="px-4" style={{ borderBottom: '0px' }}>
           <Modal.Title>{!selectedWallet ? 'Wallets' : 'Accounts'}</Modal.Title>
           <FaXmark onClick={() => setShow(false)} role="button" />
@@ -78,7 +78,11 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
           {selectedWallet &&
             accounts &&
             accounts.map((account) => (
-              <AccountRow key={account.address} onClick={() => handleClick(account)} data-testid="account-switcher">
+              <AccountRow
+                key={account.address}
+                onClick={() => handleClick(account)}
+                data-testid={`account-${account.name}`}
+              >
                 <Col xs={2}>
                   <Identicon value={account.address} size={42} theme={'polkadot'} />
                 </Col>
@@ -109,7 +113,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
               className="d-flex align-items-center justify-content-start"
               onClick={handleDisconnect}
               role="button"
-              data-testid="disconnect-button"
+              data-testid="disconnect-btn"
             >
               Disconnect <FaPowerOff className="mx-2" />
             </Col>

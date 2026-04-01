@@ -13,9 +13,17 @@ type ClaimPayoutButtonProps = {
   showMessage: (args: ExtrinsicResult) => any
   handleUpdate: () => void
   disabled: boolean
+  'data-testid'?: string
 }
 
-export function ClaimPayoutButton({ api, activeAccount, disabled, showMessage, handleUpdate }: ClaimPayoutButtonProps) {
+export function ClaimPayoutButton({
+  api,
+  activeAccount,
+  disabled,
+  showMessage,
+  handleUpdate,
+  'data-testid': dataTestId
+}: ClaimPayoutButtonProps) {
   const [loading, setLoading] = useState(false)
 
   const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
@@ -55,7 +63,14 @@ export function ClaimPayoutButton({ api, activeAccount, disabled, showMessage, h
       placement="top"
       overlay={<Tooltip id="claim-payout-tooltip">Claim your matured payout from the society.</Tooltip>}
     >
-      <Button disabled={disabled} variant="link" onClick={handleClaimPayout} size="sm" className="p-2">
+      <Button
+        disabled={disabled}
+        variant="link"
+        onClick={handleClaimPayout}
+        size="sm"
+        className="p-2"
+        data-testid={dataTestId}
+      >
         <StyledClaimIcon size={16} />
       </Button>
     </OverlayTrigger>
