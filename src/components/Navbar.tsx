@@ -36,22 +36,42 @@ const Navbar = ({
 
                   <StyledDropdownMenu>
                     <Dropdown.Item as="button">
-                      <Nav.Link to="/guide" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                      <Nav.Link
+                        to="/guide"
+                        as={LinkWithQuery}
+                        onClick={(e) => e.currentTarget.blur()}
+                        data-testid="nav-link-guide"
+                      >
                         Guide
                       </Nav.Link>
                     </Dropdown.Item>
                     <Dropdown.Item as="button">
-                      <Nav.Link to="/wiki" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                      <Nav.Link
+                        to="/wiki"
+                        as={LinkWithQuery}
+                        onClick={(e) => e.currentTarget.blur()}
+                        data-testid="nav-link-wiki"
+                      >
                         Wiki
                       </Nav.Link>
                     </Dropdown.Item>
                     <Dropdown.Item as="button">
-                      <Nav.Link to="/journey" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                      <Nav.Link
+                        to="/journey"
+                        as={LinkWithQuery}
+                        onClick={(e) => e.currentTarget.blur()}
+                        data-testid="nav-link-journey"
+                      >
                         Journey
                       </Nav.Link>
                     </Dropdown.Item>
                     <Dropdown.Item as="button">
-                      <Nav.Link to="/explore" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                      <Nav.Link
+                        to="/explore"
+                        as={LinkWithQuery}
+                        onClick={(e) => e.currentTarget.blur()}
+                        data-testid="nav-link-explore"
+                      >
                         Explore
                       </Nav.Link>
                     </Dropdown.Item>
@@ -61,19 +81,39 @@ const Navbar = ({
 
               {/* Desktop Links */}
               <div className="d-none d-lg-flex me-2 align-items-center">
-                <Nav.Link to="/guide" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                <Nav.Link
+                  to="/guide"
+                  as={LinkWithQuery}
+                  onClick={(e) => e.currentTarget.blur()}
+                  data-testid="nav-link-guide"
+                >
                   Guide
                 </Nav.Link>
                 <span>•</span>
-                <Nav.Link to="/wiki" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                <Nav.Link
+                  to="/wiki"
+                  as={LinkWithQuery}
+                  onClick={(e) => e.currentTarget.blur()}
+                  data-testid="nav-link-wiki"
+                >
                   Wiki
                 </Nav.Link>
                 <span>•</span>
-                <Nav.Link to="/journey" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                <Nav.Link
+                  to="/journey"
+                  as={LinkWithQuery}
+                  onClick={(e) => e.currentTarget.blur()}
+                  data-testid="nav-link-journey"
+                >
                   Journey
                 </Nav.Link>
                 <span>•</span>
-                <Nav.Link to="/explore" as={LinkWithQuery} onClick={(e) => e.currentTarget.blur()}>
+                <Nav.Link
+                  to="/explore"
+                  as={LinkWithQuery}
+                  onClick={(e) => e.currentTarget.blur()}
+                  data-testid="nav-link-explore"
+                >
                   Explore
                 </Nav.Link>
               </div>
@@ -106,6 +146,7 @@ const AccountNavbar = () => {
         variant={activeAccount ? 'outline-primary' : 'primary'}
         onClick={() => setShowWallets(true)}
         style={{ minHeight: '38px' }}
+        data-testid={activeAccount ? 'connected-account' : 'connect-wallet-btn'}
       >
         {activeAccount ? <SelectedAccount /> : 'Connect Wallet'}
       </Button>

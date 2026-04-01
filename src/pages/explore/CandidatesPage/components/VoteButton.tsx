@@ -14,6 +14,7 @@ type VoteButtonProps = {
   successText: string
   waitingText: string
   disabled: boolean
+  'data-testid'?: string
 }
 
 export interface Vote {
@@ -31,7 +32,8 @@ export function VoteButton({
   icon,
   handleUpdate,
   successText,
-  waitingText
+  waitingText,
+  'data-testid': dataTestId
 }: VoteButtonProps) {
   const [loading, setLoading] = useState(false)
 
@@ -55,5 +57,5 @@ export function VoteButton({
     }
   }
 
-  return <IconButton disabled={disabled} loading={loading} icon={icon} onClick={handleVote} />
+  return <IconButton disabled={disabled} loading={loading} icon={icon} onClick={handleVote} data-testid={dataTestId} />
 }

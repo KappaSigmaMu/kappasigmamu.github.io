@@ -38,9 +38,18 @@ type TimeRemainingProps = {
   member: ExtendedSocietyMember
   activeAccount: WalletAccount | undefined
   handleUpdate: () => void
+  'data-testid'?: string
 }
 
-const TimeRemaining = ({ block, latestBlock, api, member, activeAccount, handleUpdate }: TimeRemainingProps) => {
+const TimeRemaining = ({
+  block,
+  latestBlock,
+  api,
+  member,
+  activeAccount,
+  handleUpdate,
+  'data-testid': dataTestId
+}: TimeRemainingProps) => {
   if (!latestBlock)
     return (
       <Badge pill bg="black" className="me-2 p-2">
@@ -73,6 +82,7 @@ const TimeRemaining = ({ block, latestBlock, api, member, activeAccount, handleU
             showMessage={(result) => toastByStatus[result.status](result.message, { id: result.message })}
             handleUpdate={handleUpdate}
             disabled={false}
+            data-testid={dataTestId}
           />
         )}
       </>
@@ -108,7 +118,7 @@ const PayoutsList = ({ api, members, activeAccount, handleUpdate }: PayoutsListP
   if (members.length === 0) return <>No members</>
 
   return (
-    <>
+    <div data-testid="payouts-list">
       <DataHeaderRow className="d-none d-lg-flex text-center">
         <Col lg={1}>#</Col>
         <Col lg={5} className="text-center text-lg-start">
@@ -124,20 +134,32 @@ const PayoutsList = ({ api, members, activeAccount, handleUpdate }: PayoutsListP
       </DataHeaderRow>
 
       {members.map((member: ExtendedSocietyMember) => (
-        <StyledDataRow key={member.accountId.toString()}>
+        <StyledDataRow key={member.accountId.toString()} data-testid={`payout-row-${member.accountId.toString()}`}>
           <Col lg={1} className="text-center">
             <Identicon value={member.accountId.toHuman()} size={32} theme={'polkadot'} />
           </Col>
           <Col lg={5} className="text-center text-lg-start">
             {member.accountId.toHuman()}
           </Col>
-          <Col lg={2} className="text-center text-lg-start">
+          <Col
+            lg={2}
+            className="text-center text-lg-start"
+            data-testid={`payout-total-${member.accountId.toString()}`}
+          >
             <FormatBalance balance={member.extendedPayouts.paid} />
           </Col>
-          <Col lg={2} className="text-center text-lg-start">
+          <Col
+            lg={2}
+            className="text-center text-lg-start"
+            data-testid={`payout-pending-${member.accountId.toString()}`}
+          >
             <FormatBalance balance={member.extendedPayouts.pending} />
           </Col>
-          <Col lg={2} className="text-center text-lg-end">
+          <Col
+            lg={2}
+            className="text-center text-lg-end"
+            data-testid={`payout-maturity-${member.accountId.toString()}`}
+          >
             {member.isFounder && (
               <Badge pill bg="dark" className="me-2 p-2">
                 Founder
@@ -156,6 +178,7 @@ const PayoutsList = ({ api, members, activeAccount, handleUpdate }: PayoutsListP
                 member={member}
                 activeAccount={activeAccount}
                 handleUpdate={handleUpdate}
+                data-testid={`claim-payout-btn-${member.accountId.toString()}`}
               />
             )}
             {member.extendedPayouts.pending == 0 && member.extendedPayouts.paid > 0 && (
@@ -171,7 +194,7 @@ const PayoutsList = ({ api, members, activeAccount, handleUpdate }: PayoutsListP
           </Col>
         </StyledDataRow>
       ))}
-    </>
+    </div>
   )
 }
 

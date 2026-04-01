@@ -75,15 +75,20 @@ const ExplorePage = (): JSX.Element => {
           {apiState !== ApiState.ready ? (
             <LoadingSpinner />
           ) : (
-            <Routes>
-              <Route path="/" element={<NavigateWithQuery to="/explore/bidders" replace />} />
-              <Route path="/bidders" element={<BiddersPage api={api} />} />
-              <Route path="/candidates" element={<CandidatesPage api={api} handleUpdateTotal={handleUpdateTotal} />} />
-              <Route path="/members" element={<MembersPage api={api} />} />
-              <Route path="/payouts" element={<PayoutsPage api={api} />} />
-              <Route path="/suspended" element={<SuspendedPage api={api} />} />
-              <Route path="/poi/*" element={<ProofOfInkPage api={api} />} />
-            </Routes>
+            <div data-testid="blockchain-data">
+              <Routes>
+                <Route path="/" element={<NavigateWithQuery to="/explore/bidders" replace />} />
+                <Route path="/bidders" element={<BiddersPage api={api} />} />
+                <Route
+                  path="/candidates"
+                  element={<CandidatesPage api={api} handleUpdateTotal={handleUpdateTotal} />}
+                />
+                <Route path="/members" element={<MembersPage api={api} />} />
+                <Route path="/payouts" element={<PayoutsPage api={api} />} />
+                <Route path="/suspended" element={<SuspendedPage api={api} />} />
+                <Route path="/poi/*" element={<ProofOfInkPage api={api} />} />
+              </Routes>
+            </div>
           )}
         </Col>
       </Row>
