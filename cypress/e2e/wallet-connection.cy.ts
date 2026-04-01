@@ -24,7 +24,7 @@ describe('Wallet Connection UI Flow', () => {
     cy.wait(500);
 
     cy.get('[data-testid="wallet-polkadot"]').should('exist');
-    cy.get('[data-testid="disconnect-button"]').should('exist');
+    cy.get('[data-testid="disconnect-btn"]').should('exist');
   });
 
   it('should close modal when X is clicked', () => {
@@ -39,7 +39,7 @@ describe('Wallet Connection UI Flow', () => {
     cy.contains('button', /connect/i).should('be.visible').click();
     cy.wait(500);
 
-    cy.get('[data-testid="disconnect-button"]')
+    cy.get('[data-testid="disconnect-btn"]')
       .should('be.visible')
       .and('contain.text', 'Disconnect');
   });
