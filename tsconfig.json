@@ -21,5 +21,6 @@
   "paths": {
     "*": ["types/*.d.ts"]
   },
-  "include": ["src", "cypress/**/*.ts"]
+  "include": ["src"],
+  "exclude": ["node_modules", "build", "cypress"]
 }
