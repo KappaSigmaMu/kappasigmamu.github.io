@@ -12,17 +12,14 @@ type ClaimPayoutButtonProps = {
   activeAccount: WalletAccount | undefined
   showMessage: (args: ExtrinsicResult) => any
   handleUpdate: () => void
-  disabled: boolean
-  'data-testid'?: string
-}
+} & React.ComponentProps<typeof Button>
 
 export function ClaimPayoutButton({
   api,
   activeAccount,
-  disabled,
   showMessage,
   handleUpdate,
-  'data-testid': dataTestId
+  ...buttonProps
 }: ClaimPayoutButtonProps) {
   const [loading, setLoading] = useState(false)
 
@@ -64,12 +61,11 @@ export function ClaimPayoutButton({
       overlay={<Tooltip id="claim-payout-tooltip">Claim your matured payout from the society.</Tooltip>}
     >
       <Button
-        disabled={disabled}
         variant="link"
         onClick={handleClaimPayout}
         size="sm"
         className="p-2"
-        data-testid={dataTestId}
+        {...buttonProps}
       >
         <StyledClaimIcon size={16} />
       </Button>

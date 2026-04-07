@@ -51,12 +51,12 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
       pillText = 'My bid'
       handleUndo = handleUnbid
       badgeText = 'UNBID'
-      testId = 'unbid-btn'
+      testId = 'unbid-button'
     } else if (bid.kind.isVouch && isVoucher(bid)) {
       pillText = 'My vouch'
       handleUndo = handleUnvouch
       badgeText = 'UNVOUCH'
-      testId = 'unvouch-btn'
+      testId = 'unvouch-button'
     }
 
     return { pillText, handleUndo, badgeText, testId }
@@ -76,7 +76,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
         <Col lg={2} className="text-center text-lg-start">
           {badgeText && (
             <>
-              <StyledUndo $disabled={loading} onClick={() => handleUndo(index)} href="#" data-testid={testId}>
+              <StyledUndo $disabled={loading} onClick={() => handleUndo(index)} href="#" data-test={testId}>
                 {badgeText}
               </StyledUndo>
               <Badge pill bg="primary">
@@ -100,7 +100,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
   if (bids.length === 0) return <>No bids</>
 
   return (
-    <div data-testid="bidders-list">
+    <div data-test="bidders-list">
       <DataHeaderRow className="d-none d-lg-flex text-center">
         <Col lg={1}>#</Col>
         <Col lg={3} className="text-center text-lg-start">
@@ -118,7 +118,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
       </DataHeaderRow>
 
       {bids.map((bid: PalletSocietyBid, index: any) => (
-        <StyledDataRow $isOwner={isOwner(bid)} key={bid.who?.toString()} data-testid={`bid-row-${bid.who?.toString()}`}>
+        <StyledDataRow $isOwner={isOwner(bid)} key={bid.who?.toString()} data-test={`bid-row-${bid.who?.toString()}`}>
           <Col lg={1} className="text-center">
             <Identicon value={bid.who.toHuman()} size={32} theme={'polkadot'} />
           </Col>

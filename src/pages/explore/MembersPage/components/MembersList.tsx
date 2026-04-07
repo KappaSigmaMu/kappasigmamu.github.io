@@ -74,9 +74,9 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
   }, [members, activeAccount, prevActiveAccount])
 
   return (
-    <div data-testid="members-list">
+    <div data-test="members-list">
       {selectedMember && (
-        <div data-testid="member-detail-panel">
+        <div data-test="member-detail-panel">
           <MemberDetailsOffCanvas
             api={api}
             accountId={selectedMember}
@@ -107,7 +107,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
         <StyledDataRow
           key={member.accountId.toString()}
           $isDefender={member.isDefender}
-          data-testid={`member-row-${member.accountId.toString()}`}
+          data-test={`member-row-${member.accountId.toString()}`}
         >
           <Col lg={1} className="text-center">
             <Identicon value={member.accountId.toHuman()} size={32} theme={'polkadot'} />
@@ -127,7 +127,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
             className={`d-flex justify-content-lg-start justify-content-center align-items-center py-2 ${
               member.isDefender && activeAccountIsMember ? 'd-inline' : 'd-none d-lg-inline p-0'
             }`}
-            data-testid={member.isDefender ? 'defender-section' : undefined}
+            data-test={member.isDefender ? 'defender-section' : undefined}
           >
             {member.isDefender && activeAccountIsMember && (
               <>
@@ -140,7 +140,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
                   vote={{ approve: true, voterAccount: activeAccount!, accountId: member.accountId, type: 'defender' }}
                   icon={'approve'}
                   handleUpdate={handleUpdate}
-                  data-testid="defender-approve-btn"
+                  data-test="defender-approve-button"
                 ></VoteButton>
                 <VoteButton
                   disabled={disabledVote}
@@ -151,7 +151,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
                   vote={{ approve: false, voterAccount: activeAccount!, accountId: member.accountId, type: 'defender' }}
                   icon={'reject'}
                   handleUpdate={handleUpdate}
-                  data-testid="defender-reject-btn"
+                  data-test="defender-reject-button"
                 ></VoteButton>
               </>
             )}
@@ -159,7 +159,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
           <Col
             lg={1}
             className="text-center text-lg-start"
-            data-testid={`member-strikes-${member.accountId.toString()}`}
+            data-test={`member-strikes-${member.accountId.toString()}`}
           >
             <span style={{ color: member.strikes.toNumber() > 5 ? 'red' : 'white' }}>
               {member.strikes.toNumber()}
@@ -168,7 +168,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
               </span>
             </span>
           </Col>
-          <Col lg={3} className="text-center text-lg-end" data-testid={`member-badges-${member.accountId.toString()}`}>
+          <Col lg={3} className="text-center text-lg-end" data-test={`member-badges-${member.accountId.toString()}`}>
             {member.isDefender && (
               <Badge pill bg="primary" className="me-2 p-2">
                 Defender

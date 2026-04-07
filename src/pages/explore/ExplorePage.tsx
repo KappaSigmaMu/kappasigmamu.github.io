@@ -75,7 +75,7 @@ const ExplorePage = (): JSX.Element => {
           {apiState !== ApiState.ready ? (
             <LoadingSpinner />
           ) : (
-            <div data-testid="blockchain-data">
+            <div data-test="blockchain-data">
               <Routes>
                 <Route path="/" element={<NavigateWithQuery to="/explore/bidders" replace />} />
                 <Route path="/bidders" element={<BiddersPage api={api} />} />
