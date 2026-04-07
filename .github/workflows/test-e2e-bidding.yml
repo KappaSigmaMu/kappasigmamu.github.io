@@ -38,6 +38,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Setup Chopsticks config
+        run: cp config/kusama.yml.sample config/kusama.yml
+
       - name: Run bidding E2E tests
         run: yarn test:e2e:bidding
         env:
