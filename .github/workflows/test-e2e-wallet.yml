@@ -1,4 +1,4 @@
-name: Bidding E2E
+name: "E2E: Wallet Connection"
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-e2e-bidding:
+  test-e2e-wallet:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -41,8 +41,8 @@ jobs:
       - name: Setup Chopsticks config
         run: cp config/kusama.yml.sample config/kusama.yml
 
-      - name: Run bidding E2E tests
-        run: yarn test:e2e:bidding
+      - name: Run wallet connection E2E tests
+        run: yarn test:e2e:wallet
         env:
           NODE_OPTIONS: --openssl-legacy-provider
 
@@ -50,6 +50,6 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-bidding-screenshots
+          name: cypress-wallet-screenshots
           path: cypress/screenshots
           include-hidden-files: true
