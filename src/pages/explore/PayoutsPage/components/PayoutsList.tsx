@@ -39,7 +39,7 @@ type TimeRemainingProps = {
   activeAccount: WalletAccount | undefined
   handleUpdate: () => void
   'data-test'?: string
-} & Omit<React.HTMLAttributes<HTMLDivElement>, 'data-test'>
+} & React.HTMLAttributes<HTMLDivElement>
 
 const TimeRemaining = ({
   block,
@@ -48,8 +48,7 @@ const TimeRemaining = ({
   member,
   activeAccount,
   handleUpdate,
-  'data-test': dataTest,
-  ...htmlProps
+  'data-test': dataTest
 }: TimeRemainingProps) => {
   if (!latestBlock)
     return (

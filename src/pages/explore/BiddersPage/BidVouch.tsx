@@ -161,7 +161,13 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
-            <Button disabled={loading} variant="primary" type="submit" className="w-100" data-test="submit-vouch-button">
+            <Button
+              disabled={loading}
+              variant="primary"
+              type="submit"
+              className="w-100"
+              data-test="submit-vouch-button"
+            >
               {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
             <StyledButtonLabel className="text-muted">*Plus 0.0045 KSM fee</StyledButtonLabel>
