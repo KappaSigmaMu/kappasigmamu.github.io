@@ -95,9 +95,9 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   if (candidates.length === 0) return <>No candidates</>
 
   return (
-    <div data-testid="candidates-list">
+    <div data-test="candidates-list">
       {selectedCandidate && (
-        <div data-testid="candidate-detail-panel">
+        <div data-test="candidate-detail-panel">
           <CandidateDetailsOffcanvas
             api={api}
             candidateId={selectedCandidate}
@@ -124,7 +124,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
           className="text-center"
           $isOwner={isCandidate(candidate)}
           key={candidate.accountId.toString()}
-          data-testid={`candidate-row-${candidate.accountId.toString()}`}
+          data-test={`candidate-row-${candidate.accountId.toString()}`}
         >
           <Col lg={1} className="text-center">
             <Identicon value={candidate.accountId.toHuman()} size={32} theme={'polkadot'} />
@@ -148,7 +148,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
             )}
             */}
           </Col>
-          <Col lg={3} data-testid={`vote-tally-${candidate.accountId.toString()}`}>
+          <Col lg={3} data-test={`vote-tally-${candidate.accountId.toString()}`}>
             {candidate.tally.approvals.toHuman()} approvals and {candidate.tally.rejections.toHuman()} rejections
           </Col>
           <Col lg={2} className="d-flex align-items-center justify-content-center">
@@ -168,7 +168,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                   }}
                   icon={'approve'}
                   handleUpdate={handleUpdate}
-                  data-testid={`candidate-approve-btn-${candidate.accountId.toString()}`}
+                  data-test={`candidate-approve-button-${candidate.accountId.toString()}`}
                 ></VoteButton>
                 <VoteButton
                   disabled={disabledAction}
@@ -184,7 +184,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                   }}
                   icon={'reject'}
                   handleUpdate={handleUpdate}
-                  data-testid={`candidate-reject-btn-${candidate.accountId.toString()}`}
+                  data-test={`candidate-reject-button-${candidate.accountId.toString()}`}
                 ></VoteButton>
               </>
             )}
@@ -200,7 +200,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                   accountId: candidate.accountId
                 }}
                 handleUpdate={handleUpdate}
-                data-testid={`candidate-drop-btn-${candidate.accountId.toString()}`}
+                data-test={`candidate-drop-button-${candidate.accountId.toString()}`}
               />
             )}
           </Col>
@@ -209,7 +209,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
               <Badge
                 bg="secondary"
                 text="black"
-                data-testid={`candidate-voted-badge-${candidate.accountId.toString()}`}
+                data-test={`candidate-voted-badge-${candidate.accountId.toString()}`}
               >
                 Voted
               </Badge>

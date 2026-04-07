@@ -79,10 +79,10 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
     <Tab.Container defaultActiveKey="bid">
       <StyledNav variant="tabs">
         <Nav.Item>
-          <Nav.Link eventKey="bid" data-testid="bid-tab">Place Bid</Nav.Link>
+          <Nav.Link eventKey="bid" data-test="bid-tab">Place Bid</Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="vouch" data-testid="vouch-tab">Vouch</Nav.Link>
+          <Nav.Link eventKey="vouch" data-test="vouch-tab">Vouch</Nav.Link>
         </Nav.Item>
       </StyledNav>
       <StyledTabContent>
@@ -96,7 +96,7 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
                   step="0.01"
                   placeholder="0"
                   aria-label="Bid amount"
-                  data-testid="bid-amount-input"
+                  data-test="bid-amount-input"
                 />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
@@ -106,13 +106,13 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
               variant="primary"
               type="submit"
               className="w-100 mt-0 mt-lg-3 child align-self-end"
-              data-testid="submit-bid-btn"
+              data-test="submit-bid-button"
             >
               {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
           </Form>
           <hr />
-          <div className="align-self-center" data-testid="society-pot-value">
+          <div className="align-self-center" data-test="society-pot-value">
             <h6>POT: {<FormatBalance balance={pot!} />}</h6>
           </div>
           <hr />
@@ -130,7 +130,7 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
                   step="any"
                   placeholder="Address to vouch for"
                   aria-label="Address"
-                  data-testid="vouch-address-input"
+                  data-test="vouch-address-input"
                 />
               </StyledFormInput>
             </Form.Group>
@@ -143,7 +143,7 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
                   step="0.01"
                   placeholder="0"
                   aria-label="Bid amount"
-                  data-testid="vouch-amount-input"
+                  data-test="vouch-amount-input"
                 />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
@@ -156,12 +156,12 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
                   step="0.01"
                   placeholder="0"
                   aria-label="Tip amount"
-                  data-testid="vouch-tip-input"
+                  data-test="vouch-tip-input"
                 />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
-            <Button disabled={loading} variant="primary" type="submit" className="w-100" data-testid="submit-vouch-btn">
+            <Button disabled={loading} variant="primary" type="submit" className="w-100" data-test="submit-vouch-button">
               {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
             <StyledButtonLabel className="text-muted">*Plus 0.0045 KSM fee</StyledButtonLabel>

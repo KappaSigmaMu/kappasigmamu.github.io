@@ -40,7 +40,7 @@ const Navbar = ({
                         to="/guide"
                         as={LinkWithQuery}
                         onClick={(e) => e.currentTarget.blur()}
-                        data-testid="nav-link-guide"
+                        data-test="nav-link-guide"
                       >
                         Guide
                       </Nav.Link>
@@ -50,7 +50,7 @@ const Navbar = ({
                         to="/wiki"
                         as={LinkWithQuery}
                         onClick={(e) => e.currentTarget.blur()}
-                        data-testid="nav-link-wiki"
+                        data-test="nav-link-wiki"
                       >
                         Wiki
                       </Nav.Link>
@@ -60,7 +60,7 @@ const Navbar = ({
                         to="/journey"
                         as={LinkWithQuery}
                         onClick={(e) => e.currentTarget.blur()}
-                        data-testid="nav-link-journey"
+                        data-test="nav-link-journey"
                       >
                         Journey
                       </Nav.Link>
@@ -70,7 +70,7 @@ const Navbar = ({
                         to="/explore"
                         as={LinkWithQuery}
                         onClick={(e) => e.currentTarget.blur()}
-                        data-testid="nav-link-explore"
+                        data-test="nav-link-explore"
                       >
                         Explore
                       </Nav.Link>
@@ -85,7 +85,7 @@ const Navbar = ({
                   to="/guide"
                   as={LinkWithQuery}
                   onClick={(e) => e.currentTarget.blur()}
-                  data-testid="nav-link-guide"
+                  data-test="nav-link-guide"
                 >
                   Guide
                 </Nav.Link>
@@ -94,7 +94,7 @@ const Navbar = ({
                   to="/wiki"
                   as={LinkWithQuery}
                   onClick={(e) => e.currentTarget.blur()}
-                  data-testid="nav-link-wiki"
+                  data-test="nav-link-wiki"
                 >
                   Wiki
                 </Nav.Link>
@@ -103,7 +103,7 @@ const Navbar = ({
                   to="/journey"
                   as={LinkWithQuery}
                   onClick={(e) => e.currentTarget.blur()}
-                  data-testid="nav-link-journey"
+                  data-test="nav-link-journey"
                 >
                   Journey
                 </Nav.Link>
@@ -112,7 +112,7 @@ const Navbar = ({
                   to="/explore"
                   as={LinkWithQuery}
                   onClick={(e) => e.currentTarget.blur()}
-                  data-testid="nav-link-explore"
+                  data-test="nav-link-explore"
                 >
                   Explore
                 </Nav.Link>
@@ -146,7 +146,7 @@ const AccountNavbar = () => {
         variant={activeAccount ? 'outline-primary' : 'primary'}
         onClick={() => setShowWallets(true)}
         style={{ minHeight: '38px' }}
-        data-testid={activeAccount ? 'connected-account' : 'connect-wallet-btn'}
+        data-test={activeAccount ? 'connected-account' : 'connect-wallet-button'}
       >
         {activeAccount ? <SelectedAccount /> : 'Connect Wallet'}
       </Button>

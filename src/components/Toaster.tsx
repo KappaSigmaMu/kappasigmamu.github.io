@@ -46,9 +46,9 @@ const Toaster = () => (
       return (
         <ToastBar style={{ minHeight: '7vh' }} toast={t}>
           {({ icon, message }) => (
-            <div data-testid={testId} style={{ display: 'contents' }}>
+            <div data-test={testId} style={{ display: 'contents' }}>
               {icon}
-              <span data-testid="tx-message">{message}</span>
+              <span data-test="tx-message">{message}</span>
               {<FaXmark role="button" onClick={() => toast.dismiss(t.id)} style={{ flexShrink: 0 }}></FaXmark>}
             </div>
           )}

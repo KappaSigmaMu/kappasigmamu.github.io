@@ -15,9 +15,7 @@ type DropButtonProps = {
   handleUpdate: () => void
   successText: string
   waitingText: string
-  disabled: boolean
-  'data-testid'?: string
-}
+} & React.ComponentProps<typeof Button>
 
 export interface Drop {
   accountId: AccountId
@@ -32,7 +30,7 @@ export function DropButton({
   handleUpdate,
   successText,
   waitingText,
-  'data-testid': dataTestId
+  ...buttonProps
 }: DropButtonProps) {
   const [loading, setLoading] = useState(false)
 
@@ -75,7 +73,7 @@ export function DropButton({
         onClick={handleDrop}
         size="sm"
         className="p-2"
-        data-testid={dataTestId}
+        {...buttonProps}
       >
         <StyledDropIcon size={20} />
       </Button>

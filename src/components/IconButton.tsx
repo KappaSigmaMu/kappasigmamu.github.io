@@ -4,14 +4,11 @@ import { styled } from 'styled-components'
 import { LoadingSpinner } from '../pages/explore/components/LoadingSpinner'
 
 type IconButtonProps = {
-  onClick: () => any
   icon: string
-  disabled: boolean
   loading: boolean
-  'data-testid'?: string
-}
+} & React.ComponentProps<typeof Button>
 
-function IconButton({ onClick, icon, disabled, loading, 'data-testid': dataTestId }: IconButtonProps) {
+function IconButton({ icon, loading, ...buttonProps }: IconButtonProps) {
   if (loading)
     return (
       <div className="mx-2">
@@ -20,7 +17,7 @@ function IconButton({ onClick, icon, disabled, loading, 'data-testid': dataTestI
     )
 
   return (
-    <Button disabled={disabled} variant="link" onClick={onClick} size="sm" data-testid={dataTestId}>
+    <Button variant="link" size="sm" {...buttonProps}>
       {icon === 'approve' ? <StyledApproveIcon size={20} /> : <StyledRejectIcon size={20} />}
     </Button>
   )
