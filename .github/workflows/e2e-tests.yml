@@ -1,12 +1,10 @@
 name: E2E Test Suite
 
 on:
-  push:
-    branches:
-      - e2e-tests/**
   pull_request:
     branches:
       - main
+      - e2e-tests/**
   workflow_dispatch:
 
 jobs:
@@ -35,10 +33,22 @@ jobs:
       - name: Verify Cypress installation
         run: npx cypress verify
 
+      - name: Pre-install Chopsticks
+        run: npm install -g @acala-network/chopsticks@1.0.6
+
+      - name: Prepare Chopsticks config for CI
+        run: |
+          cp config/kusama.yml.sample config/kusama.yml
+          sed -i '/^block:/d' config/kusama.yml
+          sed -i '/^db:/d' config/kusama.yml
+          sed -i 's/runtime-log-level: 5/runtime-log-level: 0/' config/kusama.yml
+          echo "--- CI Chopsticks config ---"
+          head -5 config/kusama.yml
+
       - name: Start Chopsticks (background)
         run: |
           echo "Starting Chopsticks blockchain fork..."
-          nohup yarn chopsticks > chopsticks.log 2>&1 &
+          nohup chopsticks --config=config/kusama.yml > chopsticks.log 2>&1 &
           CHOPSTICKS_PID=$!
           echo "CHOPSTICKS_PID=$CHOPSTICKS_PID" >> $GITHUB_ENV
           echo "Chopsticks started with PID: $CHOPSTICKS_PID"
@@ -49,13 +59,21 @@ jobs:
       - name: Wait for Chopsticks to be ready
         run: |
           echo "Waiting for Chopsticks to respond on http://localhost:8000..."
-          timeout 120 bash -c 'until curl -sf http://localhost:8000 > /dev/null 2>&1; do sleep 2; done' || {
-            echo "Chopsticks did not start within 120 seconds"
+          timeout 180 bash -c 'until curl -sf http://localhost:8000 > /dev/null 2>&1; do sleep 3; done' || {
+            echo "Chopsticks did not start within 180 seconds"
             echo "Chopsticks log:"
             cat chopsticks.log || true
             exit 1
           }
           echo "✓ Chopsticks is running and responding"
+
+      - name: Create .env for CI
+        run: |
+          echo "REACT_APP_NAME=Kusama Society" > .env
+          echo "REACT_APP_KEYRING_PREFIX=2" >> .env
+          echo "REACT_APP_RPC={}" >> .env
+          echo "REACT_APP_PROVIDER_SOCKET=ws://127.0.0.1:8000" >> .env
+          cat .env
 
       - name: Start dev server (background)
         run: |

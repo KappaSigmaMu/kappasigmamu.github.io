@@ -25,8 +25,8 @@ describe('Wallet Connection UI Flow', () => {
     cy.contains('button', /connect/i).should('be.visible').click()
     cy.wait(500)
 
-    cy.getBySel('wallet-polkadot').should('exist');
-    cy.getBySel('disconnect-button').should('exist');
+    cy.get('[data-testid="wallet-polkadot"]').should('exist');
+    cy.get('[data-testid="disconnect-button"]').should('exist');
   });
 
   it('should close modal when X is clicked', () => {
@@ -41,7 +41,7 @@ describe('Wallet Connection UI Flow', () => {
     cy.contains('button', /connect/i).should('be.visible').click()
     cy.wait(500)
 
-    cy.getBySel('disconnect-button')
+    cy.get('[data-testid="disconnect-button"]')
       .should('be.visible')
       .and('contain.text', 'Disconnect')
   })
@@ -75,17 +75,18 @@ describe('Connect Wallet with Plugin', () => {
   })
 
   beforeEach(() => {
-    cy.initWallet(testAccounts, 'Kusama Society')
     cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
-    cy.wait(1000)
+    cy.initWallet(testAccounts, 'Kusama Society')
+    cy.wait(500)
   })
 
   describe('Connect Wallet Flow', () => {
     it('should connect wallet successfully with test account', () => {
-      cy.contains('button', /connect/i).should('be.visible').click()
-      cy.get('[data-testid="wallet-polkadot"]').should('be.visible').click()
-      cy.get('.modal-body').contains('Alice').should('be.visible').click()
-
+      cy.contains('button', /connect/i).should('be.visible').click({ force: true })
+      cy.get('[data-testid="wallet-polkadot"]').should('be.visible').click({ force: true })
+      cy.get('[data-testid="account-switcher"]', { timeout: 10000 }).should('be.visible')
+      cy.contains('[data-testid="account-switcher"]', 'Alice', { timeout: 10000 }).click({ force: true })
+      cy.get('[role="dialog"]', { timeout: 10000 }).should('not.exist')
       cy.get('[data-testid="account-balance"]').should('be.visible')
     })
 

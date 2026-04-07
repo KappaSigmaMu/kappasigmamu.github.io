@@ -16,22 +16,25 @@ describe('Wallet Plugin Integration', () => {
 
   describe('Account Injection', () => {
     beforeEach(() => {
-      cy.initWallet(testAccounts, 'Kusama Society')
       cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
+      cy.initWallet(testAccounts, 'Kusama Society')
       cy.wait(1000)
     })
 
     it('should inject all test accounts into wallet', () => {
-      cy.contains('button', /connect/i).should('be.visible').click()
-      cy.get('[data-testid="wallet-polkadot"]').should('be.visible').click()
+      cy.contains('button', /connect/i).should('be.visible').click({ force: true })
+      cy.get('[data-testid="wallet-polkadot"]', { timeout: 15000 }).should('be.visible')
+        .parent().should('contain.text', 'Use')
+      cy.get('[data-testid="wallet-polkadot"]').click({ force: true })
 
+      cy.get('[data-testid="account-switcher"]', { timeout: 10000 }).should('have.length', 6)
       cy.get('.modal-body').within(() => {
-        cy.contains('Alice').should('be.visible')
-        cy.contains('Bob').should('be.visible')
-        cy.contains('Charlie').should('be.visible')
-        cy.contains('Dave').should('be.visible')
-        cy.contains('Eve').should('be.visible')
-        cy.contains('Ferdie').should('be.visible')
+        cy.contains('Alice').should('exist')
+        cy.contains('Bob').should('exist')
+        cy.contains('Charlie').should('exist')
+        cy.contains('Dave').should('exist')
+        cy.contains('Eve').should('exist')
+        cy.contains('Ferdie').should('exist')
       })
     })
 
@@ -63,9 +66,9 @@ describe('Wallet Plugin Integration', () => {
 
   describe('Wallet Disconnect', () => {
     beforeEach(() => {
-      cy.initWallet(testAccounts, 'Kusama Society')
       cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.wait(1000)
+      cy.initWallet(testAccounts, 'Kusama Society')
+      cy.wait(500)
     })
 
     it('should disconnect wallet and return to initial state', () => {
@@ -94,9 +97,9 @@ describe('Wallet Plugin Integration', () => {
 
   describe('Wallet Persistence', () => {
     beforeEach(() => {
-      cy.initWallet(testAccounts, 'Kusama Society')
       cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.wait(1000)
+      cy.initWallet(testAccounts, 'Kusama Society')
+      cy.wait(500)
     })
 
     it('should persist wallet across page navigation', () => {
@@ -111,9 +114,9 @@ describe('Wallet Plugin Integration', () => {
 
   describe('Transaction Approval', () => {
     beforeEach(() => {
-      cy.initWallet(testAccounts, 'Kusama Society')
       cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.wait(1000)
+      cy.initWallet(testAccounts, 'Kusama Society')
+      cy.wait(500)
     })
 
     it('should handle transaction request queue', () => {

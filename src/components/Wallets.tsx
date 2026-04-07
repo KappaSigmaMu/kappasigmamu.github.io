@@ -81,7 +81,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
               <AccountRow
                 key={account.address}
                 onClick={() => handleClick(account)}
-                data-test={`account-${account.name}`}
+                data-testid="account-switcher"
               >
                 <Col xs={2}>
                   <Identicon value={account.address} size={42} theme={'polkadot'} />
@@ -113,7 +113,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
               className="d-flex align-items-center justify-content-start"
               onClick={handleDisconnect}
               role="button"
-              data-test="disconnect-button"
+              data-testid="disconnect-button"
             >
               Disconnect <FaPowerOff className="mx-2" />
             </Col>
@@ -153,7 +153,7 @@ async function handleClick(wallet: WalletType, setSelectedWallet: any) {
 
 const Wallet = ({ wallet, setSelectedWallet }: { wallet: WalletType; setSelectedWallet: any }) => {
   return (
-    <WalletRow onClick={async () => handleClick(wallet, setSelectedWallet)} data-test={walletTestId(wallet.title)}>
+    <WalletRow onClick={async () => handleClick(wallet, setSelectedWallet)} data-testid={walletTestId(wallet.title)}>
       <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} />
       <div>{wallet.title}</div>
       <div className="ms-auto">
