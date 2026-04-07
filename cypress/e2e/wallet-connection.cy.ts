@@ -25,9 +25,9 @@ describe('Wallet Connection UI Flow', () => {
     cy.contains('button', /connect/i).should('be.visible').click()
     cy.wait(500)
 
-    cy.getBySel('wallet-polkadot').should('exist');
-    cy.getBySel('disconnect-button').should('exist');
-  });
+    cy.getBySel('wallet-polkadot').should('exist')
+    cy.getBySel('disconnect-button').should('exist')
+  })
 
   it('should close modal when X is clicked', () => {
     cy.contains('button', /connect/i).should('be.visible').click()
@@ -75,28 +75,29 @@ describe('Connect Wallet with Plugin', () => {
   })
 
   beforeEach(() => {
-    cy.initWallet(testAccounts, 'Kusama Society')
     cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
-    cy.wait(1000)
+    cy.initWallet(testAccounts, 'Kusama Society')
+    cy.wait(500)
   })
 
   describe('Connect Wallet Flow', () => {
     it('should connect wallet successfully with test account', () => {
-      cy.contains('button', /connect/i).should('be.visible').click()
-      cy.get('[data-testid="wallet-polkadot"]').should('be.visible').click()
-      cy.get('.modal-body').contains('Alice').should('be.visible').click()
-
-      cy.get('[data-testid="account-balance"]').should('be.visible')
+      cy.contains('button', /connect/i).should('be.visible').click({ force: true })
+      cy.getBySel('wallet-polkadot').should('be.visible').click({ force: true })
+      cy.getBySel('account-switcher', { timeout: 10000 }).should('be.visible')
+      cy.contains('[data-test="account-switcher"]', 'Alice', { timeout: 10000 }).click({ force: true })
+      cy.get('[role="dialog"]', { timeout: 10000 }).should('not.exist')
+      cy.getBySel('account-balance').should('be.visible')
     })
 
     it('should disconnect wallet', () => {
       cy.connectWallet('Alice')
 
-      cy.get('[data-testid="account-balance"]').parents('button').click()
-      cy.get('[data-testid="disconnect-button"]').should('be.visible').click()
+      cy.getBySel('account-balance').parents('button').click()
+      cy.getBySel('disconnect-button').should('be.visible').click()
 
       cy.contains('button', /connect/i).should('be.visible')
-      cy.get('[data-testid="account-balance"]').should('not.exist')
+      cy.getBySel('account-balance').should('not.exist')
     })
 
     it('should persist wallet across page refresh', () => {
@@ -105,7 +106,7 @@ describe('Connect Wallet with Plugin', () => {
 
       cy.reload()
 
-      cy.get('[data-testid="account-balance"]', { timeout: 15000 }).should('be.visible')
+      cy.getBySel('account-balance', { timeout: 15000 }).should('be.visible')
     })
   })
 

@@ -1,8 +1,11 @@
 Cypress.Commands.add('connectWallet', (accountName: string) => {
-  cy.contains('button', /connect/i).should('be.visible').click()
-  cy.get('[data-testid="wallet-polkadot"]').should('be.visible').click()
-  cy.get('.modal-body').contains(accountName).should('be.visible').click()
-  cy.get('[data-testid="account-balance"]', { timeout: 15000 }).should('be.visible')
+  cy.contains('button', /connect/i).should('be.visible').click({ force: true })
+  cy.getBySel('wallet-polkadot').should('be.visible').click({ force: true })
+  cy.get('.modal-title', { timeout: 10000 }).should('contain.text', 'Accounts')
+  cy.getBySel('account-switcher', { timeout: 10000 }).should('have.length.gte', 1)
+  cy.contains('[data-test="account-switcher"]', accountName).click({ force: true })
+  cy.get('[role="dialog"]', { timeout: 10000 }).should('not.exist')
+  cy.getBySel('account-balance', { timeout: 15000 }).should('be.visible')
 })
 
 Cypress.Commands.add('waitForBlockchainData', (timeout?: number) => {
@@ -27,7 +30,7 @@ Cypress.Commands.add('visitExplore', (section: string) => {
 })
 
 Cypress.Commands.add('verifyAccountLevel', (level: string) => {
-  cy.get('[data-testid="account-balance"]', { timeout: 15000 })
+  cy.getBySel('account-balance', { timeout: 15000 })
     .should('be.visible')
     .and('contain.text', level.toUpperCase())
 })

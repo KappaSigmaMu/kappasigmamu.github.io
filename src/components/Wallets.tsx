@@ -81,7 +81,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
               <AccountRow
                 key={account.address}
                 onClick={() => handleClick(account)}
-                data-test={`account-${account.name}`}
+                data-test="account-switcher"
               >
                 <Col xs={2}>
                   <Identicon value={account.address} size={42} theme={'polkadot'} />
