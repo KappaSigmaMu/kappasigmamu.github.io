@@ -18,5 +18,8 @@ export function toastTestId(t: Toast): string | undefined {
   if (t.type === 'error') return 'tx-error'
   if (t.type !== 'loading') return undefined
 
-  return typeof t.message === 'string' && t.message.includes('Awaiting signature') ? 'tx-signing' : 'tx-pending'
+  if (typeof t.message !== 'string') return 'tx-pending'
+  if (!t.message.includes('Awaiting signature')) return 'tx-pending'
+
+  return 'tx-signing'
 }
