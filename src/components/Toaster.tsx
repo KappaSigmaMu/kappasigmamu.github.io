@@ -1,6 +1,7 @@
 import { Spinner } from 'react-bootstrap'
 import toast, { Toaster as TToaster, ToastBar } from 'react-hot-toast'
 import { FaXmark } from 'react-icons/fa6'
+import { toastTestId } from '../helpers/test-utils/testIds'
 
 const Toaster = () => (
   <TToaster
@@ -30,17 +31,21 @@ const Toaster = () => (
       }
     }}
   >
-    {(t) => (
-      <ToastBar style={{ minHeight: '7vh' }} toast={t}>
-        {({ icon, message }) => (
-          <>
-            {icon}
-            {message}
-            {<FaXmark role="button" onClick={() => toast.dismiss(t.id)} style={{ flexShrink: 0 }}></FaXmark>}
-          </>
-        )}
-      </ToastBar>
-    )}
+    {(t) => {
+      const testId = toastTestId(t)
+
+      return (
+        <ToastBar style={{ minHeight: '7vh' }} toast={t}>
+          {({ icon, message }) => (
+            <div data-test={testId} style={{ display: 'contents' }}>
+              {icon}
+              <span data-test="tx-message">{message}</span>
+              {<FaXmark role="button" onClick={() => toast.dismiss(t.id)} style={{ flexShrink: 0 }}></FaXmark>}
+            </div>
+          )}
+        </ToastBar>
+      )
+    }}
   </TToaster>
 )
 

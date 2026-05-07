@@ -79,10 +79,10 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
     <Tab.Container defaultActiveKey="bid">
       <StyledNav variant="tabs">
         <Nav.Item>
-          <Nav.Link eventKey="bid">Place Bid</Nav.Link>
+          <Nav.Link eventKey="bid" data-test="bid-tab">Place Bid</Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="vouch">Vouch</Nav.Link>
+          <Nav.Link eventKey="vouch" data-test="vouch-tab">Vouch</Nav.Link>
         </Nav.Item>
       </StyledNav>
       <StyledTabContent>
@@ -91,7 +91,13 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
             <Form.Group className="me-3 me-lg-0">
               <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput>
-                <StyledFormControl type="number" step="0.01" placeholder="0" aria-label="Bid amount" />
+                <StyledFormControl
+                  type="number"
+                  step="0.01"
+                  placeholder="0"
+                  aria-label="Bid amount"
+                  data-test="bid-amount-input"
+                />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
@@ -100,12 +106,13 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
               variant="primary"
               type="submit"
               className="w-100 mt-0 mt-lg-3 child align-self-end"
+              data-test="submit-bid-button"
             >
               {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
           </Form>
           <hr />
-          <div className="align-self-center">
+          <div className="align-self-center" data-test="society-pot-value">
             <h6>POT: {<FormatBalance balance={pot!} />}</h6>
           </div>
           <hr />
@@ -118,25 +125,49 @@ const BidVouch = ({ api, handleResult, activeAccount }: BidVouchProps) => {
             <Form.Group className="mb-3">
               <StyledFormLabel>Vouch for</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledFormControl type="text" step="any" placeholder="Address to vouch for" aria-label="Address" />
+                <StyledFormControl
+                  type="text"
+                  step="any"
+                  placeholder="Address to vouch for"
+                  aria-label="Address"
+                  data-test="vouch-address-input"
+                />
               </StyledFormInput>
             </Form.Group>
 
             <Form.Group className="mb-3">
               <StyledFormLabel>Bid amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledFormControl type="number" step="0.01" placeholder="0" aria-label="Bid amount" />
+                <StyledFormControl
+                  type="number"
+                  step="0.01"
+                  placeholder="0"
+                  aria-label="Bid amount"
+                  data-test="vouch-amount-input"
+                />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
             <Form.Group className="mb-3">
               <StyledFormLabel>Tip amount</StyledFormLabel>
               <StyledFormInput className="mb-3">
-                <StyledFormControl type="number" step="0.01" placeholder="0" aria-label="Tip amount" />
+                <StyledFormControl
+                  type="number"
+                  step="0.01"
+                  placeholder="0"
+                  aria-label="Tip amount"
+                  data-test="vouch-tip-input"
+                />
                 <StyledInputGroupText>KSM</StyledInputGroupText>
               </StyledFormInput>
             </Form.Group>
-            <Button disabled={loading} variant="primary" type="submit" className="w-100">
+            <Button
+              disabled={loading}
+              variant="primary"
+              type="submit"
+              className="w-100"
+              data-test="submit-vouch-button"
+            >
               {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
             <StyledButtonLabel className="text-muted">*Plus 0.0045 KSM fee</StyledButtonLabel>

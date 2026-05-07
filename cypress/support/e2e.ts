@@ -6,10 +6,18 @@ Cypress.on('uncaught:exception', (err) => {
   return false;
 });
 
+Cypress.Commands.add('getBySel', (selector: string, ...args: any[]) => {
+  return cy.get(`[data-test=${selector}]`, ...args);
+});
+
+Cypress.Commands.add('getBySelLike', (selector: string, ...args: any[]) => {
+  return cy.get(`[data-test*=${selector}]`, ...args);
+});
+
 Cypress.Commands.add('connectWallet', (accountAddress: string) => {
   cy.contains('button', /connect/i).should('be.visible').click();
   cy.wait(500);
-  cy.get('[data-testid="wallet-polkadot"]').should('be.visible').click();
+  cy.getBySel('wallet-polkadot').should('be.visible').click();
   cy.wait(2000);
   cy.get('.modal-body').contains(accountAddress).should('be.visible').click();
   cy.wait(500);
@@ -19,6 +27,8 @@ Cypress.Commands.add('connectWallet', (accountAddress: string) => {
 declare global {
   namespace Cypress {
     interface Chainable {
+      getBySel(selector: string, ...args: any[]): Chainable<JQuery<HTMLElement>>;
+      getBySelLike(selector: string, ...args: any[]): Chainable<JQuery<HTMLElement>>;
       connectWallet(accountAddress: string): Chainable<void>;
     }
   }
