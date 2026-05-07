@@ -56,7 +56,7 @@ describe('Wallet Configuration Verification', () => {
 
   it('should have retry configuration', () => {
     const retries = Cypress.config('retries')
-    cy.wrap(retries).should('deep.equal', { runMode: 2, openMode: 0 })
+    cy.wrap(retries).should('deep.equal', { runMode: 0, openMode: 0 })
   })
 })
 
