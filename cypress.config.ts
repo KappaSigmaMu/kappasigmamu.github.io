@@ -47,7 +47,7 @@ export default defineConfig({
 
     env: {
       chopsticks_url: 'ws://localhost:8000',
-      app_name: '[DEVELOPMENT] Kusama Society',
+      app_name: '[TEST] Kusama Society',
     },
   },
 });
