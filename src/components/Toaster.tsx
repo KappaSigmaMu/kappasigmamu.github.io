@@ -1,6 +1,7 @@
 import { Spinner } from 'react-bootstrap'
 import toast, { Toaster as TToaster, ToastBar } from 'react-hot-toast'
 import { FaXmark } from 'react-icons/fa6'
+import { toastTestId } from '../helpers/test-utils/testIds'
 
 const Toaster = () => (
   <TToaster
@@ -31,17 +32,7 @@ const Toaster = () => (
     }}
   >
     {(t) => {
-      const isSigningMessage = typeof t.message === 'string' && t.message.includes('Awaiting signature')
-      const testId =
-        t.type === 'success'
-          ? 'tx-success'
-          : t.type === 'error'
-            ? 'tx-error'
-            : t.type === 'loading'
-              ? isSigningMessage
-                ? 'tx-signing'
-                : 'tx-pending'
-              : undefined
+      const testId = toastTestId(t)
 
       return (
         <ToastBar style={{ minHeight: '7vh' }} toast={t}>

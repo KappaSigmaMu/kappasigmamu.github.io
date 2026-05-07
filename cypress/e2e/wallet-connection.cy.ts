@@ -21,7 +21,7 @@ describe('Wallet Connection UI Flow', () => {
     cy.contains('Polkadot').should('be.visible')
   })
 
-  it('should have data-testid attributes on wallet components', () => {
+  it('should have data-test attributes on wallet components', () => {
     cy.contains('button', /connect/i).should('be.visible').click()
     cy.wait(500)
 
