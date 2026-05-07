@@ -17,7 +17,7 @@ describe('Wallet Plugin Integration', () => {
   describe('Account Injection', () => {
     beforeEach(() => {
       cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, 'Kusama Society')
+      cy.initWallet(testAccounts, Cypress.env('app_name'))
       cy.wait(1000)
     })
 
@@ -67,7 +67,7 @@ describe('Wallet Plugin Integration', () => {
   describe('Wallet Disconnect', () => {
     beforeEach(() => {
       cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, 'Kusama Society')
+      cy.initWallet(testAccounts, Cypress.env('app_name'))
       cy.wait(500)
     })
 
@@ -98,7 +98,7 @@ describe('Wallet Plugin Integration', () => {
   describe('Wallet Persistence', () => {
     beforeEach(() => {
       cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, 'Kusama Society')
+      cy.initWallet(testAccounts, Cypress.env('app_name'))
       cy.wait(500)
     })
 
@@ -115,7 +115,7 @@ describe('Wallet Plugin Integration', () => {
   describe('Transaction Approval', () => {
     beforeEach(() => {
       cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, 'Kusama Society')
+      cy.initWallet(testAccounts, Cypress.env('app_name'))
       cy.wait(500)
     })
 
