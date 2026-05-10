@@ -75,7 +75,7 @@ describe('Connect Wallet with Plugin', () => {
   })
 
   beforeEach(() => {
-    cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
+    cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
     cy.initWallet(testAccounts, Cypress.env('app_name'))
     cy.wait(500)
   })
