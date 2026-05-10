@@ -1,8 +1,10 @@
-import { FC } from 'react'
+import { FC, HTMLAttributes } from 'react'
 import { Button, ButtonProps, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 
-const DataHeaderRow = styled(Row)`
+type DataRowProps = HTMLAttributes<HTMLDivElement> & Record<string, unknown>
+
+const DataHeaderRow: FC<DataRowProps> = styled(Row)`
   line-height: 3;
 
   & .text-end {
@@ -14,7 +16,7 @@ const DataHeaderRow = styled(Row)`
   }
 `
 
-const DataRow = styled(DataHeaderRow)`
+const DataRow: FC<DataRowProps> = styled(DataHeaderRow)`
   background-color: ${(props) => props.theme.colors.darkGrey};
   border-radius: 6px;
   margin-top: 10px;
