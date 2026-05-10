@@ -19,7 +19,7 @@ const Title = ({ activeAccount }: { activeAccount: WalletAccount }) => {
 
       <label style={{ fontSize: '10px', cursor: 'pointer', lineHeight: '15px' }}>
         <SelectedAccountDiv className="text-start">{truncateMiddle(account || '')}</SelectedAccountDiv>
-        <LevelStatusDiv data-testid="account-balance">
+        <LevelStatusDiv data-test="account-balance">
           <label>{level.toUpperCase()}</label>
         </LevelStatusDiv>
       </label>

@@ -2,6 +2,7 @@ import { ApiPromise } from '@polkadot/api'
 import { AccountId } from '@polkadot/types/interfaces'
 import { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
+import { Button } from 'react-bootstrap'
 import { IconButton } from '../../../../components/IconButton'
 import { doTx, StatusChangeHandler } from '../../../../helpers/extrinsics'
 
@@ -13,8 +14,7 @@ type VoteButtonProps = {
   handleUpdate: () => void
   successText: string
   waitingText: string
-  disabled: boolean
-}
+} & React.ComponentProps<typeof Button>
 
 export interface Vote {
   approve: boolean
@@ -31,7 +31,8 @@ export function VoteButton({
   icon,
   handleUpdate,
   successText,
-  waitingText
+  waitingText,
+  ...buttonProps
 }: VoteButtonProps) {
   const [loading, setLoading] = useState(false)
 
@@ -55,5 +56,5 @@ export function VoteButton({
     }
   }
 
-  return <IconButton disabled={disabled} loading={loading} icon={icon} onClick={handleVote} />
+  return <IconButton disabled={disabled} loading={loading} icon={icon} onClick={handleVote} {...buttonProps} />
 }
