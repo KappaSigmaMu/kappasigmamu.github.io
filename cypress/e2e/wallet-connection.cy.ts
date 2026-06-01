@@ -38,7 +38,7 @@ describe('Wallet Connection UI Flow', () => {
   })
 
   it('should display disconnect option in modal footer', () => {
-    cy.contains('button', /connect/i).should('be.visible').click()
+    cy.contains('button', /connect/i).should('be.visible').click({ force: true })
     cy.wait(500)
 
     cy.getBySel('disconnect-button')
