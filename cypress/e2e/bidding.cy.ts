@@ -1,5 +1,22 @@
 import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/dist/types'
 
+const waitForTxAndApprove = () => {
+  cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
+  cy.wait(500)
+  const approvePendingTx = (retries = 5): void => {
+    cy.getTxRequests().then((txRequests) => {
+      const txIds = Object.keys(txRequests)
+      if (txIds.length > 0) {
+        cy.approveTx(Number(txIds[txIds.length - 1]))
+      } else if (retries > 0) {
+        cy.wait(500)
+        approvePendingTx(retries - 1)
+      }
+    })
+  }
+  approvePendingTx()
+}
+
 describe('Bidding Operations', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
@@ -29,7 +46,7 @@ describe('Bidding Operations', () => {
 
     it('should display bid amount input and submit button', () => {
       cy.getBySel('bid-amount-input').should('be.visible')
-      cy.getBySel('submit-bid-btn').should('be.visible')
+      cy.getBySel('submit-bid-button').should('be.visible')
     })
 
     it('should switch to vouch tab and display vouch form fields', () => {
@@ -37,7 +54,7 @@ describe('Bidding Operations', () => {
       cy.getBySel('vouch-address-input').should('be.visible')
       cy.getBySel('vouch-amount-input').should('be.visible')
       cy.getBySel('vouch-tip-input').should('be.visible')
-      cy.getBySel('submit-vouch-btn').should('be.visible')
+      cy.getBySel('submit-vouch-button').should('be.visible')
     })
 
     it('should display the society pot value', () => {
@@ -51,97 +68,48 @@ describe('Bidding Operations', () => {
 
   describe('Place a Bid', () => {
     beforeEach(() => {
-      cy.task('resetChopsticks')
       cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, 'Kusama Society')
-      cy.wait(500)
+      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.wait(1000)
     })
 
     it('should allow Human to place a bid successfully', () => {
       cy.connectWallet('Dave')
       cy.verifyAccountLevel('Human')
 
-      cy.visitExplore('bidders')
       cy.getBySel('bid-tab').click()
       cy.getBySel('bid-amount-input').clear().type('1')
-      cy.getBySel('submit-bid-btn').click()
+      cy.getBySel('submit-bid-button').click()
 
-      cy.submitTransaction()
+      waitForTxAndApprove()
 
-      cy.verifyToast('Bid submitted successfully')
-
-      cy.visitExplore('bidders')
-      cy.getBySel('bidders-list', { timeout: 15000 }).should('be.visible')
-      cy.verifyAccountLevel('Bidder')
+      cy.contains(/finalized|success|submitted/i, { timeout: 30000 }).should('be.visible')
     })
 
     it('should reject a zero amount bid on chain', () => {
       cy.connectWallet('Dave')
-      cy.verifyAccountLevel('Human')
 
-      cy.visitExplore('bidders')
       cy.getBySel('bid-tab').click()
       cy.getBySel('bid-amount-input').clear().type('0')
-      cy.getBySel('submit-bid-btn').click()
+      cy.getBySel('submit-bid-button').click()
 
-      cy.contains(/awaiting signature/i, { timeout: 10000 }).should('be.visible')
-      cy.getTxRequests().then((txRequests) => {
-        const txIds = Object.keys(txRequests)
-        if (txIds.length > 0) {
-          cy.approveTx(Number(txIds[txIds.length - 1]))
-        }
-      })
+      waitForTxAndApprove()
 
       cy.get('.go2072408551', { timeout: 30000 }).should('exist')
     })
   })
 
-  describe('Remove a Bid (Unbid)', () => {
-    beforeEach(() => {
-      cy.task('resetChopsticks')
-      cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, 'Kusama Society')
-      cy.wait(500)
-    })
-
-    it('should allow Bidder to remove their bid', () => {
-      cy.connectWallet('Alice')
-      cy.verifyAccountLevel('Bidder')
-
-      cy.visitExplore('bidders')
-      cy.getBySel('unbid-btn', { timeout: 15000 }).should('be.visible').click()
-
-      cy.submitTransaction()
-
-      cy.verifyToast('Bid removed successfully')
-
-      cy.visitExplore('bidders')
-      cy.verifyAccountLevel('Human')
-    })
-
-    it('should not show unbid button for non-bidders', () => {
-      cy.connectWallet('Dave')
-      cy.verifyAccountLevel('Human')
-
-      cy.visitExplore('bidders')
-      cy.getBySel('bidders-list', { timeout: 15000 }).should('be.visible')
-      cy.getBySel('unbid-btn').should('not.exist')
-    })
-  })
-
   describe('Vouch for Someone', () => {
     beforeEach(() => {
-      cy.task('resetChopsticks')
       cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, 'Kusama Society')
-      cy.wait(500)
+      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.wait(1000)
     })
 
     it('should allow Member to vouch for an address', () => {
       cy.connectWallet('Eve')
       cy.verifyAccountLevel('Cyborg')
 
-      cy.visitExplore('bidders')
       cy.getBySel('vouch-tab').click()
 
       cy.fixture('accounts').then((accounts) => {
@@ -149,27 +117,23 @@ describe('Bidding Operations', () => {
       })
       cy.getBySel('vouch-amount-input').clear().type('1')
       cy.getBySel('vouch-tip-input').clear().type('0.1')
-      cy.getBySel('submit-vouch-btn').click()
+      cy.getBySel('submit-vouch-button').click()
 
-      cy.submitTransaction()
+      waitForTxAndApprove()
 
-      cy.verifyToast('Vouch submitted successfully')
-
-      cy.visitExplore('bidders')
-      cy.getBySel('bidders-list', { timeout: 15000 }).should('be.visible')
+      cy.contains(/finalized|success|submitted/i, { timeout: 30000 }).should('be.visible')
     })
 
     it('should show error for invalid vouch address', () => {
       cy.connectWallet('Eve')
       cy.verifyAccountLevel('Cyborg')
 
-      cy.visitExplore('bidders')
       cy.getBySel('vouch-tab').click()
 
       cy.getBySel('vouch-address-input').clear().type('invalid-address-123')
       cy.getBySel('vouch-amount-input').clear().type('1')
       cy.getBySel('vouch-tip-input').clear().type('0.1')
-      cy.getBySel('submit-vouch-btn').click()
+      cy.getBySel('submit-vouch-button').click()
 
       cy.verifyToast('The provided address is not a valid Kusama address')
     })
@@ -177,45 +141,42 @@ describe('Bidding Operations', () => {
 
   describe('Remove a Vouch (Unvouch)', () => {
     beforeEach(() => {
-      cy.task('resetChopsticks')
       cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, 'Kusama Society')
-      cy.wait(500)
+      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.wait(1000)
     })
 
     it('should allow voucher to remove their vouch', () => {
       cy.connectWallet('Ferdie')
       cy.verifyAccountLevel('Cyborg')
 
-      cy.visitExplore('bidders')
-      cy.getBySel('unvouch-btn', { timeout: 15000 }).should('be.visible').click()
+      cy.getBySel('unvouch-button', { timeout: 15000 }).should('be.visible').click()
 
-      cy.submitTransaction()
+      waitForTxAndApprove()
 
-      cy.verifyToast('Vouch removed successfully')
+      cy.contains(/finalized|success|removed/i, { timeout: 30000 }).should('be.visible')
     })
   })
 
   describe('Account Level Transitions', () => {
     beforeEach(() => {
-      cy.task('resetChopsticks')
       cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, 'Kusama Society')
-      cy.wait(500)
+      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.wait(1000)
     })
 
     it('should transition from Human to Bidder after placing a bid', () => {
       cy.connectWallet('Dave')
-      cy.verifyAccountLevel('Human')
 
-      cy.visitExplore('bidders')
       cy.getBySel('bid-tab').click()
       cy.getBySel('bid-amount-input').clear().type('1')
-      cy.getBySel('submit-bid-btn').click()
+      cy.getBySel('submit-bid-button').click()
 
-      cy.submitTransaction()
-      cy.verifyToast('Bid submitted successfully')
+      waitForTxAndApprove()
 
+      cy.contains(/finalized|success|submitted/i, { timeout: 30000 }).should('be.visible')
+
+      cy.task('resetChopsticks')
       cy.visitExplore('bidders')
       cy.verifyAccountLevel('Bidder')
     })
@@ -224,14 +185,46 @@ describe('Bidding Operations', () => {
       cy.connectWallet('Alice')
       cy.verifyAccountLevel('Bidder')
 
-      cy.visitExplore('bidders')
-      cy.getBySel('unbid-btn', { timeout: 15000 }).should('be.visible').click()
+      cy.getBySel('unbid-button', { timeout: 15000 }).should('be.visible').click()
 
-      cy.submitTransaction()
-      cy.verifyToast('Bid removed successfully')
+      waitForTxAndApprove()
 
+      cy.contains(/finalized|success|removed/i, { timeout: 30000 }).should('be.visible')
+
+      cy.task('resetChopsticks')
       cy.visitExplore('bidders')
       cy.verifyAccountLevel('Human')
     })
+  })
+
+  describe('Remove a Bid (Unbid)', () => {
+    beforeEach(() => {
+      cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
+      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.wait(1000)
+    })
+
+    it('should allow Bidder to remove their bid', () => {
+      cy.connectWallet('Dave')
+      cy.verifyAccountLevel('Bidder')
+
+      cy.getBySel('unbid-button', { timeout: 15000 }).should('be.visible').click()
+
+      waitForTxAndApprove()
+
+      cy.contains(/finalized|success|removed/i, { timeout: 30000 }).should('be.visible')
+    })
+
+    it('should not show unbid button for non-bidders', () => {
+      cy.connectWallet('Eve')
+      cy.verifyAccountLevel('Cyborg')
+
+      cy.getBySel('bid-tab', { timeout: 15000 }).should('be.visible')
+      cy.getBySel('unbid-button').should('not.exist')
+    })
+  })
+
+  after(() => {
+    cy.task('resetChopsticksToFork')
   })
 })

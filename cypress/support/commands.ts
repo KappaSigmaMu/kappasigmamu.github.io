@@ -14,12 +14,19 @@ Cypress.Commands.add('waitForBlockchainData', (timeout?: number) => {
 
 Cypress.Commands.add('submitTransaction', () => {
   cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
-  cy.getTxRequests().then((txRequests) => {
-    const txIds = Object.keys(txRequests)
-    if (txIds.length > 0) {
-      cy.approveTx(Number(txIds[txIds.length - 1]))
-    }
-  })
+  cy.wait(500)
+  const approvePendingTx = (retries = 5): void => {
+    cy.getTxRequests().then((txRequests) => {
+      const txIds = Object.keys(txRequests)
+      if (txIds.length > 0) {
+        cy.approveTx(Number(txIds[txIds.length - 1]))
+      } else if (retries > 0) {
+        cy.wait(500)
+        approvePendingTx(retries - 1)
+      }
+    })
+  }
+  approvePendingTx()
   cy.contains(/finalized|success/i, { timeout: 30000 }).should('be.visible')
 })
 

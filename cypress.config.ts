@@ -23,6 +23,35 @@ export default defineConfig({
           }
           return null;
         },
+        async resetChopsticksToFork() {
+          try {
+            const hashRes = await fetch('http://localhost:8000', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                jsonrpc: '2.0',
+                id: 1,
+                method: 'chain_getBlockHash',
+                params: [21000000],
+              }),
+            });
+            const { result: blockHash } = await hashRes.json();
+            const setRes = await fetch('http://localhost:8000', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                jsonrpc: '2.0',
+                id: 2,
+                method: 'dev_setHead',
+                params: [blockHash],
+              }),
+            });
+            await setRes.json();
+          } catch (e) {
+            console.log('Chopsticks fork reset skipped:', (e as Error).message);
+          }
+          return null;
+        },
       });
       return config;
     },
