@@ -196,7 +196,7 @@ function ClaimMembershipButton({
 
   if (loading) return <LoadingSpinner center={false} small={true} />
 
-  return <Button onClick={handleClaim}>Claim Membership</Button>
+  return <Button data-test="claim-membership-button" onClick={handleClaim}>Claim Membership</Button>
 }
 
 export { NextStep }

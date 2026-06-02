@@ -59,6 +59,11 @@ import-storage:
       - Candidates
       - Members
       - Payouts
+    Parameters:
+      maxMembers: 500
+      maxIntake: 10
+      maxStrikes: 10
+      candidateDeposit: 1
     Bids:
       - who: 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY # Alice
         kind:
@@ -105,6 +110,10 @@ import-storage:
       - 5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL # Ferdie (skeptic)
       - approvals: 0
         rejections: 0
+    NextHead:
+      who: 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty # Bob
+      bid: 500000000000000
+      round: 5
     ChallengeRoundCount: 6
     RoundCount: 6
     MemberCount: 2
