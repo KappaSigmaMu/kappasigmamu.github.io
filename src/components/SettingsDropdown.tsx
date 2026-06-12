@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import { FaGear, FaCircleCheck, FaCircle } from 'react-icons/fa6'
 import { StyledDropdownMenu } from './StyledDropdownMenu'
-import { providers, type Provider } from '../helpers/providers'
+import { getProviderEndpoints, providers, type Provider } from '../helpers/providers'
 import { useKusama } from '../kusama/KusamaContext'
 
 const SettingsDropdown = () => {
   const queryParams = new URLSearchParams(window.location.search)
   const overrideProviderSocket = queryParams.get('rpc')
-  let currentProvider = overrideProviderSocket ? overrideProviderSocket : process.env.REACT_APP_PROVIDER_SOCKET
+  let currentProvider = getProviderEndpoints(overrideProviderSocket, process.env.REACT_APP_PROVIDER_SOCKET)[0]
 
   const currentUrl = new URL(window.location.href)
 

@@ -2,13 +2,14 @@ import { ApiPromise, WsProvider } from '@polkadot/api'
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc'
 import React, { useReducer, useContext } from 'react'
 import { LoadingContainer } from '../components/LoadingContainer'
+import { getProviderEndpoints } from '../helpers/providers'
 
 const RPC = { ...jsonrpc, ...process.env.REACT_APP_RPC }
 
 const queryParams = new URLSearchParams(window.location.search)
 const overrideProviderSocket = queryParams.get('rpc')
 
-const SOCKET = overrideProviderSocket ? overrideProviderSocket : process.env.REACT_APP_PROVIDER_SOCKET
+const SOCKETS = getProviderEndpoints(overrideProviderSocket, process.env.REACT_APP_PROVIDER_SOCKET)
 
 enum ApiState {
   initializing,
@@ -60,7 +61,7 @@ function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
 
   dispatch({ type: 'CONNECTING' })
 
-  const provider = new WsProvider(SOCKET)
+  const provider = new WsProvider(SOCKETS)
   const api = new ApiPromise({ provider, rpc: RPC })
 
   api.on('connected', () => {
