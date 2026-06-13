@@ -37,7 +37,7 @@ export default defineConfig({
     screenshotsFolder: 'cypress/screenshots',
 
     retries: {
-      runMode: 0,
+      runMode: 1,
       openMode: 0,
     },
 
