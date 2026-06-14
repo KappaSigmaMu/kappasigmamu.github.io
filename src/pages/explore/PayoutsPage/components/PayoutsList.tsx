@@ -41,6 +41,12 @@ type TimeRemainingProps = {
   'data-test'?: string
 } & React.HTMLAttributes<HTMLDivElement>
 
+const CalculatingBadge = () => (
+  <Badge pill bg="black" className="me-2 p-2">
+    Calculating...
+  </Badge>
+)
+
 const TimeRemaining = ({
   block,
   latestBlock,
@@ -50,24 +56,17 @@ const TimeRemaining = ({
   handleUpdate,
   'data-test': dataTest
 }: TimeRemainingProps) => {
-  if (!latestBlock)
-    return (
-      <Badge pill bg="black" className="me-2 p-2">
-        Calculating...
-      </Badge>
-    )
+  const isLatestBlockLoading = latestBlock === null
+  const blocksLeft = isLatestBlockLoading ? 0 : block - latestBlock
+  const [, formattedTime] = useBlockTime(blocksLeft, api)
 
-  const blocksLeft = block - latestBlock
-  const [, time] = useBlockTime(blocksLeft, api)
+  if (isLatestBlockLoading || !formattedTime) {
+    return <CalculatingBadge />
+  }
 
-  if (!time)
-    return (
-      <Badge pill bg="black" className="me-2 p-2">
-        Calculating...
-      </Badge>
-    )
+  const isMatured = blocksLeft <= 0
 
-  if (blocksLeft <= 0) {
+  if (isMatured) {
     const isCurrentUser = activeAccount?.address === member.accountId.toHuman()
 
     return (
@@ -91,7 +90,7 @@ const TimeRemaining = ({
 
   return (
     <Badge pill bg="secondary" text="black" className="me-2 p-2">
-      Maturing in {time}
+      Maturing in {formattedTime}
     </Badge>
   )
 }
