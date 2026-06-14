@@ -5,7 +5,6 @@ import { WalletAccount } from '@talismn/connect-wallets'
 import React, { useContext, useEffect, useState } from 'react'
 import { wallets } from '../helpers/wallets'
 import { useKusama } from '../kusama'
-import { ApiState } from '../kusama/KusamaContext'
 import { toastByStatus } from '../pages/explore/helpers'
 
 const localStorageAccount = localStorage.getItem('activeAccount')
@@ -39,11 +38,10 @@ type StateType = {
 const AccountContext = React.createContext<StateType>(INIT_STATE)
 
 const AccountContextProvider = ({ children }: any) => {
-  const { api, apiState } = useKusama()
+  const { api } = useKusama()
   const [activeAccount, _setActiveAccount] = useState<WalletAccount | undefined>(storedActiveAccount)
   const [level, setLevel] = useState('human')
 
-  const loading = apiState !== ApiState.ready
   const society = api?.query.society
 
   const setActiveAccount = (account: WalletAccount | undefined) => {
@@ -103,9 +101,7 @@ const AccountContextProvider = ({ children }: any) => {
     }
   }, [society, activeAccount])
 
-  return loading ? (
-    <>{children}</>
-  ) : (
+  return (
     <AccountContext.Provider value={{ level, setLevel, activeAccount, setActiveAccount }}>
       {children}
     </AccountContext.Provider>
