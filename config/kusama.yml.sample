@@ -1,8 +1,8 @@
 endpoint:
-  - wss://kusama-rpc.polkadot.io
-  - wss://kusama-rpc.n.dwellir.com
-  - wss://rpc.dotters.network/kusama
-  - wss://rpc.ibp.network/kusama
+  - wss://kusama-asset-hub-rpc.polkadot.io
+  - wss://asset-hub-kusama-rpc.n.dwellir.com
+  - wss://asset-hub-kusama.dotters.network
+  - wss://sys.ibp.network/asset-hub-kusama
 mock-signature-host: true
 block: ${env.KUSAMA_BLOCK_NUMBER}
 db: ./db.sqlite
@@ -117,5 +117,3 @@ import-storage:
             -
               - 20000000
               - 15000000000000
-  ParasDisputes:
-    $removePrefix: ['disputes'] # those can makes block building super slow

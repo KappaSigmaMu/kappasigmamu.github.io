@@ -130,7 +130,7 @@
   },
   "scripts": {
     "build": "NODE_OPTIONS=--openssl-legacy-provider node scripts/build.js",
-    "chopsticks": "npx @acala-network/chopsticks@1.0.6 --config=config/kusama.yml",
+    "chopsticks": "npx @acala-network/chopsticks@1.4.2 --config=config/kusama.yml",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "cy:run:headless": "cypress run --headless",
