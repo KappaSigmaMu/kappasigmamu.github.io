@@ -2,8 +2,14 @@ import type { DeriveAccountRegistration } from '@polkadot/api-derive/types'
 import { buildAccountIdentity } from '../buildAccountIdentity'
 
 describe('buildAccountIdentity', () => {
-  it('returns undefined when no identity fields are set', () => {
+  it('returns undefined when display is not set', () => {
     expect(buildAccountIdentity({ judgements: [] })).toBeUndefined()
+    expect(
+      buildAccountIdentity({
+        email: 'alice@example.com',
+        judgements: []
+      })
+    ).toBeUndefined()
   })
 
   it('maps derive registration fields to account identity', () => {
