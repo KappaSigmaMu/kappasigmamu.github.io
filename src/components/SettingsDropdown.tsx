@@ -2,25 +2,16 @@ import React, { useState } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import { FaGear, FaCircleCheck, FaCircle } from 'react-icons/fa6'
 import { StyledDropdownMenu } from './StyledDropdownMenu'
-import { getProviderEndpoints, providers, type Provider } from '../helpers/providers'
+import { providers, type Provider } from '../helpers/providers'
 import { useKusama } from '../kusama/KusamaContext'
 
 const SettingsDropdown = () => {
-  const queryParams = new URLSearchParams(window.location.search)
-  const overrideProviderSocket = queryParams.get('rpc')
-  let currentProvider = getProviderEndpoints(overrideProviderSocket, process.env.REACT_APP_PROVIDER_SOCKET)[0]
-
   const currentUrl = new URL(window.location.href)
 
   const prodProviders = providers.filter((provider) => provider.dev === false)
   const devProviders = providers.filter((provider) => provider.dev === true)
 
-  const { api } = useKusama()
-  if (api) {
-    // @ts-ignore - fix me: find a better way to verify which endpoint the api is connected
-    // this is just a sanity-check, mostly used for development, to avoid submitting unintended extrinsics to production
-    currentProvider = api?._options?.provider?.endpoint
-  }
+  const { activeProviderEndpoint } = useKusama()
 
   const ProvidersList = ({ providers }: { providers: Provider[] }): JSX.Element => {
     const [hoveredItem, setHoveredItem] = useState('')
@@ -30,7 +21,7 @@ const SettingsDropdown = () => {
         {providers.map(({ name, url }, key) => {
           currentUrl.searchParams.set('rpc', url)
 
-          return url === currentProvider ? (
+          return url === activeProviderEndpoint ? (
             <Dropdown.ItemText key={key}>
               <FaCircleCheck size={14} />
               {name}
