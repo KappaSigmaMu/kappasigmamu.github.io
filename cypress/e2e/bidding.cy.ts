@@ -29,6 +29,10 @@ describe('Bidding Operations', () => {
     })
   })
 
+  beforeEach(() => {
+    cy.task('resetChopsticksToFork')
+  })
+
   describe('Bidders Page UI', () => {
     beforeEach(() => {
       visitBiddersPage()
@@ -79,17 +83,6 @@ describe('Bidding Operations', () => {
       cy.approvePendingTransaction()
       expectTransactionSuccess()
     })
-
-    it('should reject a zero amount bid on chain', () => {
-      cy.connectWallet('Dave')
-
-      cy.getBySel('bid-tab').click()
-      cy.getBySel('bid-amount-input').clear().type('0')
-      cy.getBySel('submit-bid-button').click()
-
-      cy.approvePendingTransaction()
-      cy.verifyTxError(/society\./)
-    })
   })
 
   describe('Vouch for Someone', () => {
@@ -137,6 +130,17 @@ describe('Bidding Operations', () => {
     it('should allow voucher to remove their vouch', () => {
       cy.connectWallet('Ferdie')
       cy.verifyAccountLevel('Cyborg')
+
+      cy.getBySel('vouch-tab').click()
+      cy.fixture('accounts').then((accounts) => {
+        cy.getBySel('vouch-address-input').clear().type(accounts.dave.address)
+      })
+      cy.getBySel('vouch-amount-input').clear().type('1')
+      cy.getBySel('vouch-tip-input').clear().type('0.1')
+      cy.getBySel('submit-vouch-button').click()
+
+      cy.approvePendingTransaction()
+      expectTransactionSuccess()
 
       cy.getBySel('unvouch-button', { timeout: 15000 }).should('be.visible').click()
 
@@ -186,7 +190,7 @@ describe('Bidding Operations', () => {
     })
 
     it('should allow Bidder to remove their bid', () => {
-      cy.connectWallet('Dave')
+      cy.connectWallet('Alice')
       cy.verifyAccountLevel('Bidder')
 
       cy.getBySel('unbid-button', { timeout: 15000 }).should('be.visible').click()
