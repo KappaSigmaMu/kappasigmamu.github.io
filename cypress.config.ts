@@ -1,7 +1,8 @@
 import { defineConfig } from 'cypress';
 
 const CHOPSTICKS_RPC = 'http://localhost:8000';
-const CHOPSTICKS_FORK_BLOCK = Number(process.env.KUSAMA_BLOCK_NUMBER) || 21000000;
+
+let forkBlockHash: string | null = null;
 
 async function chopsticksRpc<T>(method: string, params: unknown[] = []): Promise<T> {
   const response = await fetch(CHOPSTICKS_RPC, {
@@ -23,6 +24,14 @@ export default defineConfig({
     baseUrl: 'http://localhost:3000',
     setupNodeEvents(on, config) {
       on('task', {
+        async rememberForkPoint() {
+          try {
+            forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash');
+          } catch (e) {
+            console.log('Chopsticks fork point capture skipped:', (e as Error).message);
+          }
+          return null;
+        },
         async resetChopsticks() {
           try {
             await chopsticksRpc('dev_newBlock');
@@ -33,8 +42,12 @@ export default defineConfig({
         },
         async resetChopsticksToFork() {
           try {
-            const forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash', [CHOPSTICKS_FORK_BLOCK]);
-            await chopsticksRpc('dev_setHead', [forkBlockHash]);
+            const hash =
+              forkBlockHash ??
+              (process.env.KUSAMA_BLOCK_NUMBER
+                ? await chopsticksRpc<string>('chain_getBlockHash', [Number(process.env.KUSAMA_BLOCK_NUMBER)])
+                : null);
+            if (hash) await chopsticksRpc('dev_setHead', [hash]);
           } catch (e) {
             console.log('Chopsticks fork reset skipped:', (e as Error).message);
           }

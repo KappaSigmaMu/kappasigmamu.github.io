@@ -16,16 +16,20 @@ Cypress.Commands.add('waitForBlockchainData', (timeout?: number) => {
 
 Cypress.Commands.add('approvePendingTransaction', () => {
   cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
-  cy.wait(500)
-  const approvePendingTx = (retries = 5): void => {
+
+  const maxAttempts = 40
+  const approvePendingTx = (attempt = 0): void => {
     cy.getTxRequests().then((txRequests) => {
       const txIds = Object.keys(txRequests)
       if (txIds.length > 0) {
         cy.approveTx(Number(txIds[txIds.length - 1]))
-      } else if (retries > 0) {
-        cy.wait(500)
-        approvePendingTx(retries - 1)
+        return
       }
+      if (attempt >= maxAttempts) {
+        throw new Error('approvePendingTransaction: no transaction request appeared to approve within timeout')
+      }
+      cy.wait(500)
+      approvePendingTx(attempt + 1)
     })
   }
   approvePendingTx()

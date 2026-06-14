@@ -11,13 +11,14 @@ const visitBiddersPageWithWallet = (testAccounts: InjectedAccountWitMnemonic[]) 
 }
 
 const expectTransactionSuccess = () => {
-  cy.contains(/finalized|success|submitted/i, { timeout: 30000 }).should('be.visible')
+  cy.contains(/finalized|success/i, { timeout: 30000 }).should('be.visible')
 }
 
 describe('Bidding Operations', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
   before(() => {
+    cy.task('rememberForkPoint')
     cy.fixture('accounts').then((accounts) => {
       testAccounts = Object.values(accounts).map((acc: any) => ({
         address: acc.address,
@@ -140,7 +141,7 @@ describe('Bidding Operations', () => {
       cy.getBySel('unvouch-button', { timeout: 15000 }).should('be.visible').click()
 
       cy.approvePendingTransaction()
-      cy.contains(/finalized|success|removed/i, { timeout: 30000 }).should('be.visible')
+      expectTransactionSuccess()
     })
   })
 
@@ -171,7 +172,7 @@ describe('Bidding Operations', () => {
       cy.getBySel('unbid-button', { timeout: 15000 }).should('be.visible').click()
 
       cy.approvePendingTransaction()
-      cy.contains(/finalized|success|removed/i, { timeout: 30000 }).should('be.visible')
+      expectTransactionSuccess()
 
       cy.task('resetChopsticks')
       cy.visitExplore('bidders')
@@ -191,7 +192,7 @@ describe('Bidding Operations', () => {
       cy.getBySel('unbid-button', { timeout: 15000 }).should('be.visible').click()
 
       cy.approvePendingTransaction()
-      cy.contains(/finalized|success|removed/i, { timeout: 30000 }).should('be.visible')
+      expectTransactionSuccess()
     })
 
     it('should not show unbid button for non-bidders', () => {
