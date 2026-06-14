@@ -50,9 +50,8 @@ Cypress.Commands.add('visitExplore', (section: string) => {
 })
 
 Cypress.Commands.add('verifyAccountLevel', (level: string) => {
-  cy.getBySel('account-balance', { timeout: 15000 })
-    .should('be.visible')
-    .and('contain.text', level.toUpperCase())
+  cy.getBySel('account-balance', { timeout: 15000 }).should('be.visible')
+  cy.getBySel('account-level', { timeout: 15000 }).should('have.text', level.toUpperCase())
 })
 
 Cypress.Commands.add('verifyToast', (message: string, timeout?: number) => {
