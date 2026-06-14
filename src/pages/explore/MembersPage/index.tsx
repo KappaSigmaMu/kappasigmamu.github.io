@@ -30,8 +30,11 @@ const MembersPage = ({ api }: MembersPageProps): JSX.Element => {
     setTrigger(true)
     society?.info().then((info: ExtendedDeriveSociety) => {
       api?.query.society.defending().then((defending) => {
-        defender = defending.unwrap()[0]
-        skeptic = defending.unwrap()[1]
+        if (defending.isSome) {
+          const defendingValue = defending.unwrap()
+          defender = defendingValue[0]
+          skeptic = defendingValue[1]
+        }
 
         info.defender = defender
         info.skeptic = skeptic
