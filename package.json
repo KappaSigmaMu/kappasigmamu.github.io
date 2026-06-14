@@ -147,6 +147,7 @@
     "test:e2e:smoke": "start-server-and-test chopsticks http://localhost:8000 'start-server-and-test start:test:ready http://localhost:3000 \"cypress run --spec cypress/e2e/smoke.cy.ts --config video=false\"'",
     "test:e2e:wallet": "start-server-and-test chopsticks http://localhost:8000 'start-server-and-test start:test:ready http://localhost:3000 \"cypress run --spec cypress/e2e/wallet-connection.cy.ts --config video=false\"'",
     "test:e2e:bidding": "start-server-and-test chopsticks http://localhost:8000 'start-server-and-test start:test:ready http://localhost:3000 \"cypress run --spec cypress/e2e/bidding.cy.ts --config video=false\"'",
+    "test:e2e:payouts": "start-server-and-test chopsticks http://localhost:8000 'start-server-and-test start:test:ready http://localhost:3000 \"cypress run --spec cypress/e2e/payouts.cy.ts --config video=false\"'",
     "test:e2e:ci": "start-server-and-test chopsticks http://localhost:8000 'start-server-and-test start:test:ready http://localhost:3000 \"cypress run --config video=false\"'",
     "test:e2e:headed": "cypress run --headed",
     "test:e2e:open": "cypress open",
