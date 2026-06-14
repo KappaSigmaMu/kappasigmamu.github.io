@@ -3,6 +3,7 @@ import { AccountId32 } from '@polkadot/types/interfaces'
 import { PalletSocietyBid } from '@polkadot/types/lookup'
 import { WalletAccount } from '@talismn/connect-wallets'
 import React, { useContext, useEffect, useState } from 'react'
+import { isSameAddress } from '../helpers/address'
 import { wallets } from '../helpers/wallets'
 import { useKusama } from '../kusama'
 import { toastByStatus } from '../pages/explore/helpers'
@@ -67,37 +68,37 @@ const AccountContextProvider = ({ children }: any) => {
   }, [])
 
   useEffect(() => {
-    const setLevelCheckingAccounts = (accounts: AccountId32[], level: string) => {
-      accounts.forEach((account: AccountId32) => {
-        if (account.toHuman() === activeAccount?.address) {
-          setLevel(level)
-        }
-      })
+    if (!society || !activeAccount) return
+
+    const address = activeAccount.address
+    let cancelled = false
+
+    const detectLevel = async () => {
+      const [bids, candidates, members] = await Promise.all([
+        society.bids() as Promise<Vec<PalletSocietyBid>>,
+        society.candidates.keys() as Promise<StorageKey<[AccountId32]>[]>,
+        society.members.keys() as Promise<StorageKey<[AccountId32]>[]>
+      ])
+
+      if (cancelled || activeAccount?.address !== address) return
+
+      const matches = (accounts: AccountId32[]) =>
+        accounts.some((account) => isSameAddress(account.toString(), address))
+
+      const bidders = bids.map((bid) => bid.who)
+      const candidateAccounts = candidates.map((key) => key.args[0] as AccountId32)
+      const memberAccounts = members.map((key) => key.args[0] as AccountId32)
+
+      if (matches(memberAccounts)) setLevel('cyborg')
+      else if (matches(candidateAccounts)) setLevel('candidate')
+      else if (matches(bidders)) setLevel('bidder')
+      else setLevel('human')
     }
 
-    if (society && activeAccount) {
-      setLevel('human')
+    detectLevel()
 
-      society.bids().then((response: Vec<PalletSocietyBid>) => {
-        setLevelCheckingAccounts(
-          response.map((account) => account.who),
-          'bidder'
-        )
-      })
-
-      society.candidates.keys().then((response: StorageKey<[AccountId32]>[]) => {
-        setLevelCheckingAccounts(
-          response.map((account) => account.args[0] as AccountId32),
-          'candidate'
-        )
-      })
-
-      society.members.keys().then((response: StorageKey<[AccountId32]>[]) => {
-        setLevelCheckingAccounts(
-          response.map((account) => account.args[0] as AccountId32),
-          'cyborg'
-        )
-      })
+    return () => {
+      cancelled = true
     }
   }, [society, activeAccount])
 
