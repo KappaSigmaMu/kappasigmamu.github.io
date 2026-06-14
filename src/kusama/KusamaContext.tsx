@@ -2,13 +2,14 @@ import { ApiPromise, WsProvider } from '@polkadot/api'
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc'
 import React, { useReducer, useContext } from 'react'
 import { LoadingContainer } from '../components/LoadingContainer'
+import { getProviderEndpoints } from '../helpers/providers'
 
 const RPC = { ...jsonrpc, ...process.env.REACT_APP_RPC }
 
 const queryParams = new URLSearchParams(window.location.search)
 const overrideProviderSocket = queryParams.get('rpc')
 
-const SOCKET = overrideProviderSocket ? overrideProviderSocket : process.env.REACT_APP_PROVIDER_SOCKET
+const SOCKETS = getProviderEndpoints(overrideProviderSocket, process.env.REACT_APP_PROVIDER_SOCKET)
 
 enum ApiState {
   initializing,
@@ -22,18 +23,20 @@ enum ApiState {
 const INIT_STATE: StateType = {
   api: null,
   apiError: null,
-  apiState: ApiState.initializing
+  apiState: ApiState.initializing,
+  activeProviderEndpoint: null
 }
 
 export type StateType = {
   api: ApiPromise | null
   apiError: string | null
   apiState: ApiState
+  activeProviderEndpoint: string | null
 }
 
 type ActionType =
   | { type: 'CONNECTING' }
-  | { type: 'CONNECTED'; payload: ApiPromise }
+  | { type: 'CONNECTED'; payload: { api: ApiPromise; endpoint: string } }
   | { type: 'READY' }
   | { type: 'DISCONNECTED' }
   | { type: 'ERROR'; payload: any }
@@ -43,7 +46,12 @@ function reducer(state: StateType, action: ActionType): StateType {
     case 'CONNECTING':
       return { ...state, apiState: ApiState.connecting }
     case 'CONNECTED':
-      return { ...state, api: action.payload, apiState: ApiState.connected }
+      return {
+        ...state,
+        api: action.payload.api,
+        apiState: ApiState.connected,
+        activeProviderEndpoint: action.payload.endpoint
+      }
     case 'READY':
       return { ...state, apiState: ApiState.ready }
     case 'DISCONNECTED':
@@ -60,11 +68,11 @@ function connect(state: StateType, dispatch: React.Dispatch<ActionType>) {
 
   dispatch({ type: 'CONNECTING' })
 
-  const provider = new WsProvider(SOCKET)
+  const provider = new WsProvider(SOCKETS)
   const api = new ApiPromise({ provider, rpc: RPC })
 
   api.on('connected', () => {
-    dispatch({ type: 'CONNECTED', payload: api })
+    dispatch({ type: 'CONNECTED', payload: { api, endpoint: provider.endpoint } })
   })
   api.on('disconnected', () => dispatch({ type: 'DISCONNECTED' }))
   api.on('error', (err) => dispatch({ type: 'ERROR', payload: err }))
