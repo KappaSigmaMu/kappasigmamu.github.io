@@ -123,7 +123,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
             <Identicon value={bid.who.toHuman()} size={32} theme={'polkadot'} />
           </Col>
           <Col lg={3} className="text-center text-lg-start text-truncate">
-            <AccountIdentity api={api} accountId={bid.who} />
+            <AccountIdentity accountId={bid.who} />
           </Col>
           <Col lg={2} className="text-center text-lg-start text-truncate">
             {humanizeBidKind(bid.kind)}
