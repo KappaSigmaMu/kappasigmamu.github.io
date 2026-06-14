@@ -12,17 +12,21 @@ const AccountIdentity = ({
   hideNotSet?: boolean
 }) => {
   const identity = useAccountIdentity(accountId)
-  const id = identity?.display ?? ''
-  const verified = (identity?.judgements.length ?? 0) > 0
+  const display = identity?.display
+  const isVerified = Boolean(identity?.judgements.length)
 
-  const verifiedBadge = verified ? <StyledVerifiedBadge className="me-2" /> : <StyledUnverifiedBadge className="me-2" />
+  const verifiedBadge = isVerified ? (
+    <StyledVerifiedBadge className="me-2" />
+  ) : (
+    <StyledUnverifiedBadge className="me-2" />
+  )
 
-  if (!id && hideNotSet) return <></>
-  if (id)
+  if (!display && hideNotSet) return <></>
+  if (display)
     return (
       <div className="d-flex align-items-center justify-content-center justify-content-lg-start">
         {verifiedBadge}
-        {id}
+        {display}
       </div>
     )
   return <>{truncateMiddle(accountId?.toString(), 20)}</>
