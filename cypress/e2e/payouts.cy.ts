@@ -51,7 +51,7 @@ describe('Payouts Page', () => {
       cy.getBySelLike('payout-maturity-').should('have.length.gte', 1)
     })
 
-    it('should show Matured badge for Ferdie (payout past due block)', () => {
+    it('should show Matured badge for Eve (payout past due block)', () => {
       cy.getBySelLike('payout-maturity-').contains('Matured').should('be.visible')
     })
 
@@ -70,13 +70,13 @@ describe('Payouts Page', () => {
       cy.getBySelLike('claim-payout-button-').should('not.exist')
     })
 
-    it('should show claim button when connected as Ferdie (matured payout)', () => {
-      cy.connectWallet('Ferdie')
+    it('should show claim button when connected as Eve (matured payout)', () => {
+      cy.connectWallet('Eve')
       cy.getBySelLike('claim-payout-button-').should('be.visible')
     })
 
     it('should claim matured payout successfully', () => {
-      cy.connectWallet('Ferdie')
+      cy.connectWallet('Eve')
       cy.getBySelLike('claim-payout-button-').should('be.visible').click()
 
       cy.approvePendingTransaction()

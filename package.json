@@ -152,7 +152,7 @@
     "test:e2e:grep": "node scripts/test-e2e-grep.js",
     "test:e2e:ci": "start-server-and-test chopsticks http://localhost:8000 'start-server-and-test start:test:ready http://localhost:3000 \"cypress run --config video=false\"'",
     "test:e2e:headed": "cypress run --headed",
-    "test:e2e:open": "cypress open",
+    "test:e2e:open": "start-server-and-test chopsticks http://localhost:8000 'start-server-and-test start:test:ready http://localhost:3000 \"cypress open\"'",
     "test:debug": "cypress open --config watchForFileChanges=true"
   },
   "eslintConfig": {

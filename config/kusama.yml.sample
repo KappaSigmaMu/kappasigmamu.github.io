@@ -48,6 +48,18 @@ import-storage:
         - providers: 1
           data:
             free: '10000000000000'
+      -
+        -
+          - EW8uSDBpxcfHvAyqtHUvrzQX1U9rhjXELjbHnxkjipMEvkx
+        - providers: 1
+          data:
+            free: '50000000000000'
+      -
+        -
+          - JF7gvyH38FjNsj4sE8TFiaZP5hvPnWUTVKsRTNXae5xYU5R
+        - providers: 1
+          data:
+            free: '20000000000000'
   Indices:
     Accounts:
       -
@@ -108,10 +120,11 @@ import-storage:
     RoundCount: 6
     MemberCount: 2
     Head: 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw # Eve
+    Pot: '50000000000000'
     Payouts:
       -
         -
-          - 5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL # Ferdie
+          - 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw # Eve
         - paid: 0
           payouts:
             -
