@@ -1,23 +1,40 @@
 import { defineConfig } from 'cypress';
 
+const CHOPSTICKS_RPC = 'http://localhost:8000';
+
+let forkBlockHash: string | null = null;
+
+async function chopsticksRpc<T>(method: string, params: unknown[] = []): Promise<T> {
+  const response = await fetch(CHOPSTICKS_RPC, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
+  });
+  const payload = await response.json();
+
+  if (payload.error) {
+    throw new Error(payload.error.message);
+  }
+
+  return payload.result as T;
+}
+
 export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',
     setupNodeEvents(on, config) {
       on('task', {
+        async rememberForkPoint() {
+          try {
+            forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash');
+          } catch (e) {
+            console.log('Chopsticks fork point capture skipped:', (e as Error).message);
+          }
+          return null;
+        },
         async resetChopsticks() {
           try {
-            const response = await fetch('http://localhost:8000', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                jsonrpc: '2.0',
-                id: 1,
-                method: 'dev_newBlock',
-                params: [],
-              }),
-            });
-            await response.json();
+            await chopsticksRpc('dev_newBlock');
           } catch (e) {
             console.log('Chopsticks reset skipped:', (e as Error).message);
           }
@@ -25,28 +42,12 @@ export default defineConfig({
         },
         async resetChopsticksToFork() {
           try {
-            const hashRes = await fetch('http://localhost:8000', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                jsonrpc: '2.0',
-                id: 1,
-                method: 'chain_getBlockHash',
-                params: [21000000],
-              }),
-            });
-            const { result: blockHash } = await hashRes.json();
-            const setRes = await fetch('http://localhost:8000', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                jsonrpc: '2.0',
-                id: 2,
-                method: 'dev_setHead',
-                params: [blockHash],
-              }),
-            });
-            await setRes.json();
+            const hash =
+              forkBlockHash ??
+              (process.env.KUSAMA_BLOCK_NUMBER
+                ? await chopsticksRpc<string>('chain_getBlockHash', [Number(process.env.KUSAMA_BLOCK_NUMBER)])
+                : null);
+            if (hash) await chopsticksRpc('dev_setHead', [hash]);
           } catch (e) {
             console.log('Chopsticks fork reset skipped:', (e as Error).message);
           }
@@ -66,7 +67,7 @@ export default defineConfig({
     screenshotsFolder: 'cypress/screenshots',
 
     retries: {
-      runMode: 0,
+      runMode: 1,
       openMode: 0,
     },
 

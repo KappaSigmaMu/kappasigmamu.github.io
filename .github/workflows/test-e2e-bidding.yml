@@ -1,4 +1,4 @@
-name: Lint & Unit Tests
+name: "E2E: Bidding"
 
 on:
   pull_request:
@@ -13,8 +13,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  test-e2e-bidding:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
@@ -37,8 +38,18 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Lint
-        run: yarn lint
+      - name: Setup Chopsticks config
+        run: cp config/kusama.yml.sample config/kusama.yml
 
-      - name: Unit tests
-        run: CI=true yarn test --watchAll=false --coverage
+      - name: Run bidding E2E tests
+        run: yarn test:e2e:bidding
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-bidding-screenshots
+          path: cypress/screenshots
+          include-hidden-files: true
