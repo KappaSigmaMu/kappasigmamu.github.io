@@ -1,12 +1,12 @@
 import type { ApiPromise } from '@polkadot/api'
 import { WalletAccount } from '@talismn/connect-wallets'
-import { useState, useEffect } from 'react'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
 import { ClaimPayoutButton } from './ClaimPayoutButton'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
 import { useBlockTime } from '../../../../hooks/useBlockTime'
+import { useRelayChainBlockNumber } from '../../../../hooks/useRelayChainBlockNumber'
 import { Identicon } from '../../components/Identicon'
 import { toastByStatus } from '../../helpers'
 
@@ -96,23 +96,7 @@ const TimeRemaining = ({
 }
 
 const PayoutsList = ({ api, members, activeAccount, handleUpdate }: PayoutsListProps): JSX.Element => {
-  const [latestBlock, setLatestBlock] = useState<number | null>(null)
-
-  useEffect(() => {
-    const fetchLatestBlock = async () => {
-      const header = await api.rpc.chain.getHeader()
-      setLatestBlock(header.number.toNumber())
-    }
-
-    fetchLatestBlock()
-    const unsub = api.rpc.chain.subscribeNewHeads((header) => {
-      setLatestBlock(header.number.toNumber())
-    })
-
-    return () => {
-      unsub.then((u) => u())
-    }
-  }, [api])
+  const latestBlock = useRelayChainBlockNumber(api)
 
   if (members.length === 0) return <>No members</>
 

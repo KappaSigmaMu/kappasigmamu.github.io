@@ -23,6 +23,9 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',
     setupNodeEvents(on, config) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require('@cypress/grep/src/plugin')(config)
+
       on('task', {
         async rememberForkPoint() {
           try {
