@@ -13,6 +13,7 @@ import { AccountContextProvider } from '../account/AccountContext'
 import { Navbar } from '../components/Navbar'
 import { Toaster } from '../components/Toaster'
 import { KusamaContextProvider } from '../kusama'
+import { PeopleContextProvider } from '../people'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 
@@ -55,15 +56,17 @@ const AppRouter = () => {
 
 const App = () => (
   <KusamaContextProvider>
-    <AccountContextProvider>
-      <GlobalStyle />
-      <ThemeProvider theme={Theme}>
+    <PeopleContextProvider>
+      <AccountContextProvider>
         <GlobalStyle />
-        <Suspense fallback={<p>ERROR/LOADING...</p>}>
-          <AppRouter />
-        </Suspense>
-      </ThemeProvider>
-    </AccountContextProvider>
+        <ThemeProvider theme={Theme}>
+          <GlobalStyle />
+          <Suspense fallback={<p>ERROR/LOADING...</p>}>
+            <AppRouter />
+          </Suspense>
+        </ThemeProvider>
+      </AccountContextProvider>
+    </PeopleContextProvider>
   </KusamaContextProvider>
 )
 

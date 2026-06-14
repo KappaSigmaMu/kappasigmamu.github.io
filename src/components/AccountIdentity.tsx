@@ -1,29 +1,19 @@
-import type { ApiPromise } from '@polkadot/api'
-import type { DeriveAccountRegistration } from '@polkadot/api-derive/types'
-import { AccountId } from '@polkadot/types/interfaces'
-import { useEffect, useState } from 'react'
+import type { AccountId } from '@polkadot/types/interfaces'
 import { FaCircleCheck, FaCircleMinus } from 'react-icons/fa6'
 import { styled } from 'styled-components'
 import { truncateMiddle } from '../helpers/truncate'
+import { useAccountIdentity } from '../hooks/useAccountIdentity'
 
 const AccountIdentity = ({
   accountId,
-  api,
   hideNotSet
 }: {
   accountId: AccountId
-  api: ApiPromise
   hideNotSet?: boolean
 }) => {
-  const [id, setId] = useState<string>('')
-  const [verified, setVerified] = useState(false)
-
-  useEffect(() => {
-    api.derive.accounts.identity(accountId, (identity: DeriveAccountRegistration) => {
-      identity.display && setId(identity.display)
-      identity.judgements.length > 0 && setVerified(true)
-    })
-  }, [])
+  const identity = useAccountIdentity(accountId)
+  const id = identity?.display ?? ''
+  const verified = (identity?.judgements.length ?? 0) > 0
 
   const verifiedBadge = verified ? <StyledVerifiedBadge className="me-2" /> : <StyledUnverifiedBadge className="me-2" />
 

@@ -36,29 +36,29 @@ export function CandidateDetailsOffcanvas({ api, candidateId, show, onClose }: P
       <div className="mb-3">
         <AccountHeader accountId={candidateId} />
       </div>
-      {votes ? <CanvasBody api={api} votes={votes} /> : <LoadingSpinner />}
+      {votes ? <CanvasBody votes={votes} /> : <LoadingSpinner />}
     </Offcanvas>
   )
 }
 
-function CanvasBody({ api, votes }: { api: ApiPromise; votes: GroupedVotes }) {
+function CanvasBody({ votes }: { votes: GroupedVotes }) {
   return (
     <>
       {Object.entries(votes).map(([type, memberIds]) =>
-        memberIds.length === 0 ? <></> : <VoterList api={api} type={type} memberIds={memberIds} key={type} />
+        memberIds.length === 0 ? <></> : <VoterList type={type} memberIds={memberIds} key={type} />
       )}
     </>
   )
 }
 
-function VoterList({ api, type, memberIds }: { api: ApiPromise; type: string; memberIds: AccountId[] }) {
+function VoterList({ type, memberIds }: { type: string; memberIds: AccountId[] }) {
   return (
     <div className="mt-4">
       <h4>{type}s</h4>
       {memberIds.map((id) => (
         <div key={id.toString()} className="mb-2 ms-2">
           <Identicon value={id.toHuman()} size={22} theme="polkadot" className="me-2" />
-          <AccountIdentity api={api} accountId={id} />
+          <AccountIdentity accountId={id} />
         </div>
       ))}
     </div>
