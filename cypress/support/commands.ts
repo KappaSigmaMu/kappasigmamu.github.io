@@ -14,7 +14,7 @@ Cypress.Commands.add('waitForBlockchainData', (timeout?: number) => {
   cy.get('.spinner-border', { timeout: timeout || 10000 }).should('not.exist')
 })
 
-Cypress.Commands.add('submitTransaction', () => {
+Cypress.Commands.add('approvePendingTransaction', () => {
   cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
   cy.wait(500)
   const approvePendingTx = (retries = 5): void => {
@@ -29,7 +29,18 @@ Cypress.Commands.add('submitTransaction', () => {
     })
   }
   approvePendingTx()
+})
+
+Cypress.Commands.add('submitTransaction', () => {
+  cy.approvePendingTransaction()
   cy.contains(/finalized|success/i, { timeout: 30000 }).should('be.visible')
+})
+
+Cypress.Commands.add('verifyTxError', (message?: string | RegExp, timeout?: number) => {
+  cy.getBySel('tx-error', { timeout: timeout || 30000 }).should('be.visible')
+  if (message) {
+    cy.getBySel('tx-message').should(message instanceof RegExp ? 'match' : 'contain.text', message)
+  }
 })
 
 Cypress.Commands.add('visitExplore', (section: string) => {

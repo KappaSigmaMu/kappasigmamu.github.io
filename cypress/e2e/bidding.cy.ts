@@ -1,20 +1,17 @@
 import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/dist/types'
 
-const waitForTxAndApprove = () => {
-  cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
-  cy.wait(500)
-  const approvePendingTx = (retries = 5): void => {
-    cy.getTxRequests().then((txRequests) => {
-      const txIds = Object.keys(txRequests)
-      if (txIds.length > 0) {
-        cy.approveTx(Number(txIds[txIds.length - 1]))
-      } else if (retries > 0) {
-        cy.wait(500)
-        approvePendingTx(retries - 1)
-      }
-    })
-  }
-  approvePendingTx()
+const visitBiddersPage = () => {
+  cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
+  cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
+}
+
+const visitBiddersPageWithWallet = (testAccounts: InjectedAccountWitMnemonic[]) => {
+  visitBiddersPage()
+  cy.initWallet(testAccounts, Cypress.env('app_name'))
+}
+
+const expectTransactionSuccess = () => {
+  cy.contains(/finalized|success|submitted/i, { timeout: 30000 }).should('be.visible')
 }
 
 describe('Bidding Operations', () => {
@@ -33,8 +30,7 @@ describe('Bidding Operations', () => {
 
   describe('Bidders Page UI', () => {
     beforeEach(() => {
-      cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.wait(1000)
+      visitBiddersPage()
     })
 
     it('should load the bidders page with bid tab active by default', () => {
@@ -68,9 +64,7 @@ describe('Bidding Operations', () => {
 
   describe('Place a Bid', () => {
     beforeEach(() => {
-      cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
-      cy.wait(1000)
+      visitBiddersPageWithWallet(testAccounts)
     })
 
     it('should allow Human to place a bid successfully', () => {
@@ -81,9 +75,8 @@ describe('Bidding Operations', () => {
       cy.getBySel('bid-amount-input').clear().type('1')
       cy.getBySel('submit-bid-button').click()
 
-      waitForTxAndApprove()
-
-      cy.contains(/finalized|success|submitted/i, { timeout: 30000 }).should('be.visible')
+      cy.approvePendingTransaction()
+      expectTransactionSuccess()
     })
 
     it('should reject a zero amount bid on chain', () => {
@@ -93,17 +86,14 @@ describe('Bidding Operations', () => {
       cy.getBySel('bid-amount-input').clear().type('0')
       cy.getBySel('submit-bid-button').click()
 
-      waitForTxAndApprove()
-
-      cy.get('.go2072408551', { timeout: 30000 }).should('exist')
+      cy.approvePendingTransaction()
+      cy.verifyTxError(/society\./)
     })
   })
 
   describe('Vouch for Someone', () => {
     beforeEach(() => {
-      cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
-      cy.wait(1000)
+      visitBiddersPageWithWallet(testAccounts)
     })
 
     it('should allow Member to vouch for an address', () => {
@@ -119,9 +109,8 @@ describe('Bidding Operations', () => {
       cy.getBySel('vouch-tip-input').clear().type('0.1')
       cy.getBySel('submit-vouch-button').click()
 
-      waitForTxAndApprove()
-
-      cy.contains(/finalized|success|submitted/i, { timeout: 30000 }).should('be.visible')
+      cy.approvePendingTransaction()
+      expectTransactionSuccess()
     })
 
     it('should show error for invalid vouch address', () => {
@@ -141,9 +130,7 @@ describe('Bidding Operations', () => {
 
   describe('Remove a Vouch (Unvouch)', () => {
     beforeEach(() => {
-      cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
-      cy.wait(1000)
+      visitBiddersPageWithWallet(testAccounts)
     })
 
     it('should allow voucher to remove their vouch', () => {
@@ -152,17 +139,14 @@ describe('Bidding Operations', () => {
 
       cy.getBySel('unvouch-button', { timeout: 15000 }).should('be.visible').click()
 
-      waitForTxAndApprove()
-
+      cy.approvePendingTransaction()
       cy.contains(/finalized|success|removed/i, { timeout: 30000 }).should('be.visible')
     })
   })
 
   describe('Account Level Transitions', () => {
     beforeEach(() => {
-      cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
-      cy.wait(1000)
+      visitBiddersPageWithWallet(testAccounts)
     })
 
     it('should transition from Human to Bidder after placing a bid', () => {
@@ -172,9 +156,8 @@ describe('Bidding Operations', () => {
       cy.getBySel('bid-amount-input').clear().type('1')
       cy.getBySel('submit-bid-button').click()
 
-      waitForTxAndApprove()
-
-      cy.contains(/finalized|success|submitted/i, { timeout: 30000 }).should('be.visible')
+      cy.approvePendingTransaction()
+      expectTransactionSuccess()
 
       cy.task('resetChopsticks')
       cy.visitExplore('bidders')
@@ -187,8 +170,7 @@ describe('Bidding Operations', () => {
 
       cy.getBySel('unbid-button', { timeout: 15000 }).should('be.visible').click()
 
-      waitForTxAndApprove()
-
+      cy.approvePendingTransaction()
       cy.contains(/finalized|success|removed/i, { timeout: 30000 }).should('be.visible')
 
       cy.task('resetChopsticks')
@@ -199,9 +181,7 @@ describe('Bidding Operations', () => {
 
   describe('Remove a Bid (Unbid)', () => {
     beforeEach(() => {
-      cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
-      cy.wait(1000)
+      visitBiddersPageWithWallet(testAccounts)
     })
 
     it('should allow Bidder to remove their bid', () => {
@@ -210,8 +190,7 @@ describe('Bidding Operations', () => {
 
       cy.getBySel('unbid-button', { timeout: 15000 }).should('be.visible').click()
 
-      waitForTxAndApprove()
-
+      cy.approvePendingTransaction()
       cy.contains(/finalized|success|removed/i, { timeout: 30000 }).should('be.visible')
     })
 
