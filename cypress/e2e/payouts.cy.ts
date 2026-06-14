@@ -1,26 +1,20 @@
 import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/dist/types'
 
-const waitForTxAndApprove = () => {
-  cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
-  cy.wait(500)
-  const approvePendingTx = (retries = 5): void => {
-    cy.getTxRequests().then((txRequests) => {
-      const txIds = Object.keys(txRequests)
-      if (txIds.length > 0) {
-        cy.approveTx(Number(txIds[txIds.length - 1]))
-      } else if (retries > 0) {
-        cy.wait(500)
-        approvePendingTx(retries - 1)
-      }
-    })
-  }
-  approvePendingTx()
+const visitPayoutsPage = () => {
+  cy.visit('/explore/payouts?rpc=ws://localhost:8000')
+  cy.getBySel('payouts-list').should('be.visible')
+}
+
+const visitPayoutsPageWithWallet = (testAccounts: InjectedAccountWitMnemonic[]) => {
+  visitPayoutsPage()
+  cy.initWallet(testAccounts, Cypress.env('app_name'))
 }
 
 describe('Payouts Page', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
   before(() => {
+    cy.task('rememberForkPoint')
     cy.fixture('accounts').then((accounts) => {
       testAccounts = Object.values(accounts).map((acc: any) => ({
         address: acc.address,
@@ -31,10 +25,13 @@ describe('Payouts Page', () => {
     })
   })
 
+  beforeEach(() => {
+    cy.task('resetChopsticksToFork')
+  })
+
   describe('Payouts List UI', () => {
     beforeEach(() => {
-      cy.visit('/explore/payouts?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.waitForBlockchainData(20000)
+      visitPayoutsPage()
     })
 
     it('should display the payouts list', () => {
@@ -65,9 +62,7 @@ describe('Payouts Page', () => {
 
   describe('Claim Payout', () => {
     beforeEach(() => {
-      cy.visit('/explore/payouts?rpc=ws://localhost:8000', { timeout: 20000 })
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
-      cy.getBySel('payouts-list', { timeout: 20000 }).should('be.visible')
+      visitPayoutsPageWithWallet(testAccounts)
     })
 
     it('should not show claim button when not connected as payout owner', () => {
@@ -82,10 +77,10 @@ describe('Payouts Page', () => {
 
     it('should claim matured payout successfully', () => {
       cy.connectWallet('Ferdie')
-      cy.getBySelLike('claim-payout-button-').click({ force: true })
+      cy.getBySelLike('claim-payout-button-').should('be.visible').click()
 
-      waitForTxAndApprove()
-      cy.contains(/successfully|submitted/i, { timeout: 30000 }).should('be.visible')
+      cy.approvePendingTransaction()
+      cy.contains(/successfully/i, { timeout: 30000 }).should('be.visible')
     })
   })
 

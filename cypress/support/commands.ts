@@ -10,10 +10,6 @@ Cypress.Commands.add('connectWallet', (accountName: string) => {
   cy.getBySel('account-balance', { timeout: 15000 }).should('be.visible')
 })
 
-Cypress.Commands.add('waitForBlockchainData', (timeout?: number) => {
-  cy.get('.spinner-border', { timeout: timeout || 10000 }).should('not.exist')
-})
-
 Cypress.Commands.add('approvePendingTransaction', () => {
   cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
 
@@ -49,8 +45,7 @@ Cypress.Commands.add('verifyTxError', (message?: string | RegExp, timeout?: numb
 
 Cypress.Commands.add('visitExplore', (section: string) => {
   const rpc = Cypress.env('chopsticks_url') || 'ws://localhost:8000'
-  cy.visit(`/explore/${section}?rpc=${rpc}`, { timeout: 20000 })
-  cy.waitForBlockchainData()
+  cy.visit(`/explore/${section}?rpc=${rpc}`)
 })
 
 Cypress.Commands.add('verifyAccountLevel', (level: string) => {
