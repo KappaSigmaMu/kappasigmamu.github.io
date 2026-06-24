@@ -16,16 +16,16 @@ describe('Wallet Plugin Integration', () => {
 
   describe('Account Injection', () => {
     beforeEach(() => {
-      cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
+      cy.visit('/explore?rpc=ws://localhost:8000')
       cy.initWallet(testAccounts, Cypress.env('app_name'))
-      cy.wait(1000)
+      cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
     })
 
     it('should inject all test accounts into wallet', () => {
-      cy.contains('button', /connect/i).should('be.visible').click({ force: true })
+      cy.contains('button', /connect/i).should('be.visible').click()
       cy.getBySel('wallet-polkadot', { timeout: 15000 }).should('be.visible')
         .parent().should('contain.text', 'Use')
-      cy.getBySel('wallet-polkadot').click({ force: true })
+      cy.getBySel('wallet-polkadot').click()
 
       cy.getBySel('account-switcher', { timeout: 10000 }).should('have.length', 6)
       cy.get('.modal-body').within(() => {
@@ -66,9 +66,9 @@ describe('Wallet Plugin Integration', () => {
 
   describe('Wallet Disconnect', () => {
     beforeEach(() => {
-      cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
+      cy.visit('/explore?rpc=ws://localhost:8000')
       cy.initWallet(testAccounts, Cypress.env('app_name'))
-      cy.wait(500)
+      cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
     })
 
     it('should disconnect wallet and return to initial state', () => {
@@ -97,16 +97,16 @@ describe('Wallet Plugin Integration', () => {
 
   describe('Wallet Persistence', () => {
     beforeEach(() => {
-      cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
+      cy.visit('/explore?rpc=ws://localhost:8000')
       cy.initWallet(testAccounts, Cypress.env('app_name'))
-      cy.wait(500)
+      cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
     })
 
     it('should persist wallet across page navigation', () => {
       cy.connectWallet('Eve')
       cy.getBySel('account-balance').should('be.visible')
 
-      cy.visit('/explore/members?rpc=ws://localhost:8000', { timeout: 20000 })
+      cy.visit('/explore/members?rpc=ws://localhost:8000')
 
       cy.getBySel('account-balance', { timeout: 15000 }).should('be.visible')
     })
@@ -114,9 +114,9 @@ describe('Wallet Plugin Integration', () => {
 
   describe('Transaction Approval', () => {
     beforeEach(() => {
-      cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
+      cy.visit('/explore?rpc=ws://localhost:8000')
       cy.initWallet(testAccounts, Cypress.env('app_name'))
-      cy.wait(500)
+      cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
     })
 
     it('should handle transaction request queue', () => {

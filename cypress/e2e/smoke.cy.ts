@@ -184,8 +184,7 @@ describe('API Connection Smoke Tests', () => {
   it('should initialize API without crashing', () => {
     cy.visit('/explore/members?rpc=ws://localhost:8000')
 
-    cy.wait(5000)
-
+    cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
     cy.get('body').should('be.visible')
     cy.get('nav').should('exist')
   })
