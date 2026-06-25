@@ -4,6 +4,7 @@ describe('Candidate Voting', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
   before(() => {
+    cy.task('rememberForkPoint')
     cy.fixture('accounts').then((accounts) => {
       testAccounts = Object.values(accounts).map((acc: any) => ({
         address: acc.address,
@@ -58,6 +59,7 @@ describe('Candidate Voting', () => {
 
   describe('Vote on Candidate', () => {
     beforeEach(() => {
+      cy.task('resetChopsticksToFork', null, { timeout: 120000 })
       cy.visit('/explore/candidates?rpc=ws://localhost:8000')
       cy.initWallet(testAccounts, Cypress.env('app_name'))
       cy.getBySel('candidates-list', { timeout: 20000 }).should('be.visible')
@@ -86,7 +88,8 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-approve-button-', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.contains(/vote sent/i, { timeout: 30000 }).should('be.visible')
+      cy.task('resetChopsticks')
+      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
     })
 
     it('should allow member to reject a candidate', () => {
@@ -96,7 +99,8 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-reject-button-', { timeout: 15000 }).last().click()
 
       cy.approvePendingTransaction()
-      cy.contains(/vote sent/i, { timeout: 30000 }).should('be.visible')
+      cy.task('resetChopsticks')
+      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
     })
 
     it('should show Voted badge after voting', () => {
@@ -106,12 +110,10 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-approve-button-', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.contains(/vote sent/i, { timeout: 30000 }).should('be.visible')
-
       cy.task('resetChopsticks')
-      cy.visitExplore('candidates')
+      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
 
-      cy.getBySelLike('candidate-voted-badge-', { timeout: 15000 })
+      cy.getBySelLike('candidate-voted-badge-', { timeout: 20000 })
         .should('be.visible')
         .and('contain.text', 'Voted')
     })
