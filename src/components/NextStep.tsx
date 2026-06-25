@@ -139,7 +139,8 @@ const NextStep = () => {
   }, [api])
 
   const claim = new URLSearchParams(search).get('claim')
-  const isClaimPeriod = claim || !isVotingPeriod(votingPeriod, claimPeriod, currentBlock)
+  const periodsLoaded = votingPeriod > 0 && claimPeriod > 0
+  const isClaimPeriod = Boolean(claim) || (periodsLoaded && !isVotingPeriod(votingPeriod, claimPeriod, currentBlock))
 
   const showMessage = (nextResult: ExtrinsicResult) => {
     toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
@@ -196,7 +197,7 @@ function ClaimMembershipButton({
 
   if (loading) return <LoadingSpinner center={false} small={true} />
 
-  return <Button onClick={handleClaim}>Claim Membership</Button>
+  return <Button data-test="claim-membership-button" onClick={handleClaim}>Claim Membership</Button>
 }
 
 export { NextStep }
