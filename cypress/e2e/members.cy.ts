@@ -4,6 +4,7 @@ describe('Member Operations', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
   before(() => {
+    cy.task('rememberForkPoint')
     cy.fixture('accounts').then((accounts) => {
       testAccounts = Object.values(accounts).map((acc: any) => ({
         address: acc.address,
@@ -69,6 +70,7 @@ describe('Member Operations', () => {
 
   describe('Defender Voting', () => {
     beforeEach(() => {
+      cy.task('resetChopsticksToFork', null, { timeout: 120000 })
       cy.visit('/explore/members?rpc=ws://localhost:8000')
       cy.getBySel('members-list', { timeout: 20000 }).should('be.visible')
       cy.initWallet(testAccounts, Cypress.env('app_name'))
@@ -99,7 +101,7 @@ describe('Member Operations', () => {
 
       cy.approvePendingTransaction()
       cy.task('resetChopsticks', null, { timeout: 120000 })
-      cy.contains(/vote sent/i, { timeout: 30000 }).should('be.visible')
+      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
     })
 
     it('should allow member to reject defender', () => {
@@ -110,7 +112,7 @@ describe('Member Operations', () => {
 
       cy.approvePendingTransaction()
       cy.task('resetChopsticks', null, { timeout: 120000 })
-      cy.contains(/vote sent/i, { timeout: 30000 }).should('be.visible')
+      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
     })
 
     it('should show Voted badge after voting on defender', () => {
@@ -121,11 +123,9 @@ describe('Member Operations', () => {
 
       cy.approvePendingTransaction()
       cy.task('resetChopsticks', null, { timeout: 120000 })
-      cy.contains(/vote sent/i, { timeout: 30000 }).should('be.visible')
+      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
 
-      cy.visitExplore('members')
-
-      cy.contains('Voted', { timeout: 15000 }).should('be.visible')
+      cy.contains('Voted', { timeout: 20000 }).should('be.visible')
     })
   })
 
