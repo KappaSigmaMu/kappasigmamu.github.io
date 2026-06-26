@@ -75,6 +75,7 @@ import-storage:
       - Candidates
       - Members
       - Payouts
+      - SuspendedMembers
     Parameters:
       maxMembers: 500
       maxIntake: 10
@@ -121,6 +122,13 @@ import-storage:
         - rank: 1
           strikes: 0
           index: 1
+    SuspendedMembers:
+      -
+        -
+          - 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y # Charlie (suspended)
+        - rank: 0
+          strikes: 10
+          index: 0
     Defending:
       - 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw # Eve (defender)
       - 5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL # Ferdie (skeptic)
