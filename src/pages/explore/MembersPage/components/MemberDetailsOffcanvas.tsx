@@ -3,6 +3,7 @@ import { AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
+import { usePeople } from '../../../../people'
 import { AccountHeader } from '../../components/AccountHeader'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
 import { Offcanvas } from '../../components/Offcanvas'
@@ -16,17 +17,18 @@ type MemberDetailsOffCanvasProps = {
 }
 
 const MemberDetailsOffCanvas = ({ api, accountId, show, onClose }: MemberDetailsOffCanvasProps) => {
+  const { peopleApi } = usePeople()
   const [loading, setLoading] = useState(true)
   const [memberDetails, setMemberDetails] = useState<SocietyMemberDetails | null>(null)
 
   useEffect(() => {
     if (!accountId) return
     setLoading(true)
-    fetchMemberDetails(api, accountId).then((details) => {
+    fetchMemberDetails(api, peopleApi, accountId).then((details) => {
       setMemberDetails(details)
       setLoading(false)
     })
-  }, [accountId])
+  }, [accountId, api, peopleApi])
 
   return (
     <Offcanvas show={show} placement="end" onClose={onClose} header={<h3>{memberDetails?.identity?.name}</h3>}>

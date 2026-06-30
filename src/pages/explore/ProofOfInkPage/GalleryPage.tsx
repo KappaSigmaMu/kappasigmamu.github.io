@@ -119,7 +119,7 @@ const ProofOfInkImage = ({
                 <Identicon value={member} size={32} theme={'polkadot'} />
               </Col>
               <Col xs={9} md={9} lg={10} className="text-center text-truncate">
-                <AccountIdentity api={api} accountId={api.registry.createType('AccountId', member)} />
+                <AccountIdentity accountId={api.registry.createType('AccountId', member)} />
               </Col>
             </Row>
           </MemberInformation>
