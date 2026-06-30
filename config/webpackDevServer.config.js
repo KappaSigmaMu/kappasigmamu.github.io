@@ -14,8 +14,31 @@ const sockHost = process.env.WDS_SOCKET_HOST
 const sockPath = process.env.WDS_SOCKET_PATH // default: '/ws'
 const sockPort = process.env.WDS_SOCKET_PORT
 
+function getServerConfig() {
+  const httpsConfig = getHttpsConfig()
+
+  if (!httpsConfig) {
+    return {}
+  }
+
+  if (httpsConfig === true) {
+    return { server: 'https' }
+  }
+
+  return {
+    server: {
+      type: 'https',
+      options: {
+        key: httpsConfig.key,
+        cert: httpsConfig.cert
+      }
+    }
+  }
+}
+
 module.exports = function (proxy, allowedHost) {
   return {
+    ...getServerConfig(),
     compress: true,
     hot: true,
     static: {
@@ -25,7 +48,6 @@ module.exports = function (proxy, allowedHost) {
         ignored: ignoredFiles(paths.appSrc)
       }
     },
-    https: getHttpsConfig(),
     host,
     allowedHosts: !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === 'true' ? 'all' : [allowedHost],
     client: {

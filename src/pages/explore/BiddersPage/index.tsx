@@ -1,7 +1,7 @@
 import { ApiPromise } from '@polkadot/api'
+import type { Vec } from '@polkadot/types'
 import type { Bid } from '@polkadot/types/interfaces/society'
 import type { Codec } from '@polkadot/types-codec/types'
-import type { Vec } from '@polkadot/types'
 import { useEffect, useState, useCallback } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { BiddersList } from './BiddersList'
