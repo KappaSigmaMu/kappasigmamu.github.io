@@ -6,12 +6,6 @@ declare interface NavRouteProps {
   showSocialIcons?: boolean
 }
 
-declare module '@kappasigmamu/canary-component'
-
-declare class ThreeCanary {
-  constructor(objectUrl?: string)
-}
-
 declare interface SocietyCandidate {
   accountId: AccountId
   round: number
