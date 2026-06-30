@@ -9,6 +9,7 @@ import { LinkWithQuery } from './LinkWithQuery'
 import { useAccount } from '../account/AccountContext'
 import { StatusChangeHandler, doTx } from '../helpers/extrinsics'
 import { useKusama } from '../kusama/KusamaContext'
+import { useRelayChainBlockNumber } from '../hooks/useRelayChainBlockNumber'
 import { isVotingPeriod } from './rotation-bar/helpers/periods'
 import { LoadingSpinner } from '../pages/explore/components/LoadingSpinner'
 import { toastByStatus } from '../pages/explore/helpers'
@@ -120,7 +121,7 @@ const NextStep = () => {
   const { level, setLevel } = useAccount()
   const { api } = useKusama()
   const { search } = useLocation()
-  const [currentBlock, setCurrentBlock] = useState<number>(0)
+  const currentBlock = useRelayChainBlockNumber(api) ?? 0
   const [votingPeriod, setVotingPeriod] = useState<number>(0)
   const [claimPeriod, setClaimPeriod] = useState<number>(0)
 
@@ -131,10 +132,6 @@ const NextStep = () => {
 
       const claimPeriod = (api.consts.society.claimPeriod as u32).toNumber()
       setClaimPeriod(claimPeriod)
-
-      api.derive.chain.bestNumber((block) => {
-        setCurrentBlock(block.toNumber())
-      })
     }
   }, [api])
 
