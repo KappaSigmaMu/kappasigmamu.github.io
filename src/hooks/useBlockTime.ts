@@ -13,19 +13,24 @@ const DEFAULT_TIME = new BN(6_000)
 
 const THRESHOLD = BN_THOUSAND
 
-export function useBlockTime(blocks: number | BN = BN_ONE, apiOverride?: ApiPromise | null): Result {
+export function useBlockTime(
+  blocks: number | BN = BN_ONE,
+  apiOverride?: ApiPromise | null,
+  relayChain = false
+): Result {
   const { api } = useKusama()
 
   return useMemo((): Result => {
     const a = apiOverride || api
-    const blockTime =
-      a.consts.babe?.expectedBlockTime ||
-      a.consts.difficulty?.targetBlockTime ||
-      (a.consts.timestamp?.minimumPeriod.gte(THRESHOLD)
-        ? a.consts.timestamp.minimumPeriod.mul(BN_TWO)
-        : a.query.parachainSystem
-        ? DEFAULT_TIME.mul(BN_TWO)
-        : DEFAULT_TIME)
+    const blockTime = relayChain
+      ? DEFAULT_TIME
+      : a.consts.babe?.expectedBlockTime ||
+        a.consts.difficulty?.targetBlockTime ||
+        (a.consts.timestamp?.minimumPeriod.gte(THRESHOLD)
+          ? a.consts.timestamp.minimumPeriod.mul(BN_TWO)
+          : a.query.parachainSystem
+          ? DEFAULT_TIME.mul(BN_TWO)
+          : DEFAULT_TIME)
     const value = blockTime.mul(bnToBn(blocks)).toNumber()
     const time = extractTime(Math.abs(value))
     const { days, hours, minutes, seconds } = time
@@ -40,5 +45,5 @@ export function useBlockTime(blocks: number | BN = BN_ONE, apiOverride?: ApiProm
       .join(' ')
 
     return [blockTime.toNumber(), `${value < 0 ? '+' : ''}${timeStr}`, time]
-  }, [api, apiOverride, blocks])
+  }, [api, apiOverride, blocks, relayChain])
 }
