@@ -1,6 +1,5 @@
 Cypress.Commands.add('connectWallet', (accountName: string) => {
-  cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
-  cy.getBySel('connect-wallet-button').should('be.visible').click()
+  cy.getBySel('connect-wallet-button', { timeout: 20000 }).should('be.visible').click()
   cy.getBySel('wallet-modal').should('be.visible')
   cy.getBySel('wallet-polkadot').should('be.visible').click()
   cy.get('.modal-title', { timeout: 10000 }).should('contain.text', 'Accounts')
