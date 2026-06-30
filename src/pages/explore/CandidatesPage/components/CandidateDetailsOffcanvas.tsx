@@ -1,7 +1,7 @@
 import { ApiPromise } from '@polkadot/api'
 import { Option, StorageKey } from '@polkadot/types'
 import { AccountId, AccountId32 } from '@polkadot/types/interfaces'
-import { PalletSocietyVote } from '@polkadot/types/lookup'
+import type { SocietyVote } from '@polkadot/types/interfaces/society'
 import { useEffect, useState } from 'react'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { AccountHeader } from '../../components/AccountHeader'
@@ -27,7 +27,10 @@ export function CandidateDetailsOffcanvas({ api, candidateId, show, onClose }: P
     api.query.society.members.keys().then(async (memberIds) => {
       const candidateMemberMap = memberIds.map((memberId) => [candidateId, memberId])
       const votesResponse = await api.query.society.votes.multi(candidateMemberMap)
-      setVotes(groupVotes(candidateMemberMap, votesResponse))
+      setVotes(groupVotes(
+        candidateMemberMap as unknown as (StorageKey<[AccountId32]> | AccountId)[][],
+        votesResponse as unknown as Option<SocietyVote>[]
+      ))
     })
   }, [])
 
@@ -67,14 +70,14 @@ function VoterList({ type, memberIds }: { type: string; memberIds: AccountId[] }
 
 function groupVotes(
   candidateMemberMap: (StorageKey<[AccountId32]> | AccountId)[][],
-  votesResponse: Option<PalletSocietyVote>[]
+  votesResponse: Option<SocietyVote>[]
 ): GroupedVotes {
   // TODO: fix me
   const initial = { Approve: [], Reject: [], Skeptic: [] }
   return votesResponse.reduce((grouped, vote, idx) => {
     if (vote.isNone) return grouped
 
-    const type = vote.unwrap().Type
+    const type = vote.unwrap().type
 
     return {
       ...grouped,

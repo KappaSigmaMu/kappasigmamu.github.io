@@ -7,7 +7,7 @@ import { Canvas } from "@react-three/fiber"
 import { EffectComposer, Bloom, Glitch } from "@react-three/postprocessing"
 import React, { Suspense } from "react"
 import { Lights, Particles, Points, CameraControls, Model } from "./Components"
-import { brandPalette } from "./helpers"
+import { brandPalette, defaultConfig } from "./helpers"
 
 const ThreeCanary = (props) => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)

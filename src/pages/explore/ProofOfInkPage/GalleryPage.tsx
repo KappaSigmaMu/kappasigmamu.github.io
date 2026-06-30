@@ -23,7 +23,8 @@ const GalleryPage = ({ api }: ExamplesPageProps): JSX.Element => {
     let founderHash: string
     society?.founder().then((hash) => (founderHash = hash.toString()))
 
-    society?.members.keys().then((members: StorageKey<[AccountId32]>[]) => {
+    society?.members.keys().then((memberKeys) => {
+      const members = memberKeys as StorageKey<[AccountId32]>[]
       const hashes = members.map((account) => account.toHuman()!.toString()).filter((hash) => hash !== founderHash)
       hashes.sort((a, b) => a.toString().localeCompare(b.toString()))
       setMembers(hashes)

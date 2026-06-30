@@ -56,7 +56,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
   }
 
   const usePrevious = (value: any) => {
-    const ref = useRef()
+    const ref = useRef<any>(null)
     useEffect(() => {
       ref.current = value
     })

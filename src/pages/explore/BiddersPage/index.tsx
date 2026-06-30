@@ -1,6 +1,7 @@
 import { ApiPromise } from '@polkadot/api'
+import type { Bid } from '@polkadot/types/interfaces/society'
+import type { Codec } from '@polkadot/types-codec/types'
 import type { Vec } from '@polkadot/types'
-import type { PalletSocietyBid } from '@polkadot/types/lookup'
 import { useEffect, useState, useCallback } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { BiddersList } from './BiddersList'
@@ -15,13 +16,13 @@ type BiddersPageProps = {
 
 const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
   const { activeAccount } = useAccount()
-  const [bids, setBids] = useState<Vec<PalletSocietyBid> | null>(null)
+  const [bids, setBids] = useState<Vec<Bid> | null>(null)
 
   const society = api?.query?.society
 
   useEffect(() => {
-    society?.bids((response: Vec<PalletSocietyBid>) => {
-      setBids(response)
+    society?.bids((response: Codec) => {
+      setBids(response as unknown as Vec<Bid>)
     })
   }, [society])
 

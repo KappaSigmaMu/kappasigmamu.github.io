@@ -1,5 +1,5 @@
 import { ApiPromise } from '@polkadot/api'
-import type { Option } from '@polkadot/types'
+import type { Option, u32 } from '@polkadot/types'
 import type { SocietyVote, AccountId } from '@polkadot/types/interfaces'
 import { WalletAccount } from '@talismn/connect-wallets'
 import { useEffect, useRef, useState } from 'react'
@@ -44,7 +44,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   }
 
   const usePrevious = (value: any) => {
-    const ref = useRef()
+    const ref = useRef<any>(null)
     useEffect(() => {
       ref.current = value
     })
@@ -66,7 +66,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   useEffect(() => {
     const fetchRoundCount = async () => {
       const roundCount = await api.query.society.roundCount()
-      setRoundCount(roundCount.toNumber())
+      setRoundCount((roundCount as u32).toNumber())
     }
 
     fetchRoundCount()

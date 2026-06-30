@@ -1,3 +1,5 @@
+import type { Option, StorageKey, Vec, u32 } from '@polkadot/types'
+import type { Bid } from '@polkadot/types/interfaces/society'
 import { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Route, Routes } from 'react-router-dom'
@@ -51,12 +53,13 @@ const ExplorePage = (): JSX.Element => {
 
       Promise.all([biddersPromise, candidatesPromise, membersPromise, paramsPromise, suspendedMembersPromise]).then(
         ([bidders, candidates, members, params, suspendedMembers]) => {
+          const paramsOption = params as Option<any>
           setTotals({
-            bidders: bidders.length,
-            candidates: candidates.length,
-            members: members.toNumber(),
-            maxMembers: params.isSome ? params.unwrap().maxMembers.toNumber() : 0,
-            suspendedMembers: suspendedMembers.length
+            bidders: (bidders as unknown as Vec<Bid>).length,
+            candidates: (candidates as StorageKey[]).length,
+            members: (members as u32).toNumber(),
+            maxMembers: paramsOption.isSome ? paramsOption.unwrap().maxMembers.toNumber() : 0,
+            suspendedMembers: (suspendedMembers as StorageKey[]).length
           })
         }
       )

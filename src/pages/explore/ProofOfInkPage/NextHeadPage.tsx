@@ -1,5 +1,6 @@
 import { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
+import type { Option } from '@polkadot/types'
 import { AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
@@ -20,7 +21,8 @@ const NextHeadPage = ({ api }: NextHeadPageProps): JSX.Element => {
   const [head, setNextHead] = useState<AccountId | null>(null)
 
   useEffect(() => {
-    society?.nextHead().then((head) => {
+    society?.nextHead().then((headCodec) => {
+      const head = headCodec as Option<any>
       head.isSome && setNextHead(head.unwrap().who)
     })
   }, [society])

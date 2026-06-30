@@ -20,7 +20,7 @@ import React, {
 } from "react"
 import styled, { keyframes } from "styled-components"
 import * as THREE from "three"
-import { OrbitControls as OC } from "three/examples/jsm/controls/OrbitControls"
+import { OrbitControls as OC } from "three/addons/controls/OrbitControls.js"
 import { brandPalette, resolve, randomN } from "./helpers"
 
 const color = new THREE.Color()
@@ -96,7 +96,7 @@ const Point = ({
   hoveredColor,
   activeColor,
 }) => {
-  const ref = useRef()
+  const ref = useRef(null)
   const [hovered, setHover] = useState(false)
   const [active] = useState(false)
 
@@ -166,7 +166,7 @@ const Point = ({
 }
 
 const PointDialog = ({ position, dialogData, config }) => {
-  const ref = useRef()
+  const ref = useRef(null)
 
   const scale = 1.002
 
@@ -224,12 +224,12 @@ const Model = (props) => {
 }
 
 const Lights = ({ config }) => {
-  const groupL = useRef()
-  const groupR = useRef()
-  const front = useRef()
-  const lightL = useRef()
-  const lightR = useRef()
-  const lightF = useRef()
+  const groupL = useRef(null)
+  const groupR = useRef(null)
+  const front = useRef(null)
+  const lightL = useRef(null)
+  const lightR = useRef(null)
+  const lightF = useRef(null)
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime()
@@ -293,7 +293,7 @@ const Lights = ({ config }) => {
 }
 
 const Particles = ({ count }) => {
-  const mesh = useRef()
+  const mesh = useRef(null)
 
   const dummy = useMemo(() => new THREE.Object3D(), [])
 
@@ -361,7 +361,7 @@ const Particles = ({ count }) => {
 extend({ OC })
 
 const CameraControls = ({ config }) => {
-  const controlsRef = useRef()
+  const controlsRef = useRef(null)
   const { camera, gl } = useThree()
 
   useEffect(() => {

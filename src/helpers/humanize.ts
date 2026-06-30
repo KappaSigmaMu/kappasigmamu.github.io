@@ -1,6 +1,6 @@
-import type { PalletSocietyBidKind } from '@polkadot/types/lookup'
+import type { BidKind } from '@polkadot/types/interfaces/society'
 
-function humanizeBidKind(bid: Partial<PalletSocietyBidKind>) {
+function humanizeBidKind(bid: Partial<BidKind>) {
   if (bid.isDeposit) {
     return 'Deposit'
   } else if (bid.isVouch) {

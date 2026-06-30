@@ -25,7 +25,7 @@ const ExamplesPage = ({ api }: ExamplesPageProps): JSX.Element => {
   }
 
   useEffect(() => {
-    society?.head().then((head) => setHead(head.unwrap()))
+    society?.head().then((headCodec) => setHead(headCodec as AccountId))
   }, [society])
 
   return head === null ? (
