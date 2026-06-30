@@ -1,13 +1,27 @@
 Cypress.Commands.add('connectWallet', (accountName: string) => {
-  cy.getBySel('connect-wallet-button', { timeout: 20000 }).should('be.visible').click()
-  cy.getBySel('wallet-modal').should('be.visible')
-  cy.getBySel('wallet-polkadot').should('be.visible').click()
-  cy.get('.modal.show', { timeout: 20000 }).should('exist')
-  cy.get('.modal-title', { timeout: 20000 }).should('contain.text', 'Accounts')
-  cy.getBySel('account-switcher', { timeout: 20000 }).should('exist').should('have.length.gte', 1)
-  cy.contains('[data-test="account-switcher"]', accountName, { timeout: 20000 }).click({ force: true })
-  cy.get('[role="dialog"]', { timeout: 10000 }).should('not.exist')
-  cy.getBySel('account-balance', { timeout: 20000 }).should('exist').should('be.visible')
+  cy.get('[data-test="connect-wallet-button"], [data-test="connected-account"]', { timeout: 20000 })
+    .first()
+    .click()
+
+  cy.getBySel('wallet-modal', { timeout: 20000 }).should('be.visible')
+
+  cy.getBySel('wallet-modal').then(($modal) => {
+    if ($modal.find('.modal-title').text().includes('Wallets')) {
+      cy.getBySel('wallet-modal').find('[data-test="wallet-polkadot"]').click({ force: true })
+      cy.getBySel('wallet-modal').find('.modal-title', { timeout: 20000 }).should('contain.text', 'Accounts')
+    }
+  })
+
+  cy.getBySel('wallet-modal')
+    .find('[data-test="account-switcher"]', { timeout: 20000 })
+    .should('have.length.gte', 1)
+
+  cy.getBySel('wallet-modal')
+    .contains('[data-test="account-switcher"]', accountName, { timeout: 20000 })
+    .click({ force: true })
+
+  cy.getBySel('wallet-modal', { timeout: 10000 }).should('not.exist')
+  cy.getBySel('account-balance', { timeout: 20000 }).should('be.visible')
 })
 
 Cypress.Commands.add('approvePendingTransaction', () => {

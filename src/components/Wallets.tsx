@@ -49,11 +49,45 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
   }
 
   useEffect(() => {
-    if (!activeAccount) return
+    if (!show || !activeAccount) return
 
     const wallet = wallets.find((w) => w.title === activeAccount.wallet?.title)
     setSelectedWallet(wallet)
-  }, [activeAccount])
+  }, [activeAccount, show])
+
+  useEffect(() => {
+    if (!selectedWallet) {
+      setAccounts(undefined)
+      return
+    }
+
+    let cancelled = false
+
+    selectedWallet
+      .getAccounts()
+      .then((walletAccounts) => {
+        if (!cancelled) {
+          setAccounts(mapWalletAccounts(walletAccounts))
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          toastByStatus['error']((e as Error).message, {})
+          setAccounts([])
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [selectedWallet])
+
+  useEffect(() => {
+    if (!show) {
+      setSelectedWallet(undefined)
+      setAccounts(undefined)
+    }
+  }, [show])
 
   return (
     <>
@@ -63,6 +97,8 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
         centered
         scrollable
         animation={false}
+        enforceFocus={false}
+        restoreFocus={false}
         data-test="wallet-modal"
       >
         <Modal.Header className="px-4" style={{ borderBottom: '0px' }}>
@@ -145,9 +181,7 @@ async function selectWallet(
 
   try {
     await wallet.enable(APP_NAME)
-    const walletAccounts = await wallet.getAccounts()
     setSelectedWallet(wallet)
-    setAccounts(mapWalletAccounts(walletAccounts))
   } catch (e) {
     toastByStatus['error']((e as Error).message, {})
   }
@@ -185,7 +219,12 @@ const Wallet = ({
 }
 
 const StyledModal = styled(Modal)`
+  .modal-dialog {
+    pointer-events: none;
+  }
+
   .modal-content {
+    pointer-events: auto;
     max-height: 65vh;
     background-color: ${(props) => props.theme.colors.darkGrey};
 

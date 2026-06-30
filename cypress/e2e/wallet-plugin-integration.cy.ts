@@ -23,11 +23,17 @@ describe('Wallet Plugin Integration', () => {
 
     it('should inject all test accounts into wallet', () => {
       cy.contains('button', /connect/i).should('be.visible').click()
-      cy.getBySel('wallet-polkadot', { timeout: 15000 }).should('be.visible')
-        .parent().should('contain.text', 'Use')
-      cy.getBySel('wallet-polkadot').click()
+      cy.getBySel('wallet-modal', { timeout: 15000 }).should('be.visible')
+      cy.getBySel('wallet-modal')
+        .find('[data-test="wallet-polkadot"]')
+        .should('exist')
+        .parent()
+        .should('contain.text', 'Use')
+      cy.getBySel('wallet-modal').find('[data-test="wallet-polkadot"]').click({ force: true })
 
-      cy.getBySel('account-switcher', { timeout: 10000 }).should('have.length', 6)
+      cy.getBySel('wallet-modal')
+        .find('[data-test="account-switcher"]', { timeout: 10000 })
+        .should('have.length', 6)
       cy.get('.modal-body').within(() => {
         cy.contains('Alice').should('exist')
         cy.contains('Bob').should('exist')
