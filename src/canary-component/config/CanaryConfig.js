@@ -11,8 +11,8 @@ const canaryConfig = {
   model: {
     material: "Default OBJ",
     scale: 0.1,
-    metalness: 0.2,
-    roughness: 2,
+    metalness: 0.8,
+    roughness: 0.2,
     opacity: 1,
     color: "white",
   },
