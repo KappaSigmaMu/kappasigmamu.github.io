@@ -80,13 +80,7 @@ describe('Connect Wallet with Plugin', () => {
 
   describe('Connect Wallet Flow', () => {
     it('should connect wallet successfully with test account', () => {
-      cy.getBySel('connect-wallet-button').should('be.visible').click()
-      cy.getBySel('wallet-modal').should('be.visible')
-      cy.getBySel('wallet-polkadot').should('be.visible').click()
-      cy.getBySel('account-switcher', { timeout: 10000 }).should('be.visible')
-      cy.contains('[data-test="account-switcher"]', 'Alice', { timeout: 10000 }).click()
-      cy.get('[role="dialog"]', { timeout: 10000 }).should('not.exist')
-      cy.getBySel('account-balance').should('be.visible')
+      cy.connectWallet('Alice')
     })
 
     it('should disconnect wallet', () => {
