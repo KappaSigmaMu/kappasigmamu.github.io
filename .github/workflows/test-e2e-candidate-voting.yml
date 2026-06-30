@@ -43,7 +43,6 @@ jobs:
 
       - name: Run candidate voting E2E tests
         run: yarn test:e2e:candidate-voting
-        env:
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4

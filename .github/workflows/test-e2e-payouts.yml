@@ -43,7 +43,6 @@ jobs:
 
       - name: Run payouts E2E tests
         run: yarn test:e2e:payouts
-        env:
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4

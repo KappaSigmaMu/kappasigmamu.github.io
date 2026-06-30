@@ -43,7 +43,6 @@ jobs:
 
       - name: Run bidding E2E tests
         run: yarn test:e2e:bidding
-        env:
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4

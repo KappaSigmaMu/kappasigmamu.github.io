@@ -43,7 +43,6 @@ jobs:
 
       - name: Run error handling E2E tests
         run: yarn test:e2e:error-handling
-        env:
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4

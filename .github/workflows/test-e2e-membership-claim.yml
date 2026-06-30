@@ -43,7 +43,6 @@ jobs:
 
       - name: Run membership claim E2E tests
         run: yarn test:e2e:membership-claim
-        env:
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
