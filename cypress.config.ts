@@ -1,4 +1,8 @@
 import { defineConfig } from 'cypress';
+import { readFileSync } from 'fs';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const yaml = require('js-yaml');
 
 const CHOPSTICKS_RPC = 'http://localhost:8000';
 
@@ -17,6 +21,11 @@ async function chopsticksRpc<T>(method: string, params: unknown[] = []): Promise
   }
 
   return payload.result as T;
+}
+
+function loadImportStorage() {
+  const config = yaml.load(readFileSync('config/kusama.yml', 'utf8')) as Record<string, unknown>;
+  return config['import-storage'];
 }
 
 export default defineConfig({
@@ -56,8 +65,14 @@ export default defineConfig({
           }
           return null;
         },
+        async resetChopsticksStorage() {
+          await chopsticksRpc('dev_setStorage', [loadImportStorage()]);
+          forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash');
+          return null;
+        },
         async setChopsticksHead(blockNumber: number) {
           await chopsticksRpc('dev_setHead', [blockNumber]);
+          await chopsticksRpc('dev_setStorage', [loadImportStorage()]);
           forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash');
           return null;
         },
