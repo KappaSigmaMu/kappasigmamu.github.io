@@ -288,8 +288,8 @@
 
 **Tasks:**
 - [x] Create `cypress/e2e/membership-claim.cy.ts`
-- [x] Configure Chopsticks to simulate claim period (`restartChopsticksAtBlock` task)
-- [x] Implement claim success scenario (restarts Chopsticks at claim-period block 20937600)
+- [x] Configure Chopsticks to simulate claim period (`dev_setHead` via `setChopsticksHead` task)
+- [x] Implement claim success scenario (moves Chopsticks head to claim-period block 18230000)
 - [x] Implement claim restriction scenarios (voting period, non-candidate, existing member)
 - [x] Verify account level transition (Candidate → Cyborg)
 - [x] Add `data-test="claim-membership-button"` to `NextStep.tsx`

@@ -56,6 +56,11 @@ export default defineConfig({
           }
           return null;
         },
+        async setChopsticksHead(blockNumber: number) {
+          await chopsticksRpc('dev_setHead', [blockNumber]);
+          forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash');
+          return null;
+        },
       });
       return config;
     },
