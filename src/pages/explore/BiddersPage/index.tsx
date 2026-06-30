@@ -7,6 +7,7 @@ import { Row, Col } from 'react-bootstrap'
 import { BiddersList } from './BiddersList'
 import { BidVouch } from './BidVouch'
 import { useAccount } from '../../../account/AccountContext'
+import { type BidRow, mapBidToRow } from '../../../helpers/bidKind'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { toastByStatus } from '../helpers'
 
@@ -16,13 +17,14 @@ type BiddersPageProps = {
 
 const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
   const { activeAccount } = useAccount()
-  const [bids, setBids] = useState<Vec<Bid> | null>(null)
+  const [bids, setBids] = useState<BidRow[] | null>(null)
 
   const society = api?.query?.society
 
   useEffect(() => {
     society?.bids((response: Codec) => {
-      setBids(response as unknown as Vec<Bid>)
+      const bidsVec = response as unknown as Vec<Bid>
+      setBids([...bidsVec].map(mapBidToRow))
     })
   }, [society])
 

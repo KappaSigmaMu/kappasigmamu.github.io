@@ -1,6 +1,4 @@
 import { ApiPromise } from '@polkadot/api'
-import type { Vec } from '@polkadot/types'
-import type { Bid } from '@polkadot/types/interfaces/society'
 import { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
 import { Col, Badge } from 'react-bootstrap'
@@ -9,12 +7,12 @@ import { unbid, unvouch } from './helper'
 import { AccountIdentity } from '../../../components/AccountIdentity'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { FormatBalance } from '../../../components/FormatBalance'
-import { humanizeBidKind } from '../../../helpers/humanize'
+import { humanizeBidKindType, type BidRow as DisplayBidRow } from '../../../helpers/bidKind'
 import { Identicon } from '../components/Identicon'
 
 type Props = {
   api: ApiPromise
-  bids: Vec<Bid>
+  bids: DisplayBidRow[]
   activeAccount: WalletAccount | undefined
   handleResult: any
 }
@@ -25,14 +23,14 @@ type OnStatusChangeProps = { loading: boolean; message: string; status: string }
 const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Element => {
   const [loading, setLoading] = useState(false)
 
-  const isBidder = (bid: Bid) => activeAccount?.address === bid.who.toString()
+  const isBidder = (bid: DisplayBidRow) => activeAccount?.address === bid.who.toString()
 
-  const isVoucher = (bid: Bid) => {
-    if (!activeAccount || bid.kind.type !== 'Vouch') {
+  const isVoucher = (bid: DisplayBidRow) => {
+    if (!activeAccount || bid.kindType !== 'Vouch' || !bid.vouchAccount) {
       return false
     }
 
-    return activeAccount.address === bid.kind.asVouch[0].toString()
+    return activeAccount.address === bid.vouchAccount
   }
 
   const onStatusChange = ({ loading, message, status }: OnStatusChangeProps) => {
@@ -50,16 +48,16 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
     unvouch(api, tx, activeAccount, onStatusChange)
   }
 
-  const ownerActions = (bid: Bid) => {
+  const ownerActions = (bid: DisplayBidRow) => {
     let pillText, handleUndo: any, badgeText
 
     let testId
-    if (bid.kind.isDeposit && isBidder(bid)) {
+    if (bid.kindType === 'Deposit' && isBidder(bid)) {
       pillText = 'My bid'
       handleUndo = handleUnbid
       badgeText = 'UNBID'
       testId = 'unbid-button'
-    } else if (bid.kind.isVouch && isVoucher(bid)) {
+    } else if (bid.kindType === 'Vouch' && isVoucher(bid)) {
       pillText = 'My vouch'
       handleUndo = handleUnvouch
       badgeText = 'UNVOUCH'
@@ -69,7 +67,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
     return { pillText, handleUndo, badgeText, testId }
   }
 
-  const BidVouchIdentifier = ({ bid, index }: { bid: Bid; index: number }) => {
+  const BidVouchIdentifier = ({ bid, index }: { bid: DisplayBidRow; index: number }) => {
     const { pillText, badgeText, handleUndo, testId } = ownerActions(bid)
 
     return (
@@ -78,7 +76,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
           {<FormatBalance balance={bid.value} />}
         </Col>
         <Col lg={2} className="text-center text-lg-start text-truncate">
-          {bid.kind.type === 'Vouch' ? <FormatBalance balance={bid.kind.asVouch[1]} /> : null}
+          {bid.kindType === 'Vouch' && bid.vouchTip ? <FormatBalance balance={bid.vouchTip} /> : null}
         </Col>
         <Col lg={2} className="text-center text-lg-start">
           {badgeText && (
@@ -96,10 +94,12 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
     )
   }
 
-  const isOwner = (bid: Bid) => {
-    if (bid.kind.isDeposit) {
+  const isOwner = (bid: DisplayBidRow) => {
+    if (bid.kindType === 'Deposit') {
       return isBidder(bid)
-    } else if (bid.kind.isVouch) {
+    }
+
+    if (bid.kindType === 'Vouch') {
       return isVoucher(bid)
     }
   }
@@ -124,7 +124,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
         </Col>
       </DataHeaderRow>
 
-      {bids.map((bid: Bid, index: any) => (
+      {bids.map((bid: DisplayBidRow, index: any) => (
         <StyledDataRow $isOwner={isOwner(bid)} key={bid.who?.toString()} data-test={`bid-row-${bid.who?.toString()}`}>
           <Col lg={1} className="text-center">
             <Identicon value={bid.who.toHuman()} size={32} theme={'polkadot'} />
@@ -133,7 +133,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
             <AccountIdentity accountId={bid.who} />
           </Col>
           <Col lg={2} className="text-center text-lg-start text-truncate">
-            {humanizeBidKind(bid.kind)}
+            {humanizeBidKindType(bid.kindType, bid.vouchAccount)}
           </Col>
           <BidVouchIdentifier bid={bid} index={index} />
         </StyledDataRow>

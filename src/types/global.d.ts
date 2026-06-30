@@ -9,7 +9,7 @@ declare interface NavRouteProps {
 declare interface SocietyCandidate {
   accountId: AccountId
   round: number
-  kind: BidKind
+  kindType: import('@polkadot/types/interfaces/society').BidKind['type']
   bid: Balance
   tally: {
     approvals: u32

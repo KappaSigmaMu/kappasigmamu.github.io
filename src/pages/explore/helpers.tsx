@@ -11,7 +11,7 @@ function buildSocietyCandidatesArray(response: any): SocietyCandidate[] {
     return {
       accountId: item.accountId as AccountId,
       round: candidate.round,
-      kind: candidate.kind,
+      kindType: candidate.kind.type,
       bid: candidate.bid,
       tally: candidate.tally,
       skepticStruck: candidate.skepticStruck
