@@ -108,12 +108,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
         <Modal.Body>
           {!selectedWallet &&
             wallets.map((wallet) => (
-              <Wallet
-                wallet={wallet}
-                setSelectedWallet={setSelectedWallet}
-                setAccounts={setAccounts}
-                key={wallet.title}
-              />
+              <Wallet wallet={wallet} setSelectedWallet={setSelectedWallet} key={wallet.title} />
             ))}
           {selectedWallet &&
             accounts &&
@@ -169,11 +164,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
   )
 }
 
-async function selectWallet(
-  wallet: WalletType,
-  setSelectedWallet: (wallet: WalletType) => void,
-  setAccounts: (accounts: WalletAccount[] | undefined) => void
-) {
+async function selectWallet(wallet: WalletType, setSelectedWallet: (wallet: WalletType) => void) {
   if (!wallet.installed) {
     window.open(wallet.installUrl, '_blank')
     return
@@ -189,18 +180,13 @@ async function selectWallet(
 
 const Wallet = ({
   wallet,
-  setSelectedWallet,
-  setAccounts
+  setSelectedWallet
 }: {
   wallet: WalletType
   setSelectedWallet: (wallet: WalletType) => void
-  setAccounts: (accounts: WalletAccount[] | undefined) => void
 }) => {
   return (
-    <WalletRow
-      onClick={() => selectWallet(wallet, setSelectedWallet, setAccounts)}
-      data-test={walletTestId(wallet.title)}
-    >
+    <WalletRow onClick={() => selectWallet(wallet, setSelectedWallet)} data-test={walletTestId(wallet.title)}>
       <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} />
       <div>{wallet.title}</div>
       <div className="ms-auto">
