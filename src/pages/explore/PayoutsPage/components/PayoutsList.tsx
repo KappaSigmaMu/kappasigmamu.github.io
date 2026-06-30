@@ -58,7 +58,7 @@ const TimeRemaining = ({
 }: TimeRemainingProps) => {
   const isLatestBlockLoading = latestBlock === null
   const blocksLeft = isLatestBlockLoading ? 0 : block - latestBlock
-  const [, formattedTime] = useBlockTime(blocksLeft, api)
+  const [, formattedTime] = useBlockTime(blocksLeft, api, true)
 
   if (isLatestBlockLoading || !formattedTime) {
     return <CalculatingBadge />
