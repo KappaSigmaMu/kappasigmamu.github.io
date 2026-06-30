@@ -55,6 +55,22 @@ const cssModuleRegex = /\.module\.css$/
 const sassRegex = /\.(scss|sass)$/
 const sassModuleRegex = /\.module\.(scss|sass)$/
 
+// Bootstrap 5.3 still uses legacy Sass syntax (@import, global color functions).
+// Silence known upstream deprecations until Bootstrap migrates to @use.
+const sassLoaderOptions = {
+  api: 'modern-compiler',
+  sourceMap: true,
+  sassOptions: {
+    silenceDeprecations: [
+      'import',
+      'global-builtin',
+      'color-functions',
+      'if-function',
+      'legacy-js-api'
+    ]
+  }
+}
+
 const hasJsxRuntime = (() => {
   if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
     return false
@@ -133,9 +149,7 @@ module.exports = function (webpackEnv) {
         },
         {
           loader: require.resolve(preProcessor),
-          options: {
-            sourceMap: true
-          }
+          options: preProcessor === 'sass-loader' ? sassLoaderOptions : { sourceMap: true }
         }
       )
     }

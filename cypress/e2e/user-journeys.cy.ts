@@ -28,7 +28,7 @@ describe('User Journeys', () => {
 
     it('should guide a human through the journey page to place a bid', () => {
       cy.visit('/journey?rpc=ws://localhost:8000')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
       cy.connectWallet('Dave')
       cy.verifyAccountLevel('Human')
 
@@ -58,7 +58,7 @@ describe('User Journeys', () => {
 
     beforeEach(() => {
       cy.visit('/journey?rpc=ws://localhost:8000')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
     })
 
     it('should guide a cyborg through journey page to vote on candidates', () => {
@@ -90,7 +90,7 @@ describe('User Journeys', () => {
     beforeEach(() => {
       cy.task('resetChopsticksToFork', null, { timeout: 120000 })
       cy.visit('/explore/bidders?rpc=ws://localhost:8000')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
     })
 
     it('should place a bid as Human and become Bidder', () => {

@@ -29,11 +29,13 @@ function loadImportStorage() {
 }
 
 export default defineConfig({
+  allowCypressEnv: false,
   e2e: {
     baseUrl: 'http://localhost:3000',
     setupNodeEvents(on, config) {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require('@cypress/grep/src/plugin')(config)
+      const { plugin: cypressGrepPlugin } = require('@cypress/grep/plugin')
+      cypressGrepPlugin(config)
 
       on('task', {
         async rememberForkPoint() {
@@ -98,7 +100,7 @@ export default defineConfig({
     requestTimeout: 15000,
     responseTimeout: 15000,
 
-    env: {
+    expose: {
       chopsticks_url: 'ws://localhost:8000',
       app_name: '[TEST] Kusama Society',
     },

@@ -61,7 +61,7 @@ describe('Candidate Voting', () => {
     beforeEach(() => {
       cy.task('resetChopsticksToFork', null, { timeout: 120000 })
       cy.visit('/explore/candidates?rpc=ws://localhost:8000')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
       cy.getBySel('candidates-list', { timeout: 20000 }).should('be.visible')
     })
 
@@ -122,7 +122,7 @@ describe('Candidate Voting', () => {
   describe('Drop Candidate', () => {
     beforeEach(() => {
       cy.visit('/explore/candidates?rpc=ws://localhost:8000')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
       cy.getBySel('candidates-list', { timeout: 20000 }).should('be.visible')
     })
 

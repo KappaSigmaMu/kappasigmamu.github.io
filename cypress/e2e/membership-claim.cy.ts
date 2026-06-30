@@ -21,7 +21,7 @@ describe('Membership Claim', () => {
   describe('Claim Button Visibility', () => {
     beforeEach(() => {
       cy.visit('/journey?rpc=ws://localhost:8000&claim=true')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
     })
 
     it('should show claim membership button for candidate when claim period is active', () => {
@@ -50,7 +50,7 @@ describe('Membership Claim', () => {
   describe('Voting Period Restrictions', () => {
     it('should not show claim button during voting period without override', () => {
       cy.visit('/journey?rpc=ws://localhost:8000')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
       cy.connectWallet('Bob')
       cy.verifyAccountLevel('Candidate')
 
@@ -70,7 +70,7 @@ describe('Membership Claim', () => {
 
     it('should allow candidate to claim membership and become Cyborg', () => {
       cy.visit('/journey?rpc=ws://localhost:8000&claim=true')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
       cy.connectWallet('Bob')
       cy.verifyAccountLevel('Candidate')
 

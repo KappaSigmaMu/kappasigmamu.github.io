@@ -5,9 +5,10 @@
 import { PerspectiveCamera } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 import { EffectComposer, Bloom, Glitch } from "@react-three/postprocessing"
+import { KernelSize } from "postprocessing"
 import React, { Suspense } from "react"
 import { Lights, Particles, Points, CameraControls, Model } from "./Components"
-import { brandPalette } from "./helpers"
+import { brandPalette, defaultConfig } from "./helpers"
 
 const ThreeCanary = (props) => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
@@ -50,7 +51,8 @@ const ThreeCanary = (props) => {
 
         <EffectComposer multisampling={16}>
           <Bloom
-            kernelSize={config.bloom.kernelSize}
+            mipmapBlur={false}
+            kernelSize={KernelSize.SMALL}
             luminanceThreshold={config.bloom.luminanceThreshold}
             luminanceSmoothing={config.bloom.luminanceSmoothing}
             intensity={config.bloom.intensity}

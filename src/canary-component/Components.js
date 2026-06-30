@@ -20,7 +20,7 @@ import React, {
 } from "react"
 import styled, { keyframes } from "styled-components"
 import * as THREE from "three"
-import { OrbitControls as OC } from "three/examples/jsm/controls/OrbitControls"
+import { OrbitControls as OC } from "three/addons/controls/OrbitControls.js"
 import { brandPalette, resolve, randomN } from "./helpers"
 
 const color = new THREE.Color()
@@ -63,7 +63,7 @@ const Points = ({ objectUrl, nodesData, onNodeClick, config }) => {
       ) : null}
       <Instances
         range={selectedPositions.length}
-        material={new THREE.MeshBasicMaterial()}
+        material={new THREE.MeshBasicMaterial({ toneMapped: false })}
         geometry={new THREE.SphereGeometry(0.1)}
       >
         {selectedPositions.map((position, i) => (
@@ -96,7 +96,7 @@ const Point = ({
   hoveredColor,
   activeColor,
 }) => {
-  const ref = useRef()
+  const ref = useRef(null)
   const [hovered, setHover] = useState(false)
   const [active] = useState(false)
 
@@ -166,7 +166,7 @@ const Point = ({
 }
 
 const PointDialog = ({ position, dialogData, config }) => {
-  const ref = useRef()
+  const ref = useRef(null)
 
   const scale = 1.002
 
@@ -211,25 +211,31 @@ const Model = (props) => {
       obj.type === "Mesh" && (obj.receiveShadow = obj.castShadow = true)
     })
     // 0.8 0.2
-    Object.assign(materials[props.model.material], {
+    const material = materials[props.model.material]
+    Object.assign(material, {
       wireframe: true,
       metalness: props.model.metalness,
-      roughness: props.model.moughness,
+      roughness: Math.min(props.model.roughness ?? props.model.moughness ?? 0.5, 1),
       opacity: props.model.opacity,
       color: new THREE.Color(brandPalette[props.model.color]),
     })
+    material.needsUpdate = true
   }, [scene, nodes, materials])
 
   return <primitive object={scene} {...props} />
 }
 
+const getLightIntensityScale = (intensities) =>
+  Math.max(...intensities) < 10 ? 100 : 10
+
 const Lights = ({ config }) => {
-  const groupL = useRef()
-  const groupR = useRef()
-  const front = useRef()
-  const lightL = useRef()
-  const lightR = useRef()
-  const lightF = useRef()
+  const intensityScale = getLightIntensityScale(config.pointLight.intensity)
+  const groupL = useRef(null)
+  const groupR = useRef(null)
+  const front = useRef(null)
+  const lightL = useRef(null)
+  const lightR = useRef(null)
+  const lightF = useRef(null)
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime()
@@ -267,7 +273,7 @@ const Lights = ({ config }) => {
           color={brandPalette[config.pointLight.color[0]]}
           position={config.pointLight.position}
           distance={config.pointLight.distance}
-          intensity={config.pointLight.intensity[0]}
+          intensity={config.pointLight.intensity[0] * intensityScale}
         />
       </group>
       <group ref={groupR}>
@@ -276,7 +282,7 @@ const Lights = ({ config }) => {
           color={brandPalette[config.pointLight.color[1]]}
           position={config.pointLight.position}
           distance={config.pointLight.distance}
-          intensity={config.pointLight.intensity[1]}
+          intensity={config.pointLight.intensity[1] * intensityScale}
         />
       </group>
       <group ref={front}>
@@ -285,7 +291,7 @@ const Lights = ({ config }) => {
           color={brandPalette[config.pointLight.color[2]]}
           position={config.pointLight.position}
           distance={config.pointLight.distance}
-          intensity={config.pointLight.intensity[2]}
+          intensity={config.pointLight.intensity[2] * intensityScale}
         />
       </group>
     </>
@@ -293,7 +299,7 @@ const Lights = ({ config }) => {
 }
 
 const Particles = ({ count }) => {
-  const mesh = useRef()
+  const mesh = useRef(null)
 
   const dummy = useMemo(() => new THREE.Object3D(), [])
 
@@ -361,7 +367,7 @@ const Particles = ({ count }) => {
 extend({ OC })
 
 const CameraControls = ({ config }) => {
-  const controlsRef = useRef()
+  const controlsRef = useRef(null)
   const { camera, gl } = useThree()
 
   useEffect(() => {

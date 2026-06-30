@@ -1,5 +1,5 @@
 import { ApiPromise } from '@polkadot/api'
-import type { Option } from '@polkadot/types'
+import type { Option, u32 } from '@polkadot/types'
 import type { SocietyVote, AccountId } from '@polkadot/types/interfaces'
 import { WalletAccount } from '@talismn/connect-wallets'
 import { useEffect, useRef, useState } from 'react'
@@ -44,7 +44,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   }
 
   const usePrevious = (value: any) => {
-    const ref = useRef()
+    const ref = useRef<any>(null)
     useEffect(() => {
       ref.current = value
     })
@@ -66,7 +66,7 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
   useEffect(() => {
     const fetchRoundCount = async () => {
       const roundCount = await api.query.society.roundCount()
-      setRoundCount(roundCount.toNumber())
+      setRoundCount((roundCount as u32).toNumber())
     }
 
     fetchRoundCount()
@@ -133,20 +133,10 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
             <AccountIdentity accountId={candidate.accountId} />
           </StyledCol>
           <Col lg={1} className="d-none d-lg-inline">
-            {candidate.kind.isDeposit ? 'Deposit' : 'Vouch'}
+            {candidate.kindType === 'Deposit' ? 'Deposit' : 'Vouch'}
           </Col>
           <Col lg={2}>
             <FormatBalance balance={candidate.bid.toNumber()} />
-            {/* TODO: show member who vouched and tip amount
-            {candidate.kind.isDeposit ? (
-              <FormatBalance balance={candidate.bid.toNumber()} />
-            ) : (
-              <>
-                Member: {truncate(candidate.kind.asVouch[0].toHuman(), 7)} | Tip:
-                {<FormatBalance balance={candidate.kind.asVouch[1].toNumber()}></FormatBalance>}
-              </>
-            )}
-            */}
           </Col>
           <Col lg={3} data-test={`vote-tally-${candidate.accountId.toString()}`}>
             {candidate.tally.approvals.toHuman()} approvals and {candidate.tally.rejections.toHuman()} rejections

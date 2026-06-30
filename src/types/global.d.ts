@@ -9,7 +9,7 @@ declare interface NavRouteProps {
 declare interface SocietyCandidate {
   accountId: AccountId
   round: number
-  kind: BidKind
+  kindType: import('@polkadot/types/interfaces/society').BidKind['type']
   bid: Balance
   tally: {
     approvals: u32
@@ -21,7 +21,7 @@ declare interface SocietyCandidate {
 declare interface SuspendedCandidate {
   accountId: AccountId
   balance: BalanceOf
-  bid: PalletSocietyBidKind
+  bid: import('@polkadot/types/interfaces/society').BidKind
 }
 
 declare interface SocietyMember {
@@ -39,7 +39,7 @@ declare interface SocietyMember {
   strikes: StrikeCount
   strikesCount: number
   vouching?: SocietyMemberVouching
-  vote?: PalletSocietyVote
+  vote?: import('@polkadot/types/interfaces/society').SocietyVote
   rank: u32
 }
 

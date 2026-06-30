@@ -1,5 +1,5 @@
 import { Vec } from '@polkadot/types'
-import { PalletSocietyBid } from '@polkadot/types/lookup'
+import type { Bid as SocietyBid } from '@polkadot/types/interfaces/society'
 import { useEffect, useState } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
 import { useAccount } from '../../account/AccountContext'
@@ -13,7 +13,8 @@ const Bid = () => {
 
   useEffect(() => {
     if (api) {
-      api.query.society.bids().then((bids: Vec<PalletSocietyBid>) => {
+      api.query.society.bids().then((bidsCodec) => {
+        const bids = bidsCodec as unknown as Vec<SocietyBid>
         const accountBid = bids.find((bid) => {
           activeAccount && bid.who.toHuman() === activeAccount.address
         })

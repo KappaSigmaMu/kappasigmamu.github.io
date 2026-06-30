@@ -51,7 +51,8 @@ const GilbertoGilPage = () => {
 
   useEffect(() => {
     if (api && apiState === ApiState.ready) {
-      api.query.society.members.keys().then((members: StorageKey<[AccountId32]>[]) => {
+      api.query.society.members.keys().then((memberKeys) => {
+        const members = memberKeys as StorageKey<[AccountId32]>[]
         const ids = members.map((account) => account.toHuman()!.toString())
         setMembers(ids)
 

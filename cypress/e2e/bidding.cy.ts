@@ -7,7 +7,7 @@ const visitBiddersPage = () => {
 
 const visitBiddersPageWithWallet = (testAccounts: InjectedAccountWitMnemonic[]) => {
   visitBiddersPage()
-  cy.initWallet(testAccounts, Cypress.env('app_name'))
+  cy.initWallet(testAccounts, Cypress.expose('app_name'))
 }
 
 const expectTransactionSuccess = () => {

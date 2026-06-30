@@ -1,6 +1,6 @@
 import { StorageKey, Vec } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
-import { PalletSocietyBid } from '@polkadot/types/lookup'
+import type { Bid } from '@polkadot/types/interfaces/society'
 import { WalletAccount } from '@talismn/connect-wallets'
 import React, { useContext, useEffect, useState } from 'react'
 import { isSameAddress } from '../helpers/address'
@@ -75,7 +75,7 @@ const AccountContextProvider = ({ children }: any) => {
 
     const detectLevel = async () => {
       const [bids, candidates, members] = await Promise.all([
-        society.bids() as Promise<Vec<PalletSocietyBid>>,
+        society.bids() as Promise<Vec<Bid>>,
         society.candidates.keys() as Promise<StorageKey<[AccountId32]>[]>,
         society.members.keys() as Promise<StorageKey<[AccountId32]>[]>
       ])
