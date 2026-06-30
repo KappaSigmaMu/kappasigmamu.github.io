@@ -1,13 +1,13 @@
 import type { BidKind } from '@polkadot/types/interfaces/society'
 
-function humanizeBidKind(bid: Partial<BidKind>) {
-  if (bid.isDeposit) {
-    return 'Deposit'
-  } else if (bid.isVouch) {
-    const accountId = bid.asVouch?.[0] || ''
-    return `Vouch: ${accountId.toString()}`
-  } else {
-    return 'Unknown'
+function humanizeBidKind(kind: BidKind) {
+  switch (kind.type) {
+    case 'Deposit':
+      return 'Deposit'
+    case 'Vouch':
+      return `Vouch: ${kind.asVouch[0].toString()}`
+    default:
+      return 'Unknown'
   }
 }
 

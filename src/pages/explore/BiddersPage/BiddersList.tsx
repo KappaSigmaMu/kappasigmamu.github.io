@@ -26,7 +26,14 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
   const [loading, setLoading] = useState(false)
 
   const isBidder = (bid: Bid) => activeAccount?.address === bid.who.toString()
-  const isVoucher = (bid: Bid) => activeAccount?.address === bid.kind.asVouch?.[0].toString()
+
+  const isVoucher = (bid: Bid) => {
+    if (!activeAccount || bid.kind.type !== 'Vouch') {
+      return false
+    }
+
+    return activeAccount.address === bid.kind.asVouch[0].toString()
+  }
 
   const onStatusChange = ({ loading, message, status }: OnStatusChangeProps) => {
     setLoading(loading)
@@ -71,7 +78,7 @@ const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Ele
           {<FormatBalance balance={bid.value} />}
         </Col>
         <Col lg={2} className="text-center text-lg-start text-truncate">
-          {bid.kind.isVouch && <FormatBalance balance={bid.kind.asVouch?.[1]} />}
+          {bid.kind.type === 'Vouch' ? <FormatBalance balance={bid.kind.asVouch[1]} /> : null}
         </Col>
         <Col lg={2} className="text-center text-lg-start">
           {badgeText && (
