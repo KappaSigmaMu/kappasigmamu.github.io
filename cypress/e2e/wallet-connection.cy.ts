@@ -74,7 +74,7 @@ describe('Connect Wallet with Plugin', () => {
 
   beforeEach(() => {
     cy.visit('/explore/bidders?rpc=ws://localhost:8000')
-    cy.initWallet(testAccounts, Cypress.env('app_name'))
+    cy.initWallet(testAccounts, Cypress.expose('app_name'))
     cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
   })
 

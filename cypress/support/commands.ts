@@ -58,7 +58,7 @@ Cypress.Commands.add('verifyTxError', (message?: string | RegExp, timeout?: numb
 })
 
 Cypress.Commands.add('visitExplore', (section: string) => {
-  const rpc = Cypress.env('chopsticks_url') || 'ws://localhost:8000'
+  const rpc = Cypress.expose('chopsticks_url') || 'ws://localhost:8000'
   cy.visit(`/explore/${section}?rpc=${rpc}`)
 })
 

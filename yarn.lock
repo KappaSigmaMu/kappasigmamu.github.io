@@ -3267,16 +3267,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cypress/grep@npm:^4.1.0":
-  version: 4.1.1
-  resolution: "@cypress/grep@npm:4.1.1"
+"@cypress/grep@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "@cypress/grep@npm:6.0.2"
   dependencies:
     debug: "npm:^4.3.4"
     find-test-names: "npm:^1.28.18"
     globby: "npm:^11.0.4"
   peerDependencies:
-    cypress: ">=10"
-  checksum: 10c0/4855156354258c2533dd5997450172c8cdc1cab255af45ffacf19d4f9c07077ab2df587e018e2aab34ef7e5386cb2e3514a3112592e057bf0ed470ba83d873ed
+    cypress: ">=15.10.0"
+  checksum: 10c0/01ae82410922210a3eb56fb9f8c6e937b04f8f9a2c78499702a837f655ef355a876231a4d5de8f9644b43979eff80f55e9ea91e06b286e24003d15ee6a448fac
   languageName: node
   linkType: hard
 
@@ -13342,7 +13342,7 @@ __metadata:
     "@babel/plugin-proposal-private-property-in-object": "npm:^7.21.11"
     "@babel/preset-env": "npm:^7.26.7"
     "@chainsafe/cypress-polkadot-wallet": "npm:^2.3.0"
-    "@cypress/grep": "npm:^4.1.0"
+    "@cypress/grep": "npm:^6.0.2"
     "@open-wc/webpack-import-meta-loader": "npm:^0.4.7"
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.6.2"
     "@polkadot/api": "npm:^16.5.6"

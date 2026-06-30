@@ -7,7 +7,7 @@ const visitPayoutsPage = () => {
 
 const visitPayoutsPageWithWallet = (testAccounts: InjectedAccountWitMnemonic[]) => {
   visitPayoutsPage()
-  cy.initWallet(testAccounts, Cypress.env('app_name'))
+  cy.initWallet(testAccounts, Cypress.expose('app_name'))
 }
 
 describe('Payouts Page', () => {

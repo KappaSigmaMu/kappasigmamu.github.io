@@ -17,7 +17,7 @@ describe('Wallet Plugin Integration', () => {
   describe('Account Injection', () => {
     beforeEach(() => {
       cy.visit('/explore?rpc=ws://localhost:8000')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
       cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
     })
 
@@ -73,7 +73,7 @@ describe('Wallet Plugin Integration', () => {
   describe('Wallet Disconnect', () => {
     beforeEach(() => {
       cy.visit('/explore?rpc=ws://localhost:8000')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
       cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
     })
 
@@ -104,7 +104,7 @@ describe('Wallet Plugin Integration', () => {
   describe('Wallet Persistence', () => {
     beforeEach(() => {
       cy.visit('/explore?rpc=ws://localhost:8000')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
       cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
     })
 
@@ -121,7 +121,7 @@ describe('Wallet Plugin Integration', () => {
   describe('Transaction Approval', () => {
     beforeEach(() => {
       cy.visit('/explore?rpc=ws://localhost:8000')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
+      cy.initWallet(testAccounts, Cypress.expose('app_name'))
       cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
     })
 
