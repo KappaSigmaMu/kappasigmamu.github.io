@@ -45,7 +45,7 @@ async function fastestGateway(folderHash: string) {
       fetch(`${gateway}/ipfs/${folderHash}`).then((response) => (response.ok ? gateway : Promise.reject()))
     )
     return await Promise.race(fetchPromises)
-  } catch (error) {
+  } catch (_) {
     return ''
   }
 }
