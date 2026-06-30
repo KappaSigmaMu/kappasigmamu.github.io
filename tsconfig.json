@@ -22,5 +22,5 @@
     "*": ["types/*.d.ts"]
   },
   "include": ["src"],
-  "exclude": ["node_modules", "build", "cypress"]
+  "exclude": ["node_modules", "build", "cypress", "src/canary-component/**/*.js"]
 }
