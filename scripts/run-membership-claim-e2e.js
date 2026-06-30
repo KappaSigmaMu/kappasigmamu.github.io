@@ -1,4 +1,4 @@
-const { spawn, spawnSync, execSync } = require('child_process')
+const { spawn, spawnSync, execFileSync, execSync } = require('child_process')
 const { readFileSync, writeFileSync } = require('fs')
 
 const CHOPSTICKS_URL = 'http://localhost:8000'
@@ -7,12 +7,34 @@ const VOTING_PERIOD_BLOCK = 18280000
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
-const killChopsticks = () => {
+const getPidsListeningOnPort = (port) => {
   try {
-    execSync("pkill -f 'acala-network/chopsticks' || true", { stdio: 'ignore' })
-    execSync('lsof -ti:8000 | xargs kill -9 2>/dev/null || true', { stdio: 'ignore' })
+    return execFileSync('lsof', [`-ti:${port}`], { encoding: 'utf8' })
+      .split('\n')
+      .map((pid) => Number(pid.trim()))
+      .filter((pid) => Number.isInteger(pid) && pid > 0)
   } catch {
-    // best effort
+    return []
+  }
+}
+
+const killChopsticks = () => {
+  const pids = getPidsListeningOnPort(8000)
+  for (const pid of pids) {
+    try {
+      process.kill(pid, 'SIGTERM')
+    } catch {
+      // process already exited
+    }
+  }
+
+  for (const pid of pids) {
+    try {
+      process.kill(pid, 0)
+      process.kill(pid, 'SIGKILL')
+    } catch {
+      // process already exited
+    }
   }
 }
 

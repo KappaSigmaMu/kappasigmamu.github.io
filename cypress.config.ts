@@ -1,5 +1,5 @@
 import { defineConfig } from 'cypress';
-import { execSync, spawn } from 'child_process';
+import { execFileSync, execSync, spawn } from 'child_process';
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -20,6 +20,41 @@ async function chopsticksRpc<T>(method: string, params: unknown[] = []): Promise
   }
 
   return payload.result as T;
+}
+
+const sleep = (ms: number) => new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
+
+function getPidsListeningOnPort(port: number): number[] {
+  try {
+    return execFileSync('lsof', [`-ti:${port}`], { encoding: 'utf8' })
+      .split('\n')
+      .map((pid) => Number(pid.trim()))
+      .filter((pid) => Number.isInteger(pid) && pid > 0);
+  } catch {
+    return [];
+  }
+}
+
+async function stopChopsticks() {
+  const pids = getPidsListeningOnPort(8000);
+  for (const pid of pids) {
+    try {
+      process.kill(pid, 'SIGTERM');
+    } catch {
+      // process already exited
+    }
+  }
+
+  if (pids.length > 0) await sleep(1000);
+
+  for (const pid of pids) {
+    try {
+      process.kill(pid, 0);
+      process.kill(pid, 'SIGKILL');
+    } catch {
+      // process already exited
+    }
+  }
 }
 
 export default defineConfig({
@@ -60,9 +95,8 @@ export default defineConfig({
           return null;
         },
         async restartChopsticksAtBlock(blockNumber: number) {
-          execSync("pkill -f 'acala-network/chopsticks' || true", { stdio: 'ignore' });
-          execSync('lsof -ti:8000 | xargs kill -9 2>/dev/null || true', { stdio: 'ignore' });
-          await new Promise((r) => setTimeout(r, 2000));
+          await stopChopsticks();
+          await sleep(2000);
 
           const configPath = resolve('config/kusama.yml');
           const tmpConfig = resolve('config/kusama-tmp.yml');
@@ -84,7 +118,7 @@ export default defineConfig({
             } catch {
               // not ready yet
             }
-            await new Promise((r) => setTimeout(r, 2000));
+            await sleep(2000);
           }
           throw new Error(`Chopsticks failed to start at block ${blockNumber}`);
         },
