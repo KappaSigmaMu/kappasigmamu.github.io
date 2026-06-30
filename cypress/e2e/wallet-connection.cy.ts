@@ -16,8 +16,10 @@ describe('Wallet Connection UI Flow', () => {
     cy.contains('button', /connect/i).should('be.visible').click()
 
     cy.getBySel('wallet-modal').should('be.visible')
-    cy.get('.modal-title').should('contain.text', 'Wallets')
-    cy.contains('Polkadot').should('be.visible')
+    cy.get('.modal-header .modal-title').should('contain.text', 'Wallets')
+    cy.getBySel('wallet-modal-close').should('be.visible')
+    cy.getBySel('wallet-modal').find('[data-test^="wallet-"]').should('have.length.at.least', 1)
+    cy.getBySel('wallet-talisman').should('be.visible')
   })
 
   it('should have data-test attributes on wallet components', () => {
@@ -32,7 +34,7 @@ describe('Wallet Connection UI Flow', () => {
     cy.contains('button', /connect/i).should('be.visible').click()
 
     cy.getBySel('wallet-modal').should('be.visible')
-    cy.get('.modal-header').find('[role="button"]').click()
+    cy.getBySel('wallet-modal-close').click()
     cy.get('.modal-content').should('not.exist')
   })
 

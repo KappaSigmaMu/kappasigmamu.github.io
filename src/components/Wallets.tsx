@@ -101,10 +101,15 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
         restoreFocus={false}
         data-test="wallet-modal"
       >
-        <Modal.Header className="px-4" style={{ borderBottom: '0px' }}>
+        <StyledModalHeader className="px-4">
           <Modal.Title>{!selectedWallet ? 'Wallets' : 'Accounts'}</Modal.Title>
-          <FaXmark onClick={() => setShow(false)} role="button" />
-        </Modal.Header>
+          <CloseButton
+            onClick={() => setShow(false)}
+            role="button"
+            aria-label="Close"
+            data-test="wallet-modal-close"
+          />
+        </StyledModalHeader>
         <Modal.Body>
           {!selectedWallet &&
             wallets.map((wallet) => (
@@ -220,6 +225,24 @@ const StyledModal = styled(Modal)`
       margin: 0;
     }
   }
+`
+
+const StyledModalHeader = styled(Modal.Header)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 0;
+
+  .modal-title {
+    margin-bottom: 0;
+  }
+`
+
+const CloseButton = styled(FaXmark)`
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: auto;
 `
 
 type WalletLogoProps = {
