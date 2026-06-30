@@ -8126,7 +8126,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bootstrap@npm:^5.3.3":
+"bootstrap@npm:^5.3.8":
   version: 5.3.8
   resolution: "bootstrap@npm:5.3.8"
   peerDependencies:
@@ -13356,7 +13356,7 @@ __metadata:
     babel-plugin-named-asset-import: "npm:^0.3.8"
     babel-preset-react-app: "npm:^10.0.1"
     bfj: "npm:^8.0.0"
-    bootstrap: "npm:^5.3.3"
+    bootstrap: "npm:^5.3.8"
     browserslist: "npm:^4.24.4"
     camelcase: "npm:^8.0.0"
     case-sensitive-paths-webpack-plugin: "npm:^2.4.0"
