@@ -2,7 +2,7 @@ import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/d
 
 describe('Wallet Connection UI Flow', () => {
   beforeEach(() => {
-    cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
+    cy.visit('/explore?rpc=ws://localhost:8000')
     cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
   })
 
@@ -73,7 +73,7 @@ describe('Connect Wallet with Plugin', () => {
   })
 
   beforeEach(() => {
-    cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
+    cy.visit('/explore/bidders?rpc=ws://localhost:8000')
     cy.initWallet(testAccounts, Cypress.env('app_name'))
     cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
   })
