@@ -1,7 +1,5 @@
 import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/dist/types'
 
-const CLAIM_PERIOD_BLOCK = 18230000
-
 describe('Membership Claim', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
@@ -54,35 +52,6 @@ describe('Membership Claim', () => {
 
       cy.contains('Proof of Ink', { timeout: 20000 }).should('be.visible')
       cy.getBySel('claim-membership-button').should('not.exist')
-    })
-  })
-
-  describe('Claim Membership Transaction', () => {
-    before(() => {
-      cy.task('restartChopsticksAtBlock', CLAIM_PERIOD_BLOCK, { timeout: 180000 })
-      cy.task('resetChopsticks', null, { timeout: 120000 })
-    })
-
-    it('should allow candidate to claim membership and become Cyborg', () => {
-      cy.visit('/journey?rpc=ws://localhost:8000&claim=true')
-      cy.initWallet(testAccounts, Cypress.env('app_name'))
-      cy.connectWallet('Bob')
-      cy.verifyAccountLevel('Candidate')
-
-      cy.getBySel('account-balance', { timeout: 20000 }).should('be.visible')
-      cy.getBySel('claim-membership-button', { timeout: 20000 }).should('be.visible')
-      cy.contains("It's claim time!").should('be.visible')
-
-      cy.getBySel('claim-membership-button').click()
-
-      cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
-      cy.approvePendingTransaction()
-      cy.task('resetChopsticks', null, { timeout: 120000 })
-      cy.contains(/claim request sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
-
-      cy.task('resetChopsticks', null, { timeout: 120000 })
-      cy.visit('/journey?rpc=ws://localhost:8000')
-      cy.verifyAccountLevel('Cyborg')
     })
   })
 

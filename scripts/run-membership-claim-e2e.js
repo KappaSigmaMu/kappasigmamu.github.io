@@ -1,9 +1,9 @@
 const { spawn, spawnSync, execFileSync, execSync } = require('child_process')
-const { readFileSync, writeFileSync } = require('fs')
 
 const CHOPSTICKS_URL = 'http://localhost:8000'
 const READY_TIMEOUT_MS = 180000
 const VOTING_PERIOD_BLOCK = 18280000
+const CLAIM_PERIOD_BLOCK = 18230000
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
@@ -38,12 +38,11 @@ const killChopsticks = () => {
   }
 }
 
-const startChopsticks = () => {
+const startChopsticks = (blockNumber) => {
   execSync('rm -f db.sqlite db.sqlite-shm db.sqlite-wal', { stdio: 'ignore' })
-  const config = readFileSync('config/kusama.yml', 'utf8')
-  writeFileSync('config/kusama-tmp.yml', config.replace(/^block:\s*.+$/m, `block: ${VOTING_PERIOD_BLOCK}`))
-  const child = spawn('npx', ['@acala-network/chopsticks@1.4.2', '--config=config/kusama-tmp.yml'], {
+  const child = spawn('npx', ['@acala-network/chopsticks@1.4.2', '--config=config/kusama.yml'], {
     detached: true,
+    env: { ...process.env, KUSAMA_BLOCK_NUMBER: String(blockNumber) },
     stdio: 'ignore',
   })
   child.unref()
@@ -69,24 +68,34 @@ const waitForChopsticks = async () => {
   throw new Error('Chopsticks failed to become ready')
 }
 
-const main = async () => {
-  killChopsticks()
-  await sleep(1000)
-  startChopsticks()
-  await waitForChopsticks()
-
-  const result = spawnSync(
+const runCypressSpec = (spec) =>
+  spawnSync(
     'start-server-and-test',
-    [
-      'start:test:ready',
-      'http://localhost:3000',
-      'cypress run --spec cypress/e2e/membership-claim.cy.ts --config video=false',
-    ],
+    ['start:test:ready', 'http://localhost:3000', `cypress run --spec ${spec} --config video=false`],
     { stdio: 'inherit' }
   )
 
+const runAgainstBlock = async (blockNumber, spec) => {
   killChopsticks()
-  process.exit(result.status ?? 1)
+  await sleep(1000)
+  startChopsticks(blockNumber)
+  await waitForChopsticks()
+
+  const result = runCypressSpec(spec)
+
+  killChopsticks()
+  return result.status ?? 1
+}
+
+const main = async () => {
+  const visibilityStatus = await runAgainstBlock(VOTING_PERIOD_BLOCK, 'cypress/e2e/membership-claim.cy.ts')
+  if (visibilityStatus !== 0) process.exit(visibilityStatus)
+
+  const transactionStatus = await runAgainstBlock(
+    CLAIM_PERIOD_BLOCK,
+    'cypress/e2e/membership-claim-transaction.cy.ts'
+  )
+  process.exit(transactionStatus)
 }
 
 main().catch((error) => {
