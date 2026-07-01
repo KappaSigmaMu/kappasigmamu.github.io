@@ -1,16 +1,11 @@
 {
     "presets": [
-        "react-app", 
+        "./config/babel-preset-app",
         [
             "@babel/preset-env",
             {
                 "exclude": ["transform-exponentiation-operator"]
             }
         ]
-    ],
-    "plugins": [
-        ["@babel/plugin-proposal-private-methods", { "loose": true }],
-        ["@babel/plugin-proposal-private-property-in-object", { "loose": true }],
-        ["@babel/plugin-proposal-class-properties", { "loose": true }]
     ]
 }
