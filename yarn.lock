@@ -557,7 +557,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.24.4, @babel/parser@npm:^7.29.7":
+"@babel/parser@npm:^7.24.4, @babel/parser@npm:^7.27.2, @babel/parser@npm:^7.29.7":
   version: 7.29.7
   resolution: "@babel/parser@npm:7.29.7"
   dependencies:
@@ -3383,6 +3383,19 @@ __metadata:
   peerDependencies:
     postcss: ^8.4
   checksum: 10c0/65b6f6aa4ea899777bea710aab5f17028aa5e1aa41f7fe892c2e916b188da2b929c76be643d4a5d8d9ca5a7853df94f05c0247dd6b63540b360055d36db3104f
+  languageName: node
+  linkType: hard
+
+"@cypress/grep@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "@cypress/grep@npm:6.0.2"
+  dependencies:
+    debug: "npm:^4.3.4"
+    find-test-names: "npm:^1.28.18"
+    globby: "npm:^11.0.4"
+  peerDependencies:
+    cypress: ">=15.10.0"
+  checksum: 10c0/01ae82410922210a3eb56fb9f8c6e937b04f8f9a2c78499702a837f655ef355a876231a4d5de8f9644b43979eff80f55e9ea91e06b286e24003d15ee6a448fac
   languageName: node
   linkType: hard
 
@@ -7691,21 +7704,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"acorn-walk@npm:^8.2.0":
+  version: 8.3.5
+  resolution: "acorn-walk@npm:8.3.5"
+  dependencies:
+    acorn: "npm:^8.11.0"
+  checksum: 10c0/e31bf5b5423ed1349437029d66d708b9fbd1b77a644b031501e2c753b028d13b56348210ed901d5b1d0d86eb3381c0a0fc0d0998511a9d546d1194936266a332
+  languageName: node
+  linkType: hard
+
+"acorn@npm:^8.11.0, acorn@npm:^8.16.0":
+  version: 8.17.0
+  resolution: "acorn@npm:8.17.0"
+  bin:
+    acorn: bin/acorn
+  checksum: 10c0/5dcefea5f8f023b6cc24cbe71fb5a8112b601d36c4fa07d14e4e6ffc2ee47383332c46b36c766d9437725aa6660156eae50efa0c838719823b50d7c327c4ed42
+  languageName: node
+  linkType: hard
+
 "acorn@npm:^8.15.0":
   version: 8.16.0
   resolution: "acorn@npm:8.16.0"
   bin:
     acorn: bin/acorn
   checksum: 10c0/c9c52697227661b68d0debaf972222d4f622aa06b185824164e153438afa7b08273432ca43ea792cadb24dada1d46f6f6bb1ef8de9956979288cc1b96bf9914e
-  languageName: node
-  linkType: hard
-
-"acorn@npm:^8.16.0":
-  version: 8.17.0
-  resolution: "acorn@npm:8.17.0"
-  bin:
-    acorn: bin/acorn
-  checksum: 10c0/5dcefea5f8f023b6cc24cbe71fb5a8112b601d36c4fa07d14e4e6ffc2ee47383332c46b36c766d9437725aa6660156eae50efa0c838719823b50d7c327c4ed42
   languageName: node
   linkType: hard
 
@@ -9740,7 +9762,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:4.4.3, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.4.3":
+"debug@npm:4, debug@npm:4.4.3, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.3, debug@npm:^4.3.4, debug@npm:^4.4.3":
   version: 4.4.3
   resolution: "debug@npm:4.4.3"
   dependencies:
@@ -11259,6 +11281,24 @@ __metadata:
     make-dir: "npm:^3.0.2"
     pkg-dir: "npm:^4.1.0"
   checksum: 10c0/92747cda42bff47a0266b06014610981cfbb71f55d60f2c8216bc3108c83d9745507fb0b14ecf6ab71112bed29cd6fb1a137ee7436179ea36e11287e3159e587
+  languageName: node
+  linkType: hard
+
+"find-test-names@npm:^1.28.18":
+  version: 1.29.19
+  resolution: "find-test-names@npm:1.29.19"
+  dependencies:
+    "@babel/parser": "npm:^7.27.2"
+    "@babel/plugin-syntax-jsx": "npm:^7.27.1"
+    acorn-walk: "npm:^8.2.0"
+    debug: "npm:^4.3.3"
+    simple-bin-help: "npm:^1.8.0"
+    tinyglobby: "npm:^0.2.13"
+  bin:
+    find-test-names: bin/find-test-names.js
+    print-tests: bin/print-tests.js
+    update-test-count: bin/update-test-count.js
+  checksum: 10c0/32d4f15f296a03bd5b783d6329b01abeec75965992e4d757caaa715b759d9d5cd16471228b7d4a8c603fd3a84e7a89e993a2bf060dff9c979381a8d55605b6a8
   languageName: node
   linkType: hard
 
@@ -13679,6 +13719,7 @@ __metadata:
     "@babel/plugin-proposal-private-property-in-object": "npm:^7.21.11"
     "@babel/preset-env": "npm:^7.26.7"
     "@chainsafe/cypress-polkadot-wallet": "npm:^2.3.0"
+    "@cypress/grep": "npm:^6.0.2"
     "@eslint/eslintrc": "npm:^3.3.5"
     "@open-wc/webpack-import-meta-loader": "npm:^0.4.7"
     "@pmmmwh/react-refresh-webpack-plugin": "npm:^0.6.2"
@@ -17507,6 +17548,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"simple-bin-help@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "simple-bin-help@npm:1.8.0"
+  checksum: 10c0/baf17cdfa407b0b2ae3c5380e7c22cca058eb34dfa0909a70f892049b5e6a8b3f6f171cc318be8910111bfa75b48c5c6b84faf45028fd9634a39b4ff1b8f9cf3
+  languageName: node
+  linkType: hard
+
 "sisteransi@npm:^1.0.5":
   version: 1.0.5
   resolution: "sisteransi@npm:1.0.5"
@@ -18433,7 +18481,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tinyglobby@npm:^0.2.15":
+"tinyglobby@npm:^0.2.13, tinyglobby@npm:^0.2.15":
   version: 0.2.17
   resolution: "tinyglobby@npm:0.2.17"
   dependencies:
