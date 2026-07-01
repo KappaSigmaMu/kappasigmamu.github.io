@@ -24,29 +24,26 @@ const MembersPage = ({ api }: MembersPageProps): JSX.Element => {
     setTrigger((prev) => !prev) // Toggle the trigger to query the defender again after voting
   }
 
-  let defender: AccountId32
-  let skeptic: AccountId32
-
   useEffect(() => {
-    setTrigger(true)
-    society?.info().then((info: ExtendedDeriveSociety) => {
-      api?.query.society.defending().then((defendingCodec) => {
-        const defending = defendingCodec as Option<any>
-        if (defending.isSome) {
-          const defendingValue = defending.unwrap()
-          defender = defendingValue[0]
-          skeptic = defendingValue[1]
-        }
+    const fetchData = async () => {
+      if (!api || !society) return
 
-        info.defender = defender
-        info.skeptic = skeptic
+      const info: ExtendedDeriveSociety = await society.info()
+      const defendingCodec = await api.query.society.defending()
+      const defending = defendingCodec as Option<any>
 
-        deriveMembersInfo(api).then((responseMembers: ExtendedDeriveSociety[]) => {
-          setMembers(buildSocietyMembersArray(responseMembers, info, graceStrikes))
-        })
-      })
-    })
-  }, [trigger, society])
+      if (defending.isSome) {
+        const defendingValue = defending.unwrap()
+        info.defender = defendingValue[0]
+        info.skeptic = defendingValue[1]
+      }
+
+      const responseMembers: ExtendedDeriveSociety[] = await deriveMembersInfo(api)
+      setMembers(buildSocietyMembersArray(responseMembers, info, graceStrikes))
+    }
+
+    fetchData()
+  }, [trigger, society, api, graceStrikes])
 
   if (members === null) return <LoadingSpinner />
 

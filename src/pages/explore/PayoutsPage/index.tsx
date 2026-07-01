@@ -25,9 +25,6 @@ const PayoutsPage = ({ api }: PayoutsPageProps): JSX.Element => {
     setTrigger((prev) => !prev)
   }
 
-  let defender: AccountId32
-  let skeptic: AccountId32
-
   useEffect(() => {
     const fetchData = async () => {
       if (!api || !society) return
@@ -38,12 +35,9 @@ const PayoutsPage = ({ api }: PayoutsPageProps): JSX.Element => {
 
       if (defending.isSome) {
         const defendingValue = defending.unwrap()
-        defender = defendingValue[0]
-        skeptic = defendingValue[1]
+        info.defender = defendingValue[0]
+        info.skeptic = defendingValue[1]
       }
-
-      info.defender = defender
-      info.skeptic = skeptic
 
       const responseMembers: ExtendedDeriveSociety[] = await deriveMembersInfo(api)
       const membersArray = buildSocietyMembersArray(responseMembers, info, graceStrikes)
