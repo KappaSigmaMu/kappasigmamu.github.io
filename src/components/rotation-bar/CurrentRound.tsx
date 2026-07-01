@@ -10,11 +10,12 @@ import {
   calculateVotingPercentage,
   isVotingPeriod
 } from './helpers/periods'
+import { useRelayChainBlockNumber } from '../../hooks/useRelayChainBlockNumber'
 import { useKusama } from '../../kusama'
 
 const CurrentRound = () => {
   const { api } = useKusama()
-  const [currentBlock, setCurrentBlock] = useState<number>(0)
+  const currentBlock = useRelayChainBlockNumber(api) ?? 0
   const [challengePeriod, setChallengePeriod] = useState<number>(0)
   const [votingPeriod, setVotingPeriod] = useState<number>(0)
   const [claimPeriod, setClaimPeriod] = useState<number>(0)
@@ -29,10 +30,6 @@ const CurrentRound = () => {
 
       const claimPeriod = (api.consts.society.claimPeriod as u32).toNumber()
       setClaimPeriod(claimPeriod)
-
-      api.derive.chain.bestNumber((block) => {
-        setCurrentBlock(block.toNumber())
-      })
     }
   }, [api])
 

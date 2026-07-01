@@ -21,7 +21,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Enable Corepack
         run: corepack enable
@@ -29,7 +29,7 @@ jobs:
       - name: Cache yarn dependencies
         uses: actions/cache@v4
         with:
-          path: .yarn/cache
+          path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-

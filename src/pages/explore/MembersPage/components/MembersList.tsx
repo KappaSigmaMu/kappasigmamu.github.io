@@ -56,7 +56,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
   }
 
   const usePrevious = (value: any) => {
-    const ref = useRef()
+    const ref = useRef<any>(null)
     useEffect(() => {
       ref.current = value
     })
@@ -117,7 +117,7 @@ const MembersList = ({ api, members, activeAccount, handleUpdate }: MembersListP
             className="text-center text-lg-start text-truncate"
             onClick={() => showMemberDetails(member.accountId)}
           >
-            <AccountIdentity api={api} accountId={member.accountId} />
+            <AccountIdentity accountId={member.accountId} />
           </Col>
           <Col lg={2} className="text-center text-lg-start text-truncate">
             <AccountIndex api={api} accountId={member.accountId} />

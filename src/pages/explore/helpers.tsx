@@ -1,5 +1,5 @@
 import type { ApiPromise } from '@polkadot/api'
-import { StorageKey, u32 } from '@polkadot/types'
+import type { Option, StorageKey, u32 } from '@polkadot/types'
 import type { AccountId, AccountId32 } from '@polkadot/types/interfaces'
 import { BN } from '@polkadot/util'
 import toast from 'react-hot-toast'
@@ -11,7 +11,7 @@ function buildSocietyCandidatesArray(response: any): SocietyCandidate[] {
     return {
       accountId: item.accountId as AccountId,
       round: candidate.round,
-      kind: candidate.kind,
+      kindType: candidate.kind.type,
       bid: candidate.bid,
       tally: candidate.tally,
       skepticStruck: candidate.skepticStruck
@@ -100,17 +100,22 @@ async function deriveMembersInfo(api: ApiPromise): Promise<ExtendedDeriveSociety
     ]).pipe(
       map(([accountIds, members, payouts, defenderVotes, suspendedMembers]) =>
         accountIds
-          .map((accountId, index) =>
-            members[index].isSome
+          .map((accountId, index) => {
+            const memberOption = members[index] as Option<any>
+            const payoutRecord = payouts[index] as any
+            const defenderVote = defenderVotes[index] as Option<any>
+            const suspendedMember = suspendedMembers[index] as Option<any>
+
+            return memberOption.isSome
               ? {
                   accountId,
-                  isDefenderVoter: defenderVotes[index].isSome,
-                  isSuspended: suspendedMembers[index].isSome,
-                  member: members[index].unwrap(),
-                  payouts: payouts[index].payouts
+                  isDefenderVoter: defenderVote.isSome,
+                  isSuspended: suspendedMember.isSome,
+                  member: memberOption.unwrap(),
+                  payouts: payoutRecord.payouts
                 }
               : null
-          )
+          })
           .filter((m): m is NonNullable<typeof m> => !!m)
           .map(({ accountId, isDefenderVoter, isSuspended, member, payouts }) => ({
             accountId,

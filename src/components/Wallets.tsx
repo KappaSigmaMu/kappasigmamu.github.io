@@ -10,19 +10,21 @@ import { wallets } from '../helpers/wallets'
 import { Identicon } from '../pages/explore/components/Identicon'
 import { toastByStatus } from '../pages/explore/helpers'
 
-// interface LevelStatusType {
-//   [key: string]: string
-// }
-
-// const LEVELSTATUS: LevelStatusType = {
-//   human: 'WAITING BID',
-//   bidder: 'BID SUBMITTED',
-//   candidate: 'WAITING POI',
-//   cyborg: ''
-// }
-
 const APP_NAME = process.env.REACT_APP_NAME
-const KUSAMA_PREFIX = process.env.REACT_APP_KEYRING_PREFIX
+const KUSAMA_PREFIX = Number(process.env.REACT_APP_KEYRING_PREFIX)
+
+function isSubstrateAccount(account: WalletAccount & { type?: string }): boolean {
+  return account.type !== 'ethereum'
+}
+
+function mapWalletAccounts(accounts: WalletAccount[]): WalletAccount[] {
+  return accounts
+    .filter(isSubstrateAccount)
+    .map((account) => ({
+      ...account,
+      address: encodeAddress(decodeAddress(account.address), KUSAMA_PREFIX)
+    }))
+}
 
 function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) => void }) {
   const { activeAccount, setActiveAccount } = useAccount()
@@ -32,44 +34,82 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
   const handleDisconnect = () => {
     setShow(false)
     setActiveAccount(undefined)
+    setSelectedWallet(undefined)
+    setAccounts(undefined)
   }
 
-  const handleClick = (account: WalletAccount) => {
+  const handleAccountSelect = (account: WalletAccount) => {
     setShow(false)
     setActiveAccount(account)
   }
 
-  useEffect(() => {
-    if (!activeAccount) return
-
-    const selectedWallet = wallets.find((wallet) => wallet.title === activeAccount.wallet?.title)
-    setSelectedWallet(selectedWallet)
-  }, [])
+  const handleBackToWallets = () => {
+    setSelectedWallet(undefined)
+    setAccounts(undefined)
+  }
 
   useEffect(() => {
-    if (!selectedWallet) return
+    if (!show || !activeAccount) return
 
-    function isSubstrateAccount(account: any): account is WalletAccount & { type: string } {
-      return account?.type !== 'ethereum'
+    const wallet = wallets.find((w) => w.title === activeAccount.wallet?.title)
+    setSelectedWallet(wallet)
+  }, [activeAccount, show])
+
+  useEffect(() => {
+    if (!selectedWallet) {
+      setAccounts(undefined)
+      return
     }
 
-    selectedWallet.subscribeAccounts((accounts: WalletAccount[] | undefined) => {
-      const substrateAccounts = accounts?.filter(isSubstrateAccount)
-      const mappedAccounts = substrateAccounts?.map((account) => ({
-        ...account,
-        address: encodeAddress(decodeAddress(account.address), KUSAMA_PREFIX)
-      }))
-      setAccounts(mappedAccounts)
-    })
-  }, [selectedWallet, activeAccount, setActiveAccount])
+    let cancelled = false
+
+    selectedWallet
+      .getAccounts()
+      .then((walletAccounts) => {
+        if (!cancelled) {
+          setAccounts(mapWalletAccounts(walletAccounts))
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          toastByStatus['error']((e as Error).message, {})
+          setAccounts([])
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [selectedWallet])
+
+  useEffect(() => {
+    if (!show) {
+      setSelectedWallet(undefined)
+      setAccounts(undefined)
+    }
+  }, [show])
 
   return (
     <>
-      <StyledModal show={show} onHide={() => setShow(false)} centered scrollable data-test="wallet-modal">
-        <Modal.Header className="px-4" style={{ borderBottom: '0px' }}>
+      <StyledModal
+        show={show}
+        onHide={() => setShow(false)}
+        centered
+        scrollable
+        animation={false}
+        enforceFocus={false}
+        restoreFocus={false}
+        data-test="wallet-modal"
+      >
+        <StyledModalHeader className="px-4">
           <Modal.Title>{!selectedWallet ? 'Wallets' : 'Accounts'}</Modal.Title>
-          <FaXmark onClick={() => setShow(false)} role="button" />
-        </Modal.Header>
+          <CloseButton
+            onClick={() => setShow(false)}
+            role="button"
+            aria-label="Close"
+            data-test="wallet-modal-close"
+          />
+        </StyledModalHeader>
         <Modal.Body>
           {!selectedWallet &&
             wallets.map((wallet) => (
@@ -80,7 +120,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
             accounts.map((account) => (
               <AccountRow
                 key={account.address}
-                onClick={() => handleClick(account)}
+                onClick={() => handleAccountSelect(account)}
                 data-test="account-switcher"
               >
                 <Col xs={2}>
@@ -92,12 +132,6 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
                     {activeAccount && activeAccount.address === account.address && <FaCircleCheck className="ms-2" />}
                   </div>
                   <Address className="text-start mb-1">{account.address}</Address>
-
-                  {/* @TODO: fix me - show the correct level of each account
-                  <LevelStatusDiv>
-                    <label className="pe-3">JOURNEY: {level.toUpperCase()}</label>
-                    <label>{LEVELSTATUS[level]}</label>
-                  </LevelStatusDiv> */}
                 </Col>
               </AccountRow>
             ))}
@@ -120,7 +154,7 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
             {selectedWallet && (
               <Col
                 className="d-flex align-items-center justify-content-end"
-                onClick={() => setSelectedWallet(undefined)}
+                onClick={handleBackToWallets}
                 role="button"
               >
                 <WalletLogo src={selectedWallet.logo.src} alt={selectedWallet.logo.alt} size={30} />
@@ -135,25 +169,29 @@ function Wallets({ show, setShow }: { show: boolean; setShow: (show: boolean) =>
   )
 }
 
-async function handleClick(wallet: WalletType, setSelectedWallet: any) {
+async function selectWallet(wallet: WalletType, setSelectedWallet: (wallet: WalletType) => void) {
   if (!wallet.installed) {
     window.open(wallet.installUrl, '_blank')
     return
   }
 
   try {
-    await wallet?.enable(APP_NAME)
+    await wallet.enable(APP_NAME)
+    setSelectedWallet(wallet)
   } catch (e) {
     toastByStatus['error']((e as Error).message, {})
-    return
   }
-
-  setSelectedWallet(wallet)
 }
 
-const Wallet = ({ wallet, setSelectedWallet }: { wallet: WalletType; setSelectedWallet: any }) => {
+const Wallet = ({
+  wallet,
+  setSelectedWallet
+}: {
+  wallet: WalletType
+  setSelectedWallet: (wallet: WalletType) => void
+}) => {
   return (
-    <WalletRow onClick={async () => handleClick(wallet, setSelectedWallet)} data-test={walletTestId(wallet.title)}>
+    <WalletRow onClick={() => selectWallet(wallet, setSelectedWallet)} data-test={walletTestId(wallet.title)}>
       <WalletLogo src={wallet.logo.src} alt={wallet.logo.alt} />
       <div>{wallet.title}</div>
       <div className="ms-auto">
@@ -172,7 +210,12 @@ const Wallet = ({ wallet, setSelectedWallet }: { wallet: WalletType; setSelected
 }
 
 const StyledModal = styled(Modal)`
+  .modal-dialog {
+    pointer-events: none;
+  }
+
   .modal-content {
+    pointer-events: auto;
     max-height: 65vh;
     background-color: ${(props) => props.theme.colors.darkGrey};
 
@@ -182,6 +225,24 @@ const StyledModal = styled(Modal)`
       margin: 0;
     }
   }
+`
+
+const StyledModalHeader = styled(Modal.Header)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 0;
+
+  .modal-title {
+    margin-bottom: 0;
+  }
+`
+
+const CloseButton = styled(FaXmark)`
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: auto;
 `
 
 type WalletLogoProps = {
@@ -227,16 +288,5 @@ const Address = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `
-
-// const LevelStatusDiv = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-
-//   label {
-//     color: ${(props) => props.theme.colors.grey};
-//     font-weight: 700;
-//     font-size: 12px;
-//   }
-// `
 
 export { Wallets }

@@ -1,6 +1,7 @@
 import { ApiPromise } from '@polkadot/api'
+import type { Option } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
-import { PalletSocietyPayoutRecord } from '@polkadot/types/lookup'
+import type { PalletSocietyPayoutRecord } from '@polkadot/types/lookup'
 import { useEffect, useState } from 'react'
 import { PayoutsList } from './components/PayoutsList'
 import { useAccount } from '../../../account/AccountContext'
@@ -32,7 +33,8 @@ const PayoutsPage = ({ api }: PayoutsPageProps): JSX.Element => {
       if (!api || !society) return
 
       const info: ExtendedDeriveSociety = await society.info()
-      const defending = await api.query.society.defending()
+      const defendingCodec = await api.query.society.defending()
+      const defending = defendingCodec as Option<any>
 
       if (defending.isSome) {
         const defendingValue = defending.unwrap()

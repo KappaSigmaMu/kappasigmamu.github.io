@@ -1,13 +1,13 @@
 import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/dist/types'
 
 const visitBiddersPage = () => {
-  cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
+  cy.visit('/explore/bidders?rpc=ws://localhost:8000')
   cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
 }
 
 const visitBiddersPageWithWallet = (testAccounts: InjectedAccountWitMnemonic[]) => {
   visitBiddersPage()
-  cy.initWallet(testAccounts, Cypress.env('app_name'))
+  cy.initWallet(testAccounts, Cypress.expose('app_name'))
 }
 
 const expectTransactionSuccess = () => {

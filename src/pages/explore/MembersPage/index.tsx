@@ -1,4 +1,5 @@
 import { ApiPromise } from '@polkadot/api'
+import type { Option } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { MembersList } from './components/MembersList'
@@ -29,7 +30,8 @@ const MembersPage = ({ api }: MembersPageProps): JSX.Element => {
   useEffect(() => {
     setTrigger(true)
     society?.info().then((info: ExtendedDeriveSociety) => {
-      api?.query.society.defending().then((defending) => {
+      api?.query.society.defending().then((defendingCodec) => {
+        const defending = defendingCodec as Option<any>
         if (defending.isSome) {
           const defendingValue = defending.unwrap()
           defender = defendingValue[0]

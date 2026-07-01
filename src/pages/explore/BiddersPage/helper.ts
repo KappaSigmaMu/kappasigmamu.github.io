@@ -53,7 +53,7 @@ export const vouch = async (
 export const BNtoNumber = (bn: BN) => {
   try {
     return bn.toNumber()
-  } catch (error) {
+  } catch (_) {
     return -1
   }
 }

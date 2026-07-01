@@ -1,11 +1,13 @@
 import { ApiPromise } from '@polkadot/api'
 import type { Vec } from '@polkadot/types'
-import type { PalletSocietyBid } from '@polkadot/types/lookup'
+import type { Bid } from '@polkadot/types/interfaces/society'
+import type { Codec } from '@polkadot/types-codec/types'
 import { useEffect, useState, useCallback } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { BiddersList } from './BiddersList'
 import { BidVouch } from './BidVouch'
 import { useAccount } from '../../../account/AccountContext'
+import { type BidRow, mapBidToRow } from '../../../helpers/bidKind'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { toastByStatus } from '../helpers'
 
@@ -15,13 +17,14 @@ type BiddersPageProps = {
 
 const BiddersPage = ({ api }: BiddersPageProps): JSX.Element => {
   const { activeAccount } = useAccount()
-  const [bids, setBids] = useState<Vec<PalletSocietyBid> | null>(null)
+  const [bids, setBids] = useState<BidRow[] | null>(null)
 
   const society = api?.query?.society
 
   useEffect(() => {
-    society?.bids((response: Vec<PalletSocietyBid>) => {
-      setBids(response)
+    society?.bids((response: Codec) => {
+      const bidsVec = response as unknown as Vec<Bid>
+      setBids([...bidsVec].map(mapBidToRow))
     })
   }, [society])
 

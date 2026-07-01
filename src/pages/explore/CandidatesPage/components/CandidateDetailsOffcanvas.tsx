@@ -1,7 +1,7 @@
 import { ApiPromise } from '@polkadot/api'
 import { Option, StorageKey } from '@polkadot/types'
 import { AccountId, AccountId32 } from '@polkadot/types/interfaces'
-import { PalletSocietyVote } from '@polkadot/types/lookup'
+import type { SocietyVote } from '@polkadot/types/interfaces/society'
 import { useEffect, useState } from 'react'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { AccountHeader } from '../../components/AccountHeader'
@@ -27,7 +27,10 @@ export function CandidateDetailsOffcanvas({ api, candidateId, show, onClose }: P
     api.query.society.members.keys().then(async (memberIds) => {
       const candidateMemberMap = memberIds.map((memberId) => [candidateId, memberId])
       const votesResponse = await api.query.society.votes.multi(candidateMemberMap)
-      setVotes(groupVotes(candidateMemberMap, votesResponse))
+      setVotes(groupVotes(
+        candidateMemberMap as unknown as (StorageKey<[AccountId32]> | AccountId)[][],
+        votesResponse as unknown as Option<SocietyVote>[]
+      ))
     })
   }, [])
 
@@ -36,29 +39,29 @@ export function CandidateDetailsOffcanvas({ api, candidateId, show, onClose }: P
       <div className="mb-3">
         <AccountHeader accountId={candidateId} />
       </div>
-      {votes ? <CanvasBody api={api} votes={votes} /> : <LoadingSpinner />}
+      {votes ? <CanvasBody votes={votes} /> : <LoadingSpinner />}
     </Offcanvas>
   )
 }
 
-function CanvasBody({ api, votes }: { api: ApiPromise; votes: GroupedVotes }) {
+function CanvasBody({ votes }: { votes: GroupedVotes }) {
   return (
     <>
       {Object.entries(votes).map(([type, memberIds]) =>
-        memberIds.length === 0 ? <></> : <VoterList api={api} type={type} memberIds={memberIds} key={type} />
+        memberIds.length === 0 ? <></> : <VoterList type={type} memberIds={memberIds} key={type} />
       )}
     </>
   )
 }
 
-function VoterList({ api, type, memberIds }: { api: ApiPromise; type: string; memberIds: AccountId[] }) {
+function VoterList({ type, memberIds }: { type: string; memberIds: AccountId[] }) {
   return (
     <div className="mt-4">
       <h4>{type}s</h4>
       {memberIds.map((id) => (
         <div key={id.toString()} className="mb-2 ms-2">
           <Identicon value={id.toHuman()} size={22} theme="polkadot" className="me-2" />
-          <AccountIdentity api={api} accountId={id} />
+          <AccountIdentity accountId={id} />
         </div>
       ))}
     </div>
@@ -67,14 +70,14 @@ function VoterList({ api, type, memberIds }: { api: ApiPromise; type: string; me
 
 function groupVotes(
   candidateMemberMap: (StorageKey<[AccountId32]> | AccountId)[][],
-  votesResponse: Option<PalletSocietyVote>[]
+  votesResponse: Option<SocietyVote>[]
 ): GroupedVotes {
   // TODO: fix me
   const initial = { Approve: [], Reject: [], Skeptic: [] }
   return votesResponse.reduce((grouped, vote, idx) => {
     if (vote.isNone) return grouped
 
-    const type = vote.unwrap().Type
+    const type = vote.unwrap().type
 
     return {
       ...grouped,

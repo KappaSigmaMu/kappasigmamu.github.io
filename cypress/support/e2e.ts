@@ -1,5 +1,5 @@
 import '@chainsafe/cypress-polkadot-wallet'
-import registerCypressGrep from '@cypress/grep/src/support'
+import { register as registerCypressGrep } from '@cypress/grep'
 import './commands'
 
 registerCypressGrep()

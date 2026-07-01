@@ -1,4 +1,4 @@
-FROM node:16.13.0
+FROM node:24.18.0
 
 RUN apt-get update -qq && apt-get install -y build-essential cmake git libudev-dev python3
 

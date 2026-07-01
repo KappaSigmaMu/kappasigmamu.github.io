@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import { ReactElement } from 'react'
 import { Badge } from 'react-bootstrap'
 import styled from 'styled-components'

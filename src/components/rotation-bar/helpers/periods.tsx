@@ -12,7 +12,7 @@ export function calculateClaimPercentage(
   const periodBlocksDone = (currentBlock % intakePeriod) - votingPeriod
   const periodBlocksLeft = claimPeriod - periodBlocksDone
   const percentageDone = 100 - (periodBlocksLeft * 100) / claimPeriod
-  const [, , time] = useBlockTime(periodBlocksLeft, api)
+  const [, , time] = useBlockTime(periodBlocksLeft, api, true)
 
   return { percentageDone, time }
 }
@@ -28,7 +28,7 @@ export function calculateVotingPercentage(
   const periodBlocksDone = currentBlock % intakePeriod
   const periodBlocksLeft = votingPeriod - periodBlocksDone
   const percentageDone = 100 - (periodBlocksLeft * 100) / votingPeriod
-  const [, , time] = useBlockTime(periodBlocksLeft, api)
+  const [, , time] = useBlockTime(periodBlocksLeft, api, true)
 
   return { percentageDone, time }
 }
@@ -37,7 +37,7 @@ export function calculateChallengePercentage(currentBlock: number, period: numbe
   const periodBlocksDone = currentBlock % period
   const periodBlocksLeft = period - periodBlocksDone
   const percentageDone = 100 - (periodBlocksLeft * 100) / period
-  const [, , time] = useBlockTime(periodBlocksLeft, api)
+  const [, , time] = useBlockTime(periodBlocksLeft, api, true)
 
   return { percentageDone, time }
 }

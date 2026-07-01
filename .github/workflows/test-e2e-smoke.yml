@@ -22,7 +22,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Enable Corepack
         run: corepack enable
@@ -30,7 +30,7 @@ jobs:
       - name: Cache yarn dependencies
         uses: actions/cache@v4
         with:
-          path: .yarn/cache
+          path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
@@ -43,8 +43,6 @@ jobs:
 
       - name: Run smoke E2E tests
         run: yarn test:e2e:smoke
-        env:
-          NODE_OPTIONS: --openssl-legacy-provider
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4

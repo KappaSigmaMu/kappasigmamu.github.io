@@ -25,7 +25,7 @@ const ExamplesPage = ({ api }: ExamplesPageProps): JSX.Element => {
   }
 
   useEffect(() => {
-    society?.head().then((head) => setHead(head.unwrap()))
+    society?.head().then((headCodec) => setHead(headCodec as AccountId))
   }, [society])
 
   return head === null ? (
@@ -59,7 +59,7 @@ const ExamplesPage = ({ api }: ExamplesPageProps): JSX.Element => {
           <AccountIndex api={api!} accountId={head} callback={handleIndex} />
         </Col>
         <Col lg={2} className="text-center text-lg-start text-truncate">
-          <AccountIdentity api={api!} accountId={head} hideNotSet />
+          <AccountIdentity accountId={head} hideNotSet />
         </Col>
         <Col lg={2} className="text-center text-lg-end">
           <Badge pill bg="primary" className="me-2 p-2">

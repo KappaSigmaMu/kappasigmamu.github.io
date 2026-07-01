@@ -2,7 +2,7 @@ import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/d
 
 describe('Wallet Connection UI Flow', () => {
   beforeEach(() => {
-    cy.visit('/explore?rpc=ws://localhost:8000', { timeout: 20000 })
+    cy.visit('/explore?rpc=ws://localhost:8000')
     cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
   })
 
@@ -16,8 +16,10 @@ describe('Wallet Connection UI Flow', () => {
     cy.contains('button', /connect/i).should('be.visible').click()
 
     cy.getBySel('wallet-modal').should('be.visible')
-    cy.get('.modal-title').should('contain.text', 'Wallets')
-    cy.contains('Polkadot').should('be.visible')
+    cy.get('.modal-header .modal-title').should('contain.text', 'Wallets')
+    cy.getBySel('wallet-modal-close').should('be.visible')
+    cy.getBySel('wallet-modal').find('[data-test^="wallet-"]').should('have.length.at.least', 1)
+    cy.getBySel('wallet-talisman').should('be.visible')
   })
 
   it('should have data-test attributes on wallet components', () => {
@@ -32,7 +34,7 @@ describe('Wallet Connection UI Flow', () => {
     cy.contains('button', /connect/i).should('be.visible').click()
 
     cy.getBySel('wallet-modal').should('be.visible')
-    cy.get('.modal-header').find('[role="button"]').click()
+    cy.getBySel('wallet-modal-close').click()
     cy.get('.modal-content').should('not.exist')
   })
 
@@ -73,20 +75,14 @@ describe('Connect Wallet with Plugin', () => {
   })
 
   beforeEach(() => {
-    cy.visit('/explore/bidders?rpc=ws://localhost:8000', { timeout: 20000 })
-    cy.initWallet(testAccounts, Cypress.env('app_name'))
+    cy.visit('/explore/bidders?rpc=ws://localhost:8000')
+    cy.initWallet(testAccounts, Cypress.expose('app_name'))
     cy.getBySel('blockchain-data', { timeout: 20000 }).should('be.visible')
   })
 
   describe('Connect Wallet Flow', () => {
     it('should connect wallet successfully with test account', () => {
-      cy.getBySel('connect-wallet-button').should('be.visible').click()
-      cy.getBySel('wallet-modal').should('be.visible')
-      cy.getBySel('wallet-polkadot').should('be.visible').click()
-      cy.getBySel('account-switcher', { timeout: 10000 }).should('be.visible')
-      cy.contains('[data-test="account-switcher"]', 'Alice', { timeout: 10000 }).click()
-      cy.get('[role="dialog"]', { timeout: 10000 }).should('not.exist')
-      cy.getBySel('account-balance').should('be.visible')
+      cy.connectWallet('Alice')
     })
 
     it('should disconnect wallet', () => {
