@@ -385,10 +385,10 @@ module.exports = function (webpackEnv) {
               include: paths.appSrc,
               loader: require.resolve('babel-loader'),
               options: {
-                customize: require.resolve('babel-preset-react-app/webpack-overrides'),
+                customize: require.resolve('./babel-webpack-overrides'),
                 presets: [
                   [
-                    require.resolve('babel-preset-react-app'),
+                    require.resolve('./babel-preset-app'),
                     {
                       runtime: hasJsxRuntime ? 'automatic' : 'classic'
                     }
@@ -433,7 +433,7 @@ module.exports = function (webpackEnv) {
                 configFile: false,
                 compact: false,
                 presets: [
-                  [require.resolve('babel-preset-react-app/dependencies'), { helpers: true }],
+                  [require.resolve('./babel-preset-app-dependencies'), { helpers: true }],
                   [
                     require.resolve('@babel/preset-env'),
                     {
