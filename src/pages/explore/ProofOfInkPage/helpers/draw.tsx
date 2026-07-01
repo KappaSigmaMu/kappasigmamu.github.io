@@ -86,7 +86,6 @@ function ring(
 function splitRows(bits: boolean[], rows: number[]) {
   let i = 0
 
-  // eslint-disable-next-line no-return-assign
   return rows.map((r) => bits.slice(i, (i += r)))
 }
 

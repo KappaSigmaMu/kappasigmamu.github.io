@@ -685,7 +685,6 @@ module.exports = function (webpackEnv) {
         }),
       !disableESLintPlugin &&
         new ESLintPlugin({
-          // Plugin options
           extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
           formatter: require.resolve('react-dev-utils/eslintFormatter'),
           eslintPath: require.resolve('eslint'),
@@ -693,17 +692,7 @@ module.exports = function (webpackEnv) {
           context: paths.appSrc,
           cache: true,
           cacheLocation: path.resolve(paths.appNodeModules, '.cache/.eslintcache'),
-          // ESLint class options
           cwd: paths.appPath,
-          resolvePluginsRelativeTo: __dirname,
-          baseConfig: {
-            extends: [require.resolve('eslint-config-react-app/base')],
-            rules: {
-              ...(!hasJsxRuntime && {
-                'react/react-in-jsx-scope': 'error'
-              })
-            }
-          }
         })
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
