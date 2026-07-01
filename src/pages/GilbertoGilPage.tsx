@@ -1,17 +1,17 @@
-import { ThreeCanary, defaultConfig } from '@kappasigmamu/canary-component'
 import { StorageKey } from '@polkadot/types'
 import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { ThreeCanary, defaultConfig, type CanaryConfig } from '../canary-component'
 import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from '../components/MemberOffcanvas'
 import { useKusama } from '../kusama'
 import { ApiState } from '../kusama/KusamaContext'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
-const customGilConfig = {
+const customGilConfig: CanaryConfig = {
   ...defaultConfig.gil,
   bloom: {
     kernelSize: 1,
@@ -51,7 +51,8 @@ const GilbertoGilPage = () => {
 
   useEffect(() => {
     if (api && apiState === ApiState.ready) {
-      api.query.society.members.keys().then((members: StorageKey<[AccountId32]>[]) => {
+      api.query.society.members.keys().then((memberKeys) => {
+        const members = memberKeys as StorageKey<[AccountId32]>[]
         const ids = members.map((account) => account.toHuman()!.toString())
         setMembers(ids)
 

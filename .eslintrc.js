@@ -12,7 +12,6 @@ module.exports = {
     'import'
   ],
   extends: [
-    'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/typescript',
     'plugin:react/recommended'
@@ -29,7 +28,6 @@ module.exports = {
     }
   }],
   rules: {
-    '@typescript-eslint/camelcase': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/explicit-member-accessibility': [
       'warn',
@@ -45,11 +43,15 @@ module.exports = {
       }
     ],
     '@typescript-eslint/no-inferrable-types': 'warn',
-    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/no-unused-vars': ['warn', {
+      argsIgnorePattern: '^_',
+      caughtErrorsIgnorePattern: '^_',
+      varsIgnorePattern: '^_',
+    }],
     '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-unused-expressions': 'off',
     'import/newline-after-import': ['warn'],
     'import/no-default-export': ['warn'],
     'import/order': [

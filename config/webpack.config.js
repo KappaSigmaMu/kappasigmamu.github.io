@@ -55,6 +55,22 @@ const cssModuleRegex = /\.module\.css$/
 const sassRegex = /\.(scss|sass)$/
 const sassModuleRegex = /\.module\.(scss|sass)$/
 
+// Bootstrap 5.3 still uses legacy Sass syntax (@import, global color functions).
+// Silence known upstream deprecations until Bootstrap migrates to @use.
+const sassLoaderOptions = {
+  api: 'modern-compiler',
+  sourceMap: true,
+  sassOptions: {
+    silenceDeprecations: [
+      'import',
+      'global-builtin',
+      'color-functions',
+      'if-function',
+      'legacy-js-api'
+    ]
+  }
+}
+
 const hasJsxRuntime = (() => {
   if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
     return false
@@ -133,9 +149,7 @@ module.exports = function (webpackEnv) {
         },
         {
           loader: require.resolve(preProcessor),
-          options: {
-            sourceMap: true
-          }
+          options: preProcessor === 'sass-loader' ? sassLoaderOptions : { sourceMap: true }
         }
       )
     }
@@ -671,7 +685,6 @@ module.exports = function (webpackEnv) {
         }),
       !disableESLintPlugin &&
         new ESLintPlugin({
-          // Plugin options
           extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
           formatter: require.resolve('react-dev-utils/eslintFormatter'),
           eslintPath: require.resolve('eslint'),
@@ -679,17 +692,7 @@ module.exports = function (webpackEnv) {
           context: paths.appSrc,
           cache: true,
           cacheLocation: path.resolve(paths.appNodeModules, '.cache/.eslintcache'),
-          // ESLint class options
           cwd: paths.appPath,
-          resolvePluginsRelativeTo: __dirname,
-          baseConfig: {
-            extends: [require.resolve('eslint-config-react-app/base')],
-            rules: {
-              ...(!hasJsxRuntime && {
-                'react/react-in-jsx-scope': 'error'
-              })
-            }
-          }
         })
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.

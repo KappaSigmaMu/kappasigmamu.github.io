@@ -16,7 +16,11 @@ const developmentProviders: Provider[] = [
 
 export const providers = [...productionProviders, ...developmentProviders]
 
-export function getProviderEndpoints(override?: string | null, configured?: string): string[] {
+export function getProviderEndpoints(
+  override?: string | null,
+  configured?: string,
+  fallback: Provider[] = productionProviders
+): string[] {
   if (override) return [override]
 
   const configuredEndpoints = configured
@@ -24,5 +28,5 @@ export function getProviderEndpoints(override?: string | null, configured?: stri
     .map((endpoint) => endpoint.trim())
     .filter(Boolean)
 
-  return configuredEndpoints?.length ? configuredEndpoints : productionProviders.map(({ url }) => url)
+  return configuredEndpoints?.length ? configuredEndpoints : fallback.map(({ url }) => url)
 }

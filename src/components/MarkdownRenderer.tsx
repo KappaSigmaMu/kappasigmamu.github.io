@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react'
 import slugify from 'slugify'
 
 const renderer = new marked.Renderer()
-renderer.heading = function (text, level) {
+renderer.heading = function ({ tokens, depth }) {
+  const text = this.parser.parseInline(tokens, this.parser.textRenderer)
   const slug = slugify(text, { lower: true, strict: true, remove: /[*+~.()'"!:@]/g })
-  return `<h${level} id="${slug}">${text}</h${level}>`
+  return `<h${depth} id="${slug}">${this.parser.parseInline(tokens)}</h${depth}>`
 }
 
 marked.setOptions({

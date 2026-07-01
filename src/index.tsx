@@ -1,3 +1,5 @@
+import '@polkadot/api-augment/kusama'
+import '@polkadot/types-augment/lookup/types-substrate'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { App } from './pages/App'

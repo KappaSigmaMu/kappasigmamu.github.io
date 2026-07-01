@@ -1,12 +1,12 @@
 import { Option, StorageKey } from '@polkadot/types'
 import { AccountId, BalanceOf } from '@polkadot/types/interfaces'
-import { PalletSocietyBidKind } from '@polkadot/types/lookup'
+import type { BidKind } from '@polkadot/types/interfaces/society'
 import { ITuple } from '@polkadot/types/types'
 
-type suspendedCandidateEntry = [StorageKey<[AccountId]>, Option<ITuple<[BalanceOf, PalletSocietyBidKind]>>]
+type suspendedCandidateEntry = [StorageKey<[AccountId]>, Option<ITuple<[BalanceOf, BidKind]>>]
 
-export const extractAccountIds = (keys: StorageKey<[AccountId]>[]): AccountId[] => {
-  return keys.map(({ args: [accountId] }) => accountId).filter((a) => !!a)
+export const extractAccountIds = (keys: StorageKey[]): AccountId[] => {
+  return (keys as StorageKey<[AccountId]>[]).map(({ args: [accountId] }) => accountId).filter((a) => !!a)
 }
 
 export const extractCandidates = (entries: suspendedCandidateEntry[]): SuspendedCandidate[] => {

@@ -8,7 +8,7 @@ export const isValidAddress = (address: string | null) => {
     encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address))
 
     return true
-  } catch (error) {
+  } catch (_) {
     return false
   }
 }

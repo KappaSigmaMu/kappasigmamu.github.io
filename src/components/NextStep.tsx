@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { LinkWithQuery } from './LinkWithQuery'
 import { useAccount } from '../account/AccountContext'
 import { StatusChangeHandler, doTx } from '../helpers/extrinsics'
+import { useRelayChainBlockNumber } from '../hooks/useRelayChainBlockNumber'
 import { useKusama } from '../kusama/KusamaContext'
 import { isVotingPeriod } from './rotation-bar/helpers/periods'
 import { LoadingSpinner } from '../pages/explore/components/LoadingSpinner'
@@ -120,7 +121,7 @@ const NextStep = () => {
   const { level, setLevel } = useAccount()
   const { api } = useKusama()
   const { search } = useLocation()
-  const [currentBlock, setCurrentBlock] = useState<number>(0)
+  const currentBlock = useRelayChainBlockNumber(api) ?? 0
   const [votingPeriod, setVotingPeriod] = useState<number>(0)
   const [claimPeriod, setClaimPeriod] = useState<number>(0)
 
@@ -131,15 +132,12 @@ const NextStep = () => {
 
       const claimPeriod = (api.consts.society.claimPeriod as u32).toNumber()
       setClaimPeriod(claimPeriod)
-
-      api.derive.chain.bestNumber((block) => {
-        setCurrentBlock(block.toNumber())
-      })
     }
   }, [api])
 
   const claim = new URLSearchParams(search).get('claim')
-  const isClaimPeriod = claim || !isVotingPeriod(votingPeriod, claimPeriod, currentBlock)
+  const periodsLoaded = votingPeriod > 0 && claimPeriod > 0
+  const isClaimPeriod = Boolean(claim) || (periodsLoaded && !isVotingPeriod(votingPeriod, claimPeriod, currentBlock))
 
   const showMessage = (nextResult: ExtrinsicResult) => {
     toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
@@ -196,7 +194,7 @@ function ClaimMembershipButton({
 
   if (loading) return <LoadingSpinner center={false} small={true} />
 
-  return <Button onClick={handleClaim}>Claim Membership</Button>
+  return <Button data-test="claim-membership-button" onClick={handleClaim}>Claim Membership</Button>
 }
 
 export { NextStep }

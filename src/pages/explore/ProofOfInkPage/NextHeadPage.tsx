@@ -1,10 +1,11 @@
 import { ApiPromise } from '@polkadot/api'
 import Identicon from '@polkadot/react-identicon'
+import type { Option } from '@polkadot/types'
 import { AccountId } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
-import { Col, Badge } from 'react-bootstrap'
+import { Badge, Col } from 'react-bootstrap'
 import Alert from 'react-bootstrap/Alert'
-import { styled } from 'styled-components'
+import styled from 'styled-components'
 import { AccountIdentity } from '../../../components/AccountIdentity'
 import { AccountIndex } from '../../../components/AccountIndex'
 import { DataHeaderRow, DataRow } from '../../../components/base'
@@ -20,7 +21,8 @@ const NextHeadPage = ({ api }: NextHeadPageProps): JSX.Element => {
   const [head, setNextHead] = useState<AccountId | null>(null)
 
   useEffect(() => {
-    society?.nextHead().then((head) => {
+    society?.nextHead().then((headCodec) => {
+      const head = headCodec as Option<any>
       head.isSome && setNextHead(head.unwrap().who)
     })
   }, [society])
@@ -56,7 +58,7 @@ const NextHeadPage = ({ api }: NextHeadPageProps): JSX.Element => {
           <AccountIndex api={api!} accountId={head} />
         </Col>
         <Col lg={2} className="text-center text-lg-start text-truncate">
-          <AccountIdentity api={api!} accountId={head} hideNotSet />
+          <AccountIdentity accountId={head} hideNotSet />
         </Col>
         <Col lg={2} className="text-center text-lg-end">
           <Badge pill bg="primary" className="me-2 p-2">
