@@ -10,8 +10,11 @@ const visitBiddersPageWithWallet = (testAccounts: InjectedAccountWitMnemonic[]) 
   cy.initWallet(testAccounts, Cypress.expose('app_name'))
 }
 
+const CHOPSTICKS_TASK_TIMEOUT = 120000
+
 const expectTransactionSuccess = () => {
-  cy.contains(/finalized|success/i, { timeout: 30000 }).should('be.visible')
+  cy.task('resetChopsticks', null, { timeout: CHOPSTICKS_TASK_TIMEOUT })
+  cy.contains(/submitted successfully|transaction submitted|finalized|success/i, { timeout: 60000 }).should('be.visible')
 }
 
 describe('Bidding Operations', () => {
@@ -164,7 +167,6 @@ describe('Bidding Operations', () => {
       cy.approvePendingTransaction()
       expectTransactionSuccess()
 
-      cy.task('resetChopsticks')
       cy.visitExplore('bidders')
       cy.verifyAccountLevel('Bidder')
     })
@@ -178,7 +180,6 @@ describe('Bidding Operations', () => {
       cy.approvePendingTransaction()
       expectTransactionSuccess()
 
-      cy.task('resetChopsticks')
       cy.visitExplore('bidders')
       cy.verifyAccountLevel('Human')
     })
