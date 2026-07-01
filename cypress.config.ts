@@ -1,10 +1,12 @@
 import { defineConfig } from 'cypress';
-import { readFileSync } from 'fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import path from 'path';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const yaml = require('js-yaml');
 
 const CHOPSTICKS_RPC = 'http://localhost:8000';
+const FAILED_TESTS_CACHE = path.join(__dirname, 'cypress/.cache/failed-tests.json');
 
 let forkBlockHash: string | null = null;
 
@@ -79,6 +81,21 @@ export default defineConfig({
           return null;
         },
       });
+
+      on('after:run', (results) => {
+        const failed = results.runs.flatMap((run) =>
+          run.tests
+            .filter((test) => test.state === 'failed')
+            .map((test) => ({
+              spec: run.spec.relative,
+              title: test.title.join(' '),
+            }))
+        );
+
+        mkdirSync(path.dirname(FAILED_TESTS_CACHE), { recursive: true });
+        writeFileSync(FAILED_TESTS_CACHE, JSON.stringify(failed, null, 2));
+      });
+
       return config;
     },
     specPattern: 'cypress/e2e/*.cy.{js,jsx,ts,tsx}',

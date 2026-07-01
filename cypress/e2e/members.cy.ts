@@ -1,10 +1,16 @@
 import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/dist/types'
 
+const CHOPSTICKS_TASK_TIMEOUT = 30000
+
+const waitForDefenderChallenge = () => {
+  cy.getBySel('members-list').contains('.badge', 'Defender', { timeout: 20000 }).should('be.visible')
+}
+
 describe('Member Operations', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
   before(() => {
-    cy.task('rememberForkPoint')
+    cy.task('resetChopsticksStorage', null, { timeout: CHOPSTICKS_TASK_TIMEOUT })
     cy.fixture('accounts').then((accounts) => {
       testAccounts = Object.values(accounts).map((acc: any) => ({
         address: acc.address,
@@ -77,7 +83,8 @@ describe('Member Operations', () => {
     })
 
     it('should show defender vote buttons for Cyborg members', () => {
-      cy.connectWallet('Eve')
+      waitForDefenderChallenge()
+      cy.connectWallet('Ferdie')
       cy.verifyAccountLevel('Cyborg')
 
       cy.getBySel('defender-section', { timeout: 15000 }).should('exist')
@@ -94,6 +101,7 @@ describe('Member Operations', () => {
     })
 
     it('should allow member to approve defender', () => {
+      waitForDefenderChallenge()
       cy.connectWallet('Ferdie')
       cy.verifyAccountLevel('Cyborg')
 
@@ -105,6 +113,7 @@ describe('Member Operations', () => {
     })
 
     it('should allow member to reject defender', () => {
+      waitForDefenderChallenge()
       cy.connectWallet('Ferdie')
       cy.verifyAccountLevel('Cyborg')
 
@@ -116,6 +125,7 @@ describe('Member Operations', () => {
     })
 
     it('should show Voted badge after voting on defender', () => {
+      waitForDefenderChallenge()
       cy.connectWallet('Ferdie')
       cy.verifyAccountLevel('Cyborg')
 
