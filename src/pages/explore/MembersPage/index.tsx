@@ -1,6 +1,5 @@
 import { ApiPromise } from '@polkadot/api'
 import type { Option } from '@polkadot/types'
-import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { MembersList } from './components/MembersList'
 import { useAccount } from '../../../account/AccountContext'

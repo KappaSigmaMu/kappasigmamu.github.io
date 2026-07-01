@@ -1,6 +1,5 @@
 import { ApiPromise } from '@polkadot/api'
 import type { Option } from '@polkadot/types'
-import { AccountId32 } from '@polkadot/types/interfaces'
 import type { PalletSocietyPayoutRecord } from '@polkadot/types/lookup'
 import { useEffect, useState } from 'react'
 import { PayoutsList } from './components/PayoutsList'
