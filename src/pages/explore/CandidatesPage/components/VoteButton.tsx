@@ -24,7 +24,16 @@ export interface Vote {
   type: string
 }
 
-export function VoteButton({ vote, disabled, showMessage, icon, handleUpdate, successText, waitingText, ...buttonProps }: VoteButtonProps) {
+export function VoteButton({
+  vote,
+  disabled,
+  showMessage,
+  icon,
+  handleUpdate,
+  successText,
+  waitingText,
+  ...buttonProps
+}: VoteButtonProps) {
   const { api } = useAssetHub()
   const { polkadotSigner } = useAccount()
   const [loading, setLoading] = useState(false)
@@ -36,9 +45,10 @@ export function VoteButton({ vote, disabled, showMessage, icon, handleUpdate, su
 
   const handleVote = async () => {
     if (!api) return
-    const tx = vote.type === 'candidate'
-      ? api.tx.Society.vote({ candidate: MultiAddress.Id(vote.accountId), approve: vote.approve })
-      : api.tx.Society.defender_vote({ approve: vote.approve })
+    const tx =
+      vote.type === 'candidate'
+        ? api.tx.Society.vote({ candidate: MultiAddress.Id(vote.accountId), approve: vote.approve })
+        : api.tx.Society.defender_vote({ approve: vote.approve })
     try {
       await submitTx(tx, polkadotSigner, { finalizedText: successText, waitingText, onStatusChange })
     } catch (error) {

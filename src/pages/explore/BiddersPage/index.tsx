@@ -24,7 +24,16 @@ const BiddersPage = (): JSX.Element => {
   if (state.error) return <ChainError error={state.error} onRetry={state.refetch} />
   if (!bids) return <LoadingSpinner />
 
-  return <Row><Col xs={12} lg={3}><BidVouch handleResult={handleResult} /></Col><Col xs={12} lg={9}><BiddersList bids={bids} activeAccount={activeAccount} handleResult={handleResult} /></Col></Row>
+  return (
+    <Row>
+      <Col xs={12} lg={3}>
+        <BidVouch handleResult={handleResult} />
+      </Col>
+      <Col xs={12} lg={9}>
+        <BiddersList bids={bids} activeAccount={activeAccount} handleResult={handleResult} />
+      </Col>
+    </Row>
+  )
 }
 
 export { BiddersPage }

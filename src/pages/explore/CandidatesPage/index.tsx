@@ -14,9 +14,16 @@ const CandidatesPage = ({ handleUpdateTotal }: { handleUpdateTotal: () => void }
   const [trigger, setTrigger] = useState(false)
   const state = useChainQuery(() => (api ? getSocietyCandidates(api) : undefined), [api, trigger])
   const candidates = state.data ? buildSocietyCandidatesArray(state.data) : null
-  const handleUpdate = () => { handleUpdateTotal(); setTrigger((previous) => !previous) }
+  const handleUpdate = () => {
+    handleUpdateTotal()
+    setTrigger((previous) => !previous)
+  }
   if (state.error) return <ChainError error={state.error} onRetry={state.refetch} />
-  return candidates === null ? <LoadingSpinner /> : <CandidatesList activeAccount={activeAccount} candidates={candidates} handleUpdate={handleUpdate} />
+  return candidates === null ? (
+    <LoadingSpinner />
+  ) : (
+    <CandidatesList activeAccount={activeAccount} candidates={candidates} handleUpdate={handleUpdate} />
+  )
 }
 
 export { CandidatesPage }

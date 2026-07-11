@@ -1,5 +1,4 @@
-import type { PolkadotSigner } from 'polkadot-api'
-import type { Transaction, TxEvent } from 'polkadot-api'
+import type { PolkadotSigner, Transaction, TxEvent } from 'polkadot-api'
 import type { Observable } from 'rxjs'
 
 export type StatusChangeHandler = (info: ExtrinsicResult) => void

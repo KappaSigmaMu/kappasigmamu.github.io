@@ -9,11 +9,23 @@ import { ChainError } from '../components/ChainError'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 
 const MembersPage = (): JSX.Element => {
-  const { api } = useAssetHub(); const { activeAccount } = useAccount(); const { graceStrikes } = useConsts(); const [trigger, setTrigger] = useState(false)
-  const state = useChainQuery(() => api ? getSocietyMembersWithInfo(api, graceStrikes) : undefined, [api, graceStrikes, trigger])
+  const { api } = useAssetHub()
+  const { activeAccount } = useAccount()
+  const { graceStrikes } = useConsts()
+  const [trigger, setTrigger] = useState(false)
+  const state = useChainQuery(
+    () => (api ? getSocietyMembersWithInfo(api, graceStrikes) : undefined),
+    [api, graceStrikes, trigger]
+  )
   if (state.error) return <ChainError error={state.error} onRetry={state.refetch} />
   if (!state.data) return <LoadingSpinner />
-  return <MembersList members={state.data} activeAccount={activeAccount} handleUpdate={() => setTrigger((previous) => !previous)} />
+  return (
+    <MembersList
+      members={state.data}
+      activeAccount={activeAccount}
+      handleUpdate={() => setTrigger((previous) => !previous)}
+    />
+  )
 }
 
 export { MembersPage }

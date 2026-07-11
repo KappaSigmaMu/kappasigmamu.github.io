@@ -28,14 +28,22 @@ const Title = ({ activeAccount }: { activeAccount: WalletAccount }) => {
 const SelectedAccount = () => {
   const { activeAccount } = useAccount()
   const { state } = useAssetHub()
-  return state !== ChainState.ready || !activeAccount ? <Spinner animation="border" variant="primary" /> : <Title activeAccount={activeAccount} />
+  return state !== ChainState.ready || !activeAccount ? (
+    <Spinner animation="border" variant="primary" />
+  ) : (
+    <Title activeAccount={activeAccount} />
+  )
 }
 
 const LevelStatusDiv = styled.div`
   display: flex;
   justify-content: space-between;
   cursor: pointer;
-  label { color: ${(props) => props.theme.colors.white}; font-weight: 600; cursor: pointer; }
+  label {
+    color: ${(props) => props.theme.colors.white};
+    font-weight: 600;
+    cursor: pointer;
+  }
 `
 
 const SelectedAccountDiv = styled.div`

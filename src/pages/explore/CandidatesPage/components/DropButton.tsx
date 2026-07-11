@@ -17,19 +17,65 @@ type DropButtonProps = {
   waitingText: string
 } & React.ComponentProps<typeof Button>
 
-export interface Drop { accountId: AccountId; callerAccount: WalletAccount }
+export interface Drop {
+  accountId: AccountId
+  callerAccount: WalletAccount
+}
 
-export function DropButton({ drop, disabled, showMessage, handleUpdate, successText, waitingText, ...buttonProps }: DropButtonProps) {
+export function DropButton({
+  drop,
+  disabled,
+  showMessage,
+  handleUpdate,
+  successText,
+  waitingText,
+  ...buttonProps
+}: DropButtonProps) {
   const { api } = useAssetHub()
   const { polkadotSigner } = useAccount()
   const [loading, setLoading] = useState(false)
-  const onStatusChange: StatusChangeHandler = ({ loading: nextLoading, message, status }) => { setLoading(Boolean(nextLoading)); showMessage({ status, message }); handleUpdate() }
+  const onStatusChange: StatusChangeHandler = ({ loading: nextLoading, message, status }) => {
+    setLoading(Boolean(nextLoading))
+    showMessage({ status, message })
+    handleUpdate()
+  }
   const handleDrop = async () => {
     if (!api) return
-    try { await submitTx(api.tx.Society.drop_candidate({ candidate: drop.accountId }), polkadotSigner, { finalizedText: successText, waitingText, onStatusChange }) } catch (error) { console.error(error) }
+    try {
+      await submitTx(api.tx.Society.drop_candidate({ candidate: drop.accountId }), polkadotSigner, {
+        finalizedText: successText,
+        waitingText,
+        onStatusChange
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
-  if (loading) return <div className="mx-2"><LoadingSpinner center={false} small /></div>
-  return <OverlayTrigger placement="top" overlay={<Tooltip id="button-tooltip">This candidate can be dropped, this action will remove the candidate from the list.</Tooltip>}><Button disabled={disabled} variant="link" onClick={handleDrop} size="sm" className="p-2" {...buttonProps}><StyledDropIcon size={20} /></Button></OverlayTrigger>
+  if (loading)
+    return (
+      <div className="mx-2">
+        <LoadingSpinner center={false} small />
+      </div>
+    )
+  return (
+    <OverlayTrigger
+      placement="top"
+      overlay={
+        <Tooltip id="button-tooltip">
+          This candidate can be dropped, this action will remove the candidate from the list.
+        </Tooltip>
+      }
+    >
+      <Button disabled={disabled} variant="link" onClick={handleDrop} size="sm" className="p-2" {...buttonProps}>
+        <StyledDropIcon size={20} />
+      </Button>
+    </OverlayTrigger>
+  )
 }
 
-const StyledDropIcon = styled(FaUserXmark)`flex-shrink: 0; & path { fill: ${(props) => props.theme.colors.white}; }`
+const StyledDropIcon = styled(FaUserXmark)`
+  flex-shrink: 0;
+  & path {
+    fill: ${(props) => props.theme.colors.white};
+  }
+`

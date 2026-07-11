@@ -9,7 +9,11 @@ const AccountIdentity = ({ accountId, hideNotSet }: { accountId: AccountId | str
   const display = identity?.info.display
   const isVerified = Boolean(identity?.judgements.length)
 
-  const verifiedBadge = isVerified ? <StyledVerifiedBadge className="me-2" /> : <StyledUnverifiedBadge className="me-2" />
+  const verifiedBadge = isVerified ? (
+    <StyledVerifiedBadge className="me-2" />
+  ) : (
+    <StyledUnverifiedBadge className="me-2" />
+  )
 
   if (!display && hideNotSet) return <></>
   if (display)
@@ -24,12 +28,16 @@ const AccountIdentity = ({ accountId, hideNotSet }: { accountId: AccountId | str
 
 const StyledVerifiedBadge = styled(FaCircleCheck)`
   flex-shrink: 0;
-  & path { fill: ${(props) => props.theme.colors.secondary}; }
+  & path {
+    fill: ${(props) => props.theme.colors.secondary};
+  }
 `
 
 const StyledUnverifiedBadge = styled(FaCircleMinus)`
   flex-shrink: 0;
-  & path { fill: ${(props) => props.theme.colors.lightGrey}; }
+  & path {
+    fill: ${(props) => props.theme.colors.lightGrey};
+  }
 `
 
 export { AccountIdentity }

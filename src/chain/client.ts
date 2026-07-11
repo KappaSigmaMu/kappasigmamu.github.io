@@ -13,7 +13,10 @@ export type ClientWithProvider = {
   endpoint: string | null
 }
 
-export function createChainClient(chain: ChainName, onStatusChanged: (status: StatusChange) => void): ClientWithProvider {
+export function createChainClient(
+  chain: ChainName,
+  onStatusChanged: (status: StatusChange) => void
+): ClientWithProvider {
   const endpoints = endpointsFor(chain)
   const provider = getWsProvider(endpoints, { onStatusChanged })
   return {

@@ -17,7 +17,10 @@ type OnStatusChangeProps = ExtrinsicResult
 
 const parseKsm = (value: string): bigint => {
   const [whole = '0', fraction = ''] = value.trim().split('.')
-  const decimals = fraction.replace(/[^0-9]/g, '').slice(0, 12).padEnd(12, '0')
+  const decimals = fraction
+    .replace(/[^0-9]/g, '')
+    .slice(0, 12)
+    .padEnd(12, '0')
   return BigInt(whole || '0') * 1_000_000_000_000n + BigInt(decimals || '0')
 }
 
@@ -36,13 +39,20 @@ const BidVouch = ({ handleResult }: BidVouchProps) => {
 
   useEffect(() => {
     if (!api || bidAmount === null) return
-    void submitTx(api.tx.Society.bid({ value: bidAmount }), polkadotSigner, { finalizedText: 'Bid submitted successfully. You are now a Bidder!', onStatusChange })
+    void submitTx(api.tx.Society.bid({ value: bidAmount }), polkadotSigner, {
+      finalizedText: 'Bid submitted successfully. You are now a Bidder!',
+      onStatusChange
+    })
     setBidAmount(null)
   }, [api, bidAmount, polkadotSigner])
 
   useEffect(() => {
     if (!api || !vouch) return
-    void submitTx(api.tx.Society.vouch({ who: MultiAddress.Id(vouch.address), value: vouch.value, tip: vouch.tip }), polkadotSigner, { finalizedText: 'Vouch submitted successfully.', onStatusChange })
+    void submitTx(
+      api.tx.Society.vouch({ who: MultiAddress.Id(vouch.address), value: vouch.value, tip: vouch.tip }),
+      polkadotSigner,
+      { finalizedText: 'Vouch submitted successfully.', onStatusChange }
+    )
     setVouch(null)
   }, [api, polkadotSigner, vouch])
 
@@ -58,21 +68,177 @@ const BidVouch = ({ handleResult }: BidVouchProps) => {
       toastByStatus.error('The provided address is not a valid Kusama address.', { duration: 5000 })
       return
     }
-    setVouch({ address, value: parseKsm((event.currentTarget[1] as HTMLInputElement).value), tip: parseKsm((event.currentTarget[2] as HTMLInputElement).value) })
+    setVouch({
+      address,
+      value: parseKsm((event.currentTarget[1] as HTMLInputElement).value),
+      tip: parseKsm((event.currentTarget[2] as HTMLInputElement).value)
+    })
   }
 
-  return <Tab.Container defaultActiveKey="bid"><StyledNav variant="tabs"><Nav.Item><Nav.Link eventKey="bid" data-test="bid-tab">Place Bid</Nav.Link></Nav.Item><Nav.Item><Nav.Link eventKey="vouch" data-test="vouch-tab">Vouch</Nav.Link></Nav.Item></StyledNav><StyledTabContent>
-    <Tab.Pane eventKey="bid"><Form onSubmit={handleBidSubmit} className="d-flex flex-lg-column flex-row align-items-center parent"><Form.Group className="me-3 me-lg-0"><StyledFormLabel>Bid amount</StyledFormLabel><StyledFormInput><StyledFormControl type="number" step="0.01" placeholder="0" aria-label="Bid amount" data-test="bid-amount-input" /><StyledInputGroupText>KSM</StyledInputGroupText></StyledFormInput></Form.Group><Button disabled={loading} variant="primary" type="submit" className="w-100 mt-0 mt-lg-3 child align-self-end" data-test="submit-bid-button">{loading ? <Spinner size="sm" animation="border" /> : 'Submit'}</Button></Form><hr /><div className="align-self-center" data-test="society-pot-value"><h6>POT: <FormatBalance balance={potState.data?.value} /></h6></div><hr /><div className="align-self-center"><CurrentRound /></div></Tab.Pane>
-    <Tab.Pane eventKey="vouch"><Form onSubmit={handleVouchSubmit}><Form.Group className="mb-3"><StyledFormLabel>Vouch for</StyledFormLabel><StyledFormInput className="mb-3"><StyledFormControl type="text" placeholder="Address to vouch for" aria-label="Address" data-test="vouch-address-input" /></StyledFormInput></Form.Group><Form.Group className="mb-3"><StyledFormLabel>Bid amount</StyledFormLabel><StyledFormInput className="mb-3"><StyledFormControl type="number" step="0.01" placeholder="0" aria-label="Bid amount" data-test="vouch-amount-input" /><StyledInputGroupText>KSM</StyledInputGroupText></StyledFormInput></Form.Group><Form.Group className="mb-3"><StyledFormLabel>Tip amount</StyledFormLabel><StyledFormInput className="mb-3"><StyledFormControl type="number" step="0.01" placeholder="0" aria-label="Tip amount" data-test="vouch-tip-input" /><StyledInputGroupText>KSM</StyledInputGroupText></StyledFormInput></Form.Group><Button disabled={loading} variant="primary" type="submit" className="w-100" data-test="submit-vouch-button">{loading ? <Spinner size="sm" animation="border" /> : 'Submit'}</Button><StyledButtonLabel className="text-muted">*Plus 0.0045 KSM fee</StyledButtonLabel></Form><hr /><div className="align-self-center"><CurrentRound /></div></Tab.Pane>
-  </StyledTabContent></Tab.Container>
+  return (
+    <Tab.Container defaultActiveKey="bid">
+      <StyledNav variant="tabs">
+        <Nav.Item>
+          <Nav.Link eventKey="bid" data-test="bid-tab">
+            Place Bid
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="vouch" data-test="vouch-tab">
+            Vouch
+          </Nav.Link>
+        </Nav.Item>
+      </StyledNav>
+      <StyledTabContent>
+        <Tab.Pane eventKey="bid">
+          <Form onSubmit={handleBidSubmit} className="d-flex flex-lg-column flex-row align-items-center parent">
+            <Form.Group className="me-3 me-lg-0">
+              <StyledFormLabel>Bid amount</StyledFormLabel>
+              <StyledFormInput>
+                <StyledFormControl
+                  type="number"
+                  step="0.01"
+                  placeholder="0"
+                  aria-label="Bid amount"
+                  data-test="bid-amount-input"
+                />
+                <StyledInputGroupText>KSM</StyledInputGroupText>
+              </StyledFormInput>
+            </Form.Group>
+            <Button
+              disabled={loading}
+              variant="primary"
+              type="submit"
+              className="w-100 mt-0 mt-lg-3 child align-self-end"
+              data-test="submit-bid-button"
+            >
+              {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
+            </Button>
+          </Form>
+          <hr />
+          <div className="align-self-center" data-test="society-pot-value">
+            <h6>
+              POT: <FormatBalance balance={potState.data?.value} />
+            </h6>
+          </div>
+          <hr />
+          <div className="align-self-center">
+            <CurrentRound />
+          </div>
+        </Tab.Pane>
+        <Tab.Pane eventKey="vouch">
+          <Form onSubmit={handleVouchSubmit}>
+            <Form.Group className="mb-3">
+              <StyledFormLabel>Vouch for</StyledFormLabel>
+              <StyledFormInput className="mb-3">
+                <StyledFormControl
+                  type="text"
+                  placeholder="Address to vouch for"
+                  aria-label="Address"
+                  data-test="vouch-address-input"
+                />
+              </StyledFormInput>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <StyledFormLabel>Bid amount</StyledFormLabel>
+              <StyledFormInput className="mb-3">
+                <StyledFormControl
+                  type="number"
+                  step="0.01"
+                  placeholder="0"
+                  aria-label="Bid amount"
+                  data-test="vouch-amount-input"
+                />
+                <StyledInputGroupText>KSM</StyledInputGroupText>
+              </StyledFormInput>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <StyledFormLabel>Tip amount</StyledFormLabel>
+              <StyledFormInput className="mb-3">
+                <StyledFormControl
+                  type="number"
+                  step="0.01"
+                  placeholder="0"
+                  aria-label="Tip amount"
+                  data-test="vouch-tip-input"
+                />
+                <StyledInputGroupText>KSM</StyledInputGroupText>
+              </StyledFormInput>
+            </Form.Group>
+            <Button
+              disabled={loading}
+              variant="primary"
+              type="submit"
+              className="w-100"
+              data-test="submit-vouch-button"
+            >
+              {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
+            </Button>
+            <StyledButtonLabel className="text-muted">*Plus 0.0045 KSM fee</StyledButtonLabel>
+          </Form>
+          <hr />
+          <div className="align-self-center">
+            <CurrentRound />
+          </div>
+        </Tab.Pane>
+      </StyledTabContent>
+    </Tab.Container>
+  )
 }
 
-const StyledFormLabel = styled(Form.Label)`color: #6c757d;`
-const StyledFormControl = styled(FormControl)`border-color: #495057 transparent #495057 #495057; background-color: black; color: #6c757d; :focus { border-color: #495057 transparent #495057 #495057; background-color: black; color: #6c757d; }`
-const StyledButtonLabel = styled(Form.Text)`font-style: italic; font-size: 12px;`
-const StyledInputGroupText = styled(InputGroup.Text)`border-color: #495057 #495057 #495057 transparent; background-color: black; color: #6c757d;`
-const StyledFormInput = styled(InputGroup)`input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; } input[type='number'] { -moz-appearance: textfield; }`
-const StyledNav = styled(Nav)`border-top-right-radius: 6px; border-top-left-radius: 6px; border: none; .nav-link { color: #01ffff; border: none; } .nav-link.active { color: white; background-color: #343a40; }`
-const StyledTabContent = styled(Tab.Content)`border-bottom-right-radius: 6px; border-bottom-left-radius: 6px; background-color: #343a40; padding: 10% 7%; @media (max-width: 992px) { padding: 3% 3%; }`
+const StyledFormLabel = styled(Form.Label)`
+  color: #6c757d;
+`
+const StyledFormControl = styled(FormControl)`
+  border-color: #495057 transparent #495057 #495057;
+  background-color: black;
+  color: #6c757d;
+  :focus {
+    border-color: #495057 transparent #495057 #495057;
+    background-color: black;
+    color: #6c757d;
+  }
+`
+const StyledButtonLabel = styled(Form.Text)`
+  font-style: italic;
+  font-size: 12px;
+`
+const StyledInputGroupText = styled(InputGroup.Text)`
+  border-color: #495057 #495057 #495057 transparent;
+  background-color: black;
+  color: #6c757d;
+`
+const StyledFormInput = styled(InputGroup)`
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+`
+const StyledNav = styled(Nav)`
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  border: none;
+  .nav-link {
+    color: #01ffff;
+    border: none;
+  }
+  .nav-link.active {
+    color: white;
+    background-color: #343a40;
+  }
+`
+const StyledTabContent = styled(Tab.Content)`
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  background-color: #343a40;
+  padding: 10% 7%;
+  @media (max-width: 992px) {
+    padding: 3% 3%;
+  }
+`
 
 export { BidVouch }

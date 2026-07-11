@@ -21,7 +21,7 @@ const sortSocietyMembersArray = (a: SocietyMember, b: SocietyMember): number => 
   if (a.isSkeptic !== b.isSkeptic) return a.isSkeptic ? -1 : 1
   if (a.isHead !== b.isHead) return a.isHead ? -1 : 1
   if (a.isFounder !== b.isFounder) return a.isFounder ? -1 : 1
-  if ((a.rank > 0) !== (b.rank > 0)) return a.rank > 0 ? -1 : 1
+  if (a.rank > 0 !== b.rank > 0) return a.rank > 0 ? -1 : 1
   if (a.isDefenderVoter !== b.isDefenderVoter) return a.isDefenderVoter ? -1 : 1
   return 0
 }
@@ -55,10 +55,7 @@ export function buildSocietyMembersArray(
     .sort(sortSocietyMembersArray)
 }
 
-export async function getSocietyMembersWithInfo(
-  api: AssetHubApi,
-  graceStrikes: number
-): Promise<SocietyMember[]> {
+export async function getSocietyMembersWithInfo(api: AssetHubApi, graceStrikes: number): Promise<SocietyMember[]> {
   const [info, members] = await Promise.all([getSocietyInfo(api), getSocietyMembers(api)])
   return buildSocietyMembersArray(members, info, graceStrikes)
 }
@@ -87,6 +84,10 @@ export async function getSocietyMembersWithPayouts(
     .sort((a, b) => {
       const blockA = a.extendedPayouts.block === 0 ? Number.MAX_SAFE_INTEGER : a.extendedPayouts.block
       const blockB = b.extendedPayouts.block === 0 ? Number.MAX_SAFE_INTEGER : b.extendedPayouts.block
-      return blockA - blockB || Number(b.extendedPayouts.pending - a.extendedPayouts.pending) || Number(b.extendedPayouts.paid - a.extendedPayouts.paid)
+      return (
+        blockA - blockB ||
+        Number(b.extendedPayouts.pending - a.extendedPayouts.pending) ||
+        Number(b.extendedPayouts.paid - a.extendedPayouts.paid)
+      )
     })
 }

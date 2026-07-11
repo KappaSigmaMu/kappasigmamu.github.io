@@ -145,7 +145,7 @@
     "cy:run:headless": "cypress run --headless",
     "deploy": "gh-pages -d build",
     "eslint:fix": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\" --fix",
-    "eslint": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\"",
+    "eslint": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn eslint:fix",
     "lint": "yarn eslint",
     "start": "node scripts/start.js",

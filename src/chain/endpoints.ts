@@ -14,4 +14,5 @@ export const assetHubEndpoints = (): string[] =>
 export const peopleEndpoints = (): string[] =>
   getPeopleProviderEndpoints(getQueryParam('peopleRpc'), process.env.REACT_APP_PEOPLE_PROVIDER_SOCKET)
 
-export const endpointsFor = (chain: ChainName): string[] => (chain === 'assetHub' ? assetHubEndpoints() : peopleEndpoints())
+export const endpointsFor = (chain: ChainName): string[] =>
+  chain === 'assetHub' ? assetHubEndpoints() : peopleEndpoints()

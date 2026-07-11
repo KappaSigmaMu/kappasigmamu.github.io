@@ -10,7 +10,11 @@ export const KSM_TOKEN = 'KSM'
 export const ASSET_HUB_BLOCK_TIME = 12_000
 export const RELAY_CHAIN_BLOCK_TIME = 6_000
 
-export function formatBalance(value: bigint | number | string | undefined, withCurrency = true, isShort = false): string {
+export function formatBalance(
+  value: bigint | number | string | undefined,
+  withCurrency = true,
+  isShort = false
+): string {
   if (value === undefined || value === null) return withCurrency ? `0 ${KSM_TOKEN}` : '0'
 
   const raw = typeof value === 'bigint' ? value : BigInt(value)

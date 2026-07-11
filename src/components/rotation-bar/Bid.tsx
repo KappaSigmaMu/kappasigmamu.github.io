@@ -12,7 +12,25 @@ const Bid = () => {
   const { data: bids } = useChainQuery(() => (api ? getSocietyBids(api) : undefined), [api])
   const bid = bids?.find((item) => isSameAddress(item.who, activeAccount?.address))
 
-  return <><Row className="mb-3"><Col><h4>My Bid</h4></Col></Row><Row className="mb-3"><Col><FormatBalance balance={bid?.value} /></Col></Row><Row><Col><Button>Update</Button></Col></Row></>
+  return (
+    <>
+      <Row className="mb-3">
+        <Col>
+          <h4>My Bid</h4>
+        </Col>
+      </Row>
+      <Row className="mb-3">
+        <Col>
+          <FormatBalance balance={bid?.value} />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Button>Update</Button>
+        </Col>
+      </Row>
+    </>
+  )
 }
 
 export { Bid }

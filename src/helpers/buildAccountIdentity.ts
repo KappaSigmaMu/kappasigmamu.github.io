@@ -11,19 +11,22 @@ type LegacyIdentity = {
   judgements?: unknown[]
 }
 
-export function buildAccountIdentity(identity: Identity | LegacyIdentity | null | undefined): AccountIdentity | undefined {
+export function buildAccountIdentity(
+  identity: Identity | LegacyIdentity | null | undefined
+): AccountIdentity | undefined {
   if (!identity) return undefined
 
-  const value = 'info' in identity
-    ? {
-        display: identity.info.display,
-        email: identity.info.email,
-        legal: identity.info.legal,
-        web: identity.info.web,
-        riot: identity.info.matrix,
-        twitter: identity.info.twitter
-      }
-    : identity
+  const value =
+    'info' in identity
+      ? {
+          display: identity.info.display,
+          email: identity.info.email,
+          legal: identity.info.legal,
+          web: identity.info.web,
+          riot: identity.info.matrix,
+          twitter: identity.info.twitter
+        }
+      : identity
 
   if (!value.display) return undefined
 

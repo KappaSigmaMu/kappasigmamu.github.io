@@ -14,7 +14,10 @@ const society = (api: AssetHubApi) => api.query.Society
 
 export const getSocietyBids = (api: AssetHubApi): Promise<SocietyBid[]> => society(api).Bids.getValue()
 
-export async function getAccountLevel(api: AssetHubApi, address: string): Promise<'human' | 'bidder' | 'candidate' | 'cyborg'> {
+export async function getAccountLevel(
+  api: AssetHubApi,
+  address: string
+): Promise<'human' | 'bidder' | 'candidate' | 'cyborg'> {
   const [bids, candidates, members] = await Promise.all([
     getSocietyBids(api),
     getSocietyCandidates(api),
@@ -38,9 +41,9 @@ export const getSocietyCandidates = async (
 export const getSocietyMembersEntries = (
   api: AssetHubApi
 ): Promise<Array<{ accountId: AccountId; member: SocietyMemberRecord }>> =>
-  society(api).Members.getEntries().then((entries) =>
-    entries.map(({ keyArgs: [accountId], value: member }) => ({ accountId, member }))
-  )
+  society(api)
+    .Members.getEntries()
+    .then((entries) => entries.map(({ keyArgs: [accountId], value: member }) => ({ accountId, member })))
 
 export const getSocietySuspendedMembers = (api: AssetHubApi): Promise<AccountId[]> =>
   society(api)
