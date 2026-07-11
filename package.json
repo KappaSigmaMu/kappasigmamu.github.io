@@ -2,26 +2,13 @@
   "name": "ksm-app",
   "version": "2.0.1",
   "homepage": "https://KappaSigmaMu.github.io/",
-  "types": "src/types.d.ts",
   "engines": {
     "node": ">=24"
   },
   "dependencies": {
-    "@polkadot/api": "^16.5.6",
-    "@polkadot/api-derive": "^16.5.6",
-    "@polkadot/extension-dapp": "^0.63.1",
-    "@polkadot/extension-inject": "^0.63.1",
-    "@polkadot/keyring": "^14.0.3",
-    "@polkadot/networks": "^14.0.3",
+    "@polkadot-api/descriptors": "portal:.papi/descriptors",
+    "@polkadot-api/sdk-accounts": "^0.7.0",
     "@polkadot/react-identicon": "^3.16.7",
-    "@polkadot/rpc-core": "^16.5.6",
-    "@polkadot/types": "^16.5.6",
-    "@polkadot/types-augment": "^16.5.6",
-    "@polkadot/types-support": "^16.5.6",
-    "@polkadot/ui-keyring": "^3.16.7",
-    "@polkadot/ui-settings": "^3.16.7",
-    "@polkadot/util": "^14.0.3",
-    "@polkadot/util-crypto": "^14.0.3",
     "@popperjs/core": "^2.11.8",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
@@ -40,6 +27,7 @@
     "identity-obj-proxy": "^3.0.0",
     "marked": "^18.0.5",
     "mini-css-extract-plugin": "^2.10.2",
+    "polkadot-api": "^2.1.8",
     "postcss": "^8.5.16",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^8.2.1",
@@ -115,6 +103,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "cypress": "^15.18.0",
+    "esbuild": "^0.25.0",
     "eslint": "^9.39.4",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-flowtype": "^8.0.3",
@@ -136,6 +125,7 @@
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "pnp-webpack-plugin": "^1.7.0",
     "react-test-renderer": "^19.2.7",
+    "rxjs": "^7.8.2",
     "start-server-and-test": "^3.0.11",
     "terser-webpack-plugin": "^5.6.1",
     "webpack": "^5.108.3",
@@ -145,8 +135,7 @@
   },
   "resolutions": {
     "@babel/core": "^8.0.0",
-    "lodash.pick@>=3.7.0 <4.17.19": "https://github.com/lodash/lodash/archive/f299b52f39486275a9e6483b60a410e06520c538.tar.gz",
-    "@polkadot/types-codec": "16.5.6"
+    "lodash.pick@>=3.7.0 <4.17.19": "https://github.com/lodash/lodash/archive/f299b52f39486275a9e6483b60a410e06520c538.tar.gz"
   },
   "scripts": {
     "build": "node scripts/build.js",
@@ -193,5 +182,6 @@
     "not dead",
     "not op_mini all"
   ],
-  "packageManager": "yarn@4.17.0"
+  "packageManager": "yarn@4.17.0",
+  "postinstall": "papi"
 }

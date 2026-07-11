@@ -1,17 +1,17 @@
-import { decodeAddress, encodeAddress } from '@polkadot/util-crypto'
 import { Wallet as WalletType, WalletAccount } from '@talismn/connect-wallets'
 import { useEffect, useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
 import { FaChevronLeft, FaChevronRight, FaCircleCheck, FaDownload, FaPowerOff, FaXmark } from 'react-icons/fa6'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
+import { normalizeAddress } from '../chain/ss58'
 import { walletTestId } from '../helpers/test-utils/testIds'
 import { wallets } from '../helpers/wallets'
 import { Identicon } from '../pages/explore/components/Identicon'
 import { toastByStatus } from '../pages/explore/helpers'
 
 const APP_NAME = process.env.REACT_APP_NAME
-const KUSAMA_PREFIX = Number(process.env.REACT_APP_KEYRING_PREFIX)
+const KUSAMA_PREFIX = Number(process.env.REACT_APP_KEYRING_PREFIX ?? 2)
 
 function isSubstrateAccount(account: WalletAccount & { type?: string }): boolean {
   return account.type !== 'ethereum'
@@ -22,7 +22,7 @@ function mapWalletAccounts(accounts: WalletAccount[]): WalletAccount[] {
     .filter(isSubstrateAccount)
     .map((account) => ({
       ...account,
-      address: encodeAddress(decodeAddress(account.address), KUSAMA_PREFIX)
+      address: normalizeAddress(account.address, KUSAMA_PREFIX)
     }))
 }
 
@@ -176,7 +176,7 @@ async function selectWallet(wallet: WalletType, setSelectedWallet: (wallet: Wall
   }
 
   try {
-    await wallet.enable(APP_NAME)
+    await wallet.enable(APP_NAME ?? 'Kappa Sigma Mu')
     setSelectedWallet(wallet)
   } catch (e) {
     toastByStatus['error']((e as Error).message, {})

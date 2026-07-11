@@ -1,23 +1,10 @@
-import { ApiPromise } from '@polkadot/api'
-import { AccountId } from '@polkadot/types/interfaces'
-import '@polkadot/api-augment/substrate'
+import type { PeopleApi, AssetHubApi } from '../../../../chain/client'
+import { getAccountIndex } from '../../../../chain/indices'
+import { getIdentity } from '../../../../chain/people/identity'
+import type { AccountId, SocietyMemberDetails } from '../../../../chain/types'
 import { buildAccountIdentity } from '../../../../helpers/buildAccountIdentity'
 
-export async function fetchMemberDetails(
-  api: ApiPromise,
-  peopleApi: ApiPromise | null,
-  accountId: AccountId
-): Promise<SocietyMemberDetails> {
-  const accountInfo = await api.derive.accounts.info(accountId)
-
-  let identity: AccountIdentity | undefined
-  if (peopleApi) {
-    const registration = await peopleApi.derive.accounts.identity(accountId)
-    identity = buildAccountIdentity(registration)
-  }
-
-  const rawIndex = accountInfo?.accountIndex
-  const index = rawIndex ? api.registry.createType('AccountIndex', rawIndex.toNumber()).toString() : undefined
-
-  return { accountId, identity, index }
+export async function fetchMemberDetails(api: AssetHubApi, peopleApi: PeopleApi | null, accountId: AccountId): Promise<SocietyMemberDetails> {
+  const [index, identity] = await Promise.all([getAccountIndex(api, accountId), peopleApi ? getIdentity(peopleApi, accountId) : Promise.resolve(null)])
+  return { accountId, identity: buildAccountIdentity(identity), index }
 }

@@ -1,17 +1,10 @@
-import type { BlockNumber } from '@polkadot/types/interfaces'
-import { formatNumber } from '@polkadot/util'
 import { useBlockTime } from '../hooks/useBlockTime'
-import { useKusama } from '../kusama'
 
-const BlockTime = ({ block }: { block: BlockNumber }) => {
-  const { api } = useKusama()
-  const [, time] = useBlockTime(block, api)
-
+const BlockTime = ({ block }: { block: number | bigint }) => {
+  const [, time] = useBlockTime(block)
   return (
     <>
-      <span>{time}</span>
-      &nbsp;
-      <span>(#{formatNumber(block)})</span>
+      <span>{time}</span>&nbsp;<span>(#{block.toString()})</span>
     </>
   )
 }

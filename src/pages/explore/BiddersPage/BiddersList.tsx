@@ -1,166 +1,69 @@
-import { ApiPromise } from '@polkadot/api'
-import { WalletAccount } from '@talismn/connect-wallets'
+import type { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
-import { Col, Badge } from 'react-bootstrap'
+import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
-import { unbid, unvouch } from './helper'
+import { useAccount } from '../../../account/AccountContext'
+import { useAssetHub } from '../../../chain/ChainProvider'
+import { submitTx } from '../../../chain/society/tx'
+import { isSameAddress } from '../../../chain/ss58'
+import type { ExtrinsicResult } from '../../../chain/types'
 import { AccountIdentity } from '../../../components/AccountIdentity'
 import { DataHeaderRow, DataRow } from '../../../components/base'
 import { FormatBalance } from '../../../components/FormatBalance'
 import { humanizeBidKindType, type BidRow as DisplayBidRow } from '../../../helpers/bidKind'
 import { Identicon } from '../components/Identicon'
 
-type Props = {
-  api: ApiPromise
-  bids: DisplayBidRow[]
-  activeAccount: WalletAccount | undefined
-  handleResult: any
-}
+type Props = { bids: DisplayBidRow[]; activeAccount: WalletAccount | undefined; handleResult: (result: ExtrinsicResult) => void }
 
-type OnStatusChangeProps = { loading: boolean; message: string; status: string }
-
-// TODO: move this to a `components` directory to follow the convention of other pages
-const BiddersList = ({ api, bids, activeAccount, handleResult }: Props): JSX.Element => {
+const BiddersList = ({ bids, activeAccount, handleResult }: Props): JSX.Element => {
+  const { api } = useAssetHub()
+  const { polkadotSigner } = useAccount()
   const [loading, setLoading] = useState(false)
 
-  const isBidder = (bid: DisplayBidRow) => activeAccount?.address === bid.who.toString()
-
-  const isVoucher = (bid: DisplayBidRow) => {
-    if (!activeAccount || bid.kindType !== 'Vouch' || !bid.vouchAccount) {
-      return false
-    }
-
-    return activeAccount.address === bid.vouchAccount
-  }
-
-  const onStatusChange = ({ loading, message, status }: OnStatusChangeProps) => {
-    setLoading(loading)
+  const onStatusChange = ({ loading: nextLoading, message, status }: ExtrinsicResult) => {
+    setLoading(Boolean(nextLoading))
     handleResult({ message, status })
   }
 
   const handleUnbid = () => {
-    const tx = api.tx.society.unbid()
-    unbid(api, tx, activeAccount, onStatusChange)
+    if (!api) return
+    void submitTx(api.tx.Society.unbid(), polkadotSigner, {
+      finalizedText: 'Bid removed successfully. You became Human again.',
+      onStatusChange
+    })
   }
 
   const handleUnvouch = () => {
-    const tx = api.tx.society.unvouch()
-    unvouch(api, tx, activeAccount, onStatusChange)
+    if (!api) return
+    void submitTx(api.tx.Society.unvouch(), polkadotSigner, {
+      finalizedText: 'Vouch removed successfully.',
+      onStatusChange
+    })
   }
 
-  const ownerActions = (bid: DisplayBidRow) => {
-    let pillText, handleUndo: any, badgeText
-
-    let testId
-    if (bid.kindType === 'Deposit' && isBidder(bid)) {
-      pillText = 'My bid'
-      handleUndo = handleUnbid
-      badgeText = 'UNBID'
-      testId = 'unbid-button'
-    } else if (bid.kindType === 'Vouch' && isVoucher(bid)) {
-      pillText = 'My vouch'
-      handleUndo = handleUnvouch
-      badgeText = 'UNVOUCH'
-      testId = 'unvouch-button'
-    }
-
-    return { pillText, handleUndo, badgeText, testId }
-  }
-
-  const BidVouchIdentifier = ({ bid, index }: { bid: DisplayBidRow; index: number }) => {
-    const { pillText, badgeText, handleUndo, testId } = ownerActions(bid)
-
-    return (
-      <>
-        <Col lg={2} className="text-center text-lg-start text-truncate">
-          {<FormatBalance balance={bid.value} />}
-        </Col>
-        <Col lg={2} className="text-center text-lg-start text-truncate">
-          {bid.kindType === 'Vouch' && bid.vouchTip ? <FormatBalance balance={bid.vouchTip} /> : null}
-        </Col>
-        <Col lg={2} className="text-center text-lg-start">
-          {badgeText && (
-            <>
-              <StyledUndo $disabled={loading} onClick={() => handleUndo(index)} href="#" data-test={testId}>
-                {badgeText}
-              </StyledUndo>
-              <Badge pill bg="primary">
-                {pillText}
-              </Badge>
-            </>
-          )}
-        </Col>
-      </>
-    )
-  }
-
-  const isOwner = (bid: DisplayBidRow) => {
-    if (bid.kindType === 'Deposit') {
-      return isBidder(bid)
-    }
-
-    if (bid.kindType === 'Vouch') {
-      return isVoucher(bid)
-    }
-  }
+  const isBidder = (bid: DisplayBidRow) => isSameAddress(activeAccount?.address, bid.who)
+  const isVoucher = (bid: DisplayBidRow) => Boolean(activeAccount && bid.kindType === 'Vouch' && bid.vouchAccount && isSameAddress(activeAccount.address, bid.vouchAccount))
 
   if (bids.length === 0) return <>No bids</>
 
-  return (
-    <div data-test="bidders-list">
-      <DataHeaderRow className="d-none d-lg-flex text-center">
-        <Col lg={1}>#</Col>
-        <Col lg={3} className="text-center text-lg-start">
-          Wallet Hash
-        </Col>
-        <Col lg={2} className="text-center text-lg-start">
-          Bid Kind
-        </Col>
-        <Col lg={2} className="text-center text-lg-start">
-          Value
-        </Col>
-        <Col lg={2} className="text-center text-lg-start">
-          Tip
-        </Col>
-      </DataHeaderRow>
-
-      {bids.map((bid: DisplayBidRow, index: any) => (
-        <StyledDataRow $isOwner={isOwner(bid)} key={bid.who?.toString()} data-test={`bid-row-${bid.who?.toString()}`}>
-          <Col lg={1} className="text-center">
-            <Identicon value={bid.who.toHuman()} size={32} theme={'polkadot'} />
-          </Col>
-          <Col lg={3} className="text-center text-lg-start text-truncate">
-            <AccountIdentity accountId={bid.who} />
-          </Col>
-          <Col lg={2} className="text-center text-lg-start text-truncate">
-            {humanizeBidKindType(bid.kindType, bid.vouchAccount)}
-          </Col>
-          <BidVouchIdentifier bid={bid} index={index} />
-        </StyledDataRow>
-      ))}
-    </div>
-  )
+  return <div data-test="bidders-list">
+    <DataHeaderRow className="d-none d-lg-flex text-center"><Col lg={1}>#</Col><Col lg={3} className="text-center text-lg-start">Wallet Hash</Col><Col lg={2} className="text-center text-lg-start">Bid Kind</Col><Col lg={2} className="text-center text-lg-start">Value</Col><Col lg={2} className="text-center text-lg-start">Tip</Col></DataHeaderRow>
+    {bids.map((bid) => {
+      const owner = bid.kindType === 'Deposit' ? isBidder(bid) : isVoucher(bid)
+      const canUndo = bid.kindType === 'Deposit' ? isBidder(bid) : isVoucher(bid)
+      return <StyledDataRow $isOwner={owner} key={bid.who} data-test={`bid-row-${bid.who}`}>
+        <Col lg={1} className="text-center"><Identicon value={bid.who} size={32} theme="polkadot" /></Col>
+        <Col lg={3} className="text-center text-lg-start text-truncate"><AccountIdentity accountId={bid.who} /></Col>
+        <Col lg={2} className="text-center text-lg-start text-truncate">{humanizeBidKindType(bid.kindType, bid.vouchAccount)}</Col>
+        <Col lg={2} className="text-center text-lg-start text-truncate"><FormatBalance balance={bid.value} /></Col>
+        <Col lg={2} className="text-center text-lg-start text-truncate">{bid.kindType === 'Vouch' && bid.vouchTip ? <FormatBalance balance={bid.vouchTip} /> : null}</Col>
+        <Col lg={2} className="text-center text-lg-start">{canUndo && <><StyledUndo $disabled={loading} onClick={(event) => { event.preventDefault(); bid.kindType === 'Deposit' ? handleUnbid() : handleUnvouch() }} href="#" data-test={bid.kindType === 'Deposit' ? 'unbid-button' : 'unvouch-button'}>{bid.kindType === 'Deposit' ? 'UNBID' : 'UNVOUCH'}</StyledUndo><Badge pill bg="primary">{bid.kindType === 'Deposit' ? 'My bid' : 'My vouch'}</Badge></>}</Col>
+      </StyledDataRow>
+    })}
+  </div>
 }
 
-const StyledDataRow = styled(DataRow)`
-  background-color: ${(props) => (props.$isOwner ? '#73003d' : '')};
-  border: ${(props) => (props.$isOwner ? '2px solid #E6007A' : '')};
-  @media (max-width: 992px) {
-    padding-block: 12px;
-    margin-inline: 2px;
-  }
-`
-
-type PropsUnbid = {
-  $disabled: boolean
-}
-
-const StyledUndo = styled.a<PropsUnbid>`
-  color: ${(props) => (props.$disabled ? 'grey' : '#E6007A')};
-  margin-right: 3%;
-  font-weight: 800;
-  font-size: 13px;
-  pointer-events: ${(props) => (props.$disabled ? 'none' : '')};
-`
+const StyledDataRow = styled(DataRow)`background-color: ${(props) => (props.$isOwner ? '#73003d' : '')}; border: ${(props) => (props.$isOwner ? '2px solid #E6007A' : '')}; @media (max-width: 992px) { padding-block: 12px; margin-inline: 2px; }`
+const StyledUndo = styled.a<{ $disabled: boolean }>`color: ${(props) => (props.$disabled ? 'grey' : '#E6007A')}; margin-right: 3%; font-weight: 800; font-size: 13px; pointer-events: ${(props) => (props.$disabled ? 'none' : '')};`
 
 export { BiddersList }

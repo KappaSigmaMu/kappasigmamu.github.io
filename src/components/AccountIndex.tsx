@@ -1,27 +1,25 @@
-import type { ApiPromise } from '@polkadot/api'
-import type { AccountId, AccountIndex as PAccountIndex } from '@polkadot/types/interfaces'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useAssetHub } from '../chain/ChainProvider'
+import { useChainQuery } from '../chain/hooks'
+import { getAccountIndex } from '../chain/indices'
+import type { AccountId } from '../chain/types'
 
 const AccountIndex = ({
   accountId,
-  api,
-  callback
+  callback,
+  api: _api
 }: {
-  accountId: AccountId
-  api: ApiPromise
+  accountId: AccountId | string
   callback?: (data: string) => void
+  api?: unknown
 }) => {
-  const [index, setIndex] = useState<string>('')
+  const { api } = useAssetHub()
+  const state = useChainQuery(() => (api ? getAccountIndex(api, accountId as AccountId) : undefined), [api, accountId])
+  const index = state.data ?? ''
 
   useEffect(() => {
-    api.derive.accounts.idToIndex(accountId, (accountIndex: PAccountIndex) => {
-      if (accountIndex) {
-        const index = api.registry.createType('AccountIndex', accountIndex.toNumber()).toString()
-        setIndex(index)
-        if (callback) callback(index)
-      }
-    })
-  }, [])
+    if (index) callback?.(index)
+  }, [callback, index])
 
   return <>{index}</>
 }

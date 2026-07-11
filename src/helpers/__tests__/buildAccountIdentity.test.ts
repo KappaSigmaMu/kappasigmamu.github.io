@@ -1,4 +1,3 @@
-import type { DeriveAccountRegistration } from '@polkadot/api-derive/types'
 import { buildAccountIdentity } from '../buildAccountIdentity'
 
 describe('buildAccountIdentity', () => {
@@ -13,7 +12,7 @@ describe('buildAccountIdentity', () => {
   })
 
   it('maps derive registration fields to account identity', () => {
-    const registration: DeriveAccountRegistration = {
+    const registration = {
       display: 'Alice',
       email: 'alice@example.com',
       legal: 'Alice Example',

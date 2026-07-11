@@ -1,34 +1,15 @@
-import type { DeriveAccountRegistration } from '@polkadot/api-derive/types'
-import type { AccountId } from '@polkadot/types/interfaces'
-import { useEffect, useState } from 'react'
-import { usePeople, PeopleApiState } from '../people/PeopleContext'
+import type { Identity } from '@polkadot-api/sdk-accounts'
+import { usePeople, ChainState } from '../chain/ChainProvider'
+import { useChainQuery } from '../chain/hooks'
+import { getIdentity } from '../chain/people/identity'
+import type { AccountId } from '../chain/types'
 
-export function useAccountIdentity(accountId: AccountId | string): DeriveAccountRegistration | null {
-  const { peopleApi, peopleApiState } = usePeople()
-  const [identity, setIdentity] = useState<DeriveAccountRegistration | null>(null)
+export function useAccountIdentity(accountId: AccountId | string): Identity | null {
+  const { api, state } = usePeople()
+  const identity = useChainQuery(
+    () => (api && state === ChainState.ready && accountId ? getIdentity(api, accountId as AccountId) : undefined),
+    [api, state, accountId]
+  )
 
-  useEffect(() => {
-    if (!peopleApi || peopleApiState !== PeopleApiState.ready || !accountId) return
-
-    let cancelled = false
-    let unsubscribe: (() => void) | undefined
-
-    const subscribe = async () => {
-      const unsub = await peopleApi.derive.accounts.identity(accountId, (value) => {
-        if (!cancelled) setIdentity(value)
-      })
-
-      if (cancelled) unsub()
-      else unsubscribe = unsub
-    }
-
-    subscribe()
-
-    return () => {
-      cancelled = true
-      unsubscribe?.()
-    }
-  }, [peopleApi, peopleApiState, accountId])
-
-  return identity
+  return identity.data ?? null
 }

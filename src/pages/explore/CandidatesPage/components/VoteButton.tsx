@@ -1,15 +1,16 @@
-import { ApiPromise } from '@polkadot/api'
-import { AccountId } from '@polkadot/types/interfaces'
-import { WalletAccount } from '@talismn/connect-wallets'
+import { MultiAddress } from '@polkadot-api/descriptors'
+import type { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'
+import { useAccount } from '../../../../account/AccountContext'
+import { useAssetHub } from '../../../../chain/ChainProvider'
+import { submitTx, type StatusChangeHandler } from '../../../../chain/society/tx'
+import type { AccountId, ExtrinsicResult } from '../../../../chain/types'
 import { IconButton } from '../../../../components/IconButton'
-import { doTx, StatusChangeHandler } from '../../../../helpers/extrinsics'
 
 type VoteButtonProps = {
-  api: ApiPromise
   vote: Vote
-  showMessage: (args: ExtrinsicResult) => any
+  showMessage: (args: ExtrinsicResult) => void
   icon: string
   handleUpdate: () => void
   successText: string
@@ -23,36 +24,25 @@ export interface Vote {
   type: string
 }
 
-export function VoteButton({
-  api,
-  vote,
-  disabled,
-  showMessage,
-  icon,
-  handleUpdate,
-  successText,
-  waitingText,
-  ...buttonProps
-}: VoteButtonProps) {
+export function VoteButton({ vote, disabled, showMessage, icon, handleUpdate, successText, waitingText, ...buttonProps }: VoteButtonProps) {
+  const { api } = useAssetHub()
+  const { polkadotSigner } = useAccount()
   const [loading, setLoading] = useState(false)
-
-  const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
-    loading !== undefined && setLoading(loading)
+  const onStatusChange: StatusChangeHandler = ({ loading: nextLoading, message, status }) => {
+    setLoading(Boolean(nextLoading))
     showMessage({ status, message })
     handleUpdate()
   }
 
-  const extrinsic =
-    vote.type === 'candidate'
-      ? api.tx.society.vote(vote.accountId, vote.approve)
-      : api.tx.society.defenderVote(vote.approve)
-
   const handleVote = async () => {
-    setLoading(true)
+    if (!api) return
+    const tx = vote.type === 'candidate'
+      ? api.tx.Society.vote({ candidate: MultiAddress.Id(vote.accountId), approve: vote.approve })
+      : api.tx.Society.defender_vote({ approve: vote.approve })
     try {
-      await doTx(api, extrinsic, successText, waitingText, vote.voterAccount, onStatusChange)
-    } catch (e) {
-      console.error(e)
+      await submitTx(tx, polkadotSigner, { finalizedText: successText, waitingText, onStatusChange })
+    } catch (error) {
+      console.error(error)
     }
   }
 

@@ -1,24 +1,14 @@
-import { ApiPromise } from '@polkadot/api'
-import { AccountId } from '@polkadot/types/interfaces'
-import { useEffect, useState } from 'react'
 import { SuspendedList } from './components/SuspendedList'
-import { extractAccountIds } from './helpers/data-extraction'
+import { useAssetHub } from '../../../chain/ChainProvider'
+import { useChainQuery } from '../../../chain/hooks'
+import { getSocietySuspendedMembers } from '../../../chain/society/queries'
+import { ChainError } from '../components/ChainError'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 
-type SuspendedPageProps = {
-  api: ApiPromise | null
-}
-
-const SuspendedPage = ({ api }: SuspendedPageProps): JSX.Element => {
-  const society = api?.query?.society
-
-  const [members, setMembers] = useState<AccountId[] | null>(null)
-
-  useEffect(() => {
-    society?.suspendedMembers.keys().then(extractAccountIds).then(setMembers)
-  }, [society])
-
-  return members === null ? <LoadingSpinner /> : <SuspendedList members={members!} />
+const SuspendedPage = (): JSX.Element => {
+  const { api } = useAssetHub(); const state = useChainQuery(() => api ? getSocietySuspendedMembers(api) : undefined, [api])
+  if (state.error) return <ChainError error={state.error} onRetry={state.refetch} />
+  return state.data ? <SuspendedList members={state.data} /> : <LoadingSpinner />
 }
 
 export { SuspendedPage }

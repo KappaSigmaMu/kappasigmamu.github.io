@@ -1,25 +1,15 @@
-import type { AccountId } from '@polkadot/types/interfaces'
 import { FaCircleCheck, FaCircleMinus } from 'react-icons/fa6'
 import { styled } from 'styled-components'
+import type { AccountId } from '../chain/types'
 import { truncateMiddle } from '../helpers/truncate'
 import { useAccountIdentity } from '../hooks/useAccountIdentity'
 
-const AccountIdentity = ({
-  accountId,
-  hideNotSet
-}: {
-  accountId: AccountId
-  hideNotSet?: boolean
-}) => {
+const AccountIdentity = ({ accountId, hideNotSet }: { accountId: AccountId | string; hideNotSet?: boolean }) => {
   const identity = useAccountIdentity(accountId)
-  const display = identity?.display
+  const display = identity?.info.display
   const isVerified = Boolean(identity?.judgements.length)
 
-  const verifiedBadge = isVerified ? (
-    <StyledVerifiedBadge className="me-2" />
-  ) : (
-    <StyledUnverifiedBadge className="me-2" />
-  )
+  const verifiedBadge = isVerified ? <StyledVerifiedBadge className="me-2" /> : <StyledUnverifiedBadge className="me-2" />
 
   if (!display && hideNotSet) return <></>
   if (display)
@@ -34,18 +24,12 @@ const AccountIdentity = ({
 
 const StyledVerifiedBadge = styled(FaCircleCheck)`
   flex-shrink: 0;
-
-  & path {
-    fill: ${(props) => props.theme.colors.secondary};
-  }
+  & path { fill: ${(props) => props.theme.colors.secondary}; }
 `
 
 const StyledUnverifiedBadge = styled(FaCircleMinus)`
   flex-shrink: 0;
-
-  & path {
-    fill: ${(props) => props.theme.colors.lightGrey};
-  }
+  & path { fill: ${(props) => props.theme.colors.lightGrey}; }
 `
 
 export { AccountIdentity }
