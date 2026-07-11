@@ -138,7 +138,7 @@
     "lodash.pick@>=3.7.0 <4.17.19": "https://github.com/lodash/lodash/archive/f299b52f39486275a9e6483b60a410e06520c538.tar.gz"
   },
   "scripts": {
-    "build": "node scripts/build.js",
+    "build": "papi && node scripts/build.js",
     "chopsticks": "npx @acala-network/chopsticks@1.4.2 --config=config/kusama.yml",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
