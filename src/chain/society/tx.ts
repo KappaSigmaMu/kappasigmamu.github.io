@@ -39,11 +39,17 @@ export function submitTx(
 
     observable.subscribe({
       next: (event) => {
-        if (event.type === 'txBestBlocksState' && event.found && !event.ok) {
-          const message = event.dispatchError ? errorText(event.dispatchError) : 'Transaction failed.'
-          onStatusChange({ loading: false, message, status: 'error' })
-          settled = true
-          resolve()
+        if (settled) return
+
+        if (event.type === 'txBestBlocksState' && event.found) {
+          if (event.ok) {
+            onStatusChange({ loading: false, message: 'Transaction submitted.', status: 'success' })
+          } else {
+            const message = event.dispatchError ? errorText(event.dispatchError) : 'Transaction failed.'
+            onStatusChange({ loading: false, message, status: 'error' })
+            settled = true
+            resolve()
+          }
           return
         }
 
@@ -59,7 +65,7 @@ export function submitTx(
           return
         }
 
-        if (!settled && event.type !== 'signed') {
+        if (event.type !== 'signed') {
           onStatusChange({ loading: true, message: waitingText, status: 'loading' })
         }
       },
