@@ -1,4 +1,3 @@
-/* eslint-disable no-extend-native */
 
 declare global {
   interface BigInt {
