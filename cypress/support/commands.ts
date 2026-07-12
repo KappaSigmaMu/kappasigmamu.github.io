@@ -70,3 +70,15 @@ Cypress.Commands.add('verifyAccountLevel', (level: string) => {
 Cypress.Commands.add('verifyToast', (message: string, timeout?: number) => {
   cy.contains(message, { timeout: timeout || 15000 }).should('be.visible')
 })
+
+// Chopsticks fork resets (dev_setHead) rewind the chain while the app's PAPI client still
+// holds pinned chainHead blocks, crashing it ("Cannot read properties of undefined (reading
+// 'number')"). Unload the app before resetting so no client is connected.
+Cypress.Commands.add('unloadApp', () => {
+  cy.window().then((win) => {
+    win.location.replace('about:blank')
+  })
+  cy.window({ timeout: 10000 }).should((win) => {
+    expect(win.location.href).to.equal('about:blank')
+  })
+})

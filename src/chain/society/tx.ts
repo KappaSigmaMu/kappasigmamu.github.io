@@ -33,8 +33,9 @@ export function submitTx(
 
   onStatusChange({ loading: true, message: 'Awaiting signature...', status: 'loading' })
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     let settled = false
+    let included = false
     const observable = tx.signSubmitAndWatch(signer) as Observable<TxEvent>
 
     observable.subscribe({
@@ -43,6 +44,7 @@ export function submitTx(
 
         if (event.type === 'txBestBlocksState' && event.found) {
           if (event.ok) {
+            included = true
             onStatusChange({ loading: false, message: 'Transaction submitted.', status: 'success' })
           } else {
             const message = event.dispatchError ? errorText(event.dispatchError) : 'Transaction failed.'
@@ -72,9 +74,17 @@ export function submitTx(
       error: (error: unknown) => {
         if (settled) return
         settled = true
+        // Once the tx is in a block, late broadcast revalidation can still error
+        // (e.g. InvalidTxError "Stale" on chopsticks); the tx already succeeded.
+        if (included) {
+          console.warn('Ignoring post-inclusion transaction error:', error)
+          resolve()
+          return
+        }
+        console.error(error)
         const message = error instanceof Error ? error.message : String(error)
         onStatusChange({ loading: false, message, status: 'error' })
-        reject(error)
+        resolve()
       },
       complete: () => {
         if (!settled) resolve()

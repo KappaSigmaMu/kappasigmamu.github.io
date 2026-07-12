@@ -2,8 +2,12 @@ import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/d
 
 const approveTxAndAdvance = () => {
   cy.approvePendingTransaction()
-  cy.contains(/finalized|success|sent|submitted/i, { timeout: 60000 }).should('be.visible')
   cy.task('resetChopsticks', null, { timeout: 120000 })
+  // Must not match the "Request sent. Waiting for response..." toast, which shows
+  // before the tx is in a block.
+  cy.contains(/transaction submitted|submitted successfully|removed successfully|vote sent|finalized/i, {
+    timeout: 60000
+  }).should('be.visible')
 }
 
 describe('User Journeys', () => {
@@ -124,6 +128,7 @@ describe('User Journeys', () => {
   })
 
   after(() => {
+    cy.unloadApp()
     cy.task('resetChopsticksToFork')
   })
 })

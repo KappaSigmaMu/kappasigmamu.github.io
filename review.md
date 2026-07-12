@@ -1,5 +1,48 @@
 # Session review — papi-migration debugging (2026-07-11)
 
+## UPDATE (later session, 2026-07-11): remaining failures resolved — verified locally
+
+- The Voted-badge fix is the `client.finalizedBlock$` → refetch subscription in
+  `src/pages/explore/CandidatesPage/index.tsx` and `src/pages/explore/MembersPage/index.tsx`
+  (uncommitted working-tree changes). It was written last session but never test-verified;
+  runs without it (e.g. CI) still show the badge failures.
+- Finality probe result: chopsticks delivers best + finalized to PAPI **simultaneously** once
+  a block is built (no finality lag); `dev_newBlock` itself can take ~40s cold.
+- Verified via `corepack yarn test:e2e:grep`:
+  - "should show Voted badge after voting" (candidates) — ✓ passing (49s)
+  - "should show Voted badge after voting on defender" (members) — ✓ passing (5s)
+  - "should unbid as Bidder" (user-journeys, chainHead fork-reset crash) — ✓ passing (66s),
+    no after-hook error; the bigint fix resolved it, no teardown change needed.
+- Still NOT committed. Next step: user runs `test:e2e:all` / lets CI confirm.
+
+## UPDATE 2 (same day): user-journeys full-spec failures fixed — 5/5 passing
+
+Running the whole user-journeys spec (not just one test) exposed three more issues:
+
+1. **PAPI chainHead crash ("reading 'number'")** on `dev_newBlock` after a `dev_setHead`
+   fork rewind: chopsticks 1.4.2 emits chainHead follow events referencing block hashes the
+   client never saw; `pinned-blocks.js` (`blocks.get(acc.best).number`) throws, killing every
+   downstream observable — the app is genuinely broken after it, so Cypress suppression is not
+   an option. polkadot-api's ws middleware (applied by default via `polkadot-api/ws`) doesn't
+   cover it. **Fix: bumped chopsticks 1.4.2 → 1.5.0 in package.json** (released 2026-06-26);
+   crash gone, block builds also much faster.
+2. **Unhandled `InvalidTxError { Invalid: Stale }` rejection**: PAPI's broadcast revalidation
+   can error *after* the tx is already in a block (chopsticks quirk); `void submitTx(...)`
+   callers (BidVouch, BiddersList) made it an unhandled rejection → Cypress fails the test.
+   **Fix in `src/chain/society/tx.ts`**: `submitTx` never rejects (logs instead) and ignores
+   observable errors that arrive after the tx was included in a best block.
+3. **`approveTxAndAdvance` in user-journeys.cy.ts asserted the wrong toast**: its regex
+   (`/finalized|success|sent|submitted/i`) matched "Request **sent**. Waiting for response...",
+   so it "passed" before the tx was in a block, then raced dev_newBlock. **Fix**: reset first,
+   then assert on success-only toast texts (matches the other tx specs' pattern).
+4. Also added `cy.unloadApp()` (support/commands.ts) called before `resetChopsticksToFork` in
+   every spec's `after()` hook — disconnects the app before fork rewinds (belt-and-braces; the
+   after-all "reading 'number'" failure disappeared with this + the chopsticks bump).
+
+Verified: `test:e2e:grep "User Journeys"` → 5/5 passing (1m, no retries); jest 21/21; eslint +
+tsc clean. NOT committed. Voted-badge grep runs passed before these changes; chopsticks bump +
+submitTx change affect all specs, so full-suite confirmation (user-run) is the next step.
+
 ## Root causes found
 
 1. **Account indices looked wrong ("wrong chain")** — actually a display-encoding bug in

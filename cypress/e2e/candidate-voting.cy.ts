@@ -136,6 +136,7 @@ describe('Candidate Voting', () => {
   })
 
   after(() => {
+    cy.unloadApp()
     cy.task('resetChopsticksToFork')
   })
 })

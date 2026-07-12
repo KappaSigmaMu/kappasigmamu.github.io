@@ -140,6 +140,7 @@ describe('Member Operations', () => {
   })
 
   after(() => {
+    cy.unloadApp()
     cy.task('resetChopsticksToFork')
   })
 })

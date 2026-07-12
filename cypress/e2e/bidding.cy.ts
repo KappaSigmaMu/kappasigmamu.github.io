@@ -210,6 +210,7 @@ describe('Bidding Operations', () => {
   })
 
   after(() => {
+    cy.unloadApp()
     cy.task('resetChopsticksToFork')
   })
 })

@@ -86,6 +86,7 @@ describe('Payouts Page', () => {
   })
 
   after(() => {
+    cy.unloadApp()
     cy.task('resetChopsticksToFork')
   })
 })
