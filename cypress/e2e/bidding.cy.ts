@@ -33,7 +33,7 @@ describe('Bidding Operations', () => {
   })
 
   beforeEach(() => {
-    cy.task('resetChopsticksToFork')
+    cy.resetChopsticksToFork()
   })
 
   describe('Bidders Page UI', () => {
@@ -210,7 +210,6 @@ describe('Bidding Operations', () => {
   })
 
   after(() => {
-    cy.unloadApp()
-    cy.task('resetChopsticksToFork')
+    cy.resetChopsticksToFork()
   })
 })

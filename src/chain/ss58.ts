@@ -31,8 +31,6 @@ export function isSameAddress(a?: string | null, b?: string | null): boolean {
 
 const SS58_HASH_PREFIX = new TextEncoder().encode('SS58PRE')
 
-// SS58 encoding of an account index: little-endian index bytes with a 1-byte
-// checksum (unlike 32-byte public keys, which use a 2-byte checksum).
 export function accountIndexToString(index: number, ss58Format = KUSAMA_SS58): string {
   if (!Number.isSafeInteger(index) || index < 0) return ''
 

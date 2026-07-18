@@ -26,7 +26,7 @@ describe('Payouts Page', () => {
   })
 
   beforeEach(() => {
-    cy.task('resetChopsticksToFork')
+    cy.resetChopsticksToFork()
   })
 
   describe('Payouts List UI', () => {
@@ -86,7 +86,6 @@ describe('Payouts Page', () => {
   })
 
   after(() => {
-    cy.unloadApp()
-    cy.task('resetChopsticksToFork')
+    cy.resetChopsticksToFork()
   })
 })

@@ -74,8 +74,6 @@ export function submitTx(
       error: (error: unknown) => {
         if (settled) return
         settled = true
-        // Once the tx is in a block, late broadcast revalidation can still error
-        // (e.g. InvalidTxError "Stale" on chopsticks); the tx already succeeded.
         if (included) {
           console.warn('Ignoring post-inclusion transaction error:', error)
           resolve()

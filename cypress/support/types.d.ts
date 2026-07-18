@@ -10,5 +10,6 @@ declare namespace Cypress {
     verifyToast(message: string, timeout?: number): Chainable<void>
     verifyTxError(message?: string | RegExp, timeout?: number): Chainable<void>
     unloadApp(): Chainable<void>
+    resetChopsticksToFork(options?: { timeout?: number }): Chainable<void>
   }
 }

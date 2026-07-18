@@ -28,9 +28,7 @@ const GalleryPage = (): JSX.Element => {
           setFolderHash(nextFolderHash)
           setGateway(nextGateway)
         }
-      } catch {
-        /* The gallery remains in its loading state when IPFS is unavailable. */
-      }
+      } catch {}
     })()
     return () => {
       cancelled = true

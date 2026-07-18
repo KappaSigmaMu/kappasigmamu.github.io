@@ -1,8 +1,6 @@
 import { accountIndexToString, isSameAddress, normalizeAddress } from '../ss58'
 
 describe('accountIndexToString', () => {
-  // Reference values produced by @polkadot/util-crypto encodeAddress(leBytes, 2),
-  // matching what the pre-PAPI UI displayed via createType('AccountIndex').toString()
   it.each([
     [0, 'fyF'],
     [1, 'g4b'],

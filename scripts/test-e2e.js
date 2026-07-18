@@ -104,8 +104,6 @@ function buildCypressCommand({ mode, spec, grep, headed }) {
 }
 
 function runWithServers(cypressCommand, env = {}) {
-  // cypressCommand may contain double quotes (e.g. grep patterns); escape them so
-  // they survive this layer's double-quoted wrapping when the shell re-parses it
   const escapedCypressCommand = cypressCommand.replace(/"/g, '\\"')
   const withApp = `start-server-and-test start:test:ready http://localhost:3000 "${escapedCypressCommand}"`
   const command = `start-server-and-test chopsticks http://localhost:8000 '${withApp}'`

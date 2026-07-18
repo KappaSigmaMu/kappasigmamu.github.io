@@ -3,8 +3,6 @@ import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/d
 const approveTxAndAdvance = () => {
   cy.approvePendingTransaction()
   cy.task('resetChopsticks', null, { timeout: 120000 })
-  // Must not match the "Request sent. Waiting for response..." toast, which shows
-  // before the tx is in a block.
   cy.contains(/transaction submitted|submitted successfully|removed successfully|vote sent|finalized/i, {
     timeout: 60000
   }).should('be.visible')
@@ -27,7 +25,7 @@ describe('User Journeys', () => {
 
   describe('New User Journey (Human → Bidder)', () => {
     before(() => {
-      cy.task('resetChopsticksToFork', null, { timeout: 120000 })
+      cy.resetChopsticksToFork({ timeout: 120000 })
     })
 
     it('should guide a human through the journey page to place a bid', () => {
@@ -57,7 +55,7 @@ describe('User Journeys', () => {
 
   describe('Member Participation Journey', () => {
     before(() => {
-      cy.task('resetChopsticksToFork', null, { timeout: 120000 })
+      cy.resetChopsticksToFork({ timeout: 120000 })
     })
 
     beforeEach(() => {
@@ -92,7 +90,7 @@ describe('User Journeys', () => {
 
   describe('Bidder Lifecycle (Bid → Unbid)', () => {
     beforeEach(() => {
-      cy.task('resetChopsticksToFork', null, { timeout: 120000 })
+      cy.resetChopsticksToFork({ timeout: 120000 })
       cy.visit('/explore/bidders?rpc=ws://localhost:8000')
       cy.initWallet(testAccounts, Cypress.expose('app_name'))
     })
@@ -128,7 +126,6 @@ describe('User Journeys', () => {
   })
 
   after(() => {
-    cy.unloadApp()
-    cy.task('resetChopsticksToFork')
+    cy.resetChopsticksToFork()
   })
 })
