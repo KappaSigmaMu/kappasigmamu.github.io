@@ -1,15 +1,13 @@
-import { StorageKey } from '@polkadot/types'
-import { AccountId32 } from '@polkadot/types/interfaces'
 import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { isMobile } from 'react-device-detect'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThreeCanary, defaultConfig, type CanaryConfig } from '../canary-component'
+import { ChainState, useAssetHub } from '../chain/ChainProvider'
+import { getSocietyMembersEntries } from '../chain/society/queries'
 import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from '../components/MemberOffcanvas'
-import { useKusama } from '../kusama'
-import { ApiState } from '../kusama/KusamaContext'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 
 const customCanaryConfig: CanaryConfig = {
@@ -34,7 +32,7 @@ const LandingPage = () => {
   window.scrollTo(0, 0)
 
   const navigate = useNavigate()
-  const { api, apiState } = useKusama()
+  const { api, state: apiState } = useAssetHub()
   const [members, setMembers] = useState<Array<string>>([])
   const [show, setShow] = useState(false)
 
@@ -54,23 +52,13 @@ const LandingPage = () => {
   const handleButtonClick = (to: string) => navigate(to + search)
 
   useEffect(() => {
-    if (api && apiState === ApiState.ready) {
-      api.query.society.members.keys().then((memberKeys) => {
-        const members = memberKeys as StorageKey<[AccountId32]>[]
-        const ids = members.map((account) => account.toHuman()!.toString())
+    if (api && apiState === ChainState.ready) {
+      getSocietyMembersEntries(api).then((memberEntries) => {
+        const ids = memberEntries.map(({ accountId }) => accountId)
         setMembers(ids)
 
         // TODO: include identity and picture here
-        members.forEach((member) => {
-          const id = member.toHuman()!.toString()
-          const m = allMembers
-          m[id] = {
-            hash: id,
-            name: 'unknown',
-            level: 'cyborg'
-          }
-          setAllMembers(m)
-        })
+        setAllMembers(Object.fromEntries(ids.map((id) => [id, { hash: id, name: 'unknown', level: 'cyborg' }])))
       })
     }
   }, [api, apiState])

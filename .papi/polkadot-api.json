@@ -1,0 +1,18 @@
+{
+  "version": 0,
+  "descriptorPath": ".papi/descriptors",
+  "entries": {
+    "ksmAssetHub": {
+      "chain": "kusama_asset_hub",
+      "metadata": ".papi/metadata/ksmAssetHub.scale",
+      "genesis": "0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a",
+      "codeHash": "0x7619228ef8715fd44c26d1e3b69cc3d32bb621932dc66832eeedfb1e4ea09fcd"
+    },
+    "ksmPeople": {
+      "chain": "kusama_people",
+      "metadata": ".papi/metadata/ksmPeople.scale",
+      "genesis": "0xc1af4cb4eb3918e5db15086c0cc5ec17fb334f728b7c65dd44bfe1e174ff8b3f",
+      "codeHash": "0x52210c7b07487c4af6601b444bf2502cd342470f01c3d5d64ec891b415afada5"
+    }
+  }
+}

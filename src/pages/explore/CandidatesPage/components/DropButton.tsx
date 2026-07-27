@@ -1,17 +1,17 @@
-import { ApiPromise } from '@polkadot/api'
-import { AccountId } from '@polkadot/types/interfaces'
-import { WalletAccount } from '@talismn/connect-wallets'
+import type { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { FaUserXmark } from 'react-icons/fa6'
 import { styled } from 'styled-components'
-import { doTx, StatusChangeHandler } from '../../../../helpers/extrinsics'
+import { useAccount } from '../../../../account/AccountContext'
+import { useAssetHub } from '../../../../chain/ChainProvider'
+import { submitTx, type StatusChangeHandler } from '../../../../chain/society/tx'
+import type { AccountId, ExtrinsicResult } from '../../../../chain/types'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
 
 type DropButtonProps = {
-  api: ApiPromise
   drop: Drop
-  showMessage: (args: ExtrinsicResult) => any
+  showMessage: (args: ExtrinsicResult) => void
   handleUpdate: () => void
   successText: string
   waitingText: string
@@ -23,7 +23,6 @@ export interface Drop {
 }
 
 export function DropButton({
-  api,
   drop,
   disabled,
   showMessage,
@@ -32,32 +31,32 @@ export function DropButton({
   waitingText,
   ...buttonProps
 }: DropButtonProps) {
+  const { api } = useAssetHub()
+  const { polkadotSigner } = useAccount()
   const [loading, setLoading] = useState(false)
-
-  const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
-    loading !== undefined && setLoading(loading)
+  const onStatusChange: StatusChangeHandler = ({ loading: nextLoading, message, status }) => {
+    setLoading(Boolean(nextLoading))
     showMessage({ status, message })
     handleUpdate()
   }
-
-  const extrinsic = api.tx.society.dropCandidate(drop.accountId)
-
   const handleDrop = async () => {
-    setLoading(true)
+    if (!api) return
     try {
-      await doTx(api, extrinsic, successText, waitingText, drop.callerAccount, onStatusChange)
-    } catch (e) {
-      console.error(e)
+      await submitTx(api.tx.Society.drop_candidate({ candidate: drop.accountId }), polkadotSigner, {
+        finalizedText: successText,
+        waitingText,
+        onStatusChange
+      })
+    } catch (error) {
+      console.error(error)
     }
   }
-
   if (loading)
     return (
       <div className="mx-2">
-        <LoadingSpinner center={false} small={true} />
+        <LoadingSpinner center={false} small />
       </div>
     )
-
   return (
     <OverlayTrigger
       placement="top"
@@ -67,14 +66,7 @@ export function DropButton({
         </Tooltip>
       }
     >
-      <Button
-        disabled={disabled}
-        variant="link"
-        onClick={handleDrop}
-        size="sm"
-        className="p-2"
-        {...buttonProps}
-      >
+      <Button disabled={disabled} variant="link" onClick={handleDrop} size="sm" className="p-2" {...buttonProps}>
         <StyledDropIcon size={20} />
       </Button>
     </OverlayTrigger>
@@ -83,7 +75,6 @@ export function DropButton({
 
 const StyledDropIcon = styled(FaUserXmark)`
   flex-shrink: 0;
-
   & path {
     fill: ${(props) => props.theme.colors.white};
   }
