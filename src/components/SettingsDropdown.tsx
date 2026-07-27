@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import { FaGear, FaCircleCheck, FaCircle } from 'react-icons/fa6'
 import { StyledDropdownMenu } from './StyledDropdownMenu'
+import { useAssetHub } from '../chain/ChainProvider'
 import { providers, type Provider } from '../helpers/providers'
-import { useKusama } from '../kusama/KusamaContext'
 
 const SettingsDropdown = () => {
   const currentUrl = new URL(window.location.href)
@@ -11,7 +11,7 @@ const SettingsDropdown = () => {
   const prodProviders = providers.filter((provider) => provider.dev === false)
   const devProviders = providers.filter((provider) => provider.dev === true)
 
-  const { activeProviderEndpoint } = useKusama()
+  const { activeProviderEndpoint } = useAssetHub()
 
   const ProvidersList = ({ providers }: { providers: Provider[] }): JSX.Element => {
     const [hoveredItem, setHoveredItem] = useState('')

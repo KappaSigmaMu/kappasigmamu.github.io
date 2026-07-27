@@ -1,21 +1,12 @@
-import type { DeriveSociety } from '@polkadot/api-derive/types'
-import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { FormattedKSM } from '../../helpers/FormattedKSM'
-import { useKusama } from '../../kusama'
+import { useAssetHub } from '../../chain/ChainProvider'
+import { useChainQuery } from '../../chain/hooks'
+import { getSocietyInfo } from '../../chain/society/queries'
+import { FormatBalance } from '../FormatBalance'
 
 const RoundPayout = () => {
-  const { api } = useKusama()
-  const [info, setInfo] = useState<DeriveSociety | any>()
-
-  useEffect(() => {
-    if (api) {
-      api.derive.society.info().then((response) => {
-        setInfo(response)
-      })
-    }
-  }, [api])
-
+  const { api } = useAssetHub()
+  const { data: info } = useChainQuery(() => (api ? getSocietyInfo(api) : undefined), [api])
   return (
     <>
       <Row className="mb-3">
@@ -25,7 +16,7 @@ const RoundPayout = () => {
       </Row>
       <Row>
         <Col>
-          <FormattedKSM>{info?.pot.toHuman().substring(0, 5)}</FormattedKSM>
+          <FormatBalance balance={info?.pot} />
         </Col>
       </Row>
     </>

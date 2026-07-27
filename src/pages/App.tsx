@@ -10,10 +10,9 @@ import { LandingPage } from './LandingPage'
 import { WelcomePage } from './WelcomePage'
 import { WikiPage } from './WikiPage'
 import { AccountContextProvider } from '../account/AccountContext'
+import { ChainProvider } from '../chain/ChainProvider'
 import { Navbar } from '../components/Navbar'
 import { Toaster } from '../components/Toaster'
-import { KusamaContextProvider } from '../kusama'
-import { PeopleContextProvider } from '../people'
 import { GlobalStyle } from '../styles/globalStyle'
 import { Theme } from '../styles/Theme'
 
@@ -55,8 +54,8 @@ const AppRouter = () => {
 }
 
 const App = () => (
-  <KusamaContextProvider>
-    <PeopleContextProvider>
+  <ChainProvider chain="assetHub" showLoading>
+    <ChainProvider chain="people">
       <AccountContextProvider>
         <GlobalStyle />
         <ThemeProvider theme={Theme}>
@@ -66,8 +65,8 @@ const App = () => (
           </Suspense>
         </ThemeProvider>
       </AccountContextProvider>
-    </PeopleContextProvider>
-  </KusamaContextProvider>
+    </ChainProvider>
+  </ChainProvider>
 )
 
 export { App }
