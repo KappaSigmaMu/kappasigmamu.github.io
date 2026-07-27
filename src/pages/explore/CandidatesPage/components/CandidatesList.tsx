@@ -1,14 +1,15 @@
-import { ApiPromise } from '@polkadot/api'
-import type { Option, u32 } from '@polkadot/types'
-import type { SocietyVote, AccountId } from '@polkadot/types/interfaces'
-import { WalletAccount } from '@talismn/connect-wallets'
-import { useEffect, useRef, useState } from 'react'
+import type { WalletAccount } from '@talismn/connect-wallets'
+import { useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
 import { DropButton } from './DropButton'
 import { VoteButton } from './VoteButton'
 import { useAccount } from '../../../../account/AccountContext'
+import { useAssetHub } from '../../../../chain/ChainProvider'
+import { useChainQuery } from '../../../../chain/hooks'
+import { isSameAddress } from '../../../../chain/ss58'
+import type { AccountId, ExtrinsicResult, SocietyCandidate } from '../../../../chain/types'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
@@ -20,76 +21,34 @@ const StyledCol = styled(Col)`
     cursor: pointer;
   }
 `
+type Props = { activeAccount: WalletAccount | undefined; candidates: SocietyCandidate[]; handleUpdate: () => void }
 
-type CandidatesListProps = {
-  api: ApiPromise
-  activeAccount: WalletAccount | undefined
-  candidates: SocietyCandidate[]
-  handleUpdate: () => void
-}
-
-const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: CandidatesListProps): JSX.Element => {
-  const [roundCount, setRoundCount] = useState<number>(0)
-
-  const [votes, setVotes] = useState<SocietyCandidate[]>([])
-  const society = api?.query?.society
-
-  const [disabledAction, setDisabledAction] = useState<boolean>(false)
-  const [selectedCandidate, setSelectedCandidate] = useState<AccountId | null>(null)
-  const [showCandidateDetailsOffcanvas, setShowCandidateDetailsOffcanvas] = useState(false)
-
-  const showMessage = (nextResult: ExtrinsicResult) => {
-    setDisabledAction(nextResult.status === 'loading')
-    toastByStatus[nextResult.status](nextResult.message, { id: nextResult.message })
-  }
-
-  const usePrevious = (value: any) => {
-    const ref = useRef<any>(null)
-    useEffect(() => {
-      ref.current = value
-    })
-    return ref.current
-  }
-
+const CandidatesList = ({ activeAccount, candidates, handleUpdate }: Props): JSX.Element => {
+  const { api } = useAssetHub()
   const { level } = useAccount()
-  const isCandidate = (candidate: SocietyCandidate) => activeAccount?.address === candidate.accountId.toHuman()
-  const isMember = level === 'cyborg'
-  const isDroppable = (candidate: SocietyCandidate) => {
-    return (
-      candidate.tally.rejections.toNumber() >= Math.max(candidate.tally.approvals.toNumber() * 2, 1) &&
-      roundCount > Number(candidate.round) + 1
-    )
+  const [selectedCandidate, setSelectedCandidate] = useState<AccountId | null>(null)
+  const [showDetails, setShowDetails] = useState(false)
+  const [disabledAction, setDisabledAction] = useState(false)
+  const roundState = useChainQuery(() => api?.query.Society.RoundCount.getValue(), [api])
+  const voteState = useChainQuery(
+    () =>
+      api && activeAccount
+        ? api.query.Society.Votes.getValues(candidates.map(({ accountId }) => [accountId, activeAccount.address]))
+        : undefined,
+    [api, activeAccount, candidates]
+  )
+  const roundCount = roundState.data ?? 0
+  const voted = voteState.data ?? []
+  const showMessage = (result: ExtrinsicResult) => {
+    setDisabledAction(result.status === 'loading')
+    toastByStatus[result.status](result.message, { id: result.message })
   }
-
-  const prevActiveAccount = usePrevious(activeAccount)
-
-  useEffect(() => {
-    const fetchRoundCount = async () => {
-      const roundCount = await api.query.society.roundCount()
-      setRoundCount((roundCount as u32).toNumber())
-    }
-
-    fetchRoundCount()
-  }, [])
-
-  useEffect(() => {
-    if (!activeAccount || candidates.length === 0) return
-
-    candidates.forEach((candidate) => {
-      society.votes(candidate.accountId, activeAccount!.address, (vote: Option<SocietyVote>) => {
-        if (vote.isEmpty) {
-          if (prevActiveAccount != activeAccount) setVotes([])
-          return
-        }
-
-        setVotes((votes) => [...votes, candidate.accountId])
-      })
-    })
-  }, [candidates, activeAccount, prevActiveAccount])
-
+  const isCandidate = (candidate: SocietyCandidate) => isSameAddress(activeAccount?.address, candidate.accountId)
+  const isDroppable = (candidate: SocietyCandidate) =>
+    candidate.tally.rejections >= Math.max(candidate.tally.approvals * 2, 1) && roundCount > candidate.round + 1
   const showCandidateDetails = (candidateId: AccountId) => {
     setSelectedCandidate(candidateId)
-    setShowCandidateDetailsOffcanvas(true)
+    setShowDetails(true)
   }
 
   if (candidates.length === 0) return <>No candidates</>
@@ -99,35 +58,32 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
       {selectedCandidate && (
         <div data-test="candidate-detail-panel">
           <CandidateDetailsOffcanvas
-            api={api}
             candidateId={selectedCandidate}
-            show={showCandidateDetailsOffcanvas}
-            onClose={() => setShowCandidateDetailsOffcanvas(false)}
+            show={showDetails}
+            onClose={() => setShowDetails(false)}
           />
         </div>
       )}
-
       <DataHeaderRow className="d-none d-lg-flex text-center">
         <Col lg={1}>#</Col>
         <Col lg={2}>Wallet Hash</Col>
-        <Col lg={1} className="d-none d-lg-inline ">
+        <Col lg={1} className="d-none d-lg-inline">
           Bid Kind
         </Col>
         <Col lg={2}>Amount</Col>
         <Col lg={3}>Tally</Col>
-        <Col lg={2}>{isMember && 'Vote'}</Col>
+        <Col lg={2}>{level === 'cyborg' && 'Vote'}</Col>
         <Col lg={1}>Status</Col>
       </DataHeaderRow>
-
-      {candidates.map((candidate: SocietyCandidate) => (
+      {candidates.map((candidate, index) => (
         <StyledDataRow
           className="text-center"
           $isOwner={isCandidate(candidate)}
-          key={candidate.accountId.toString()}
-          data-test={`candidate-row-${candidate.accountId.toString()}`}
+          key={candidate.accountId}
+          data-test={`candidate-row-${candidate.accountId}`}
         >
           <Col lg={1} className="text-center">
-            <Identicon value={candidate.accountId.toHuman()} size={32} theme={'polkadot'} />
+            <Identicon value={candidate.accountId} size={32} theme="polkadot" />
           </Col>
           <StyledCol lg={2} className="text-truncate" onClick={() => showCandidateDetails(candidate.accountId)}>
             <AccountIdentity accountId={candidate.accountId} />
@@ -136,17 +92,16 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
             {candidate.kindType === 'Deposit' ? 'Deposit' : 'Vouch'}
           </Col>
           <Col lg={2}>
-            <FormatBalance balance={candidate.bid.toNumber()} />
+            <FormatBalance balance={candidate.bid} />
           </Col>
-          <Col lg={3} data-test={`vote-tally-${candidate.accountId.toString()}`}>
-            {candidate.tally.approvals.toHuman()} approvals and {candidate.tally.rejections.toHuman()} rejections
+          <Col lg={3} data-test={`vote-tally-${candidate.accountId}`}>
+            {candidate.tally.approvals} approvals and {candidate.tally.rejections} rejections
           </Col>
           <Col lg={2} className="d-flex align-items-center justify-content-center">
-            {isMember && (
+            {level === 'cyborg' && (
               <>
                 <VoteButton
                   disabled={disabledAction}
-                  api={api}
                   showMessage={showMessage}
                   successText="Approval vote sent."
                   waitingText="Request sent. Waiting for response..."
@@ -156,13 +111,12 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                     accountId: candidate.accountId,
                     type: 'candidate'
                   }}
-                  icon={'approve'}
+                  icon="approve"
                   handleUpdate={handleUpdate}
-                  data-test={`candidate-approve-button-${candidate.accountId.toString()}`}
-                ></VoteButton>
+                  data-test={`candidate-approve-button-${candidate.accountId}`}
+                />
                 <VoteButton
                   disabled={disabledAction}
-                  api={api}
                   showMessage={showMessage}
                   successText="Rejection vote sent."
                   waitingText="Request sent. Waiting for response..."
@@ -172,35 +126,27 @@ const CandidatesList = ({ api, activeAccount, candidates, handleUpdate }: Candid
                     accountId: candidate.accountId,
                     type: 'candidate'
                   }}
-                  icon={'reject'}
+                  icon="reject"
                   handleUpdate={handleUpdate}
-                  data-test={`candidate-reject-button-${candidate.accountId.toString()}`}
-                ></VoteButton>
+                  data-test={`candidate-reject-button-${candidate.accountId}`}
+                />
               </>
             )}
             {isDroppable(candidate) && (
               <DropButton
                 disabled={disabledAction}
-                api={api}
                 showMessage={showMessage}
                 successText="Candidate dropped."
                 waitingText="Request sent. Waiting for response..."
-                drop={{
-                  callerAccount: activeAccount!,
-                  accountId: candidate.accountId
-                }}
+                drop={{ callerAccount: activeAccount!, accountId: candidate.accountId }}
                 handleUpdate={handleUpdate}
-                data-test={`candidate-drop-button-${candidate.accountId.toString()}`}
+                data-test={`candidate-drop-button-${candidate.accountId}`}
               />
             )}
           </Col>
           <Col lg={1} className="d-flex align-items-center justify-content-center">
-            {votes.includes(candidate.accountId) && (
-              <Badge
-                bg="secondary"
-                text="black"
-                data-test={`candidate-voted-badge-${candidate.accountId.toString()}`}
-              >
+            {voted[index] && (
+              <Badge bg="secondary" text="black" data-test={`candidate-voted-badge-${candidate.accountId}`}>
                 Voted
               </Badge>
             )}
@@ -220,5 +166,4 @@ const StyledDataRow = styled(DataRow)`
     margin-inline: 2px;
   }
 `
-
 export { CandidatesList }

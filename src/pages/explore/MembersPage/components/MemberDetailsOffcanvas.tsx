@@ -1,47 +1,40 @@
-import { ApiPromise } from '@polkadot/api'
-import { AccountId } from '@polkadot/types/interfaces'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { usePeople } from '../../../../people'
-import { PeopleApiState } from '../../../../people/PeopleContext'
+import { ChainState, useAssetHub, usePeople } from '../../../../chain/ChainProvider'
+import { useChainQuery } from '../../../../chain/hooks'
+import type { AccountId, SocietyMemberDetails } from '../../../../chain/types'
 import { AccountHeader } from '../../components/AccountHeader'
+import { ChainError } from '../../components/ChainError'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
 import { Offcanvas } from '../../components/Offcanvas'
 import { fetchMemberDetails } from '../helpers/fetchMemberDetails'
 
-type MemberDetailsOffCanvasProps = {
-  api: ApiPromise
-  accountId: AccountId
-  show: boolean
-  onClose: () => any
-}
+type Props = { accountId: AccountId; show: boolean; onClose: () => void }
 
-const MemberDetailsOffCanvas = ({ api, accountId, show, onClose }: MemberDetailsOffCanvasProps) => {
-  const { peopleApi, peopleApiState } = usePeople()
-  const [loading, setLoading] = useState(true)
-  const [memberDetails, setMemberDetails] = useState<SocietyMemberDetails | null>(null)
-
+const MemberDetailsOffCanvas = ({ accountId, show, onClose }: Props) => {
+  const { api } = useAssetHub()
+  const people = usePeople()
+  const peopleReady = people.state === ChainState.ready
+  const state = useChainQuery(
+    () =>
+      api && (peopleReady || people.state === ChainState.error || people.state === ChainState.disconnected)
+        ? fetchMemberDetails(api, peopleReady ? people.api : null, accountId)
+        : undefined,
+    [api, people.api, people.state, accountId]
+  )
   useEffect(() => {
-    if (!accountId) return
-
-    const peopleApiReady = peopleApiState === PeopleApiState.ready
-    const peopleApiUnavailable =
-      peopleApiState === PeopleApiState.error || peopleApiState === PeopleApiState.disconnected
-
-    if (!peopleApiReady && !peopleApiUnavailable) return
-
-    setLoading(true)
-    const identityApi = peopleApiReady ? peopleApi : null
-    fetchMemberDetails(api, identityApi, accountId).then((details) => {
-      setMemberDetails(details)
-      setLoading(false)
-    })
-  }, [accountId, api, peopleApi, peopleApiState])
-
+    if (show) state.refetch()
+  }, [show])
   return (
-    <Offcanvas show={show} placement="end" onClose={onClose} header={<h3>{memberDetails?.identity?.name}</h3>}>
-      {loading ? <LoadingSpinner /> : <CanvasBody memberDetails={memberDetails!} />}
+    <Offcanvas show={show} placement="end" onClose={onClose} header={<h3>{state.data?.identity?.name}</h3>}>
+      {state.error ? (
+        <ChainError error={state.error} onRetry={state.refetch} />
+      ) : state.isLoading || !state.data ? (
+        <LoadingSpinner />
+      ) : (
+        <CanvasBody memberDetails={state.data} />
+      )}
     </Offcanvas>
   )
 }
@@ -74,12 +67,10 @@ const CanvasBody = ({ memberDetails }: { memberDetails: SocietyMemberDetails }) 
     </Container>
   )
 }
-
 const StyledRow = styled(Row)`
   margin-top: 30px;
   .extra-vertical-spacing .row {
     margin-bottom: 5px;
   }
 `
-
 export { MemberDetailsOffCanvas }

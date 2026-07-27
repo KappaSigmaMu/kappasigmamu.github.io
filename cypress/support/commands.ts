@@ -70,3 +70,17 @@ Cypress.Commands.add('verifyAccountLevel', (level: string) => {
 Cypress.Commands.add('verifyToast', (message: string, timeout?: number) => {
   cy.contains(message, { timeout: timeout || 15000 }).should('be.visible')
 })
+
+Cypress.Commands.add('unloadApp', () => {
+  cy.window().then((win) => {
+    win.location.replace('about:blank')
+  })
+  cy.window({ timeout: 10000 }).should((win) => {
+    expect(win.location.href).to.equal('about:blank')
+  })
+})
+
+Cypress.Commands.add('resetChopsticksToFork', (options?: { timeout?: number }) => {
+  cy.unloadApp()
+  return options ? cy.task('resetChopsticksToFork', null, options) : cy.task('resetChopsticksToFork')
+})

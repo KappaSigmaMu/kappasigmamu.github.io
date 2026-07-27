@@ -1,16 +1,10 @@
-import { AccountId } from '@polkadot/types/interfaces'
 import { Col, Badge } from 'react-bootstrap'
 import { styled } from 'styled-components'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { Identicon } from '../../components/Identicon'
 
-type SuspendedListProps = {
-  members: AccountId[]
-}
-
-const SuspendedList = ({ members }: SuspendedListProps): JSX.Element => {
+const SuspendedList = ({ members }: { members: string[] }): JSX.Element => {
   if (members.length === 0) return <>No suspended members</>
-
   return (
     <>
       <DataHeaderRow className="d-none d-lg-flex text-center">
@@ -22,14 +16,13 @@ const SuspendedList = ({ members }: SuspendedListProps): JSX.Element => {
         </Col>
         <Col lg={4} className="text-center text-lg-start"></Col>
       </DataHeaderRow>
-
-      {members.map((accountId: AccountId) => (
-        <StyledDataRow key={accountId.toString()}>
+      {members.map((accountId) => (
+        <StyledDataRow key={accountId}>
           <Col lg={1} className="text-center">
-            <Identicon value={accountId.toHuman()} size={32} theme="polkadot" />
+            <Identicon value={accountId} size={32} theme="polkadot" />
           </Col>
           <Col lg={7} className="text-center text-lg-start text-truncate">
-            {accountId.toString()}
+            {accountId}
           </Col>
           <Col lg={4} className="text-center text-lg-end">
             <Badge pill bg="danger" className="me-2 p-2">
@@ -48,5 +41,4 @@ const StyledDataRow = styled(DataRow)`
     margin-inline: 2px;
   }
 `
-
 export { SuspendedList }

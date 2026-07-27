@@ -1,45 +1,47 @@
-import { ApiPromise } from '@polkadot/api'
-import { Option, StorageKey } from '@polkadot/types'
-import { AccountId, AccountId32 } from '@polkadot/types/interfaces'
-import type { SocietyVote } from '@polkadot/types/interfaces/society'
-import { useEffect, useState } from 'react'
+import { useAssetHub } from '../../../../chain/ChainProvider'
+import { useChainQuery } from '../../../../chain/hooks'
+import { getSocietyMembersEntries, getSocietyVotes } from '../../../../chain/society/queries'
+import type { AccountId, SocietyVote } from '../../../../chain/types'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { AccountHeader } from '../../components/AccountHeader'
+import { ChainError } from '../../components/ChainError'
 import { Identicon } from '../../components/Identicon'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
 import { Offcanvas } from '../../components/Offcanvas'
 
 type VoteType = 'Skeptic' | 'Approve' | 'Reject'
 type GroupedVotes = Record<VoteType, AccountId[]>
+type Props = { show: boolean; candidateId: AccountId; onClose: () => void }
 
-type Props = {
-  api: ApiPromise
-  show: boolean
-  candidateId: AccountId
-  onClose: () => void
-}
-
-export function CandidateDetailsOffcanvas({ api, candidateId, show, onClose }: Props) {
-  const [votes, setVotes] = useState<GroupedVotes | null>(null)
-
-  useEffect(() => {
-    // TODO: cache members and member->candidate map
-    api.query.society.members.keys().then(async (memberIds) => {
-      const candidateMemberMap = memberIds.map((memberId) => [candidateId, memberId])
-      const votesResponse = await api.query.society.votes.multi(candidateMemberMap)
-      setVotes(groupVotes(
-        candidateMemberMap as unknown as (StorageKey<[AccountId32]> | AccountId)[][],
-        votesResponse as unknown as Option<SocietyVote>[]
-      ))
-    })
-  }, [])
-
+export function CandidateDetailsOffcanvas({ candidateId, show, onClose }: Props) {
+  const { api } = useAssetHub()
+  const members = useChainQuery(() => (api ? getSocietyMembersEntries(api) : undefined), [api])
+  const votes = useChainQuery(() => (api ? getSocietyVotes(api, candidateId) : undefined), [api, candidateId])
+  const grouped =
+    members.data && votes.data
+      ? groupVotes(
+          members.data.map(({ accountId }) => accountId),
+          votes.data
+        )
+      : null
   return (
     <Offcanvas placement="end" show={show} onClose={onClose} header={<h3>Candidate</h3>}>
       <div className="mb-3">
         <AccountHeader accountId={candidateId} />
       </div>
-      {votes ? <CanvasBody votes={votes} /> : <LoadingSpinner />}
+      {members.error || votes.error ? (
+        <ChainError
+          error={members.error ?? votes.error!}
+          onRetry={() => {
+            members.refetch()
+            votes.refetch()
+          }}
+        />
+      ) : grouped ? (
+        <CanvasBody votes={grouped} />
+      ) : (
+        <LoadingSpinner />
+      )}
     </Offcanvas>
   )
 }
@@ -48,19 +50,18 @@ function CanvasBody({ votes }: { votes: GroupedVotes }) {
   return (
     <>
       {Object.entries(votes).map(([type, memberIds]) =>
-        memberIds.length === 0 ? <></> : <VoterList type={type} memberIds={memberIds} key={type} />
+        memberIds.length === 0 ? null : <VoterList type={type} memberIds={memberIds} key={type} />
       )}
     </>
   )
 }
-
 function VoterList({ type, memberIds }: { type: string; memberIds: AccountId[] }) {
   return (
     <div className="mt-4">
       <h4>{type}s</h4>
       {memberIds.map((id) => (
-        <div key={id.toString()} className="mb-2 ms-2">
-          <Identicon value={id.toHuman()} size={22} theme="polkadot" className="me-2" />
+        <div key={id} className="mb-2 ms-2">
+          <Identicon value={id} size={22} theme="polkadot" className="me-2" />
           <AccountIdentity accountId={id} />
         </div>
       ))}
@@ -68,21 +69,10 @@ function VoterList({ type, memberIds }: { type: string; memberIds: AccountId[] }
   )
 }
 
-function groupVotes(
-  candidateMemberMap: (StorageKey<[AccountId32]> | AccountId)[][],
-  votesResponse: Option<SocietyVote>[]
-): GroupedVotes {
-  // TODO: fix me
-  const initial = { Approve: [], Reject: [], Skeptic: [] }
-  return votesResponse.reduce((grouped, vote, idx) => {
-    if (vote.isNone) return grouped
-
-    const type = vote.unwrap().type
-
-    return {
-      ...grouped,
-      // Associate voter id to vote based on list position
-      [type as unknown as string]: Array.of(candidateMemberMap[idx][1], ...grouped['Approve'])
-    }
-  }, initial)
+function groupVotes(memberIds: AccountId[], votes: Array<SocietyVote | undefined>): GroupedVotes {
+  const grouped: GroupedVotes = { Approve: [], Reject: [], Skeptic: [] }
+  votes.forEach((vote, index) => {
+    if (vote) grouped[vote.approve ? 'Approve' : 'Reject'].push(memberIds[index])
+  })
+  return grouped
 }

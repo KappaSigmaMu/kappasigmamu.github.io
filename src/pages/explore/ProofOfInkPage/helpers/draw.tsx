@@ -4,7 +4,8 @@
 
 // Adapted (with permission) from https://www.w3schools.com/code/tryit.asp?filename=GGIGKE2GG7N1
 
-import type { AccountId } from '@polkadot/types/interfaces'
+import { toPublicKey } from '../../../../chain/ss58'
+import type { AccountId } from '../../../../chain/types'
 
 export const PADD = 50
 export const SIZE = 300
@@ -267,9 +268,9 @@ function tattoo3(ctx: CanvasRenderingContext2D, bits: boolean[]): void {
 }
 
 export function draw(ctx: CanvasRenderingContext2D, accountId: AccountId, accountIndex: string): void {
-  console.log(`Generating ink for ${accountId.toString()} as ${accountId.toHex()}`)
+  console.log(`Generating ink for ${accountId} as ${accountId}`)
 
-  const bits = addressToBits(accountId.toU8a())
+  const bits = addressToBits(toPublicKey(accountId))
 
   ctx.save()
   ctx.translate(0, 0)
