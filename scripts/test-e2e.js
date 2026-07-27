@@ -104,7 +104,8 @@ function buildCypressCommand({ mode, spec, grep, headed }) {
 }
 
 function runWithServers(cypressCommand, env = {}) {
-  const withApp = `start-server-and-test start:test:ready http://localhost:3000 "${cypressCommand}"`
+  const escapedCypressCommand = cypressCommand.replace(/"/g, '\\"')
+  const withApp = `start-server-and-test start:test:ready http://localhost:3000 "${escapedCypressCommand}"`
   const command = `start-server-and-test chopsticks http://localhost:8000 '${withApp}'`
 
   return spawnSync(command, {

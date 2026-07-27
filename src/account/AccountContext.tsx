@@ -1,11 +1,9 @@
-import { StorageKey, Vec } from '@polkadot/types'
-import { AccountId32 } from '@polkadot/types/interfaces'
-import type { Bid } from '@polkadot/types/interfaces/society'
-import { WalletAccount } from '@talismn/connect-wallets'
+import type { WalletAccount } from '@talismn/connect-wallets'
+import { getPolkadotSignerFromPjs, type PolkadotSigner, type SignPayload, type SignRaw } from 'polkadot-api/pjs-signer'
 import React, { useContext, useEffect, useState } from 'react'
-import { isSameAddress } from '../helpers/address'
+import { useAssetHub } from '../chain/ChainProvider'
+import { getAccountLevel } from '../chain/society/queries'
 import { wallets } from '../helpers/wallets'
-import { useKusama } from '../kusama'
 import { toastByStatus } from '../pages/explore/helpers'
 
 const localStorageAccount = localStorage.getItem('activeAccount')
@@ -13,7 +11,7 @@ const localStorageAccount = localStorage.getItem('activeAccount')
 let storedActiveAccount: WalletAccount | undefined
 if (localStorageAccount && localStorageAccount !== 'undefined') {
   try {
-    storedActiveAccount = JSON.parse(localStorageAccount!)
+    storedActiveAccount = JSON.parse(localStorageAccount)
   } catch (error) {
     console.error(error)
   }
@@ -21,89 +19,88 @@ if (localStorageAccount && localStorageAccount !== 'undefined') {
 
 const APP_NAME = process.env.REACT_APP_NAME
 
-const INIT_STATE = {
-  activeAccount: storedActiveAccount,
-  setActiveAccount: () => ({}),
-  level: 'human',
-  setLevel: () => ({})
-}
-
 type StateType = {
   level: string
   setLevel: (level: string) => void
   setActiveAccount: (account: WalletAccount | undefined) => void
-
   activeAccount: WalletAccount | undefined
+  polkadotSigner: PolkadotSigner | undefined
+}
+
+const INIT_STATE: StateType = {
+  activeAccount: storedActiveAccount,
+  setActiveAccount: () => undefined,
+  setLevel: () => undefined,
+  level: 'human',
+  polkadotSigner: undefined
 }
 
 const AccountContext = React.createContext<StateType>(INIT_STATE)
 
-const AccountContextProvider = ({ children }: any) => {
-  const { api } = useKusama()
+const AccountContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const { api } = useAssetHub()
   const [activeAccount, _setActiveAccount] = useState<WalletAccount | undefined>(storedActiveAccount)
+  const [polkadotSigner, setPolkadotSigner] = useState<PolkadotSigner | undefined>(undefined)
   const [level, setLevel] = useState('human')
-
-  const society = api?.query.society
 
   const setActiveAccount = (account: WalletAccount | undefined) => {
     _setActiveAccount(account)
+    setPolkadotSigner(undefined)
     localStorage.setItem('activeAccount', JSON.stringify(account))
   }
 
   useEffect(() => {
-    if (!activeAccount) return
+    if (!activeAccount) {
+      setPolkadotSigner(undefined)
+      return
+    }
 
+    let cancelled = false
     const enableWallet = async () => {
-      const wallet = wallets.find((wallet) => wallet.extensionName === activeAccount?.source)
+      const wallet = wallets.find((candidate) => candidate.extensionName === activeAccount.source)
       try {
-        await wallet?.enable(APP_NAME)
-        _setActiveAccount((account: any) => ({ ...account, signer: wallet?.signer }))
-      } catch (e) {
-        toastByStatus['error']((e as Error).message, {})
-        return
+        await wallet?.enable(APP_NAME ?? 'Kappa Sigma Mu')
+        const signer = wallet?.signer as { signPayload?: SignPayload; signRaw?: SignRaw } | undefined
+
+        if (!signer?.signPayload || !signer.signRaw) throw new Error('This wallet does not expose a compatible signer.')
+        const papiSigner = getPolkadotSignerFromPjs(activeAccount.address, signer.signPayload, signer.signRaw)
+        if (!cancelled) setPolkadotSigner(papiSigner)
+      } catch (error) {
+        if (!cancelled) {
+          setPolkadotSigner(undefined)
+          toastByStatus.error(error instanceof Error ? error.message : String(error), {})
+        }
       }
     }
 
-    enableWallet()
-  }, [])
+    void enableWallet()
+    return () => {
+      cancelled = true
+    }
+  }, [activeAccount])
 
   useEffect(() => {
-    if (!society || !activeAccount) return
-
-    const address = activeAccount.address
-    let cancelled = false
-
-    const detectLevel = async () => {
-      const [bids, candidates, members] = await Promise.all([
-        society.bids() as Promise<Vec<Bid>>,
-        society.candidates.keys() as Promise<StorageKey<[AccountId32]>[]>,
-        society.members.keys() as Promise<StorageKey<[AccountId32]>[]>
-      ])
-
-      if (cancelled || activeAccount?.address !== address) return
-
-      const matches = (accounts: AccountId32[]) =>
-        accounts.some((account) => isSameAddress(account.toString(), address))
-
-      const bidders = bids.map((bid) => bid.who)
-      const candidateAccounts = candidates.map((key) => key.args[0] as AccountId32)
-      const memberAccounts = members.map((key) => key.args[0] as AccountId32)
-
-      if (matches(memberAccounts)) setLevel('cyborg')
-      else if (matches(candidateAccounts)) setLevel('candidate')
-      else if (matches(bidders)) setLevel('bidder')
-      else setLevel('human')
+    if (!api || !activeAccount) {
+      setLevel('human')
+      return
     }
 
-    detectLevel()
+    let cancelled = false
+    getAccountLevel(api, activeAccount.address)
+      .then((nextLevel) => {
+        if (!cancelled) setLevel(nextLevel)
+      })
+      .catch(() => {
+        if (!cancelled) setLevel('human')
+      })
 
     return () => {
       cancelled = true
     }
-  }, [society, activeAccount])
+  }, [api, activeAccount])
 
   return (
-    <AccountContext.Provider value={{ level, setLevel, activeAccount, setActiveAccount }}>
+    <AccountContext.Provider value={{ level, setLevel, activeAccount, setActiveAccount, polkadotSigner }}>
       {children}
     </AccountContext.Provider>
   )

@@ -1,14 +1,4 @@
-import { decodeAddress, encodeAddress } from '@polkadot/keyring'
-import { hexToU8a, isHex } from '@polkadot/util'
+import { getSs58AddressInfo, type SS58String } from 'polkadot-api'
 
-export const isValidAddress = (address: string | null) => {
-  if (address === null) return false
-
-  try {
-    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address))
-
-    return true
-  } catch (_) {
-    return false
-  }
-}
+export const isValidAddress = (address: string | null) =>
+  address !== null && getSs58AddressInfo(address as SS58String).isValid

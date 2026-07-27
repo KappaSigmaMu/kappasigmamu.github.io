@@ -1,6 +1,3 @@
-import { u32 } from '@polkadot/types'
-import { Time } from '@polkadot/util/types'
-import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import styled from 'styled-components'
@@ -10,28 +7,14 @@ import {
   calculateVotingPercentage,
   isVotingPeriod
 } from './helpers/periods'
+import { useConsts } from '../../hooks/useConsts'
 import { useRelayChainBlockNumber } from '../../hooks/useRelayChainBlockNumber'
-import { useKusama } from '../../kusama'
+import { LoadingSpinner } from '../../pages/explore/components/LoadingSpinner'
 
 const CurrentRound = () => {
-  const { api } = useKusama()
-  const currentBlock = useRelayChainBlockNumber(api) ?? 0
-  const [challengePeriod, setChallengePeriod] = useState<number>(0)
-  const [votingPeriod, setVotingPeriod] = useState<number>(0)
-  const [claimPeriod, setClaimPeriod] = useState<number>(0)
-
-  useEffect(() => {
-    if (api) {
-      const challengePeriod = (api.consts.society.challengePeriod as u32).toNumber()
-      setChallengePeriod(challengePeriod)
-
-      const votingPeriod = (api.consts.society.votingPeriod as u32).toNumber()
-      setVotingPeriod(votingPeriod)
-
-      const claimPeriod = (api.consts.society.claimPeriod as u32).toNumber()
-      setClaimPeriod(claimPeriod)
-    }
-  }, [api])
+  const currentBlock = useRelayChainBlockNumber() ?? 0
+  const { challengePeriod, votingPeriod, claimPeriod } = useConsts()
+  if (challengePeriod <= 0 || votingPeriod <= 0 || claimPeriod <= 0) return <LoadingSpinner center={false} small />
 
   const isVoting = isVotingPeriod(votingPeriod, claimPeriod, currentBlock)
   const text = isVoting ? 'Waiting for voting period to end' : 'Waiting for claim period to end'
@@ -42,18 +25,18 @@ const CurrentRound = () => {
         title="Claim Period"
         inactive={isVoting}
         text={text}
-        info={calculateClaimPercentage(currentBlock, votingPeriod, claimPeriod, api)}
+        info={calculateClaimPercentage(currentBlock, votingPeriod, claimPeriod)}
       />
       <CurrentRoundItem
         title="Voting Period"
         inactive={!isVoting}
         text={text}
-        info={calculateVotingPercentage(currentBlock, votingPeriod, claimPeriod, api)}
+        info={calculateVotingPercentage(currentBlock, votingPeriod, claimPeriod)}
       />
       <CurrentRoundItem
         title="Challenge Period"
         inactive={false}
-        info={calculateChallengePercentage(currentBlock, challengePeriod, api)}
+        info={calculateChallengePercentage(currentBlock, challengePeriod)}
       />
     </>
   )
@@ -63,15 +46,11 @@ type CurrentRoundItemProps = {
   title: string
   inactive: boolean
   text?: string
-  info: {
-    percentageDone: number
-    time: Time
-  }
+  info: { percentageDone: number; time: { days: number; hours: number; minutes: number; seconds: number } }
 }
 
 const CurrentRoundItem = ({ title, inactive, text, info }: CurrentRoundItemProps) => {
   const { days, hours, minutes, seconds } = info.time
-
   return (
     <>
       <Row className="mt-4 mb-1">
@@ -103,15 +82,11 @@ const CurrentRoundItem = ({ title, inactive, text, info }: CurrentRoundItemProps
   )
 }
 
-const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element => (
+const CurrentRoundProgress = ({ percentageDone }: { percentageDone: number }): JSX.Element => (
   <div style={{ width: 100, height: 100 }}>
     <CircularProgressbar
-      value={props.percentageDone}
-      styles={buildStyles({
-        pathColor: '#E6007A',
-        trailColor: '#fff',
-        strokeLinecap: 'butt'
-      })}
+      value={percentageDone}
+      styles={buildStyles({ pathColor: '#E6007A', trailColor: '#fff', strokeLinecap: 'butt' })}
     />
   </div>
 )
@@ -119,7 +94,6 @@ const CurrentRoundProgress = (props: { percentageDone: number }): JSX.Element =>
 const Unit = styled.span`
   color: ${(props) => props.theme.colors.lightGrey};
 `
-
 const Value = styled.span`
   color: ${(props) => props.theme.colors.white};
 `

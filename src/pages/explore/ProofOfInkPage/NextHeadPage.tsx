@@ -1,35 +1,22 @@
-import { ApiPromise } from '@polkadot/api'
-import Identicon from '@polkadot/react-identicon'
-import type { Option } from '@polkadot/types'
-import { AccountId } from '@polkadot/types/interfaces'
-import { useEffect, useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
 import Alert from 'react-bootstrap/Alert'
 import styled from 'styled-components'
+import { useAssetHub } from '../../../chain/ChainProvider'
+import { useChainQuery } from '../../../chain/hooks'
 import { AccountIdentity } from '../../../components/AccountIdentity'
 import { AccountIndex } from '../../../components/AccountIndex'
 import { DataHeaderRow, DataRow } from '../../../components/base'
+import { ChainError } from '../components/ChainError'
+import { Identicon } from '../components/Identicon'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 
-type NextHeadPageProps = {
-  api: ApiPromise | null
-}
-
-const NextHeadPage = ({ api }: NextHeadPageProps): JSX.Element => {
-  const society = api?.query?.society
-
-  const [head, setNextHead] = useState<AccountId | null>(null)
-
-  useEffect(() => {
-    society?.nextHead().then((headCodec) => {
-      const head = headCodec as Option<any>
-      head.isSome && setNextHead(head.unwrap().who)
-    })
-  }, [society])
-
-  return head === null ? (
-    <LoadingSpinner />
-  ) : (
+const NextHeadPage = (): JSX.Element => {
+  const { api } = useAssetHub()
+  const state = useChainQuery(() => api?.query.Society.NextHead.getValue(), [api])
+  const head = state.data?.who
+  if (state.error) return <ChainError error={state.error} onRetry={state.refetch} />
+  if (!head) return <LoadingSpinner />
+  return (
     <>
       <DataHeaderRow className="d-none d-lg-flex text-center">
         <Col lg={1} className="text-center">
@@ -46,16 +33,15 @@ const NextHeadPage = ({ api }: NextHeadPageProps): JSX.Element => {
         </Col>
         <Col lg={2}></Col>
       </DataHeaderRow>
-
       <StyledDataRow>
         <Col lg={1} className="text-center">
-          <Identicon value={head.toHuman()} size={32} theme={'polkadot'} />
+          <Identicon value={head} size={32} theme="polkadot" />
         </Col>
         <Col lg={5} className="text-center text-lg-start text-truncate">
-          {head.toHuman()}
+          {head}
         </Col>
         <Col lg={2} className="text-center text-lg-start">
-          <AccountIndex api={api!} accountId={head} />
+          <AccountIndex accountId={head} />
         </Col>
         <Col lg={2} className="text-center text-lg-start text-truncate">
           <AccountIdentity accountId={head} hideNotSet />
@@ -66,19 +52,16 @@ const NextHeadPage = ({ api }: NextHeadPageProps): JSX.Element => {
           </Badge>
         </Col>
       </StyledDataRow>
-
       <Alert variant="warning" style={{ textAlign: 'center' }}>
         <b>This may change if new members are approved</b>
       </Alert>
     </>
   )
 }
-
 const StyledDataRow = styled(DataRow)`
   @media (max-width: 992px) {
     padding-block: 12px;
     margin-inline: 2px;
   }
 `
-
 export { NextHeadPage }
