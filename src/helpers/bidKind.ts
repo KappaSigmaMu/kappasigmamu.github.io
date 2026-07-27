@@ -1,7 +1,6 @@
-import type { AccountId, Balance } from '@polkadot/types/interfaces'
-import type { Bid, BidKind } from '@polkadot/types/interfaces/society'
+import type { SocietyBid, SocietyBidKindType, Balance, AccountId } from '../chain/types'
 
-export type BidKindType = BidKind['type']
+export type BidKindType = SocietyBidKindType
 
 export type BidRow = {
   who: AccountId
@@ -11,32 +10,15 @@ export type BidRow = {
   vouchTip?: Balance
 }
 
-export function mapBidToRow(bid: Bid): BidRow {
+export function mapBidToRow(bid: SocietyBid): BidRow {
   if (bid.kind.type === 'Vouch') {
-    return {
-      who: bid.who,
-      kindType: 'Vouch',
-      value: bid.value,
-      vouchAccount: bid.kind.asVouch[0].toString(),
-      vouchTip: bid.kind.asVouch[1]
-    }
+    const [vouchAccount, vouchTip] = bid.kind.value
+    return { who: bid.who, kindType: 'Vouch', value: bid.value, vouchAccount, vouchTip }
   }
 
-  return {
-    who: bid.who,
-    kindType: 'Deposit',
-    value: bid.value
-  }
+  return { who: bid.who, kindType: 'Deposit', value: bid.value }
 }
 
 export function humanizeBidKindType(kindType: BidKindType, vouchAccount?: string): string {
-  if (kindType === 'Deposit') {
-    return 'Deposit'
-  }
-
-  if (kindType === 'Vouch') {
-    return `Vouch: ${vouchAccount ?? ''}`
-  }
-
-  return 'Unknown'
+  return kindType === 'Vouch' ? `Vouch: ${vouchAccount ?? ''}` : kindType === 'Deposit' ? 'Deposit' : 'Unknown'
 }

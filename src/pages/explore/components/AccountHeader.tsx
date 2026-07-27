@@ -1,7 +1,7 @@
-import { AccountId } from '@polkadot/types/interfaces'
 import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { Identicon } from './Identicon'
+import type { AccountId } from '../../../chain/types'
 import { CopyButton } from '../../../components/CopyButton'
 
 export function AccountHeader({ accountId }: { accountId: AccountId }) {
@@ -9,14 +9,14 @@ export function AccountHeader({ accountId }: { accountId: AccountId }) {
     <>
       <Row>
         <Col className="d-flex justify-content-center">
-          <Identicon value={accountId.toHuman()} size={100} theme={'polkadot'} />
+          <Identicon value={accountId} size={100} theme="polkadot" />
         </Col>
       </Row>
       <Row>
-        <HashRow className="mx-auto">{accountId.toHuman()}</HashRow>
+        <HashRow className="mx-auto">{accountId}</HashRow>
       </Row>
       <Row className="mt-3">
-        <CopyButton content={accountId.toHuman()} />
+        <CopyButton content={accountId} />
       </Row>
     </>
   )

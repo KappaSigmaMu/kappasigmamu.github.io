@@ -8,6 +8,7 @@ import { SocialIcons } from './SocialIcons'
 import { StyledDropdownMenu } from './StyledDropdownMenu'
 import { Wallets } from './Wallets'
 import { useAccount } from '../account/AccountContext'
+import type { NavRouteProps } from '../chain/types'
 import KappaSigmaMu from '../static/kappa-sigma-mu-logo.svg'
 
 const Navbar = ({
