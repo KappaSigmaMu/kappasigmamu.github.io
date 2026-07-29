@@ -16,8 +16,7 @@ const visitDashboard = () => {
 
 describe('Explore Dashboard', () => {
   beforeEach(() => {
-    cy.unloadApp()
-    cy.task('resetChopsticksStorage', null, { timeout: CHOPSTICKS_TASK_TIMEOUT })
+    cy.resetChopsticksStorage({ timeout: CHOPSTICKS_TASK_TIMEOUT })
     visitDashboard()
   })
 

@@ -79,6 +79,8 @@ import-storage:
       - Payouts
       - SuspendedMembers
       - Defending
+      - Votes
+      - DefenderVotes
       - Head
       - ChallengeRoundCount
     Parameters:

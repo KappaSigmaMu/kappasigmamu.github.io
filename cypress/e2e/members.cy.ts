@@ -84,7 +84,7 @@ describe('Member Operations', () => {
 
   describe('Defender Voting', () => {
     beforeEach(() => {
-      cy.resetChopsticksToFork({ timeout: 120000 })
+      cy.resetChopsticksStorage({ timeout: 120000 })
       cy.visit('/explore/members?rpc=ws://localhost:8000')
       cy.getBySel('members-list', { timeout: 20000 }).should('be.visible')
       cy.initWallet(testAccounts, Cypress.expose('app_name'))
@@ -148,6 +148,6 @@ describe('Member Operations', () => {
   })
 
   after(() => {
-    cy.resetChopsticksToFork()
+    cy.resetChopsticksStorage()
   })
 })

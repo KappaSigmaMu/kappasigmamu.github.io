@@ -12,7 +12,6 @@ describe('User Journeys', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
   before(() => {
-    cy.task('rememberForkPoint')
     cy.fixture('accounts').then((accounts) => {
       testAccounts = Object.values(accounts).map((acc: any) => ({
         address: acc.address,
@@ -25,7 +24,7 @@ describe('User Journeys', () => {
 
   describe('New User Journey (Human → Bidder)', () => {
     before(() => {
-      cy.resetChopsticksToFork({ timeout: 120000 })
+      cy.resetChopsticksStorage({ timeout: 120000 })
     })
 
     it('should guide a human through the journey page to place a bid', () => {
@@ -55,7 +54,7 @@ describe('User Journeys', () => {
 
   describe('Member Participation Journey', () => {
     before(() => {
-      cy.resetChopsticksToFork({ timeout: 120000 })
+      cy.resetChopsticksStorage({ timeout: 120000 })
     })
 
     beforeEach(() => {
@@ -90,7 +89,7 @@ describe('User Journeys', () => {
 
   describe('Bidder Lifecycle (Bid → Unbid)', () => {
     beforeEach(() => {
-      cy.resetChopsticksToFork({ timeout: 120000 })
+      cy.resetChopsticksStorage({ timeout: 120000 })
       cy.visit('/explore/bidders?rpc=ws://localhost:8000')
       cy.initWallet(testAccounts, Cypress.expose('app_name'))
     })
@@ -126,6 +125,6 @@ describe('User Journeys', () => {
   })
 
   after(() => {
-    cy.resetChopsticksToFork()
+    cy.resetChopsticksStorage()
   })
 })

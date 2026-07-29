@@ -21,7 +21,7 @@ const SUITES = {
 }
 
 const SUITE_ENV = {
-  'membership-claim': { KUSAMA_BLOCK_NUMBER: '18280000' },
+  'membership-claim': { KUSAMA_BLOCK_NUMBER: '18230000' },
 }
 
 function parseArgs(argv) {

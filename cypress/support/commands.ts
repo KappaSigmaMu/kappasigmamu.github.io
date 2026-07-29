@@ -97,7 +97,7 @@ Cypress.Commands.add('unloadApp', () => {
   })
 })
 
-Cypress.Commands.add('resetChopsticksToFork', (options?: { timeout?: number }) => {
+Cypress.Commands.add('resetChopsticksStorage', (options?: { timeout?: number }) => {
   cy.unloadApp()
-  return options ? cy.task('resetChopsticksToFork', null, options) : cy.task('resetChopsticksToFork')
+  return options ? cy.task('resetChopsticksStorage', null, options) : cy.task('resetChopsticksStorage')
 })

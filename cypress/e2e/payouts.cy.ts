@@ -14,7 +14,6 @@ describe('Payouts Page', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
   before(() => {
-    cy.task('rememberForkPoint')
     cy.fixture('accounts').then((accounts) => {
       testAccounts = Object.values(accounts).map((acc: any) => ({
         address: acc.address,
@@ -26,7 +25,7 @@ describe('Payouts Page', () => {
   })
 
   beforeEach(() => {
-    cy.resetChopsticksToFork()
+    cy.resetChopsticksStorage()
   })
 
   describe('Payouts List UI', () => {
@@ -90,6 +89,6 @@ describe('Payouts Page', () => {
   })
 
   after(() => {
-    cy.resetChopsticksToFork()
+    cy.resetChopsticksStorage()
   })
 })

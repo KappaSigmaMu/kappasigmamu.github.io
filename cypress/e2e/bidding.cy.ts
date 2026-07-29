@@ -41,8 +41,7 @@ describe('Bidding Operations', () => {
   })
 
   beforeEach(() => {
-    cy.unloadApp()
-    cy.task('resetChopsticksStorage', null, { timeout: CHOPSTICKS_TASK_TIMEOUT })
+    cy.resetChopsticksStorage({ timeout: CHOPSTICKS_TASK_TIMEOUT })
   })
 
   describe('Bidders Page UI', () => {
@@ -116,15 +115,7 @@ describe('Bidding Operations', () => {
       cy.getBySel('submit-vouch-button').click()
 
       cy.approvePendingTransaction()
-      cy.getBySel('tx-pending', { timeout: 30000 }).find('[data-test="tx-message"]').should('be.visible')
-      cy.includePendingTransaction({ timeout: CHOPSTICKS_TASK_TIMEOUT })
-
-      // Chopsticks can briefly restart its WebSocket while building a block in CI.
-      // Reconnect and assert the resulting chain state instead of depending on the
-      // transaction-status subscription surviving that restart.
-      visitBiddersPage()
-      cy.contains('Bidders (2)', { timeout: 60000 }).should('be.visible')
-      cy.getBySel('bidders-list', { timeout: 60000 }).should('contain.text', 'Vouch:')
+      expectTransactionSuccess()
     })
 
     it('should show error for invalid vouch address', () => {
@@ -228,7 +219,6 @@ describe('Bidding Operations', () => {
   })
 
   after(() => {
-    cy.unloadApp()
-    cy.task('resetChopsticksStorage', null, { timeout: CHOPSTICKS_TASK_TIMEOUT })
+    cy.resetChopsticksStorage({ timeout: CHOPSTICKS_TASK_TIMEOUT })
   })
 })

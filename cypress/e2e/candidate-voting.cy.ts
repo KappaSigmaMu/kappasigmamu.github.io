@@ -4,7 +4,6 @@ describe('Candidate Voting', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
   before(() => {
-    cy.task('rememberForkPoint')
     cy.fixture('accounts').then((accounts) => {
       testAccounts = Object.values(accounts).map((acc: any) => ({
         address: acc.address,
@@ -59,7 +58,7 @@ describe('Candidate Voting', () => {
 
   describe('Vote on Candidate', () => {
     beforeEach(() => {
-      cy.resetChopsticksToFork({ timeout: 120000 })
+      cy.resetChopsticksStorage({ timeout: 120000 })
       cy.visit('/explore/candidates?rpc=ws://localhost:8000')
       cy.initWallet(testAccounts, Cypress.expose('app_name'))
       cy.getBySel('candidates-list', { timeout: 20000 }).should('be.visible')
@@ -136,6 +135,6 @@ describe('Candidate Voting', () => {
   })
 
   after(() => {
-    cy.resetChopsticksToFork()
+    cy.resetChopsticksStorage()
   })
 })
