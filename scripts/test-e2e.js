@@ -4,6 +4,7 @@ const path = require('path')
 
 const ROOT = path.join(__dirname, '..')
 const FAILED_TESTS_FILE = path.join(ROOT, 'cypress/.cache/failed-tests.json')
+const DEFAULT_KUSAMA_BLOCK_NUMBER = '19596780'
 
 const SUITES = {
   smoke: 'cypress/e2e/smoke.cy.ts',
@@ -106,12 +107,14 @@ function buildCypressCommand({ mode, spec, grep, headed }) {
 function runWithServers(cypressCommand, env = {}) {
   const escapedCypressCommand = cypressCommand.replace(/"/g, '\\"')
   const withApp = `start-server-and-test start:test:ready http://localhost:3000 "${escapedCypressCommand}"`
-  const command = `start-server-and-test chopsticks http://localhost:8000 '${withApp}'`
+  const command = `start-server-and-test chopsticks:test http://localhost:8000 '${withApp}'`
+  const kusamaBlockNumber =
+    env.KUSAMA_BLOCK_NUMBER ?? process.env.KUSAMA_BLOCK_NUMBER ?? DEFAULT_KUSAMA_BLOCK_NUMBER
 
   return spawnSync(command, {
     stdio: 'inherit',
     shell: true,
-    env: { ...process.env, ...env },
+    env: { ...process.env, KUSAMA_BLOCK_NUMBER: kusamaBlockNumber, ...env },
   })
 }
 

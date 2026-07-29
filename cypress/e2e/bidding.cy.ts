@@ -18,7 +18,7 @@ const expectTransactionSuccess = () => {
     .should('be.visible')
     .and('contain.text', 'Request sent. Waiting for response...')
 
-  cy.task('resetChopsticks', null, { timeout: CHOPSTICKS_TASK_TIMEOUT })
+  cy.includePendingTransaction({ timeout: CHOPSTICKS_TASK_TIMEOUT })
   cy.getBySel('tx-success', { timeout: 60000 })
     .find('[data-test="tx-message"]')
     .should('be.visible')

@@ -82,9 +82,9 @@ describe('Membership Claim', () => {
 
       cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
       cy.approvePendingTransaction()
+      cy.includePendingTransaction({ timeout: CHOPSTICKS_TASK_TIMEOUT })
       cy.contains(/claim request sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
 
-      cy.task('resetChopsticks', null, { timeout: CHOPSTICKS_TASK_TIMEOUT })
       cy.visit('/journey?rpc=ws://localhost:8000')
       cy.verifyAccountLevel('Cyborg')
     })

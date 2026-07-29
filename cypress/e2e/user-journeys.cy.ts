@@ -2,7 +2,7 @@ import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/d
 
 const approveTxAndAdvance = () => {
   cy.approvePendingTransaction()
-  cy.task('resetChopsticks', null, { timeout: 120000 })
+  cy.includePendingTransaction({ timeout: 120000 })
   cy.contains(/transaction submitted|submitted successfully|removed successfully|vote sent|finalized/i, {
     timeout: 60000
   }).should('be.visible')

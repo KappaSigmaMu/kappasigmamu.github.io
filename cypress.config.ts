@@ -7,6 +7,8 @@ const yaml = require('js-yaml');
 
 const CHOPSTICKS_RPC = 'http://localhost:8000';
 const FAILED_TESTS_CACHE = path.join(__dirname, 'cypress/.cache/failed-tests.json');
+const PENDING_EXTRINSIC_TIMEOUT = 30000;
+const PENDING_EXTRINSIC_POLL_INTERVAL = 100;
 
 let forkBlockHash: string | null = null;
 
@@ -23,6 +25,20 @@ async function chopsticksRpc<T>(method: string, params: unknown[] = []): Promise
   }
 
   return payload.result as T;
+}
+
+const delay = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+async function waitForPendingExtrinsics(): Promise<string[]> {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < PENDING_EXTRINSIC_TIMEOUT) {
+    const pending = await chopsticksRpc<string[]>('author_pendingExtrinsics');
+    if (pending.length > 0) return pending;
+    await delay(PENDING_EXTRINSIC_POLL_INTERVAL);
+  }
+
+  throw new Error(`No pending Chopsticks extrinsic appeared within ${PENDING_EXTRINSIC_TIMEOUT}ms`);
 }
 
 function loadImportStorage() {
@@ -54,6 +70,18 @@ export default defineConfig({
           } catch (e) {
             console.log('Chopsticks reset skipped:', (e as Error).message);
           }
+          return null;
+        },
+        async includePendingTransaction() {
+          const queueStartedAt = Date.now();
+          const pending = await waitForPendingExtrinsics();
+          const queuedAfter = Date.now() - queueStartedAt;
+          const blockStartedAt = Date.now();
+          await chopsticksRpc('dev_newBlock');
+          const blockDuration = Date.now() - blockStartedAt;
+          console.log(
+            `Chopsticks included ${pending.length} pending transaction(s): queue ${queuedAfter}ms, block ${blockDuration}ms`
+          );
           return null;
         },
         async resetChopsticksToFork() {

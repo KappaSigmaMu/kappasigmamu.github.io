@@ -108,7 +108,7 @@ describe('Member Operations', () => {
       cy.getBySel('defender-approve-button', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.task('resetChopsticks', null, { timeout: 120000 })
+      cy.includePendingTransaction({ timeout: 120000 })
       cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
     })
 
@@ -120,7 +120,7 @@ describe('Member Operations', () => {
       cy.getBySel('defender-reject-button', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.task('resetChopsticks', null, { timeout: 120000 })
+      cy.includePendingTransaction({ timeout: 120000 })
       cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
     })
 
@@ -132,7 +132,7 @@ describe('Member Operations', () => {
       cy.getBySel('defender-approve-button', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.task('resetChopsticks', null, { timeout: 120000 })
+      cy.includePendingTransaction({ timeout: 120000 })
       cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
 
       cy.contains('Voted', { timeout: 20000 }).should('be.visible')

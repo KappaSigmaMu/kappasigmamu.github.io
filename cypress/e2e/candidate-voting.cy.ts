@@ -88,7 +88,7 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-approve-button-', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.task('resetChopsticks')
+      cy.includePendingTransaction({ timeout: 120000 })
       cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
     })
 
@@ -99,7 +99,7 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-reject-button-', { timeout: 15000 }).last().click()
 
       cy.approvePendingTransaction()
-      cy.task('resetChopsticks')
+      cy.includePendingTransaction({ timeout: 120000 })
       cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
     })
 
@@ -110,7 +110,7 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-approve-button-', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.task('resetChopsticks')
+      cy.includePendingTransaction({ timeout: 120000 })
       cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
 
       cy.getBySelLike('candidate-voted-badge-', { timeout: 20000 })

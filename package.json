@@ -142,6 +142,7 @@
   "scripts": {
     "build": "papi && node scripts/build.js",
     "chopsticks": "npx @acala-network/chopsticks@1.5.0 --config=config/kusama.yml",
+    "chopsticks:test": "npx @acala-network/chopsticks@1.5.0 --config=config/kusama.yml --build-block-mode=Manual --runtime-log-level=0 --save-blocks=false",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "cy:run:headless": "cypress run --headless",

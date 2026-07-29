@@ -24,6 +24,8 @@ Cypress.Commands.add('connectWallet', (accountName: string) => {
   cy.getBySel('account-balance', { timeout: 20000 }).should('be.visible')
 })
 
+const approvedTxRequestIds = new Set<number>()
+
 Cypress.Commands.add('approvePendingTransaction', () => {
   cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
 
@@ -31,8 +33,12 @@ Cypress.Commands.add('approvePendingTransaction', () => {
   const approvePendingTx = (attempt = 0): void => {
     cy.getTxRequests().then((txRequests) => {
       const txIds = Object.keys(txRequests)
+        .map(Number)
+        .filter((txId) => !approvedTxRequestIds.has(txId))
       if (txIds.length > 0) {
-        cy.approveTx(Number(txIds[txIds.length - 1]))
+        const txId = txIds[txIds.length - 1]
+        approvedTxRequestIds.add(txId)
+        cy.approveTx(txId)
         return
       }
       if (attempt >= maxAttempts) {
@@ -45,9 +51,18 @@ Cypress.Commands.add('approvePendingTransaction', () => {
   approvePendingTx()
 })
 
+Cypress.Commands.add('includePendingTransaction', (options?: { timeout?: number }) => {
+  if (options) {
+    cy.task('includePendingTransaction', null, options)
+    return
+  }
+  cy.task('includePendingTransaction')
+})
+
 Cypress.Commands.add('submitTransaction', () => {
   cy.approvePendingTransaction()
   cy.getBySel('tx-pending', { timeout: 30000 }).find('[data-test="tx-message"]').should('be.visible')
+  cy.includePendingTransaction({ timeout: 120000 })
   cy.getBySel('tx-success', { timeout: 30000 }).find('[data-test="tx-message"]').should('be.visible')
   cy.getBySel('tx-pending').should('not.exist')
 })
