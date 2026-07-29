@@ -2,6 +2,7 @@ import { useLayoutEffect, useState } from 'react'
 import { Nav } from 'react-bootstrap'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
+import { LoadingSpinner } from './LoadingSpinner'
 import { LinkWithQuery } from '../../../components/LinkWithQuery'
 
 type Totals = {
@@ -12,7 +13,7 @@ type Totals = {
   suspendedMembers: number
 }
 
-const NavigationBar = ({ totals }: { totals: Totals }) => {
+const NavigationBar = ({ totals, loading = false }: { totals: Totals; loading?: boolean }) => {
   const [showSubNav, setShowSubNav] = useState(false)
   const location = useLocation()
 
@@ -28,22 +29,22 @@ const NavigationBar = ({ totals }: { totals: Totals }) => {
       >
         <StyledNavItem>
           <Nav.Link as={LinkWithQuery} to="/explore/bidders">
-            Bidders ({totals.bidders})
+            Bidders {loading ? <LoadingSpinner center={false} small /> : `(${totals.bidders})`}
           </Nav.Link>
         </StyledNavItem>
         <StyledNavItem>
           <Nav.Link as={LinkWithQuery} to="/explore/candidates">
-            Candidates ({totals.candidates})
+            Candidates {loading ? <LoadingSpinner center={false} small /> : `(${totals.candidates})`}
           </Nav.Link>
         </StyledNavItem>
         <StyledNavItem>
           <Nav.Link as={LinkWithQuery} to="/explore/members">
-            Members ({totals.members}/{totals.maxMembers})
+            Members {loading ? <LoadingSpinner center={false} small /> : `(${totals.members}/${totals.maxMembers})`}
           </Nav.Link>
         </StyledNavItem>
         <StyledNavItem>
           <Nav.Link as={LinkWithQuery} to="/explore/suspended">
-            Suspended Members ({totals.suspendedMembers})
+            Suspended Members {loading ? <LoadingSpinner center={false} small /> : `(${totals.suspendedMembers})`}
           </Nav.Link>
         </StyledNavItem>
         <StyledNavItem>
@@ -96,6 +97,11 @@ const StyledNav = styled(Nav)`
 `
 
 const StyledNavItem = styled(Nav.Item)`
+  .spinner-border {
+    display: inline-block;
+    width: 0.8rem;
+    height: 0.8rem;
+  }
   .nav-link {
     color: ${(props) => props.theme.colors.lightGrey};
   }

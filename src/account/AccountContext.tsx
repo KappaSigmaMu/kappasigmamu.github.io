@@ -1,8 +1,8 @@
 import type { WalletAccount } from '@talismn/connect-wallets'
 import { getPolkadotSignerFromPjs, type PolkadotSigner, type SignPayload, type SignRaw } from 'polkadot-api/pjs-signer'
-import React, { useContext, useEffect, useState } from 'react'
-import { useAssetHub } from '../chain/ChainProvider'
-import { getAccountLevel } from '../chain/society/queries'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { getAccountLevelFromCollections, type SocietyAccountLevel } from '../chain/society/queries'
+import { useSociety } from '../chain/society/SocietyContext'
 import { wallets } from '../helpers/wallets'
 import { toastByStatus } from '../pages/explore/helpers'
 
@@ -20,8 +20,9 @@ if (localStorageAccount && localStorageAccount !== 'undefined') {
 const APP_NAME = process.env.REACT_APP_NAME
 
 type StateType = {
-  level: string
-  setLevel: (level: string) => void
+  level: SocietyAccountLevel
+  isLevelLoading: boolean
+  isSignerLoading: boolean
   setActiveAccount: (account: WalletAccount | undefined) => void
   activeAccount: WalletAccount | undefined
   polkadotSigner: PolkadotSigner | undefined
@@ -30,18 +31,19 @@ type StateType = {
 const INIT_STATE: StateType = {
   activeAccount: storedActiveAccount,
   setActiveAccount: () => undefined,
-  setLevel: () => undefined,
   level: 'human',
+  isLevelLoading: false,
+  isSignerLoading: false,
   polkadotSigner: undefined
 }
 
 const AccountContext = React.createContext<StateType>(INIT_STATE)
 
 const AccountContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const { api } = useAssetHub()
+  const { bids, candidates, memberEntries } = useSociety()
   const [activeAccount, _setActiveAccount] = useState<WalletAccount | undefined>(storedActiveAccount)
   const [polkadotSigner, setPolkadotSigner] = useState<PolkadotSigner | undefined>(undefined)
-  const [level, setLevel] = useState('human')
+  const [isSignerLoading, setIsSignerLoading] = useState(Boolean(storedActiveAccount))
 
   const setActiveAccount = (account: WalletAccount | undefined) => {
     _setActiveAccount(account)
@@ -52,10 +54,12 @@ const AccountContextProvider = ({ children }: { children: React.ReactNode }) => 
   useEffect(() => {
     if (!activeAccount) {
       setPolkadotSigner(undefined)
+      setIsSignerLoading(false)
       return
     }
 
     let cancelled = false
+    setIsSignerLoading(true)
     const enableWallet = async () => {
       const wallet = wallets.find((candidate) => candidate.extensionName === activeAccount.source)
       try {
@@ -64,10 +68,14 @@ const AccountContextProvider = ({ children }: { children: React.ReactNode }) => 
 
         if (!signer?.signPayload || !signer.signRaw) throw new Error('This wallet does not expose a compatible signer.')
         const papiSigner = getPolkadotSignerFromPjs(activeAccount.address, signer.signPayload, signer.signRaw)
-        if (!cancelled) setPolkadotSigner(papiSigner)
+        if (!cancelled) {
+          setPolkadotSigner(papiSigner)
+          setIsSignerLoading(false)
+        }
       } catch (error) {
         if (!cancelled) {
           setPolkadotSigner(undefined)
+          setIsSignerLoading(false)
           toastByStatus.error(error instanceof Error ? error.message : String(error), {})
         }
       }
@@ -79,28 +87,27 @@ const AccountContextProvider = ({ children }: { children: React.ReactNode }) => 
     }
   }, [activeAccount])
 
-  useEffect(() => {
-    if (!api || !activeAccount) {
-      setLevel('human')
-      return
-    }
-
-    let cancelled = false
-    getAccountLevel(api, activeAccount.address)
-      .then((nextLevel) => {
-        if (!cancelled) setLevel(nextLevel)
-      })
-      .catch(() => {
-        if (!cancelled) setLevel('human')
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [api, activeAccount])
+  const isLevelLoading = Boolean(
+    activeAccount &&
+      (bids.isLoading ||
+        candidates.isLoading ||
+        memberEntries.isLoading ||
+        !bids.data ||
+        !candidates.data ||
+        !memberEntries.data)
+  )
+  const level = useMemo(
+    () =>
+      activeAccount && bids.data && candidates.data && memberEntries.data
+        ? getAccountLevelFromCollections(activeAccount.address, bids.data, candidates.data, memberEntries.data)
+        : 'human',
+    [activeAccount, bids.data, candidates.data, memberEntries.data]
+  )
 
   return (
-    <AccountContext.Provider value={{ level, setLevel, activeAccount, setActiveAccount, polkadotSigner }}>
+    <AccountContext.Provider
+      value={{ level, isLevelLoading, isSignerLoading, activeAccount, setActiveAccount, polkadotSigner }}
+    >
       {children}
     </AccountContext.Provider>
   )

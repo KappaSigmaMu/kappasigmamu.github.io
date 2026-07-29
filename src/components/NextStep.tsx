@@ -96,7 +96,7 @@ const ClaimMembershipStep = ({
   handleUpdate: () => void
 }) => {
   const { api } = useAssetHub()
-  const { polkadotSigner } = useAccount()
+  const { polkadotSigner, isSignerLoading } = useAccount()
   const [loading, setLoading] = useState(false)
   const onStatusChange: StatusChangeHandler = ({ loading: nextLoading, message, status }) => {
     setLoading(Boolean(nextLoading))
@@ -111,12 +111,12 @@ const ClaimMembershipStep = ({
       onStatusChange
     })
   }
-  if (loading) return <LoadingSpinner center={false} small />
+  if (loading || isSignerLoading) return <LoadingSpinner center={false} small />
   return (
     <>
       <h5>It's claim time!</h5>
       <p>If you were approved, go ahead and claim your membership:</p>&nbsp;&nbsp;
-      <Button data-test="claim-membership-button" onClick={handleClaim}>
+      <Button data-test="claim-membership-button" onClick={handleClaim} disabled={!polkadotSigner}>
         Claim Membership
       </Button>
     </>
@@ -124,7 +124,7 @@ const ClaimMembershipStep = ({
 }
 
 const NextStep = () => {
-  const { level, setLevel } = useAccount()
+  const { level, isLevelLoading } = useAccount()
   const { search } = useLocation()
   const currentBlock = useRelayChainBlockNumber() ?? 0
   const { votingPeriod, claimPeriod } = useConsts()
@@ -132,11 +132,12 @@ const NextStep = () => {
   const periodsLoaded = votingPeriod > 0 && claimPeriod > 0
   const isClaimPeriod = Boolean(claim) || (periodsLoaded && !isVotingPeriod(votingPeriod, claimPeriod, currentBlock))
   const showMessage = (result: ExtrinsicResult) => toastByStatus[result.status](result.message, { id: result.message })
+  if (isLevelLoading) return <LoadingSpinner />
   return (
     <>
       <StyledP>{level !== 'cyborg' && 'Next Step'}</StyledP>
       {level === 'candidate' && isClaimPeriod ? (
-        <ClaimMembershipStep showMessage={showMessage} handleUpdate={() => setLevel('cyborg')} />
+        <ClaimMembershipStep showMessage={showMessage} handleUpdate={() => undefined} />
       ) : (
         LEVELS[level]
       )}

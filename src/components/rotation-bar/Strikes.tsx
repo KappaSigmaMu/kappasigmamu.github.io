@@ -1,11 +1,10 @@
 import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../../account/AccountContext'
-import { useAssetHub } from '../../chain/ChainProvider'
-import { useChainQuery } from '../../chain/hooks'
-import { getSocietyMembers } from '../../chain/society/queries'
+import { useSociety } from '../../chain/society/SocietyContext'
 import { isSameAddress } from '../../chain/ss58'
 import { useConsts } from '../../hooks/useConsts'
+import { LoadingSpinner } from '../../pages/explore/components/LoadingSpinner'
 
 const Circle = ({ active = false }: { active?: boolean }): JSX.Element => (
   <svg width="16" height="16" viewBox="0 0 16 16">
@@ -21,11 +20,12 @@ const StrikesCounter = ({ count, graceStrikes }: { count: number; graceStrikes: 
 )
 
 const Strikes = () => {
-  const { api } = useAssetHub()
   const { activeAccount } = useAccount()
   const { graceStrikes } = useConsts()
-  const { data: members } = useChainQuery(() => (api ? getSocietyMembers(api) : undefined), [api])
-  const strikes = members?.find((member) => isSameAddress(member.accountId, activeAccount?.address))?.strikes ?? 0
+  const { data: members, isLoading } = useSociety().memberEntries
+  const strikes = members?.find((entry) => isSameAddress(entry.accountId, activeAccount?.address))?.member.strikes ?? 0
+
+  if (isLoading) return <LoadingSpinner center={false} small />
 
   return (
     <>

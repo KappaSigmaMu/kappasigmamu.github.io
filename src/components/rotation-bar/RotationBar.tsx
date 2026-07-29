@@ -5,6 +5,7 @@ import { CurrentRound } from './CurrentRound'
 import { RoundPayout } from './RoundPayout'
 import { Strikes } from './Strikes'
 import { useAccount } from '../../account/AccountContext'
+import { LoadingSpinner } from '../../pages/explore/components/LoadingSpinner'
 
 const HumanCurrentRound = (
   <>
@@ -68,7 +69,8 @@ const LEVELS: LevelsType = {
 }
 
 const RotationBar = () => {
-  const { level } = useAccount()
+  const { level, isLevelLoading } = useAccount()
+  if (isLevelLoading) return <LoadingSpinner />
   return (
     <StyledDiv className="py-4">
       <Container>

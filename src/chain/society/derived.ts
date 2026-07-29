@@ -64,11 +64,11 @@ export type SocietyMembersWithPayouts = SocietyMember & {
   extendedPayouts: { block: number; pending: bigint; paid: bigint }
 }
 
-export async function getSocietyMembersWithPayouts(
-  api: AssetHubApi,
+export function buildSocietyMembersWithPayouts(
+  rawMembers: SocietyMemberSnapshot[],
+  info: SocietyInfo | null,
   graceStrikes: number
-): Promise<SocietyMembersWithPayouts[]> {
-  const [info, rawMembers] = await Promise.all([getSocietyInfo(api), getSocietyMembers(api)])
+): SocietyMembersWithPayouts[] {
   const members = buildSocietyMembersArray(rawMembers, info, graceStrikes)
   const byAddress = new Map(rawMembers.map((member) => [member.accountId, member]))
 
@@ -90,4 +90,12 @@ export async function getSocietyMembersWithPayouts(
         Number(b.extendedPayouts.paid - a.extendedPayouts.paid)
       )
     })
+}
+
+export async function getSocietyMembersWithPayouts(
+  api: AssetHubApi,
+  graceStrikes: number
+): Promise<SocietyMembersWithPayouts[]> {
+  const [info, rawMembers] = await Promise.all([getSocietyInfo(api), getSocietyMembers(api)])
+  return buildSocietyMembersWithPayouts(rawMembers, info, graceStrikes)
 }

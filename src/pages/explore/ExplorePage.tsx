@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Route, Routes } from 'react-router-dom'
 import { BiddersPage } from './BiddersPage'
@@ -11,23 +10,21 @@ import { PayoutsPage } from './PayoutsPage'
 import { ProofOfInkPage } from './ProofOfInkPage'
 import { SuspendedPage } from './SuspendedPage'
 import { ChainState, useAssetHub } from '../../chain/ChainProvider'
-import { useChainQuery } from '../../chain/hooks'
-import { getSocietyTotals, type SocietyTotals } from '../../chain/society/queries'
+import type { SocietyTotals } from '../../chain/society/queries'
+import { useSociety } from '../../chain/society/SocietyContext'
 import { NavigateWithQuery } from '../../components/NavigateWithQuery'
 
 const initialState: SocietyTotals = { bidders: 0, candidates: 0, members: 0, maxMembers: 0, suspendedMembers: 0 }
 
 const ExplorePage = (): JSX.Element => {
-  const { api, state: chainState } = useAssetHub()
-  const [trigger, setTrigger] = useState(false)
-  const totalsState = useChainQuery(() => (api ? getSocietyTotals(api) : undefined), [api, trigger])
+  const { state: chainState } = useAssetHub()
+  const { totals: totalsState } = useSociety()
   const totals = totalsState.data ?? initialState
-  const handleUpdateTotal = () => setTrigger((previous) => !previous)
   return (
     <Container>
       <Row>
         <Col>
-          <NavigationBar totals={totals} />
+          <NavigationBar totals={totals} loading={totalsState.isLoading} />
         </Col>
       </Row>
       {totalsState.error && <ChainError error={totalsState.error} onRetry={totalsState.refetch} />}
@@ -40,7 +37,7 @@ const ExplorePage = (): JSX.Element => {
               <Routes>
                 <Route path="/" element={<NavigateWithQuery to="/explore/bidders" replace />} />
                 <Route path="/bidders" element={<BiddersPage />} />
-                <Route path="/candidates" element={<CandidatesPage handleUpdateTotal={handleUpdateTotal} />} />
+                <Route path="/candidates" element={<CandidatesPage />} />
                 <Route path="/members" element={<MembersPage />} />
                 <Route path="/payouts" element={<PayoutsPage />} />
                 <Route path="/suspended" element={<SuspendedPage />} />

@@ -26,9 +26,9 @@ const Title = ({ activeAccount }: { activeAccount: WalletAccount }) => {
 }
 
 const SelectedAccount = () => {
-  const { activeAccount } = useAccount()
+  const { activeAccount, isLevelLoading, isSignerLoading } = useAccount()
   const { state } = useAssetHub()
-  return state !== ChainState.ready || !activeAccount ? (
+  return state !== ChainState.ready || !activeAccount || isLevelLoading || isSignerLoading ? (
     <Spinner animation="border" variant="primary" />
   ) : (
     <Title activeAccount={activeAccount} />

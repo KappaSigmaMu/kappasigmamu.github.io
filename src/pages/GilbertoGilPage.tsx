@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThreeCanary, defaultConfig, type CanaryConfig } from '../canary-component'
-import { ChainState, useAssetHub } from '../chain/ChainProvider'
-import { getSocietyMembersEntries } from '../chain/society/queries'
+import { useSociety } from '../chain/society/SocietyContext'
 import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
 import { MemberOffcanvas } from '../components/MemberOffcanvas'
 import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
+import { LoadingSpinner } from './explore/components/LoadingSpinner'
 
 const customGilConfig: CanaryConfig = {
   ...defaultConfig.gil,
@@ -31,12 +31,15 @@ const GilbertoGilPage = () => {
   window.scrollTo(0, 0)
 
   const navigate = useNavigate()
-  const { api, state: apiState } = useAssetHub()
-  const [members, setMembers] = useState<Array<string>>([])
+  const membersState = useSociety().memberEntries
+  const members = useMemo(() => membersState.data?.map(({ accountId }) => accountId), [membersState.data])
   const [show, setShow] = useState(false)
 
   const [selectedMember, setSelectedMember] = useState<MemberData>({})
-  const [allMembers, setAllMembers] = useState<MembersData>({})
+  const allMembers = useMemo<MembersData>(
+    () => Object.fromEntries((members ?? []).map((id) => [id, { hash: id, name: 'unknown', level: 'cyborg' }])),
+    [members]
+  )
 
   const handleClose = () => setShow(false)
 
@@ -47,18 +50,6 @@ const GilbertoGilPage = () => {
     }
   }
 
-  useEffect(() => {
-    if (api && apiState === ChainState.ready) {
-      getSocietyMembersEntries(api).then((memberEntries) => {
-        const ids = memberEntries.map(({ accountId }) => accountId)
-        setMembers(ids)
-
-        // TODO: include identity and picture here
-        setAllMembers(Object.fromEntries(ids.map((id) => [id, { hash: id, name: 'unknown', level: 'cyborg' }])))
-      })
-    }
-  }, [api, apiState])
-
   const { search } = useLocation()
   const handleButtonClick = (to: string) => navigate(to + search)
 
@@ -67,7 +58,7 @@ const GilbertoGilPage = () => {
       <MemberOffcanvas show={show} handleClose={handleClose} member={selectedMember} />
       <FullPageHeightRow nogutters="true">
         <div className="position-absolute h-100">
-          {members && (
+          {members ? (
             <ThreeCanary
               objectUrl={`./static/gil.glb`}
               nodes={members.map((id: string) => ({
@@ -78,6 +69,8 @@ const GilbertoGilPage = () => {
               onNodeClick={handleCanaryNodeClick}
               config={customGilConfig}
             />
+          ) : (
+            <LoadingSpinner />
           )}
         </div>
         <CentralizedCol xs={0} lg={8} />

@@ -1,5 +1,6 @@
 import { useAssetHub } from '../ChainProvider'
 import { useChainQuery } from '../hooks'
+import { useSociety } from './SocietyContext'
 
 export type SocietyConsts = {
   candidateDeposit: bigint
@@ -29,6 +30,7 @@ const DEFAULT_CONSTS: SocietyConsts = {
 
 export function useSocietyConsts() {
   const { api } = useAssetHub()
+  const { info } = useSociety()
   const state = useChainQuery(
     () =>
       api
@@ -38,9 +40,8 @@ export function useSocietyConsts() {
             api.constants.Society.PeriodSpend(),
             api.constants.Society.VotingPeriod(),
             api.constants.Society.ClaimPeriod(),
-            api.constants.Society.ChallengePeriod(),
-            api.query.Society.Parameters.getValue()
-          ]).then(([palletId, graceStrikes, periodSpend, votingPeriod, claimPeriod, challengePeriod, parameters]) => ({
+            api.constants.Society.ChallengePeriod()
+          ]).then(([palletId, graceStrikes, periodSpend, votingPeriod, claimPeriod, challengePeriod]) => ({
             palletId,
             graceStrikes,
             periodSpend,
@@ -48,13 +49,22 @@ export function useSocietyConsts() {
             claimPeriod,
             rotationPeriod: votingPeriod + claimPeriod,
             challengePeriod,
-            maxCandidateIntake: parameters?.max_intake ?? 0,
-            candidateDeposit: parameters?.candidate_deposit ?? 0n,
+            maxCandidateIntake: info.data?.parameters?.max_intake ?? 0,
+            candidateDeposit: info.data?.parameters?.candidate_deposit ?? 0n,
             wrongSideDeduction: 0n
           }))
         : undefined,
-    [api]
+    [api, info.data?.parameters]
   )
 
-  return { ...state, ...(state.data ?? DEFAULT_CONSTS) }
+  return {
+    ...state,
+    error: state.error ?? info.error,
+    isLoading: state.isLoading || info.isLoading,
+    refetch: () => {
+      state.refetch()
+      info.refetch()
+    },
+    ...(state.data ?? DEFAULT_CONSTS)
+  }
 }

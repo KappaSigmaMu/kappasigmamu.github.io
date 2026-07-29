@@ -1,12 +1,11 @@
 import { Col, Row } from 'react-bootstrap'
-import { useAssetHub } from '../../chain/ChainProvider'
-import { useChainQuery } from '../../chain/hooks'
-import { getSocietyInfo } from '../../chain/society/queries'
+import { useSociety } from '../../chain/society/SocietyContext'
+import { LoadingSpinner } from '../../pages/explore/components/LoadingSpinner'
 import { FormatBalance } from '../FormatBalance'
 
 const RoundPayout = () => {
-  const { api } = useAssetHub()
-  const { data: info } = useChainQuery(() => (api ? getSocietyInfo(api) : undefined), [api])
+  const { data: info, isLoading } = useSociety().info
+  if (isLoading) return <LoadingSpinner center={false} small />
   return (
     <>
       <Row className="mb-3">

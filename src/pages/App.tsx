@@ -11,6 +11,7 @@ import { WelcomePage } from './WelcomePage'
 import { WikiPage } from './WikiPage'
 import { AccountContextProvider } from '../account/AccountContext'
 import { ChainProvider } from '../chain/ChainProvider'
+import { SocietyProvider } from '../chain/society/SocietyContext'
 import { Navbar } from '../components/Navbar'
 import { Toaster } from '../components/Toaster'
 import { GlobalStyle } from '../styles/globalStyle'
@@ -56,15 +57,17 @@ const AppRouter = () => {
 const App = () => (
   <ChainProvider chain="assetHub" showLoading>
     <ChainProvider chain="people">
-      <AccountContextProvider>
-        <GlobalStyle />
-        <ThemeProvider theme={Theme}>
+      <SocietyProvider>
+        <AccountContextProvider>
           <GlobalStyle />
-          <Suspense fallback={<p>ERROR/LOADING...</p>}>
-            <AppRouter />
-          </Suspense>
-        </ThemeProvider>
-      </AccountContextProvider>
+          <ThemeProvider theme={Theme}>
+            <GlobalStyle />
+            <Suspense fallback={<p>ERROR/LOADING...</p>}>
+              <AppRouter />
+            </Suspense>
+          </ThemeProvider>
+        </AccountContextProvider>
+      </SocietyProvider>
     </ChainProvider>
   </ChainProvider>
 )

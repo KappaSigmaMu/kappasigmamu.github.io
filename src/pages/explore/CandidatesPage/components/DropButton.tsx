@@ -32,7 +32,7 @@ export function DropButton({
   ...buttonProps
 }: DropButtonProps) {
   const { api } = useAssetHub()
-  const { polkadotSigner } = useAccount()
+  const { polkadotSigner, isSignerLoading } = useAccount()
   const [loading, setLoading] = useState(false)
   const onStatusChange: StatusChangeHandler = ({ loading: nextLoading, message, status }) => {
     setLoading(Boolean(nextLoading))
@@ -51,7 +51,7 @@ export function DropButton({
       console.error(error)
     }
   }
-  if (loading)
+  if (loading || isSignerLoading)
     return (
       <div className="mx-2">
         <LoadingSpinner center={false} small />
@@ -66,7 +66,14 @@ export function DropButton({
         </Tooltip>
       }
     >
-      <Button disabled={disabled} variant="link" onClick={handleDrop} size="sm" className="p-2" {...buttonProps}>
+      <Button
+        disabled={disabled || !polkadotSigner}
+        variant="link"
+        onClick={handleDrop}
+        size="sm"
+        className="p-2"
+        {...buttonProps}
+      >
         <StyledDropIcon size={20} />
       </Button>
     </OverlayTrigger>

@@ -1,19 +1,21 @@
 import type { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
 import { Badge, Col } from 'react-bootstrap'
+import { distinctUntilChanged } from 'rxjs'
 import styled from 'styled-components'
 import { CandidateDetailsOffcanvas } from './CandidateDetailsOffcanvas'
 import { DropButton } from './DropButton'
 import { VoteButton } from './VoteButton'
 import { useAccount } from '../../../../account/AccountContext'
 import { useAssetHub } from '../../../../chain/ChainProvider'
-import { useChainQuery } from '../../../../chain/hooks'
+import { useChainQuery, useChainSub } from '../../../../chain/hooks'
 import { isSameAddress } from '../../../../chain/ss58'
 import type { AccountId, ExtrinsicResult, SocietyCandidate } from '../../../../chain/types'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { FormatBalance } from '../../../../components/FormatBalance'
 import { Identicon } from '../../components/Identicon'
+import { LoadingSpinner } from '../../components/LoadingSpinner'
 import { toastByStatus } from '../../helpers'
 
 const StyledCol = styled(Col)`
@@ -25,11 +27,17 @@ type Props = { activeAccount: WalletAccount | undefined; candidates: SocietyCand
 
 const CandidatesList = ({ activeAccount, candidates, handleUpdate }: Props): JSX.Element => {
   const { api } = useAssetHub()
-  const { level } = useAccount()
+  const { level, isLevelLoading, isSignerLoading } = useAccount()
   const [selectedCandidate, setSelectedCandidate] = useState<AccountId | null>(null)
   const [showDetails, setShowDetails] = useState(false)
   const [disabledAction, setDisabledAction] = useState(false)
-  const roundState = useChainQuery(() => api?.query.Society.RoundCount.getValue(), [api])
+  const roundState = useChainSub(
+    () =>
+      api?.query.Society.RoundCount.watchValue({ at: 'best' }).pipe(
+        distinctUntilChanged((previous, current) => previous.value === current.value)
+      ),
+    [api]
+  )
   const voteState = useChainQuery(
     () =>
       api && activeAccount
@@ -37,10 +45,11 @@ const CandidatesList = ({ activeAccount, candidates, handleUpdate }: Props): JSX
         : undefined,
     [api, activeAccount, candidates]
   )
-  const roundCount = roundState.data ?? 0
+  const roundCount = roundState.data?.value ?? 0
   const voted = voteState.data ?? []
   const showMessage = (result: ExtrinsicResult) => {
     setDisabledAction(result.status === 'loading')
+    if (result.status === 'success') voteState.refetch()
     toastByStatus[result.status](result.message, { id: result.message })
   }
   const isCandidate = (candidate: SocietyCandidate) => isSameAddress(activeAccount?.address, candidate.accountId)
@@ -51,6 +60,8 @@ const CandidatesList = ({ activeAccount, candidates, handleUpdate }: Props): JSX
     setShowDetails(true)
   }
 
+  if ((activeAccount && (isLevelLoading || isSignerLoading)) || roundState.isLoading || voteState.isLoading)
+    return <LoadingSpinner />
   if (candidates.length === 0) return <>No candidates</>
 
   return (

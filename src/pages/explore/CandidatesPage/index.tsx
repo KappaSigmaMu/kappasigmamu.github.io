@@ -1,34 +1,19 @@
-import { useEffect, useState } from 'react'
 import { CandidatesList } from './components/CandidatesList'
 import { useAccount } from '../../../account/AccountContext'
-import { useAssetHub } from '../../../chain/ChainProvider'
-import { useChainQuery } from '../../../chain/hooks'
 import { buildSocietyCandidatesArray } from '../../../chain/society/derived'
-import { getSocietyCandidates } from '../../../chain/society/queries'
+import { useSociety } from '../../../chain/society/SocietyContext'
 import { ChainError } from '../components/ChainError'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 
-const CandidatesPage = ({ handleUpdateTotal }: { handleUpdateTotal: () => void }): JSX.Element => {
-  const { api, client } = useAssetHub()
+const CandidatesPage = (): JSX.Element => {
   const { activeAccount } = useAccount()
-  const [trigger, setTrigger] = useState(false)
-  const [blockTrigger, setBlockTrigger] = useState(0)
-  useEffect(() => {
-    if (!client) return
-    const sub = client.finalizedBlock$.subscribe({ next: () => setBlockTrigger((prev) => prev + 1) })
-    return () => sub.unsubscribe()
-  }, [client])
-  const state = useChainQuery(() => (api ? getSocietyCandidates(api) : undefined), [api, trigger, blockTrigger])
+  const state = useSociety().candidates
   const candidates = state.data ? buildSocietyCandidatesArray(state.data) : null
-  const handleUpdate = () => {
-    handleUpdateTotal()
-    setTrigger((previous) => !previous)
-  }
   if (state.error) return <ChainError error={state.error} onRetry={state.refetch} />
   return candidates === null ? (
     <LoadingSpinner />
   ) : (
-    <CandidatesList activeAccount={activeAccount} candidates={candidates} handleUpdate={handleUpdate} />
+    <CandidatesList activeAccount={activeAccount} candidates={candidates} handleUpdate={() => undefined} />
   )
 }
 

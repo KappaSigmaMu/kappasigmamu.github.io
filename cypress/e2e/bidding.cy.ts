@@ -166,8 +166,9 @@ describe('Bidding Operations', () => {
       visitBiddersPageWithWallet(testAccounts)
     })
 
-    it('should transition from Human to Bidder after placing a bid', () => {
+    it('should update account level from Human to Bidder without reloading', () => {
       cy.connectWallet('Dave')
+      cy.verifyAccountLevel('Human')
 
       cy.getBySel('bid-tab').click()
       cy.getBySel('bid-amount-input').clear().type('1')
@@ -176,7 +177,7 @@ describe('Bidding Operations', () => {
       cy.approvePendingTransaction()
       expectTransactionSuccess()
 
-      cy.visitExplore('bidders')
+      // The account selector and bids list consume the same live Society snapshot.
       cy.verifyAccountLevel('Bidder')
     })
 

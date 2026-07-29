@@ -1,21 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
-import { useAssetHub } from '../../../chain/ChainProvider'
-import { useChainQuery } from '../../../chain/hooks'
-import { getSocietyInfo, getSocietyMembersEntries } from '../../../chain/society/queries'
+import { useSociety } from '../../../chain/society/SocietyContext'
 import { AccountIdentity } from '../../../components/AccountIdentity'
 import { getLatestPinnedHash, fastestGateway, imageUrl } from '../../../helpers/ipfs'
 import { ChainError } from '../components/ChainError'
 import { Identicon } from '../components/Identicon'
 
 const GalleryPage = (): JSX.Element => {
-  const { api } = useAssetHub()
-  const membersState = useChainQuery(async () => {
-    if (!api) return undefined
-    const [info, members] = await Promise.all([getSocietyInfo(api), getSocietyMembersEntries(api)])
-    return members.map(({ accountId }) => accountId).filter((accountId) => accountId !== info.founder)
-  }, [api])
+  const { memberEntries, info } = useSociety()
+  const members = memberEntries.data
+    ?.map(({ accountId }) => accountId)
+    .filter((accountId) => accountId !== info.data?.founder)
   const [folderHash, setFolderHash] = useState('')
   const [gateway, setGateway] = useState('')
   useEffect(() => {
@@ -34,13 +30,23 @@ const GalleryPage = (): JSX.Element => {
       cancelled = true
     }
   }, [])
-  if (membersState.error) return <ChainError error={membersState.error} onRetry={membersState.refetch} />
-  if (!folderHash || !gateway || !membersState.data)
+  const error = memberEntries.error ?? info.error
+  if (error)
+    return (
+      <ChainError
+        error={error}
+        onRetry={() => {
+          memberEntries.refetch()
+          info.refetch()
+        }}
+      />
+    )
+  if (!folderHash || !gateway || !members || !info.data)
     return <Spinner className="mx-auto d-block" animation="border" role="status" variant="primary" />
   return (
     <Container>
       <Row>
-        {membersState.data.map((member) => (
+        {members.map((member) => (
           <ProofOfInkImage key={member} gateway={gateway} folderHash={folderHash} member={member} />
         ))}
       </Row>

@@ -11,6 +11,7 @@ import { AccountIndex } from '../../../../components/AccountIndex'
 import { DataHeaderRow, DataRow } from '../../../../components/base'
 import { VoteButton } from '../../CandidatesPage/components/VoteButton'
 import { Identicon } from '../../components/Identicon'
+import { LoadingSpinner } from '../../components/LoadingSpinner'
 import { toastByStatus } from '../../helpers'
 
 const StyledDataRow = styled(DataRow)`
@@ -27,7 +28,7 @@ const StyledDataRow = styled(DataRow)`
 type Props = { members: SocietyMember[]; activeAccount: WalletAccount | undefined; handleUpdate: () => void }
 
 const MembersList = ({ members, activeAccount, handleUpdate }: Props): JSX.Element => {
-  const { level } = useAccount()
+  const { level, isLevelLoading, isSignerLoading } = useAccount()
   const [activeAccountIsDefenderVoter, setActiveAccountIsDefenderVoter] = useState(false)
   const [disabledVote, setDisabledVote] = useState(false)
   const [selectedMember, setSelectedMember] = useState<AccountId | null>(null)
@@ -41,6 +42,7 @@ const MembersList = ({ members, activeAccount, handleUpdate }: Props): JSX.Eleme
     setDisabledVote(result.status === 'loading')
     toastByStatus[result.status](result.message, { id: result.message })
   }
+  if (activeAccount && (isLevelLoading || isSignerLoading)) return <LoadingSpinner />
   if (members.length === 0) return <>No members</>
   return (
     <div data-test="members-list">

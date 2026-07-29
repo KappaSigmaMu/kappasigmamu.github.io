@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Badge, Col, Row } from 'react-bootstrap'
 import { styled } from 'styled-components'
 import { draw, PADD, SIZE } from './helpers/draw'
-import { useAssetHub } from '../../../chain/ChainProvider'
-import { useChainQuery } from '../../../chain/hooks'
+import { useSociety } from '../../../chain/society/SocietyContext'
 import type { AccountId } from '../../../chain/types'
 import { AccountIdentity } from '../../../components/AccountIdentity'
 import { AccountIndex } from '../../../components/AccountIndex'
@@ -13,10 +12,9 @@ import { Identicon } from '../components/Identicon'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 
 const ExamplesPage = (): JSX.Element => {
-  const { api } = useAssetHub()
-  const state = useChainQuery(() => api?.query.Society.Head.getValue(), [api])
+  const state = useSociety().info
   const [index, setIndex] = useState('')
-  const head = state.data
+  const head = state.data?.head
   if (state.error) return <ChainError error={state.error} onRetry={state.refetch} />
   if (!head) return <LoadingSpinner />
   return (

@@ -4,7 +4,7 @@ import { Spinner, Tab, Nav, Form, Button, InputGroup, FormControl } from 'react-
 import styled from 'styled-components'
 import { useAccount } from '../../../account/AccountContext'
 import { useAssetHub } from '../../../chain/ChainProvider'
-import { useChainSub } from '../../../chain/hooks'
+import { useSociety } from '../../../chain/society/SocietyContext'
 import { submitTx } from '../../../chain/society/tx'
 import type { ExtrinsicResult } from '../../../chain/types'
 import { FormatBalance } from '../../../components/FormatBalance'
@@ -26,8 +26,8 @@ const parseKsm = (value: string): bigint => {
 
 const BidVouch = ({ handleResult }: BidVouchProps) => {
   const { api } = useAssetHub()
-  const { polkadotSigner } = useAccount()
-  const potState = useChainSub(() => api?.query.Society.Pot.watchValue({ at: 'best' }), [api])
+  const { polkadotSigner, isSignerLoading } = useAccount()
+  const potState = useSociety().info
   const [bidAmount, setBidAmount] = useState<bigint | null>(null)
   const [vouch, setVouch] = useState<{ address: string; value: bigint; tip: bigint } | null>(null)
   const [loading, setLoading] = useState(false)
@@ -106,19 +106,24 @@ const BidVouch = ({ handleResult }: BidVouchProps) => {
               </StyledFormInput>
             </Form.Group>
             <Button
-              disabled={loading}
+              disabled={loading || isSignerLoading}
               variant="primary"
               type="submit"
               className="w-100 mt-0 mt-lg-3 child align-self-end"
               data-test="submit-bid-button"
             >
-              {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
+              {loading || isSignerLoading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
           </Form>
           <hr />
           <div className="align-self-center" data-test="society-pot-value">
             <h6>
-              POT: <FormatBalance balance={potState.data?.value} />
+              POT:{' '}
+              {potState.isLoading ? (
+                <Spinner size="sm" animation="border" />
+              ) : (
+                <FormatBalance balance={potState.data?.pot} />
+              )}
             </h6>
           </div>
           <hr />
@@ -166,13 +171,13 @@ const BidVouch = ({ handleResult }: BidVouchProps) => {
               </StyledFormInput>
             </Form.Group>
             <Button
-              disabled={loading}
+              disabled={loading || isSignerLoading}
               variant="primary"
               type="submit"
               className="w-100"
               data-test="submit-vouch-button"
             >
-              {loading ? <Spinner size="sm" animation="border" /> : 'Submit'}
+              {loading || isSignerLoading ? <Spinner size="sm" animation="border" /> : 'Submit'}
             </Button>
             <StyledButtonLabel className="text-muted">*Plus 0.0045 KSM fee</StyledButtonLabel>
           </Form>

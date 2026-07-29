@@ -1,16 +1,16 @@
 import { Button, Col, Row } from 'react-bootstrap'
 import { useAccount } from '../../account/AccountContext'
-import { useAssetHub } from '../../chain/ChainProvider'
-import { useChainQuery } from '../../chain/hooks'
-import { getSocietyBids } from '../../chain/society/queries'
+import { useSociety } from '../../chain/society/SocietyContext'
 import { isSameAddress } from '../../chain/ss58'
+import { LoadingSpinner } from '../../pages/explore/components/LoadingSpinner'
 import { FormatBalance } from '../FormatBalance'
 
 const Bid = () => {
-  const { api } = useAssetHub()
   const { activeAccount } = useAccount()
-  const { data: bids } = useChainQuery(() => (api ? getSocietyBids(api) : undefined), [api])
+  const { data: bids, isLoading } = useSociety().bids
   const bid = bids?.find((item) => isSameAddress(item.who, activeAccount?.address))
+
+  if (isLoading) return <LoadingSpinner center={false} small />
 
   return (
     <>

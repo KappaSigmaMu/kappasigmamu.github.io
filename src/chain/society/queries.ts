@@ -14,25 +14,38 @@ const society = (api: AssetHubApi) => api.query.Society
 
 export const getSocietyBids = (api: AssetHubApi): Promise<SocietyBid[]> => society(api).Bids.getValue()
 
-export async function getAccountLevel(
-  api: AssetHubApi,
-  address: string
-): Promise<'human' | 'bidder' | 'candidate' | 'cyborg'> {
-  const [bids, candidates, members] = await Promise.all([
-    getSocietyBids(api),
-    getSocietyCandidates(api),
-    getSocietyMembersEntries(api)
-  ])
+export type SocietyAccountLevel = 'human' | 'bidder' | 'candidate' | 'cyborg'
+export type SocietyCandidateEntry = { accountId: AccountId; candidate: SocietyCandidateRecord }
+export type SocietyMemberEntry = { accountId: AccountId; member: SocietyMemberRecord }
 
+export function getAccountLevelFromCollections(
+  address: string,
+  bids: SocietyBid[],
+  candidates: SocietyCandidateEntry[],
+  members: SocietyMemberEntry[]
+): SocietyAccountLevel {
   if (members.some(({ accountId }) => isSameAddress(accountId, address))) return 'cyborg'
   if (candidates.some(({ accountId }) => isSameAddress(accountId, address))) return 'candidate'
   if (bids.some(({ who }) => isSameAddress(who, address))) return 'bidder'
   return 'human'
 }
 
+export async function getAccountLevel(
+  api: AssetHubApi,
+  address: string
+): Promise<SocietyAccountLevel> {
+  const [bids, candidates, members] = await Promise.all([
+    getSocietyBids(api),
+    getSocietyCandidates(api),
+    getSocietyMembersEntries(api)
+  ])
+
+  return getAccountLevelFromCollections(address, bids, candidates, members)
+}
+
 export const getSocietyCandidates = async (
   api: AssetHubApi
-): Promise<Array<{ accountId: AccountId; candidate: SocietyCandidateRecord }>> =>
+): Promise<SocietyCandidateEntry[]> =>
   (await society(api).Candidates.getEntries()).map(({ keyArgs: [accountId], value: candidate }) => ({
     accountId,
     candidate
@@ -40,7 +53,7 @@ export const getSocietyCandidates = async (
 
 export const getSocietyMembersEntries = (
   api: AssetHubApi
-): Promise<Array<{ accountId: AccountId; member: SocietyMemberRecord }>> =>
+): Promise<SocietyMemberEntry[]> =>
   society(api)
     .Members.getEntries()
     .then((entries) => entries.map(({ keyArgs: [accountId], value: member }) => ({ accountId, member })))

@@ -1,6 +1,6 @@
 import { useAssetHub } from '../../../../chain/ChainProvider'
 import { useChainQuery } from '../../../../chain/hooks'
-import { getSocietyMembersEntries, getSocietyVotes } from '../../../../chain/society/queries'
+import { useSociety } from '../../../../chain/society/SocietyContext'
 import type { AccountId, SocietyVote } from '../../../../chain/types'
 import { AccountIdentity } from '../../../../components/AccountIdentity'
 import { AccountHeader } from '../../components/AccountHeader'
@@ -15,8 +15,14 @@ type Props = { show: boolean; candidateId: AccountId; onClose: () => void }
 
 export function CandidateDetailsOffcanvas({ candidateId, show, onClose }: Props) {
   const { api } = useAssetHub()
-  const members = useChainQuery(() => (api ? getSocietyMembersEntries(api) : undefined), [api])
-  const votes = useChainQuery(() => (api ? getSocietyVotes(api, candidateId) : undefined), [api, candidateId])
+  const members = useSociety().memberEntries
+  const votes = useChainQuery(
+    () =>
+      api && members.data
+        ? api.query.Society.Votes.getValues(members.data.map(({ accountId }) => [candidateId, accountId]))
+        : undefined,
+    [api, candidateId, members.data]
+  )
   const grouped =
     members.data && votes.data
       ? groupVotes(

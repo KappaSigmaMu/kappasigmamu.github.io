@@ -2,6 +2,7 @@ import { ReactElement } from 'react'
 import { Badge } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useAccount } from '../account/AccountContext'
+import { LoadingSpinner } from '../pages/explore/components/LoadingSpinner'
 import CanarySvgLevel1 from '../static/canary-level-1.svg'
 
 interface LevelsType {
@@ -34,7 +35,9 @@ const LEVELS: LevelsType = {
 }
 
 const Level = () => {
-  const { level } = useAccount()
+  const { level, isLevelLoading } = useAccount()
+
+  if (isLevelLoading) return <LoadingSpinner />
 
   return (
     <>

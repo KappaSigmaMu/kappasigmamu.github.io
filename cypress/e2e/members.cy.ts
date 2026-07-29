@@ -31,6 +31,14 @@ describe('Member Operations', () => {
       cy.getBySel('members-list').should('be.visible')
     })
 
+    it('should finish loading the shared members snapshot within the UI budget', () => {
+      cy.window().then((win) => {
+        const navigation = win.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
+        expect(win.performance.now() - navigation.startTime).to.be.lessThan(20_000)
+      })
+      cy.getBySel('loading-spinner').should('not.exist')
+    })
+
     it('should display member rows', () => {
       cy.getBySelLike('member-row-').should('have.length.gte', 1)
     })

@@ -35,7 +35,7 @@ export function VoteButton({
   ...buttonProps
 }: VoteButtonProps) {
   const { api } = useAssetHub()
-  const { polkadotSigner } = useAccount()
+  const { polkadotSigner, isSignerLoading } = useAccount()
   const [loading, setLoading] = useState(false)
   const onStatusChange: StatusChangeHandler = ({ loading: nextLoading, message, status }) => {
     setLoading(Boolean(nextLoading))
@@ -56,5 +56,13 @@ export function VoteButton({
     }
   }
 
-  return <IconButton disabled={disabled} loading={loading} icon={icon} onClick={handleVote} {...buttonProps} />
+  return (
+    <IconButton
+      disabled={disabled || isSignerLoading || !polkadotSigner}
+      loading={loading || isSignerLoading}
+      icon={icon}
+      onClick={handleVote}
+      {...buttonProps}
+    />
+  )
 }
