@@ -13,8 +13,17 @@ const visitBiddersPageWithWallet = (testAccounts: InjectedAccountWitMnemonic[]) 
 const CHOPSTICKS_TASK_TIMEOUT = 120000
 
 const expectTransactionSuccess = () => {
+  cy.getBySel('tx-pending', { timeout: 30000 })
+    .find('[data-test="tx-message"]')
+    .should('be.visible')
+    .and('contain.text', 'Request sent. Waiting for response...')
+
   cy.task('resetChopsticks', null, { timeout: CHOPSTICKS_TASK_TIMEOUT })
-  cy.contains(/submitted successfully|transaction submitted|finalized|success/i, { timeout: 60000 }).should('be.visible')
+  cy.getBySel('tx-success', { timeout: 60000 })
+    .find('[data-test="tx-message"]')
+    .should('be.visible')
+    .and('contain.text', 'Transaction submitted.')
+  cy.getBySel('tx-pending').should('not.exist')
 }
 
 describe('Bidding Operations', () => {

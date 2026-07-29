@@ -81,7 +81,11 @@ describe('Payouts Page', () => {
 
       cy.approvePendingTransaction()
       cy.task('resetChopsticks', null, { timeout: 120000 })
-      cy.contains(/successfully/i, { timeout: 30000 }).should('be.visible')
+      cy.getBySel('tx-success', { timeout: 30000 })
+        .find('[data-test="tx-message"]')
+        .should('be.visible')
+        .and('contain.text', 'Transaction submitted.')
+      cy.getBySel('tx-pending').should('not.exist')
     })
   })
 

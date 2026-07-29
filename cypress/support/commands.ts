@@ -47,7 +47,9 @@ Cypress.Commands.add('approvePendingTransaction', () => {
 
 Cypress.Commands.add('submitTransaction', () => {
   cy.approvePendingTransaction()
-  cy.contains(/finalized|success/i, { timeout: 30000 }).should('be.visible')
+  cy.getBySel('tx-pending', { timeout: 30000 }).find('[data-test="tx-message"]').should('be.visible')
+  cy.getBySel('tx-success', { timeout: 30000 }).find('[data-test="tx-message"]').should('be.visible')
+  cy.getBySel('tx-pending').should('not.exist')
 })
 
 Cypress.Commands.add('verifyTxError', (message?: string | RegExp, timeout?: number) => {

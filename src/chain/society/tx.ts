@@ -1,5 +1,5 @@
 import type { PolkadotSigner, Transaction, TxEvent } from 'polkadot-api'
-import type { Observable } from 'rxjs'
+import type { Observable, Subscription } from 'rxjs'
 
 export type StatusChangeHandler = (info: ExtrinsicResult) => void
 
@@ -35,23 +35,28 @@ export function submitTx(
 
   return new Promise((resolve) => {
     let settled = false
-    let included = false
+    const subscriptionRef: { current?: Subscription } = {}
     const observable = tx.signSubmitAndWatch(signer) as Observable<TxEvent>
 
-    observable.subscribe({
+    const settle = () => {
+      if (settled) return
+      settled = true
+      resolve()
+      subscriptionRef.current?.unsubscribe()
+    }
+
+    subscriptionRef.current = observable.subscribe({
       next: (event) => {
         if (settled) return
 
         if (event.type === 'txBestBlocksState' && event.found) {
           if (event.ok) {
-            included = true
             onStatusChange({ loading: false, message: 'Transaction submitted.', status: 'success' })
           } else {
             const message = event.dispatchError ? errorText(event.dispatchError) : 'Transaction failed.'
             onStatusChange({ loading: false, message, status: 'error' })
-            settled = true
-            resolve()
           }
+          settle()
           return
         }
 
@@ -62,31 +67,24 @@ export function submitTx(
             const message = event.dispatchError ? errorText(event.dispatchError) : 'Transaction failed.'
             onStatusChange({ loading: false, message, status: 'error' })
           }
-          settled = true
-          resolve()
+          settle()
           return
         }
 
-        if (event.type !== 'signed') {
-          onStatusChange({ loading: true, message: waitingText, status: 'loading' })
-        }
+        onStatusChange({ loading: true, message: waitingText, status: 'loading' })
       },
       error: (error: unknown) => {
         if (settled) return
-        settled = true
-        if (included) {
-          console.warn('Ignoring post-inclusion transaction error:', error)
-          resolve()
-          return
-        }
         console.error(error)
         const message = error instanceof Error ? error.message : String(error)
         onStatusChange({ loading: false, message, status: 'error' })
-        resolve()
+        settle()
       },
       complete: () => {
-        if (!settled) resolve()
+        settle()
       }
     })
+
+    if (settled) subscriptionRef.current.unsubscribe()
   })
 }
