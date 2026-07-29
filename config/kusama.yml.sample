@@ -61,6 +61,8 @@ import-storage:
           data:
             free: '20000000000000'
   Indices:
+    $removePrefix:
+      - Accounts
     Accounts:
       -
         -

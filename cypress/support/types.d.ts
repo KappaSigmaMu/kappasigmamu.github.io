@@ -7,7 +7,7 @@ declare namespace Cypress {
     includePendingTransaction(options?: { timeout?: number }): Chainable<void>
     submitTransaction(): Chainable<void>
     visitExplore(section: string): Chainable<void>
-    verifyAccountLevel(level: string): Chainable<void>
+    verifyAccountLevel(level: string, timeout?: number): Chainable<void>
     verifyToast(message: string, timeout?: number): Chainable<void>
     verifyTxError(message?: string | RegExp, timeout?: number): Chainable<void>
     unloadApp(): Chainable<void>

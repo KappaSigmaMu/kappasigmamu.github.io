@@ -41,6 +41,13 @@ async function waitForPendingExtrinsics(): Promise<string[]> {
   throw new Error(`No pending Chopsticks extrinsic appeared within ${PENDING_EXTRINSIC_TIMEOUT}ms`);
 }
 
+async function clearPendingExtrinsics(): Promise<void> {
+  const pending = await chopsticksRpc<string[]>('author_pendingExtrinsics');
+  if (pending.length === 0) return;
+
+  await chopsticksRpc('author_removeExtrinsic', [pending]);
+}
+
 function loadImportStorage() {
   const config = yaml.load(readFileSync('config/kusama.yml', 'utf8')) as Record<string, unknown>;
   return config['import-storage'];
@@ -92,12 +99,14 @@ export default defineConfig({
                 ? await chopsticksRpc<string>('chain_getBlockHash', [Number(process.env.KUSAMA_BLOCK_NUMBER)])
                 : null);
             if (hash) await chopsticksRpc('dev_setHead', [hash]);
+            await clearPendingExtrinsics();
           } catch (e) {
             console.log('Chopsticks fork reset skipped:', (e as Error).message);
           }
           return null;
         },
         async resetChopsticksStorage() {
+          await clearPendingExtrinsics();
           await chopsticksRpc('dev_setStorage', [loadImportStorage()]);
           forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash');
           return null;
@@ -108,6 +117,7 @@ export default defineConfig({
         },
         async setChopsticksHead(blockNumber: number) {
           await chopsticksRpc('dev_setHead', [blockNumber]);
+          await clearPendingExtrinsics();
           await chopsticksRpc('dev_setStorage', [loadImportStorage()]);
           forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash');
           return null;

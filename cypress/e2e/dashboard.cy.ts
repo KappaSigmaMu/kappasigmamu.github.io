@@ -16,6 +16,7 @@ const visitDashboard = () => {
 
 describe('Explore Dashboard', () => {
   beforeEach(() => {
+    cy.unloadApp()
     cy.task('resetChopsticksStorage', null, { timeout: CHOPSTICKS_TASK_TIMEOUT })
     visitDashboard()
   })
@@ -68,7 +69,8 @@ describe('Explore Dashboard', () => {
     visitDashboard()
 
     cy.getBySel('society-head-index', { timeout: 30000 }).should('contain.text', '(index not set)')
-    cy.getBySel('society-head-index-warning').should('be.visible').trigger('mouseover')
+    cy.getBySel('society-head-index-warning').should('be.visible')
+    cy.getBySel('society-head-index-warning').trigger('mouseover')
     cy.get('#society-head-index-warning-tooltip')
       .should('be.visible')
       .and('contain.text', 'has not set up an index yet')
