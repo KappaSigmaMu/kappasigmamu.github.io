@@ -5,13 +5,20 @@ import styled from 'styled-components'
 interface LinkWithQueryProps extends Omit<LinkProps, 'to'> {
   to: string
   children: React.ReactNode
+  allowActiveClick?: boolean
 }
 
-const LinkWithQuery: React.FC<LinkWithQueryProps> = ({ children, to, ...props }) => {
+const LinkWithQuery: React.FC<LinkWithQueryProps> = ({ children, to, allowActiveClick = false, ...props }) => {
   const { search, pathname } = useLocation()
-  const isSelected = pathname === to || pathname === to + '/'
+  const isSelected = pathname === to || pathname === to + '/' || pathname.startsWith(to + '/')
   return (
-    <StyledLink to={to + search} {...props} $selected={isSelected}>
+    <StyledLink
+      to={to + search}
+      {...props}
+      $selected={isSelected}
+      $allowActiveClick={allowActiveClick}
+      aria-current={isSelected ? 'page' : undefined}
+    >
       {children}
     </StyledLink>
   )
@@ -19,12 +26,13 @@ const LinkWithQuery: React.FC<LinkWithQueryProps> = ({ children, to, ...props })
 
 interface StyledLinkProps {
   $selected?: boolean
+  $allowActiveClick?: boolean
 }
 
 const StyledLink = styled(Link)<StyledLinkProps>`
   color: ${(props) => props.$selected && 'white !important'};
-  pointer-events: ${(props) => (props.$selected ? 'none' : 'auto')};
-  cursor: ${(props) => (props.$selected ? 'default' : 'pointer')};
+  pointer-events: ${(props) => (props.$selected && !props.$allowActiveClick ? 'none' : 'auto')};
+  cursor: ${(props) => (props.$selected && !props.$allowActiveClick ? 'default' : 'pointer')};
 `
 
 export { LinkWithQuery }

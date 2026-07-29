@@ -9,11 +9,13 @@ const GlobalStyle = createGlobalStyle`
     background-color: #212529;
     font-family: Roboto, sans-serif !important;
     font-style: normal;
+    overscroll-behavior-y: none;
   }
 
   body {
     background-color: #212529;
     overflow: auto;
+    overscroll-behavior-y: none;
   }
 
   h1 {
