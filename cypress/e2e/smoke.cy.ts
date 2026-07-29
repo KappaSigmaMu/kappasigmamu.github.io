@@ -72,10 +72,11 @@ describe('Explore Routes Smoke Tests', () => {
     })
   })
 
-  it('should redirect /explore to /explore/bidders', () => {
+  it('should render the dashboard at /explore', () => {
     cy.visit('/explore?rpc=ws://localhost:8000')
 
-    cy.url().should('include', '/explore/bidders')
+    cy.url().should('match', /\/explore\?rpc=/)
+    cy.getBySel('explore-dashboard', { timeout: 20000 }).should('be.visible')
     cy.get('body').should('be.visible')
   })
 
@@ -200,10 +201,10 @@ describe('Query Parameter Preservation Smoke Tests', () => {
     cy.get('body').should('be.visible')
   })
 
-  it('should preserve ?rpc parameter through redirects', () => {
+  it('should preserve ?rpc parameter on the dashboard and through redirects', () => {
     cy.visit(`/explore?rpc=${testRpc}`)
 
-    cy.url().should('include', '/explore/bidders')
+    cy.url().should('include', '/explore?')
     cy.url().should('include', `rpc=${testRpc}`)
 
     cy.visit(`/explore/poi?rpc=${testRpc}`)

@@ -7,6 +7,7 @@ const FAILED_TESTS_FILE = path.join(ROOT, 'cypress/.cache/failed-tests.json')
 const DEFAULT_KUSAMA_BLOCK_NUMBER = '19596780'
 
 const SUITES = {
+  dashboard: 'cypress/e2e/dashboard.cy.ts',
   smoke: 'cypress/e2e/smoke.cy.ts',
   wallet: 'cypress/e2e/wallet-connection.cy.ts',
   bidding: 'cypress/e2e/bidding.cy.ts',

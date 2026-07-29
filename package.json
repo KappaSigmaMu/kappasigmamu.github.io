@@ -156,6 +156,7 @@
     "start:test:ready": "node scripts/wait-for-chopsticks.js && yarn start:test",
     "test": "node scripts/test.js",
     "test:e2e": "node scripts/test-e2e.js all",
+    "test:e2e:dashboard": "node scripts/test-e2e.js dashboard",
     "test:e2e:smoke": "node scripts/test-e2e.js smoke",
     "test:e2e:wallet": "node scripts/test-e2e.js wallet",
     "test:e2e:bidding": "node scripts/test-e2e.js bidding",

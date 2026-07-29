@@ -102,6 +102,10 @@ export default defineConfig({
           forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash');
           return null;
         },
+        async clearChopsticksIndices() {
+          await chopsticksRpc('dev_setStorage', [{ Indices: { $removePrefix: ['Accounts'] } }]);
+          return null;
+        },
         async setChopsticksHead(blockNumber: number) {
           await chopsticksRpc('dev_setHead', [blockNumber]);
           await chopsticksRpc('dev_setStorage', [loadImportStorage()]);

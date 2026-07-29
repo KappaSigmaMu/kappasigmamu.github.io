@@ -126,12 +126,12 @@ describe('Candidate Voting', () => {
       cy.getBySel('candidates-list', { timeout: 20000 }).should('be.visible')
     })
 
-    it('should not show drop button when conditions are not met', () => {
+    it('should show a drop button for the kickable candidate', () => {
       cy.connectWallet('Eve')
       cy.verifyAccountLevel('Cyborg')
 
       cy.getBySel('candidates-list', { timeout: 15000 }).should('be.visible')
-      cy.getBySelLike('candidate-drop-button-').should('not.exist')
+      cy.getBySelLike('candidate-drop-button-').should('have.length', 1).and('be.visible')
     })
   })
 
