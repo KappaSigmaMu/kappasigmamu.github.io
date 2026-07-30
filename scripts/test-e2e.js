@@ -15,6 +15,7 @@ const SUITES = {
   'candidate-voting': 'cypress/e2e/candidate-voting.cy.ts',
   members: 'cypress/e2e/members.cy.ts',
   'membership-claim': 'cypress/e2e/membership-claim.cy.ts',
+  'index-selector': 'cypress/e2e/index-selector.cy.ts',
   'user-journeys': 'cypress/e2e/user-journeys.cy.ts',
   'error-handling': 'cypress/e2e/error-handling.cy.ts',
   suspended: 'cypress/e2e/suspended.cy.ts',

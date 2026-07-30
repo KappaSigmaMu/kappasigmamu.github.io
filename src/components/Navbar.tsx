@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Button, Navbar as RBNavbar } from 'react-bootstrap'
-import { FaBars, FaXmark } from 'react-icons/fa6'
+import { Button, Navbar as RBNavbar, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { FaBars, FaTriangleExclamation, FaXmark } from 'react-icons/fa6'
 import styled from 'styled-components'
+import { IndexSelectorModal } from './IndexSelectorModal'
 import { LinkWithQuery } from './LinkWithQuery'
 import { SelectedAccount } from './SelectedAccount'
 import { SettingsDropdown } from './SettingsDropdown'
@@ -26,6 +27,7 @@ const Navbar = ({
   showSocialIcons = false
 }: NavRouteProps) => {
   const [showMenu, setShowMenu] = useState(false)
+  const [showIndexSelector, setShowIndexSelector] = useState(false)
 
   useEffect(() => {
     if (!showMenu) return
@@ -39,6 +41,10 @@ const Navbar = ({
   }, [showMenu])
 
   const closeMenu = () => setShowMenu(false)
+  const openIndexSelector = () => {
+    setShowMenu(false)
+    setShowIndexSelector(true)
+  }
 
   return (
     <>
@@ -63,6 +69,7 @@ const Navbar = ({
 
             <DesktopActions>
               <SettingsDropdown />
+              <IndexWarningButton onClick={openIndexSelector} />
               {showSocialIcons && <SocialIcons />}
             </DesktopActions>
           </DesktopHeader>
@@ -107,14 +114,37 @@ const Navbar = ({
 
             <DrawerActions>
               <SettingsDropdown mobile />
+              <MobileIndexAction type="button" onClick={openIndexSelector} data-test="mobile-index-selector">
+                <FaTriangleExclamation aria-hidden="true" />
+                <span>Account Index</span>
+              </MobileIndexAction>
             </DrawerActions>
           </MobileDrawer>
         </>
       )}
 
+      {showIndexSelector && (
+        <IndexSelectorModal show={showIndexSelector} onHide={() => setShowIndexSelector(false)} />
+      )}
     </>
   )
 }
+
+const IndexWarningButton = ({ onClick }: { onClick: () => void }) => (
+  <OverlayTrigger
+    placement="bottom"
+    overlay={<Tooltip id="index-selector-tooltip">Claim or freeze an account index</Tooltip>}
+  >
+    <WarningButton
+      type="button"
+      onClick={onClick}
+      aria-label="Open account index selector"
+      data-test="index-selector-button"
+    >
+      <FaTriangleExclamation aria-hidden="true" />
+    </WarningButton>
+  </OverlayTrigger>
+)
 
 const NavbarBrand = ({ onClick }: { onClick?: () => void }) => (
   <BrandLink as={LinkWithQuery} to="/" onClick={onClick} aria-label="Kappa Sigma Mu home" allowActiveClick>
@@ -397,6 +427,47 @@ const DrawerActions = styled.div`
   padding-top: 4px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   flex-direction: column;
+`
+
+const WarningButton = styled.button`
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #ffc107;
+  font-size: 16px;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(255, 193, 7, 0.12);
+    color: #ffd54f;
+  }
+`
+
+const MobileIndexAction = styled.button`
+  display: flex;
+  min-height: 48px;
+  width: 100%;
+  padding: 0 18px;
+  border: 0;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+  background: transparent;
+  color: #ffc107;
+  font-size: 1rem;
+  text-align: left;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(255, 193, 7, 0.08);
+    color: #ffd54f;
+  }
 `
 
 export { Navbar }
