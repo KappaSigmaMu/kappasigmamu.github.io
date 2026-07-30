@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { MarkdownRenderer } from '../components/MarkdownRenderer'
-import CanaryRed from '../static/grid-canary-red.png'
+import { MarkdownRenderer } from '@/components/MarkdownRenderer'
+import CanaryRed from '@/static/grid-canary-red.png'
 
 const WikiPage = () => {
   const [content, setContent] = useState('')

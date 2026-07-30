@@ -1,4 +1,4 @@
-import { getPeopleProviderEndpoints, peopleProductionProviders } from '../peopleProviders'
+import { getPeopleProviderEndpoints, peopleProductionProviders } from '@/helpers/peopleProviders'
 
 describe('People chain RPC providers', () => {
   it('uses the ordered production fallback list by default', () => {

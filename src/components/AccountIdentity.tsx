@@ -1,8 +1,8 @@
 import { FaCircleCheck, FaCircleMinus } from 'react-icons/fa6'
 import { styled } from 'styled-components'
-import type { AccountId } from '../chain/types'
-import { truncateMiddle } from '../helpers/truncate'
-import { useAccountIdentity } from '../hooks/useAccountIdentity'
+import type { AccountId } from '@/chain/types'
+import { truncateMiddle } from '@/helpers/truncate'
+import { useAccountIdentity } from '@/hooks/useAccountIdentity'
 
 const AccountIdentity = ({
   accountId,

@@ -1,4 +1,4 @@
-import { extractTime, RELAY_CHAIN_BLOCK_TIME, type TimeParts } from '../../../chain/format'
+import { extractTime, RELAY_CHAIN_BLOCK_TIME, type TimeParts } from '@/chain/format'
 
 const timeForBlocks = (blocks: number): TimeParts => extractTime(Math.abs(RELAY_CHAIN_BLOCK_TIME * blocks))
 

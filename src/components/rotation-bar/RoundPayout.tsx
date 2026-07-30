@@ -1,7 +1,7 @@
 import { Col, Row } from 'react-bootstrap'
-import { useSociety } from '../../chain/society/SocietyContext'
-import { LoadingSpinner } from '../../pages/explore/components/LoadingSpinner'
-import { FormatBalance } from '../FormatBalance'
+import { useSociety } from '@/chain/society/SocietyContext'
+import { FormatBalance } from '@/components/FormatBalance'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
 
 const RoundPayout = () => {
   const { data: info, isLoading } = useSociety().info

@@ -1,9 +1,9 @@
 import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { ExternalLink } from '../components/base'
-import { LinkWithQuery } from '../components/LinkWithQuery'
-import CanaryRed from '../static/grid-canary-red.png'
-import CanaryGreen from '../static/spots-canary-green.png'
+import { ExternalLink } from '@/components/base'
+import { LinkWithQuery } from '@/components/LinkWithQuery'
+import CanaryRed from '@/static/grid-canary-red.png'
+import CanaryGreen from '@/static/spots-canary-green.png'
 
 const WikiLink = styled(ExternalLink).attrs(() => ({
   href: '/wiki'

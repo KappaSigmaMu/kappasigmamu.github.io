@@ -1,4 +1,4 @@
-import { useBlockTime } from '../hooks/useBlockTime'
+import { useBlockTime } from '@/hooks/useBlockTime'
 
 const BlockTime = ({ block }: { block: number | bigint }) => {
   const [, time] = useBlockTime(block)

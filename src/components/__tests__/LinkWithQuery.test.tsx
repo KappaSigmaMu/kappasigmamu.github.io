@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { LinkWithQuery } from '../LinkWithQuery'
+import { LinkWithQuery } from '@/components/LinkWithQuery'
 
 describe('LinkWithQuery', () => {
   it('marks a parent route active on nested pages and preserves the query string', () => {

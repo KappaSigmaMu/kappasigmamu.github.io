@@ -1,5 +1,5 @@
 import { BaseDotsamaWallet, getWallets } from '@talismn/connect-wallets'
-import NovaWalletLogo from '../static/nova-wallet-logo.svg'
+import NovaWalletLogo from '@/static/nova-wallet-logo.svg'
 
 class NovaWallet extends BaseDotsamaWallet {
   public extensionName = 'polkadot-js'

@@ -1,4 +1,4 @@
-import { buildAccountIdentity } from '../buildAccountIdentity'
+import { buildAccountIdentity } from '@/helpers/buildAccountIdentity'
 
 describe('buildAccountIdentity', () => {
   it('returns undefined when display is not set', () => {

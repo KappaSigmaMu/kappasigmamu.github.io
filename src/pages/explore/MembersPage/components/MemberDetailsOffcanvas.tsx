@@ -1,14 +1,14 @@
 import { useEffect } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { ChainState, useAssetHub, usePeople } from '../../../../chain/ChainProvider'
-import { useChainQuery } from '../../../../chain/hooks'
-import type { AccountId, SocietyMemberDetails } from '../../../../chain/types'
-import { AccountHeader } from '../../components/AccountHeader'
-import { ChainError } from '../../components/ChainError'
-import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { Offcanvas } from '../../components/Offcanvas'
-import { fetchMemberDetails } from '../helpers/fetchMemberDetails'
+import { ChainState, useAssetHub, usePeople } from '@/chain/ChainProvider'
+import { useChainQuery } from '@/chain/hooks'
+import type { AccountId, SocietyMemberDetails } from '@/chain/types'
+import { AccountHeader } from '@/pages/explore/components/AccountHeader'
+import { ChainError } from '@/pages/explore/components/ChainError'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
+import { Offcanvas } from '@/pages/explore/components/Offcanvas'
+import { fetchMemberDetails } from '@/pages/explore/MembersPage/helpers/fetchMemberDetails'
 
 type Props = { accountId: AccountId; show: boolean; onClose: () => void }
 

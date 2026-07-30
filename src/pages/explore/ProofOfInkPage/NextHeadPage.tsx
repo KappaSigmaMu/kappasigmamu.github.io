@@ -1,14 +1,14 @@
 import { Badge, Col } from 'react-bootstrap'
 import Alert from 'react-bootstrap/Alert'
 import styled from 'styled-components'
-import { useAssetHub } from '../../../chain/ChainProvider'
-import { useChainQuery } from '../../../chain/hooks'
-import { AccountIdentity } from '../../../components/AccountIdentity'
-import { AccountIndex } from '../../../components/AccountIndex'
-import { DataHeaderRow, DataRow } from '../../../components/base'
-import { ChainError } from '../components/ChainError'
-import { Identicon } from '../components/Identicon'
-import { LoadingSpinner } from '../components/LoadingSpinner'
+import { useAssetHub } from '@/chain/ChainProvider'
+import { useChainQuery } from '@/chain/hooks'
+import { AccountIdentity } from '@/components/AccountIdentity'
+import { AccountIndex } from '@/components/AccountIndex'
+import { DataHeaderRow, DataRow } from '@/components/base'
+import { ChainError } from '@/pages/explore/components/ChainError'
+import { Identicon } from '@/pages/explore/components/Identicon'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
 
 const NextHeadPage = (): JSX.Element => {
   const { api } = useAssetHub()

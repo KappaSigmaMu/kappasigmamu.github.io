@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
-import { Theme } from '../../styles/Theme'
-import { Navbar } from '../Navbar'
+import { Navbar } from '@/components/Navbar'
+import { Theme } from '@/styles/Theme'
 
 jest.mock('../../account/AccountContext', () => ({
   useAccount: () => ({ activeAccount: undefined })

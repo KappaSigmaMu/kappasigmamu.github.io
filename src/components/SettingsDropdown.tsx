@@ -3,8 +3,8 @@ import { Dropdown } from 'react-bootstrap'
 import { FaCircle, FaCircleCheck, FaGear } from 'react-icons/fa6'
 import styled from 'styled-components'
 import { StyledDropdownMenu } from './StyledDropdownMenu'
-import { useAssetHub } from '../chain/ChainProvider'
-import { providers, type Provider } from '../helpers/providers'
+import { useAssetHub } from '@/chain/ChainProvider'
+import { providers, type Provider } from '@/helpers/providers'
 
 const SettingsDropdown = ({ mobile = false }: { mobile?: boolean }) => {
   const currentUrl = new URL(window.location.href)

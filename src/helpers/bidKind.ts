@@ -1,4 +1,4 @@
-import type { SocietyBid, SocietyBidKindType, Balance, AccountId } from '../chain/types'
+import type { SocietyBid, SocietyBidKindType, Balance, AccountId } from '@/chain/types'
 
 export type BidKindType = SocietyBidKindType
 

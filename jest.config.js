@@ -31,6 +31,7 @@ module.exports = {
   modulePaths: [],
   modulePathIgnorePatterns: ["<rootDir>/src/__tests__/fixtures"],
   moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
     "^react-native$": "react-native-web",
     "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
   },

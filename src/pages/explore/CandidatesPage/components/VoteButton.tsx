@@ -2,11 +2,11 @@ import { MultiAddress } from '@polkadot-api/descriptors'
 import type { WalletAccount } from '@talismn/connect-wallets'
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'
-import { useAccount } from '../../../../account/AccountContext'
-import { useAssetHub } from '../../../../chain/ChainProvider'
-import { submitTx, type StatusChangeHandler } from '../../../../chain/society/tx'
-import type { AccountId, ExtrinsicResult } from '../../../../chain/types'
-import { IconButton } from '../../../../components/IconButton'
+import { useAccount } from '@/account/AccountContext'
+import { useAssetHub } from '@/chain/ChainProvider'
+import { submitTx, type StatusChangeHandler } from '@/chain/society/tx'
+import type { AccountId, ExtrinsicResult } from '@/chain/types'
+import { IconButton } from '@/components/IconButton'
 
 type VoteButtonProps = {
   vote: Vote

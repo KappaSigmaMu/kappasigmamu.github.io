@@ -1,7 +1,7 @@
 import { Button } from 'react-bootstrap'
 import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa6'
 import { styled } from 'styled-components'
-import { LoadingSpinner } from '../pages/explore/components/LoadingSpinner'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
 
 type IconButtonProps = {
   icon: string

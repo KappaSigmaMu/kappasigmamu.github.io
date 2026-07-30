@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
-import { useAssetHub } from '../chain/ChainProvider'
-import { useChainQuery } from '../chain/hooks'
-import { getAccountIndex } from '../chain/indices'
-import type { AccountId } from '../chain/types'
+import { useAssetHub } from '@/chain/ChainProvider'
+import { useChainQuery } from '@/chain/hooks'
+import { getAccountIndex } from '@/chain/indices'
+import type { AccountId } from '@/chain/types'
 
 const AccountIndex = ({
   accountId,

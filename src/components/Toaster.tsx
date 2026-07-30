@@ -1,7 +1,7 @@
 import { Spinner } from 'react-bootstrap'
 import toast, { Toaster as TToaster, ToastBar } from 'react-hot-toast'
 import { FaXmark } from 'react-icons/fa6'
-import { toastTestId } from '../helpers/test-utils/testIds'
+import { toastTestId } from '@/helpers/test-utils/testIds'
 
 const Toaster = () => (
   <TToaster

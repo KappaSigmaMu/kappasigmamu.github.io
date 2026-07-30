@@ -1,5 +1,5 @@
-import type { BidRow } from '../../../helpers/bidKind'
-import { selectNextRoundBidderIds } from '../dashboardHelpers'
+import type { BidRow } from '@/helpers/bidKind'
+import { selectNextRoundBidderIds } from '@/pages/explore/dashboardHelpers'
 
 const bid = (who: string, value: bigint): BidRow => ({ who: who as BidRow['who'], value, kindType: 'Deposit' })
 

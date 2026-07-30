@@ -2,10 +2,10 @@ import type { WalletAccount } from '@talismn/connect-wallets'
 import { Spinner } from 'react-bootstrap'
 import { FaChevronDown } from 'react-icons/fa6'
 import styled from 'styled-components'
-import { useAccount } from '../account/AccountContext'
-import { ChainState, useAssetHub } from '../chain/ChainProvider'
-import { truncateMiddle } from '../helpers/truncate'
-import { Identicon } from '../pages/explore/components/Identicon'
+import { useAccount } from '@/account/AccountContext'
+import { ChainState, useAssetHub } from '@/chain/ChainProvider'
+import { truncateMiddle } from '@/helpers/truncate'
+import { Identicon } from '@/pages/explore/components/Identicon'
 
 const Title = ({ activeAccount }: { activeAccount: WalletAccount }) => {
   const { level } = useAccount()

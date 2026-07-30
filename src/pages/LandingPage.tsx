@@ -3,12 +3,12 @@ import { Col, Row } from 'react-bootstrap'
 import { isMobile } from 'react-device-detect'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { ThreeCanary, defaultConfig, type CanaryConfig } from '../canary-component'
-import { useSociety } from '../chain/society/SocietyContext'
-import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
-import { MemberOffcanvas } from '../components/MemberOffcanvas'
-import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
 import { LoadingSpinner } from './explore/components/LoadingSpinner'
+import { ThreeCanary, defaultConfig, type CanaryConfig } from '@/canary-component'
+import { useSociety } from '@/chain/society/SocietyContext'
+import { OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '@/components/base'
+import { MemberOffcanvas } from '@/components/MemberOffcanvas'
+import KappaSigmaMuTitle from '@/static/kappa-sigma-mu-title.svg'
 
 const customCanaryConfig: CanaryConfig = {
   ...defaultConfig.canary,

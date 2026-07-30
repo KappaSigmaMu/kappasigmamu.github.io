@@ -7,9 +7,9 @@ import {
   calculateVotingPercentage,
   isVotingPeriod
 } from './helpers/periods'
-import { useConsts } from '../../hooks/useConsts'
-import { useRelayChainBlockNumber } from '../../hooks/useRelayChainBlockNumber'
-import { LoadingSpinner } from '../../pages/explore/components/LoadingSpinner'
+import { useConsts } from '@/hooks/useConsts'
+import { useRelayChainBlockNumber } from '@/hooks/useRelayChainBlockNumber'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
 
 const CurrentRound = () => {
   const currentBlock = useRelayChainBlockNumber() ?? 0

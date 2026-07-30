@@ -1,10 +1,10 @@
 import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { useAccount } from '../../account/AccountContext'
-import { useSociety } from '../../chain/society/SocietyContext'
-import { isSameAddress } from '../../chain/ss58'
-import { useConsts } from '../../hooks/useConsts'
-import { LoadingSpinner } from '../../pages/explore/components/LoadingSpinner'
+import { useAccount } from '@/account/AccountContext'
+import { useSociety } from '@/chain/society/SocietyContext'
+import { isSameAddress } from '@/chain/ss58'
+import { useConsts } from '@/hooks/useConsts'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
 
 const Circle = ({ active = false }: { active?: boolean }): JSX.Element => (
   <svg width="16" height="16" viewBox="0 0 16 16">

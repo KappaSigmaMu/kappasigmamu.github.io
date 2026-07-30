@@ -1,6 +1,6 @@
 import { createIdentitySdk, type Identity } from '@polkadot-api/sdk-accounts'
-import type { PeopleApi } from '../client'
-import type { AccountId } from '../types'
+import type { PeopleApi } from '@/chain/client'
+import type { AccountId } from '@/chain/types'
 
 let sdkApi: PeopleApi | null = null
 let sdk: ReturnType<typeof createIdentitySdk> | null = null

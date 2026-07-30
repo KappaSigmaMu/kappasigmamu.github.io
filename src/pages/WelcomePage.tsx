@@ -1,9 +1,9 @@
 import { Badge, Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { Level } from '../components/Level'
-import { LinkWithQuery } from '../components/LinkWithQuery'
-import { SocialIcons } from '../components/SocialIcons'
-import MapIcon from '../static/map-icon.svg'
+import { Level } from '@/components/Level'
+import { LinkWithQuery } from '@/components/LinkWithQuery'
+import { SocialIcons } from '@/components/SocialIcons'
+import MapIcon from '@/static/map-icon.svg'
 
 const WelcomePage = (): JSX.Element => {
   return (

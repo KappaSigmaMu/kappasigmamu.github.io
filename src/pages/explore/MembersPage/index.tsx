@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import { MembersList } from './components/MembersList'
-import { useAccount } from '../../../account/AccountContext'
-import { buildSocietyMembersArray } from '../../../chain/society/derived'
-import { useSociety } from '../../../chain/society/SocietyContext'
-import { useConsts } from '../../../hooks/useConsts'
-import { ChainError } from '../components/ChainError'
-import { LoadingSpinner } from '../components/LoadingSpinner'
+import { useAccount } from '@/account/AccountContext'
+import { buildSocietyMembersArray } from '@/chain/society/derived'
+import { useSociety } from '@/chain/society/SocietyContext'
+import { useConsts } from '@/hooks/useConsts'
+import { ChainError } from '@/pages/explore/components/ChainError'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
 
 const MembersPage = (): JSX.Element => {
   const { activeAccount } = useAccount()

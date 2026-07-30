@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import { PayoutsList } from './components/PayoutsList'
-import { useAccount } from '../../../account/AccountContext'
-import { buildSocietyMembersWithPayouts } from '../../../chain/society/derived'
-import type { SocietyMemberSnapshot } from '../../../chain/society/queries'
-import { useSociety, useSocietyPayouts } from '../../../chain/society/SocietyContext'
-import { useConsts } from '../../../hooks/useConsts'
-import { ChainError } from '../components/ChainError'
-import { LoadingSpinner } from '../components/LoadingSpinner'
+import { useAccount } from '@/account/AccountContext'
+import { buildSocietyMembersWithPayouts } from '@/chain/society/derived'
+import type { SocietyMemberSnapshot } from '@/chain/society/queries'
+import { useSociety, useSocietyPayouts } from '@/chain/society/SocietyContext'
+import { useConsts } from '@/hooks/useConsts'
+import { ChainError } from '@/pages/explore/components/ChainError'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
 
 const PayoutsPage = (): JSX.Element => {
   const { activeAccount } = useAccount()

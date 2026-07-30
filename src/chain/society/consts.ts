@@ -1,6 +1,6 @@
-import { useAssetHub } from '../ChainProvider'
-import { useChainQuery } from '../hooks'
 import { useSociety } from './SocietyContext'
+import { useAssetHub } from '@/chain/ChainProvider'
+import { useChainQuery } from '@/chain/hooks'
 
 export type SocietyConsts = {
   candidateDeposit: bigint

@@ -1,4 +1,4 @@
-import { getProviderEndpoints, productionProviders } from '../providers'
+import { getProviderEndpoints, productionProviders } from '@/helpers/providers'
 
 describe('RPC providers', () => {
   it('uses the ordered production fallback list by default', () => {

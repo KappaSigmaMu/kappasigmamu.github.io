@@ -2,7 +2,7 @@ import type { StatusChange } from 'polkadot-api/ws'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { createChainClient, getTypedApi, type ChainApi, type ChainClient } from './client'
 import { type ChainName } from './endpoints'
-import { LoadingContainer } from '../components/LoadingContainer'
+import { LoadingContainer } from '@/components/LoadingContainer'
 
 export enum ChainState {
   initializing,

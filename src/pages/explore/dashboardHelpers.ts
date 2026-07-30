@@ -1,4 +1,4 @@
-import type { BidRow } from '../../helpers/bidKind'
+import type { BidRow } from '@/helpers/bidKind'
 
 export function selectNextRoundBidderIds(
   bids: BidRow[],

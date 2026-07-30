@@ -1,5 +1,5 @@
-import type { AssetHubApi } from '../client'
-import { isSameAddress } from '../ss58'
+import type { AssetHubApi } from '@/chain/client'
+import { isSameAddress } from '@/chain/ss58'
 import type {
   SocietyBid,
   SocietyCandidateRecord,
@@ -8,7 +8,7 @@ import type {
   SocietyPayoutRecord,
   SocietyVote,
   AccountId
-} from '../types'
+} from '@/chain/types'
 
 const society = (api: AssetHubApi) => api.query.Society
 

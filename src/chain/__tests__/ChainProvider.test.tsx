@@ -1,7 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { WsEvent, type StatusChange } from 'polkadot-api/ws'
-import { ChainProvider, ChainState, useAssetHub } from '../ChainProvider'
-import { createChainClient, getTypedApi } from '../client'
+import { ChainProvider, ChainState, useAssetHub } from '@/chain/ChainProvider'
+import { createChainClient, getTypedApi } from '@/chain/client'
 
 jest.mock('../client', () => ({
   createChainClient: jest.fn(),

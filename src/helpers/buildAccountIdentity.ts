@@ -1,5 +1,5 @@
 import type { Identity } from '@polkadot-api/sdk-accounts'
-import type { AccountIdentity } from '../chain/types'
+import type { AccountIdentity } from '@/chain/types'
 
 type LegacyIdentity = {
   display?: string

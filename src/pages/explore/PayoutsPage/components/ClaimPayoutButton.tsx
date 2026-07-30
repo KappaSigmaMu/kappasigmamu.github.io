@@ -3,11 +3,11 @@ import { useState } from 'react'
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { FaMoneyBillTransfer } from 'react-icons/fa6'
 import { styled } from 'styled-components'
-import { useAccount } from '../../../../account/AccountContext'
-import { useAssetHub } from '../../../../chain/ChainProvider'
-import { submitTx, type StatusChangeHandler } from '../../../../chain/society/tx'
-import type { ExtrinsicResult } from '../../../../chain/types'
-import { LoadingSpinner } from '../../components/LoadingSpinner'
+import { useAccount } from '@/account/AccountContext'
+import { useAssetHub } from '@/chain/ChainProvider'
+import { submitTx, type StatusChangeHandler } from '@/chain/society/tx'
+import type { ExtrinsicResult } from '@/chain/types'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
 
 type Props = {
   activeAccount: WalletAccount | undefined

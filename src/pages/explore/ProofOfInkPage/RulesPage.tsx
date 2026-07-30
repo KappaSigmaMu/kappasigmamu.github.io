@@ -1,4 +1,4 @@
-import { MarkdownRenderer } from '../../../components/MarkdownRenderer'
+import { MarkdownRenderer } from '@/components/MarkdownRenderer'
 
 const RulesPage = (): JSX.Element => {
   const rulesMarkdown =

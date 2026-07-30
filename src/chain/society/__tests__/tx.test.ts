@@ -1,6 +1,6 @@
 import type { PolkadotSigner, Transaction, TxEvent } from 'polkadot-api'
 import { Subject } from 'rxjs'
-import { submitTx, type StatusChangeHandler } from '../tx'
+import { submitTx, type StatusChangeHandler } from '@/chain/society/tx'
 
 const signer = {} as PolkadotSigner
 const txHash = '0x1234'

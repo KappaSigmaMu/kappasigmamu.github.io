@@ -1,1 +1,1 @@
-export { isSameAddress, normalizeAddress, toPublicKey } from '../chain/ss58'
+export { isSameAddress, normalizeAddress, toPublicKey } from '@/chain/ss58'

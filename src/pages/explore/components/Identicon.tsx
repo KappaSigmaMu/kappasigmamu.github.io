@@ -1,6 +1,6 @@
 import IIdenticon from '@polkadot/react-identicon'
 import { IconTheme } from '@polkadot/react-identicon/types'
-import { toastByStatus } from '../helpers'
+import { toastByStatus } from '@/pages/explore/helpers'
 
 type IdenticonProps = {
   value: string | Uint8Array | null | undefined

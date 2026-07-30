@@ -1,5 +1,5 @@
-import { getPeopleProviderEndpoints } from '../helpers/peopleProviders'
-import { getProviderEndpoints } from '../helpers/providers'
+import { getPeopleProviderEndpoints } from '@/helpers/peopleProviders'
+import { getProviderEndpoints } from '@/helpers/providers'
 
 export type ChainName = 'assetHub' | 'people'
 

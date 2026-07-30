@@ -4,8 +4,8 @@ import { Bid } from './Bid'
 import { CurrentRound } from './CurrentRound'
 import { RoundPayout } from './RoundPayout'
 import { Strikes } from './Strikes'
-import { useAccount } from '../../account/AccountContext'
-import { LoadingSpinner } from '../../pages/explore/components/LoadingSpinner'
+import { useAccount } from '@/account/AccountContext'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
 
 const HumanCurrentRound = (
   <>

@@ -1,9 +1,9 @@
 import { Button, Col, Row } from 'react-bootstrap'
-import { useAccount } from '../../account/AccountContext'
-import { useSociety } from '../../chain/society/SocietyContext'
-import { isSameAddress } from '../../chain/ss58'
-import { LoadingSpinner } from '../../pages/explore/components/LoadingSpinner'
-import { FormatBalance } from '../FormatBalance'
+import { useAccount } from '@/account/AccountContext'
+import { useSociety } from '@/chain/society/SocietyContext'
+import { isSameAddress } from '@/chain/ss58'
+import { FormatBalance } from '@/components/FormatBalance'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
 
 const Bid = () => {
   const { activeAccount } = useAccount()

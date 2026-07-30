@@ -1,8 +1,8 @@
 import { Col, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { Identicon } from './Identicon'
-import type { AccountId } from '../../../chain/types'
-import { CopyButton } from '../../../components/CopyButton'
+import type { AccountId } from '@/chain/types'
+import { CopyButton } from '@/components/CopyButton'
 
 export function AccountHeader({ accountId }: { accountId: AccountId }) {
   return (

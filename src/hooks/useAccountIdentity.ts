@@ -1,8 +1,8 @@
 import type { Identity } from '@polkadot-api/sdk-accounts'
-import { usePeople, ChainState } from '../chain/ChainProvider'
-import { useChainQuery } from '../chain/hooks'
-import { getIdentity } from '../chain/people/identity'
-import type { AccountId } from '../chain/types'
+import { usePeople, ChainState } from '@/chain/ChainProvider'
+import { useChainQuery } from '@/chain/hooks'
+import { getIdentity } from '@/chain/people/identity'
+import type { AccountId } from '@/chain/types'
 
 export function useAccountIdentity(accountId: AccountId | string): Identity | null {
   const { api, state } = usePeople()

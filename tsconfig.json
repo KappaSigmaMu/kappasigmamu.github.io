@@ -16,10 +16,10 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "sourceMap": true,
-    "checkJs": true
-  },
-  "paths": {
-    "*": ["types/*.d.ts"]
+    "checkJs": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "build", "cypress", "src/canary-component/**/*.js"]

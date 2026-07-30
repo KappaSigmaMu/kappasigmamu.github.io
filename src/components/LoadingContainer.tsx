@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { ChainState, type ChainConnection } from '../chain/ChainProvider'
-import { LoadingSpinner } from '../pages/explore/components/LoadingSpinner'
+import { ChainState, type ChainConnection } from '@/chain/ChainProvider'
+import { LoadingSpinner } from '@/pages/explore/components/LoadingSpinner'
 
 const LoadingContainer = ({ state }: { state: ChainConnection }) => {
   return state.state !== ChainState.ready ? (

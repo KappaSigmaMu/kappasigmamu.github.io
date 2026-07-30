@@ -1,7 +1,7 @@
 import { Col, Badge } from 'react-bootstrap'
 import { styled } from 'styled-components'
-import { DataHeaderRow, DataRow } from '../../../../components/base'
-import { Identicon } from '../../components/Identicon'
+import { DataHeaderRow, DataRow } from '@/components/base'
+import { Identicon } from '@/pages/explore/components/Identicon'
 
 const SuspendedList = ({ members }: { members: string[] }): JSX.Element => {
   if (members.length === 0) return <>No suspended members</>

@@ -10,9 +10,9 @@ import { MembersPage } from './MembersPage'
 import { PayoutsPage } from './PayoutsPage'
 import { ProofOfInkPage } from './ProofOfInkPage'
 import { SuspendedPage } from './SuspendedPage'
-import { ChainState, useAssetHub } from '../../chain/ChainProvider'
-import type { SocietyTotals } from '../../chain/society/queries'
-import { useSociety } from '../../chain/society/SocietyContext'
+import { ChainState, useAssetHub } from '@/chain/ChainProvider'
+import type { SocietyTotals } from '@/chain/society/queries'
+import { useSociety } from '@/chain/society/SocietyContext'
 
 const initialState: SocietyTotals = { bidders: 0, candidates: 0, members: 0, maxMembers: 0, suspendedMembers: 0 }
 

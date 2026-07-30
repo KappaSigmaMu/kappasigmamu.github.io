@@ -1,4 +1,4 @@
-import { accountIndexToString, isSameAddress, normalizeAddress } from '../ss58'
+import { accountIndexToString, isSameAddress, normalizeAddress } from '@/chain/ss58'
 
 describe('accountIndexToString', () => {
   it.each([

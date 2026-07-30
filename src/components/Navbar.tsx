@@ -7,9 +7,9 @@ import { SelectedAccount } from './SelectedAccount'
 import { SettingsDropdown } from './SettingsDropdown'
 import { SocialIcons } from './SocialIcons'
 import { Wallets } from './Wallets'
-import { useAccount } from '../account/AccountContext'
-import type { NavRouteProps } from '../chain/types'
-import KappaSigmaMu from '../static/kappa-sigma-mu-logo-trimmed.svg'
+import { useAccount } from '@/account/AccountContext'
+import type { NavRouteProps } from '@/chain/types'
+import KappaSigmaMu from '@/static/kappa-sigma-mu-logo-trimmed.svg'
 
 const navigationItems = [
   { label: 'Home', to: '/', testId: 'nav-link-home' },

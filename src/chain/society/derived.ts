@@ -1,7 +1,7 @@
-import type { AssetHubApi } from '../client'
-import { isSameAddress } from '../ss58'
-import type { SocietyCandidate, SocietyInfo, SocietyMember } from '../types'
 import { getSocietyCandidates, getSocietyInfo, getSocietyMembers, type SocietyMemberSnapshot } from './queries'
+import type { AssetHubApi } from '@/chain/client'
+import { isSameAddress } from '@/chain/ss58'
+import type { SocietyCandidate, SocietyInfo, SocietyMember } from '@/chain/types'
 
 export function buildSocietyCandidatesArray(
   candidates: Awaited<ReturnType<typeof getSocietyCandidates>>

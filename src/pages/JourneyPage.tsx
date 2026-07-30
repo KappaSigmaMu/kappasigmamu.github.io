@@ -1,7 +1,7 @@
 import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
-import { Level } from '../components/Level'
-import { NextStep } from '../components/NextStep'
+import { Level } from '@/components/Level'
+import { NextStep } from '@/components/NextStep'
 
 const JourneyPage = (): JSX.Element => (
   <>

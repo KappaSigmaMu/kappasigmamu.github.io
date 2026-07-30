@@ -1,14 +1,14 @@
 import React, { useContext, useMemo } from 'react'
 import { combineLatest, distinctUntilChanged, filter, map } from 'rxjs'
-import { useAssetHub } from '../ChainProvider'
-import { useChainSub, type ChainRequestState } from '../hooks'
-import type { AccountId, SocietyBid, SocietyInfo, SocietyPayoutRecord, SocietyVote } from '../types'
 import type {
   SocietyCandidateEntry,
   SocietyMemberEntry,
   SocietyMemberSnapshot,
   SocietyTotals
 } from './queries'
+import { useAssetHub } from '@/chain/ChainProvider'
+import { useChainSub, type ChainRequestState } from '@/chain/hooks'
+import type { AccountId, SocietyBid, SocietyInfo, SocietyPayoutRecord, SocietyVote } from '@/chain/types'
 
 type SocietyContextValue = {
   bids: ChainRequestState<SocietyBid[]>

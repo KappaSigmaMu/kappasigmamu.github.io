@@ -4,8 +4,8 @@
 
 // Adapted (with permission) from https://www.w3schools.com/code/tryit.asp?filename=GGIGKE2GG7N1
 
-import { toPublicKey } from '../../../../chain/ss58'
-import type { AccountId } from '../../../../chain/types'
+import { toPublicKey } from '@/chain/ss58'
+import type { AccountId } from '@/chain/types'
 
 export const PADD = 50
 export const SIZE = 300

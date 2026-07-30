@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { WikiPage } from '../WikiPage'
+import { WikiPage } from '@/pages/WikiPage'
 
 jest.mock('../../components/MarkdownRenderer', () => ({
   MarkdownRenderer: ({ markdownText }: { markdownText: string }) => <div>{markdownText}</div>

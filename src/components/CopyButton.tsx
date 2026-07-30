@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Overlay, Tooltip } from 'react-bootstrap'
-import CopyIcon from '../static/copy-icon.svg'
+import CopyIcon from '@/static/copy-icon.svg'
 
 export function CopyButton({ content }: { content: string }): JSX.Element {
   const imgRef = useRef(null)

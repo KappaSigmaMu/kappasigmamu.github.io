@@ -3,7 +3,7 @@ import { Nav } from 'react-bootstrap'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { LoadingSpinner } from './LoadingSpinner'
-import { LinkWithQuery } from '../../../components/LinkWithQuery'
+import { LinkWithQuery } from '@/components/LinkWithQuery'
 
 type Totals = {
   bidders: number

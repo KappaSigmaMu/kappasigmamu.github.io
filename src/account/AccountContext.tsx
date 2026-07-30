@@ -1,10 +1,10 @@
 import type { WalletAccount } from '@talismn/connect-wallets'
 import { getPolkadotSignerFromPjs, type PolkadotSigner, type SignPayload, type SignRaw } from 'polkadot-api/pjs-signer'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { getAccountLevelFromCollections, type SocietyAccountLevel } from '../chain/society/queries'
-import { useSociety } from '../chain/society/SocietyContext'
-import { wallets } from '../helpers/wallets'
-import { toastByStatus } from '../pages/explore/helpers'
+import { getAccountLevelFromCollections, type SocietyAccountLevel } from '@/chain/society/queries'
+import { useSociety } from '@/chain/society/SocietyContext'
+import { wallets } from '@/helpers/wallets'
+import { toastByStatus } from '@/pages/explore/helpers'
 
 const localStorageAccount = localStorage.getItem('activeAccount')
 

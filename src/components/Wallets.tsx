@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
 import { FaChevronLeft, FaChevronRight, FaCircleCheck, FaDownload, FaPowerOff, FaXmark } from 'react-icons/fa6'
 import styled from 'styled-components'
-import { useAccount } from '../account/AccountContext'
-import { normalizeAddress } from '../chain/ss58'
-import { walletTestId } from '../helpers/test-utils/testIds'
-import { wallets } from '../helpers/wallets'
-import { Identicon } from '../pages/explore/components/Identicon'
-import { toastByStatus } from '../pages/explore/helpers'
+import { useAccount } from '@/account/AccountContext'
+import { normalizeAddress } from '@/chain/ss58'
+import { walletTestId } from '@/helpers/test-utils/testIds'
+import { wallets } from '@/helpers/wallets'
+import { Identicon } from '@/pages/explore/components/Identicon'
+import { toastByStatus } from '@/pages/explore/helpers'
 
 const APP_NAME = process.env.REACT_APP_NAME
 const KUSAMA_PREFIX = Number(process.env.REACT_APP_KEYRING_PREFIX ?? 2)

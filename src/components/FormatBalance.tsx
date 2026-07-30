@@ -1,6 +1,6 @@
 import React from 'react'
-import { formatBalance } from '../chain/format'
-import type { Balance } from '../chain/types'
+import { formatBalance } from '@/chain/format'
+import type { Balance } from '@/chain/types'
 
 type ValueType = Balance | bigint | number | string | { toString(): string } | undefined
 

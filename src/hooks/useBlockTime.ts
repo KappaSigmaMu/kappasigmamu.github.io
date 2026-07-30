@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { ASSET_HUB_BLOCK_TIME, extractTime, formatTime, RELAY_CHAIN_BLOCK_TIME, type TimeParts } from '../chain/format'
+import { ASSET_HUB_BLOCK_TIME, extractTime, formatTime, RELAY_CHAIN_BLOCK_TIME, type TimeParts } from '@/chain/format'
 
 type Result = [number, string, TimeParts]
 

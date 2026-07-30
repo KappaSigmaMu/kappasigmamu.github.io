@@ -1,8 +1,8 @@
-import type { PeopleApi, AssetHubApi } from '../../../../chain/client'
-import { getAccountIndex } from '../../../../chain/indices'
-import { getIdentity } from '../../../../chain/people/identity'
-import type { AccountId, SocietyMemberDetails } from '../../../../chain/types'
-import { buildAccountIdentity } from '../../../../helpers/buildAccountIdentity'
+import type { PeopleApi, AssetHubApi } from '@/chain/client'
+import { getAccountIndex } from '@/chain/indices'
+import { getIdentity } from '@/chain/people/identity'
+import type { AccountId, SocietyMemberDetails } from '@/chain/types'
+import { buildAccountIdentity } from '@/helpers/buildAccountIdentity'
 
 export async function fetchMemberDetails(
   api: AssetHubApi,

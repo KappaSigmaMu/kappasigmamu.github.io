@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
-import { useSociety } from '../../../chain/society/SocietyContext'
-import { AccountIdentity } from '../../../components/AccountIdentity'
-import { getLatestPinnedHash, fastestGateway, imageUrl } from '../../../helpers/ipfs'
-import { ChainError } from '../components/ChainError'
-import { Identicon } from '../components/Identicon'
+import { useSociety } from '@/chain/society/SocietyContext'
+import { AccountIdentity } from '@/components/AccountIdentity'
+import { getLatestPinnedHash, fastestGateway, imageUrl } from '@/helpers/ipfs'
+import { ChainError } from '@/pages/explore/components/ChainError'
+import { Identicon } from '@/pages/explore/components/Identicon'
 
 const GalleryPage = (): JSX.Element => {
   const { memberEntries, info } = useSociety()

@@ -1,5 +1,5 @@
-import { useAssetHub } from '../chain/ChainProvider'
-import { useChainSub } from '../chain/hooks'
+import { useAssetHub } from '@/chain/ChainProvider'
+import { useChainSub } from '@/chain/hooks'
 
 export function useRelayChainBlockNumber(_apiOverride?: unknown): number | null {
   const { api } = useAssetHub()

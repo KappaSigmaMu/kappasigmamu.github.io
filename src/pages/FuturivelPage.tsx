@@ -1,9 +1,9 @@
 import { Col, Container } from 'react-bootstrap'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { ExternalLink, OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '../components/base'
-import GilWireframe from '../static/gil-wireframe.png'
-import KappaSigmaMuTitle from '../static/kappa-sigma-mu-title.svg'
+import { ExternalLink, OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '@/components/base'
+import GilWireframe from '@/static/gil-wireframe.png'
+import KappaSigmaMuTitle from '@/static/kappa-sigma-mu-title.svg'
 
 const SocietyGuideLink = styled(ExternalLink).attrs(() => ({
   href: 'https://docs.google.com/document/d/1trsjncEMSRT2u2eSh1IsQfB9o7tfh9s4moMbA2op6RA/edit'
