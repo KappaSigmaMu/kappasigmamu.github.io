@@ -1,5 +1,7 @@
 import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/dist/types'
 
+const CHOPSTICKS_TASK_TIMEOUT = 120000
+
 const visitPayoutsPage = () => {
   cy.visit('/explore/payouts?rpc=ws://localhost:8000')
   cy.getBySel('payouts-list').should('be.visible')

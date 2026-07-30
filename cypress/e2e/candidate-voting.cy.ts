@@ -1,5 +1,7 @@
 import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/dist/types'
 
+const CHOPSTICKS_TASK_TIMEOUT = 120000
+
 describe('Candidate Voting', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
