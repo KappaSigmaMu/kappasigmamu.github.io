@@ -81,8 +81,7 @@ describe('Membership Claim', () => {
 
       cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: CHOPSTICKS_TASK_TIMEOUT })
-      cy.getBySel('tx-success', { timeout: 60000 }).should('be.visible')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
       cy.verifyAccountLevel('Cyborg', 60000)
     })
   })

@@ -87,8 +87,7 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-approve-button-', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: 120000 })
-      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
     })
 
     it('should allow member to reject a candidate', () => {
@@ -98,8 +97,7 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-reject-button-', { timeout: 15000 }).last().click()
 
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: 120000 })
-      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
     })
 
     it('should show Voted badge after voting', () => {
@@ -109,8 +107,7 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-approve-button-', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: 120000 })
-      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
 
       cy.getBySelLike('candidate-voted-badge-', { timeout: 20000 })
         .should('be.visible')

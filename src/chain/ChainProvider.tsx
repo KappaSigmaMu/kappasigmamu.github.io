@@ -53,9 +53,33 @@ export function ChainProvider({
   useEffect(() => {
     let cancelled = false
     let client: ChainClient | null = null
+    let statusVersion = 0
+
+    const verifyConnection = (version: number) => {
+      const currentClient = client
+      if (!currentClient) return
+
+      currentClient
+        .getFinalizedBlock()
+        .then(() => {
+          if (!cancelled && version === statusVersion) {
+            setConnection((previous) => ({ ...previous, state: ChainState.ready, error: null }))
+          }
+        })
+        .catch((error: unknown) => {
+          if (!cancelled && version === statusVersion) {
+            setConnection((previous) => ({
+              ...previous,
+              state: ChainState.error,
+              error: error instanceof Error ? error : new Error(String(error))
+            }))
+          }
+        })
+    }
 
     const updateStatus = (status: StatusChange) => {
       if (cancelled) return
+      const version = ++statusVersion
       const endpoint = statusEndpoint(status)
       setConnection((previous) => ({
         ...previous,
@@ -70,6 +94,8 @@ export function ChainProvider({
         error: status.type === 'ERROR' ? new Error(String(status.event)) : null,
         activeProviderEndpoint: endpoint ?? previous.activeProviderEndpoint
       }))
+
+      if (status.type === 'CONNECTED') verifyConnection(version)
     }
 
     setConnection({ ...initialConnection, state: ChainState.connecting })
@@ -83,21 +109,7 @@ export function ChainProvider({
       error: null,
       activeProviderEndpoint: created.endpoint
     })
-
-    client
-      .getFinalizedBlock()
-      .then(() => {
-        if (!cancelled) setConnection((previous) => ({ ...previous, state: ChainState.ready, error: null }))
-      })
-      .catch((error: unknown) => {
-        if (!cancelled) {
-          setConnection((previous) => ({
-            ...previous,
-            state: ChainState.error,
-            error: error instanceof Error ? error : new Error(String(error))
-          }))
-        }
-      })
+    verifyConnection(statusVersion)
 
     return () => {
       cancelled = true

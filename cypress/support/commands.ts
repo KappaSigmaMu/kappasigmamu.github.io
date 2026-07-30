@@ -51,20 +51,16 @@ Cypress.Commands.add('approvePendingTransaction', () => {
   approvePendingTx()
 })
 
-Cypress.Commands.add('includePendingTransaction', (options?: { timeout?: number }) => {
-  if (options) {
-    cy.task('includePendingTransaction', null, options)
-    return
-  }
-  cy.task('includePendingTransaction')
+Cypress.Commands.add('waitForTransactionInclusion', (options?: { timeout?: number }) => {
+  return options
+    ? cy.task('waitForTransactionInclusion', null, options)
+    : cy.task('waitForTransactionInclusion')
 })
 
 Cypress.Commands.add('submitTransaction', () => {
   cy.approvePendingTransaction()
   cy.getBySel('tx-pending', { timeout: 30000 }).find('[data-test="tx-message"]').should('be.visible')
-  cy.includePendingTransaction({ timeout: 120000 })
-  cy.getBySel('tx-success', { timeout: 30000 }).find('[data-test="tx-message"]').should('be.visible')
-  cy.getBySel('tx-pending').should('not.exist')
+  cy.waitForTransactionInclusion({ timeout: 120000 })
 })
 
 Cypress.Commands.add('verifyTxError', (message?: string | RegExp, timeout?: number) => {

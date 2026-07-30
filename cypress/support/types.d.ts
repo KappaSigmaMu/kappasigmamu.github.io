@@ -4,7 +4,7 @@ declare namespace Cypress {
     getBySelLike(selector: string, ...args: any[]): Chainable<JQuery<HTMLElement>>
     connectWallet(accountName: string): Chainable<void>
     approvePendingTransaction(): Chainable<void>
-    includePendingTransaction(options?: { timeout?: number }): Chainable<void>
+    waitForTransactionInclusion(options?: { timeout?: number }): Chainable<null>
     submitTransaction(): Chainable<void>
     visitExplore(section: string): Chainable<void>
     verifyAccountLevel(level: string, timeout?: number): Chainable<void>

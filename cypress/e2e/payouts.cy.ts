@@ -79,12 +79,7 @@ describe('Payouts Page', () => {
       cy.getBySelLike('claim-payout-button-').should('be.visible').click()
 
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: 120000 })
-      cy.getBySel('tx-success', { timeout: 30000 })
-        .find('[data-test="tx-message"]')
-        .should('be.visible')
-        .and('contain.text', 'Transaction submitted.')
-      cy.getBySel('tx-pending').should('not.exist')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
     })
   })
 
