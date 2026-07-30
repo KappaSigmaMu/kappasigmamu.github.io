@@ -7,10 +7,8 @@ const yaml = require('js-yaml');
 
 const CHOPSTICKS_RPC = 'http://localhost:8000';
 const FAILED_TESTS_CACHE = path.join(__dirname, 'cypress/.cache/failed-tests.json');
-const PENDING_EXTRINSIC_TIMEOUT = 30000;
-const PENDING_EXTRINSIC_POLL_INTERVAL = 100;
-
-let forkBlockHash: string | null = null;
+const TRANSACTION_INCLUSION_TIMEOUT = 60000;
+const TRANSACTION_POLL_INTERVAL = 100;
 
 async function chopsticksRpc<T>(method: string, params: unknown[] = []): Promise<T> {
   const response = await fetch(CHOPSTICKS_RPC, {
@@ -27,18 +25,31 @@ async function chopsticksRpc<T>(method: string, params: unknown[] = []): Promise
   return payload.result as T;
 }
 
+async function clearPendingExtrinsics(): Promise<void> {
+  const pending = await chopsticksRpc<string[]>('author_pendingExtrinsics');
+  if (pending.length === 0) return;
+
+  await chopsticksRpc('author_removeExtrinsic', [pending]);
+}
+
 const delay = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
-async function waitForPendingExtrinsics(): Promise<string[]> {
+async function waitForTransactionInclusion(): Promise<void> {
   const startedAt = Date.now();
+  const initialHeader = await chopsticksRpc<{ number: string }>('chain_getHeader');
+  let sawPendingTransaction = false;
 
-  while (Date.now() - startedAt < PENDING_EXTRINSIC_TIMEOUT) {
+  while (Date.now() - startedAt < TRANSACTION_INCLUSION_TIMEOUT) {
     const pending = await chopsticksRpc<string[]>('author_pendingExtrinsics');
-    if (pending.length > 0) return pending;
-    await delay(PENDING_EXTRINSIC_POLL_INTERVAL);
+    if (pending.length > 0) sawPendingTransaction = true;
+    if (sawPendingTransaction && pending.length === 0) {
+      const currentHeader = await chopsticksRpc<{ number: string }>('chain_getHeader');
+      if (currentHeader.number !== initialHeader.number) return;
+    }
+    await delay(TRANSACTION_POLL_INTERVAL);
   }
 
-  throw new Error(`No pending Chopsticks extrinsic appeared within ${PENDING_EXTRINSIC_TIMEOUT}ms`);
+  throw new Error(`Chopsticks did not include a pending transaction within ${TRANSACTION_INCLUSION_TIMEOUT}ms`);
 }
 
 function loadImportStorage() {
@@ -56,56 +67,17 @@ export default defineConfig({
       cypressGrepPlugin(config)
 
       on('task', {
-        async rememberForkPoint() {
-          try {
-            forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash');
-          } catch (e) {
-            console.log('Chopsticks fork point capture skipped:', (e as Error).message);
-          }
-          return null;
-        },
-        async resetChopsticks() {
-          try {
-            await chopsticksRpc('dev_newBlock');
-          } catch (e) {
-            console.log('Chopsticks reset skipped:', (e as Error).message);
-          }
-          return null;
-        },
-        async includePendingTransaction() {
-          const queueStartedAt = Date.now();
-          const pending = await waitForPendingExtrinsics();
-          const queuedAfter = Date.now() - queueStartedAt;
-          const blockStartedAt = Date.now();
-          await chopsticksRpc('dev_newBlock');
-          const blockDuration = Date.now() - blockStartedAt;
-          console.log(
-            `Chopsticks included ${pending.length} pending transaction(s): queue ${queuedAfter}ms, block ${blockDuration}ms`
-          );
-          return null;
-        },
-        async resetChopsticksToFork() {
-          try {
-            const hash =
-              forkBlockHash ??
-              (process.env.KUSAMA_BLOCK_NUMBER
-                ? await chopsticksRpc<string>('chain_getBlockHash', [Number(process.env.KUSAMA_BLOCK_NUMBER)])
-                : null);
-            if (hash) await chopsticksRpc('dev_setHead', [hash]);
-          } catch (e) {
-            console.log('Chopsticks fork reset skipped:', (e as Error).message);
-          }
+        async waitForTransactionInclusion() {
+          await waitForTransactionInclusion();
           return null;
         },
         async resetChopsticksStorage() {
+          await clearPendingExtrinsics();
           await chopsticksRpc('dev_setStorage', [loadImportStorage()]);
-          forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash');
           return null;
         },
-        async setChopsticksHead(blockNumber: number) {
-          await chopsticksRpc('dev_setHead', [blockNumber]);
-          await chopsticksRpc('dev_setStorage', [loadImportStorage()]);
-          forkBlockHash = await chopsticksRpc<string>('chain_getBlockHash');
+        async clearChopsticksIndices() {
+          await chopsticksRpc('dev_setStorage', [{ Indices: { $removePrefix: ['Accounts'] } }]);
           return null;
         },
       });

@@ -123,7 +123,8 @@ export function SocietyProvider({ children }: { children: React.ReactNode }) {
               skeptic: skeptic.value,
               pot: pot.value,
               parameters: parameters.value,
-              defender: defending.value?.[0]
+              defender: defending.value?.[0],
+              defenderSkeptic: defending.value?.[1]
             }))
           )
         : undefined,

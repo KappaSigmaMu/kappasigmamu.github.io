@@ -4,7 +4,15 @@ import type { AccountId } from '../chain/types'
 import { truncateMiddle } from '../helpers/truncate'
 import { useAccountIdentity } from '../hooks/useAccountIdentity'
 
-const AccountIdentity = ({ accountId, hideNotSet }: { accountId: AccountId | string; hideNotSet?: boolean }) => {
+const AccountIdentity = ({
+  accountId,
+  hideNotSet,
+  truncateLength = 20
+}: {
+  accountId: AccountId | string
+  hideNotSet?: boolean
+  truncateLength?: number
+}) => {
   const identity = useAccountIdentity(accountId)
   const display = identity?.info.display
   const isVerified = Boolean(identity?.judgements.length)
@@ -23,7 +31,7 @@ const AccountIdentity = ({ accountId, hideNotSet }: { accountId: AccountId | str
         {display}
       </div>
     )
-  return <>{truncateMiddle(accountId?.toString(), 20)}</>
+  return <>{truncateMiddle(accountId?.toString(), truncateLength)}</>
 }
 
 const StyledVerifiedBadge = styled(FaCircleCheck)`

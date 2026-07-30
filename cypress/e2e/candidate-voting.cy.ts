@@ -1,10 +1,11 @@
 import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/dist/types'
 
+const CHOPSTICKS_TASK_TIMEOUT = 120000
+
 describe('Candidate Voting', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
   before(() => {
-    cy.task('rememberForkPoint')
     cy.fixture('accounts').then((accounts) => {
       testAccounts = Object.values(accounts).map((acc: any) => ({
         address: acc.address,
@@ -59,7 +60,7 @@ describe('Candidate Voting', () => {
 
   describe('Vote on Candidate', () => {
     beforeEach(() => {
-      cy.resetChopsticksToFork({ timeout: 120000 })
+      cy.resetChopsticksStorage({ timeout: 120000 })
       cy.visit('/explore/candidates?rpc=ws://localhost:8000')
       cy.initWallet(testAccounts, Cypress.expose('app_name'))
       cy.getBySel('candidates-list', { timeout: 20000 }).should('be.visible')
@@ -88,8 +89,7 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-approve-button-', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: 120000 })
-      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
     })
 
     it('should allow member to reject a candidate', () => {
@@ -99,8 +99,7 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-reject-button-', { timeout: 15000 }).last().click()
 
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: 120000 })
-      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
     })
 
     it('should show Voted badge after voting', () => {
@@ -110,8 +109,7 @@ describe('Candidate Voting', () => {
       cy.getBySelLike('candidate-approve-button-', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: 120000 })
-      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
 
       cy.getBySelLike('candidate-voted-badge-', { timeout: 20000 })
         .should('be.visible')
@@ -126,16 +124,16 @@ describe('Candidate Voting', () => {
       cy.getBySel('candidates-list', { timeout: 20000 }).should('be.visible')
     })
 
-    it('should not show drop button when conditions are not met', () => {
+    it('should show a drop button for the kickable candidate', () => {
       cy.connectWallet('Eve')
       cy.verifyAccountLevel('Cyborg')
 
       cy.getBySel('candidates-list', { timeout: 15000 }).should('be.visible')
-      cy.getBySelLike('candidate-drop-button-').should('not.exist')
+      cy.getBySelLike('candidate-drop-button-').should('have.length', 1).and('be.visible')
     })
   })
 
   after(() => {
-    cy.resetChopsticksToFork()
+    cy.resetChopsticksStorage()
   })
 })

@@ -17,20 +17,13 @@ const expectTransactionSuccess = () => {
     .find('[data-test="tx-message"]')
     .should('be.visible')
     .and('contain.text', 'Request sent. Waiting for response...')
-
-  cy.includePendingTransaction({ timeout: CHOPSTICKS_TASK_TIMEOUT })
-  cy.getBySel('tx-success', { timeout: 60000 })
-    .find('[data-test="tx-message"]')
-    .should('be.visible')
-    .and('contain.text', 'Transaction submitted.')
-  cy.getBySel('tx-pending').should('not.exist')
+  cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
 }
 
 describe('Bidding Operations', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
   before(() => {
-    cy.task('rememberForkPoint')
     cy.fixture('accounts').then((accounts) => {
       testAccounts = Object.values(accounts).map((acc: any) => ({
         address: acc.address,
@@ -42,7 +35,7 @@ describe('Bidding Operations', () => {
   })
 
   beforeEach(() => {
-    cy.resetChopsticksToFork()
+    cy.resetChopsticksStorage({ timeout: CHOPSTICKS_TASK_TIMEOUT })
   })
 
   describe('Bidders Page UI', () => {
@@ -220,6 +213,6 @@ describe('Bidding Operations', () => {
   })
 
   after(() => {
-    cy.resetChopsticksToFork()
+    cy.resetChopsticksStorage({ timeout: CHOPSTICKS_TASK_TIMEOUT })
   })
 })

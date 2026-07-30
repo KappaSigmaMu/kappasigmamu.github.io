@@ -109,6 +109,7 @@ export async function getSocietyInfo(api: AssetHubApi): Promise<SocietyInfo> {
     head,
     skeptic,
     defender: defending?.[0],
+    defenderSkeptic: defending?.[1],
     pot,
     parameters
   }

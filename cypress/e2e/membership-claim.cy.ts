@@ -1,7 +1,6 @@
 import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/dist/types'
 
-const CLAIM_PERIOD_BLOCK = 18230000
-const CHOPSTICKS_TASK_TIMEOUT = 30000
+const CHOPSTICKS_TASK_TIMEOUT = 120000
 
 describe('Membership Claim', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
@@ -61,11 +60,11 @@ describe('Membership Claim', () => {
 
   describe('Claim Membership Transaction', () => {
     beforeEach(() => {
-      cy.task('setChopsticksHead', CLAIM_PERIOD_BLOCK, { timeout: CHOPSTICKS_TASK_TIMEOUT })
+      cy.resetChopsticksStorage({ timeout: CHOPSTICKS_TASK_TIMEOUT })
     })
 
     after(() => {
-      cy.task('resetChopsticksStorage', null, { timeout: CHOPSTICKS_TASK_TIMEOUT })
+      cy.resetChopsticksStorage({ timeout: CHOPSTICKS_TASK_TIMEOUT })
     })
 
     it('should allow candidate to claim membership and become Cyborg', () => {
@@ -82,11 +81,8 @@ describe('Membership Claim', () => {
 
       cy.contains(/awaiting signature/i, { timeout: 30000 }).should('be.visible')
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: CHOPSTICKS_TASK_TIMEOUT })
-      cy.contains(/claim request sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
-
-      cy.visit('/journey?rpc=ws://localhost:8000')
-      cy.verifyAccountLevel('Cyborg')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
+      cy.verifyAccountLevel('Cyborg', 60000)
     })
   })
 

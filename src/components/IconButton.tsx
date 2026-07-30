@@ -1,5 +1,5 @@
 import { Button } from 'react-bootstrap'
-import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6'
+import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa6'
 import { styled } from 'styled-components'
 import { LoadingSpinner } from '../pages/explore/components/LoadingSpinner'
 
@@ -17,13 +17,43 @@ function IconButton({ icon, loading, ...buttonProps }: IconButtonProps) {
     )
 
   return (
-    <Button variant="link" size="sm" {...buttonProps}>
+    <VoteIconButton
+      aria-label={icon === 'approve' ? 'Approve' : 'Reject'}
+      variant="link"
+      size="sm"
+      {...buttonProps}
+    >
       {icon === 'approve' ? <StyledApproveIcon size={20} /> : <StyledRejectIcon size={20} />}
-    </Button>
+    </VoteIconButton>
   )
 }
 
-const StyledApproveIcon = styled(FaCircleCheck)`
+const VoteIconButton = styled(Button)`
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  place-items: center;
+  background: transparent;
+  box-shadow: none;
+  line-height: 1;
+  vertical-align: middle;
+
+  svg {
+    display: block;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    border: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+`
+
+const StyledApproveIcon = styled(FaThumbsUp)`
   flex-shrink: 0;
 
   & path {
@@ -31,7 +61,7 @@ const StyledApproveIcon = styled(FaCircleCheck)`
   }
 `
 
-const StyledRejectIcon = styled(FaCircleXmark)`
+const StyledRejectIcon = styled(FaThumbsDown)`
   flex-shrink: 0;
 
   & path {

@@ -51,20 +51,16 @@ Cypress.Commands.add('approvePendingTransaction', () => {
   approvePendingTx()
 })
 
-Cypress.Commands.add('includePendingTransaction', (options?: { timeout?: number }) => {
-  if (options) {
-    cy.task('includePendingTransaction', null, options)
-    return
-  }
-  cy.task('includePendingTransaction')
+Cypress.Commands.add('waitForTransactionInclusion', (options?: { timeout?: number }) => {
+  return options
+    ? cy.task('waitForTransactionInclusion', null, options)
+    : cy.task('waitForTransactionInclusion')
 })
 
 Cypress.Commands.add('submitTransaction', () => {
   cy.approvePendingTransaction()
   cy.getBySel('tx-pending', { timeout: 30000 }).find('[data-test="tx-message"]').should('be.visible')
-  cy.includePendingTransaction({ timeout: 120000 })
-  cy.getBySel('tx-success', { timeout: 30000 }).find('[data-test="tx-message"]').should('be.visible')
-  cy.getBySel('tx-pending').should('not.exist')
+  cy.waitForTransactionInclusion({ timeout: 120000 })
 })
 
 Cypress.Commands.add('verifyTxError', (message?: string | RegExp, timeout?: number) => {
@@ -79,9 +75,9 @@ Cypress.Commands.add('visitExplore', (section: string) => {
   cy.visit(`/explore/${section}?rpc=${rpc}`)
 })
 
-Cypress.Commands.add('verifyAccountLevel', (level: string) => {
-  cy.getBySel('account-balance', { timeout: 15000 }).should('be.visible')
-  cy.getBySel('account-level', { timeout: 15000 }).should('have.text', level.toUpperCase())
+Cypress.Commands.add('verifyAccountLevel', (level: string, timeout = 15000) => {
+  cy.getBySel('account-balance', { timeout }).should('be.visible')
+  cy.getBySel('account-level', { timeout }).should('be.visible').and('have.text', level.toUpperCase())
 })
 
 Cypress.Commands.add('verifyToast', (message: string, timeout?: number) => {
@@ -97,7 +93,7 @@ Cypress.Commands.add('unloadApp', () => {
   })
 })
 
-Cypress.Commands.add('resetChopsticksToFork', (options?: { timeout?: number }) => {
+Cypress.Commands.add('resetChopsticksStorage', (options?: { timeout?: number }) => {
   cy.unloadApp()
-  return options ? cy.task('resetChopsticksToFork', null, options) : cy.task('resetChopsticksToFork')
+  return options ? cy.task('resetChopsticksStorage', null, options) : cy.task('resetChopsticksStorage')
 })

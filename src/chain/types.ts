@@ -61,6 +61,7 @@ export type SocietyInfo = {
   head?: AccountId
   skeptic?: AccountId
   defender?: AccountId
+  defenderSkeptic?: AccountId
   pot: Balance
   parameters?: {
     max_members: number

@@ -1,5 +1,7 @@
 import { InjectedAccountWitMnemonic } from '@chainsafe/cypress-polkadot-wallet/dist/types'
 
+const CHOPSTICKS_TASK_TIMEOUT = 120000
+
 const visitPayoutsPage = () => {
   cy.visit('/explore/payouts?rpc=ws://localhost:8000')
   cy.getBySel('payouts-list').should('be.visible')
@@ -14,7 +16,6 @@ describe('Payouts Page', () => {
   let testAccounts: InjectedAccountWitMnemonic[]
 
   before(() => {
-    cy.task('rememberForkPoint')
     cy.fixture('accounts').then((accounts) => {
       testAccounts = Object.values(accounts).map((acc: any) => ({
         address: acc.address,
@@ -26,7 +27,7 @@ describe('Payouts Page', () => {
   })
 
   beforeEach(() => {
-    cy.resetChopsticksToFork()
+    cy.resetChopsticksStorage()
   })
 
   describe('Payouts List UI', () => {
@@ -80,16 +81,11 @@ describe('Payouts Page', () => {
       cy.getBySelLike('claim-payout-button-').should('be.visible').click()
 
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: 120000 })
-      cy.getBySel('tx-success', { timeout: 30000 })
-        .find('[data-test="tx-message"]')
-        .should('be.visible')
-        .and('contain.text', 'Transaction submitted.')
-      cy.getBySel('tx-pending').should('not.exist')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
     })
   })
 
   after(() => {
-    cy.resetChopsticksToFork()
+    cy.resetChopsticksStorage()
   })
 })

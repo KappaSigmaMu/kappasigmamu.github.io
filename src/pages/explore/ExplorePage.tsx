@@ -1,10 +1,11 @@
 import { Col, Container, Row } from 'react-bootstrap'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { BiddersPage } from './BiddersPage'
 import { CandidatesPage } from './CandidatesPage'
 import { ChainError } from './components/ChainError'
 import { LoadingSpinner } from './components/LoadingSpinner'
 import { NavigationBar } from './components/NavigationBar'
+import { DashboardPage } from './DashboardPage'
 import { MembersPage } from './MembersPage'
 import { PayoutsPage } from './PayoutsPage'
 import { ProofOfInkPage } from './ProofOfInkPage'
@@ -12,21 +13,24 @@ import { SuspendedPage } from './SuspendedPage'
 import { ChainState, useAssetHub } from '../../chain/ChainProvider'
 import type { SocietyTotals } from '../../chain/society/queries'
 import { useSociety } from '../../chain/society/SocietyContext'
-import { NavigateWithQuery } from '../../components/NavigateWithQuery'
 
 const initialState: SocietyTotals = { bidders: 0, candidates: 0, members: 0, maxMembers: 0, suspendedMembers: 0 }
 
 const ExplorePage = (): JSX.Element => {
   const { state: chainState } = useAssetHub()
   const { totals: totalsState } = useSociety()
+  const { pathname } = useLocation()
   const totals = totalsState.data ?? initialState
+  const isDashboard = pathname === '/explore' || pathname === '/explore/'
   return (
     <Container>
-      <Row>
-        <Col>
-          <NavigationBar totals={totals} loading={totalsState.isLoading} />
-        </Col>
-      </Row>
+      {!isDashboard && (
+        <Row>
+          <Col>
+            <NavigationBar totals={totals} loading={totalsState.isLoading} />
+          </Col>
+        </Row>
+      )}
       {totalsState.error && <ChainError error={totalsState.error} onRetry={totalsState.refetch} />}
       <Row>
         <Col>
@@ -35,7 +39,7 @@ const ExplorePage = (): JSX.Element => {
           ) : (
             <div data-test="blockchain-data">
               <Routes>
-                <Route path="/" element={<NavigateWithQuery to="/explore/bidders" replace />} />
+                <Route path="/" element={<DashboardPage />} />
                 <Route path="/bidders" element={<BiddersPage />} />
                 <Route path="/candidates" element={<CandidatesPage />} />
                 <Route path="/members" element={<MembersPage />} />

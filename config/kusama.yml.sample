@@ -61,6 +61,8 @@ import-storage:
           data:
             free: '20000000000000'
   Indices:
+    $removePrefix:
+      - Accounts
     Accounts:
       -
         -
@@ -77,6 +79,8 @@ import-storage:
       - Payouts
       - SuspendedMembers
       - Defending
+      - Votes
+      - DefenderVotes
       - Head
       - ChallengeRoundCount
     Parameters:
@@ -104,7 +108,7 @@ import-storage:
       -
         -
           - 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y # Charlie
-        - round: 5
+        - round: 4 # Deliberately old enough to be kickable at RoundCount 6
           kind:
             Deposit: 1666666666660
           bid: 65000000000000

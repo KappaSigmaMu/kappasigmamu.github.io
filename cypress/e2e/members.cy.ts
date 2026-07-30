@@ -84,7 +84,7 @@ describe('Member Operations', () => {
 
   describe('Defender Voting', () => {
     beforeEach(() => {
-      cy.resetChopsticksToFork({ timeout: 120000 })
+      cy.resetChopsticksStorage({ timeout: 120000 })
       cy.visit('/explore/members?rpc=ws://localhost:8000')
       cy.getBySel('members-list', { timeout: 20000 }).should('be.visible')
       cy.initWallet(testAccounts, Cypress.expose('app_name'))
@@ -116,8 +116,7 @@ describe('Member Operations', () => {
       cy.getBySel('defender-approve-button', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: 120000 })
-      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
     })
 
     it('should allow member to reject defender', () => {
@@ -128,8 +127,7 @@ describe('Member Operations', () => {
       cy.getBySel('defender-reject-button', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: 120000 })
-      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
     })
 
     it('should show Voted badge after voting on defender', () => {
@@ -140,14 +138,13 @@ describe('Member Operations', () => {
       cy.getBySel('defender-approve-button', { timeout: 15000 }).first().click()
 
       cy.approvePendingTransaction()
-      cy.includePendingTransaction({ timeout: 120000 })
-      cy.contains(/vote sent|transaction submitted/i, { timeout: 60000 }).should('be.visible')
+      cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
 
       cy.contains('Voted', { timeout: 20000 }).should('be.visible')
     })
   })
 
   after(() => {
-    cy.resetChopsticksToFork()
+    cy.resetChopsticksStorage()
   })
 })
