@@ -16,6 +16,10 @@ jest.mock('../SettingsDropdown', () => ({
 
 jest.mock('../SocialIcons', () => ({ SocialIcons: () => null }))
 jest.mock('../Wallets', () => ({ Wallets: () => null }))
+jest.mock('../IndexSelectorModal', () => ({
+  IndexSelectorModal: ({ show }: { show: boolean }) =>
+    show ? <div data-test="index-selector-modal">Index modal</div> : null
+}))
 
 describe('Navbar', () => {
   const renderNavbar = (route = '/wiki') =>
@@ -56,5 +60,12 @@ describe('Navbar', () => {
     renderNavbar('/')
 
     expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page')
+  })
+
+  it('opens the account index selector from the warning button', () => {
+    const { container } = renderNavbar()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open account index selector' }))
+    expect(container.querySelector('[data-test="index-selector-modal"]')).toBeInTheDocument()
   })
 })

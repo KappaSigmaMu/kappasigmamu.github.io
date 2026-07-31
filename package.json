@@ -164,6 +164,7 @@
     "test:e2e:candidate-voting": "node scripts/test-e2e.js candidate-voting",
     "test:e2e:members": "node scripts/test-e2e.js members",
     "test:e2e:membership-claim": "node scripts/test-e2e.js membership-claim",
+    "test:e2e:index-selector": "node scripts/test-e2e.js index-selector",
     "test:e2e:user-journeys": "node scripts/test-e2e.js user-journeys",
     "test:e2e:error-handling": "node scripts/test-e2e.js error-handling",
     "test:e2e:suspended": "node scripts/test-e2e.js suspended",
