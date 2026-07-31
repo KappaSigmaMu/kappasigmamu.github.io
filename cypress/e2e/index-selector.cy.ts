@@ -27,7 +27,7 @@ const openIndexSelector = () => {
 
 const selectAvailableIndex = (index = AVAILABLE_INDEX) => {
   cy.getBySel(`index-row-${index}`, { timeout: 30000 }).should('be.visible').click()
-  cy.getBySel('selected-index-summary').should('contain.text', `Index #${index}`)
+  cy.getBySel('selected-index-summary').should('contain.text', `ID: ${index}`)
 }
 
 describe('Account Index Selector', () => {
@@ -77,17 +77,19 @@ describe('Account Index Selector', () => {
       cy.getBySel(`index-row-${AVAILABLE_INDEX}`).should('be.visible').and('contain.text', 'Available')
     })
 
-    it('paginates with first/last and nearby page numbers', () => {
+    it('paginates showing a full page of available indices, shifted around claimed ones', () => {
       openIndexSelector()
 
       cy.getBySel('index-page-first').should('be.disabled')
       cy.getBySel('index-page-prev').should('be.disabled')
       cy.getBySel('index-row-0').should('not.exist')
       cy.getBySel('index-row-1').should('be.visible')
+      cy.getBySel('index-row-100', { timeout: 10000 }).should('be.visible')
 
       cy.getBySel('index-page-next').click()
-      cy.getBySel('index-row-100', { timeout: 10000 }).should('be.visible')
+      cy.getBySel('index-row-101', { timeout: 10000 }).should('be.visible')
       cy.getBySel('index-row-1').should('not.exist')
+      cy.getBySel('index-row-100').should('not.exist')
 
       cy.getBySel('index-page-first').should('not.be.disabled').click()
       cy.getBySel('index-row-1').should('be.visible')
@@ -161,7 +163,7 @@ describe('Account Index Selector', () => {
 
       cy.getBySel('only-available-checkbox').uncheck({ force: true })
       cy.getBySel(`index-row-${SEEDED_CLAIMED_INDEX}`).should('be.visible').click()
-      cy.getBySel('selected-index-summary').should('contain.text', `Index #${SEEDED_CLAIMED_INDEX}`)
+      cy.getBySel('selected-index-summary').should('contain.text', `ID: ${SEEDED_CLAIMED_INDEX}`)
       cy.getBySel('selected-index-summary').should('contain.text', 'permanently frozen to its owner')
       cy.getBySel('claim-index-button').should('not.exist')
       cy.getBySel('freeze-index-button').should('not.exist')

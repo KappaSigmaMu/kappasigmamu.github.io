@@ -43,7 +43,21 @@ type ListItem = {
 /** Highest page for u32 indices with INDICES_PAGE_SIZE entries per page. */
 const MAX_PAGE = Math.floor(0xffffffff / INDICES_PAGE_SIZE)
 
+const TOTAL_INDEX_SPACE = 0x100000000
+
 const TX_TOAST_ID = 'index-selector-tx'
+
+function nthAvailableIndex(claimedSorted: number[], n: number): number {
+  let low = 0
+  let high = claimedSorted.length
+  while (low < high) {
+    const mid = Math.floor((low + high) / 2)
+    const missingBefore = claimedSorted[mid] - mid
+    if (missingBefore > n) high = mid
+    else low = mid + 1
+  }
+  return n + low
+}
 
 const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
   const { api } = useAssetHub()
@@ -83,45 +97,50 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
     return { id: ownIndexId, short: accountIndexToString(ownIndexId), claimed: claimedState.data?.get(ownIndexId) }
   }, [ownIndexId, claimedState.data])
 
-  const maxClaimedPage = useMemo(() => {
-    if (!claimedState.data || claimedState.data.size === 0) return 0
-    let maxId = 0
-    claimedState.data.forEach((_, index) => {
-      if (index > maxId) maxId = index
-    })
-    return Math.floor(maxId / INDICES_PAGE_SIZE)
+  const claimedSorted = useMemo(() => {
+    return claimedState.data ? [...claimedState.data.keys()].sort((a, b) => a - b) : []
   }, [claimedState.data])
 
-  // Soft last page for » : highest claimed index page (falls back to 0).
-  const lastPage = maxClaimedPage
+  const maxAvailablePage = useMemo(() => {
+    const totalAvailable = TOTAL_INDEX_SPACE - claimedSorted.length
+    return Math.max(0, Math.ceil(totalAvailable / INDICES_PAGE_SIZE) - 1)
+  }, [claimedSorted])
 
-  const { start, end } = pageRange(page)
+  const maxPage = onlyAvailable ? maxAvailablePage : MAX_PAGE
+
   const items = useMemo((): ListItem[] => {
     const claimed = claimedState.data
     const result: ListItem[] = []
+    if (onlyAvailable) {
+      let id = nthAvailableIndex(claimedSorted, page * INDICES_PAGE_SIZE)
+      while (result.length < INDICES_PAGE_SIZE && id <= 0xffffffff) {
+        if (!claimed?.has(id)) result.push({ id, short: accountIndexToString(id), claimed: undefined })
+        id += 1
+      }
+      return result
+    }
+
+    const { start, end } = pageRange(page)
     for (let id = start; id <= end; id += 1) {
       if (id === ownIndexId) continue
-      const assignment = claimed?.get(id)
-      const isOwnAssignment = Boolean(assignment && isSameAddress(assignment.owner, activeAccount?.address))
-      if (onlyAvailable && assignment && !isOwnAssignment) continue
-      result.push({
-        id,
-        short: accountIndexToString(id),
-        claimed: assignment
-      })
+      result.push({ id, short: accountIndexToString(id), claimed: claimed?.get(id) })
     }
     return result
-  }, [activeAccount?.address, end, onlyAvailable, ownIndexId, start, claimedState.data])
+  }, [claimedSorted, onlyAvailable, ownIndexId, page, claimedState.data])
 
-  useEffect(() => {
-    if (!onlyAvailable || selectedIndex === null || !claimedState.data) return
-    const assignment = claimedState.data.get(selectedIndex)
-    if (assignment && !isSameAddress(assignment.owner, activeAccount?.address)) setSelectedIndex(null)
-  }, [activeAccount?.address, onlyAvailable, selectedIndex, claimedState.data])
+  const rangeLabel =
+    items.length > 0
+      ? `${items[0].id.toLocaleString()}–${items[items.length - 1].id.toLocaleString()}`
+      : '—'
 
   useEffect(() => {
     setPageInput(String(page + 1))
   }, [page])
+
+  useEffect(() => {
+    setPage(0)
+    setSelectedIndex(null)
+  }, [onlyAvailable])
 
   const selectedAssignment = selectedIndex === null ? undefined : claimedState.data?.get(selectedIndex)
   const isSelectedAvailable = selectedIndex !== null && !selectedAssignment
@@ -135,10 +154,10 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
   const ownsSelected = selectedIndex !== null && (claimedIndex === selectedIndex || ownsSelectedUnfrozen)
   const canFreeze = Boolean(api && polkadotSigner && ownsSelected && !busy)
   const canFree = Boolean(api && polkadotSigner && ownsSelected && !busy)
-  const isFrozenByOther = Boolean(selectedAssignment?.frozen)
+  const isClaimedByOther = Boolean(selectedAssignment) && !ownsSelected
 
   const goToPage = (nextPage: number) => {
-    const next = Math.min(MAX_PAGE, Math.max(0, nextPage))
+    const next = Math.min(maxPage, Math.max(0, nextPage))
     setPage(next)
     setSelectedIndex(null)
   }
@@ -255,7 +274,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
         $selected={isSelected}
         $claimed={isClaimed}
         $own={isOwn}
-        onClick={() => setSelectedIndex(item.id)}
+        onClick={() => setSelectedIndex(isSelected ? null : item.id)}
         data-test={`index-row-${item.id}`}
       >
         <IndexMain>
@@ -309,9 +328,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
             <ListHeader>
               <ListHeaderTitle>
                 <strong>Indices</strong>
-                <RangeLabel title={`${start}–${end}`}>
-                  {start.toLocaleString()}–{end.toLocaleString()}
-                </RangeLabel>
+                <RangeLabel title={rangeLabel}>{rangeLabel}</RangeLabel>
               </ListHeaderTitle>
               <CheckboxLabel htmlFor="only-available-indices">
                 <CheckboxBox>
@@ -345,13 +362,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
                 </EmptyState>
               ) : items.length === 0 ? (
                 <EmptyState data-empty="true">
-                  <EmptyStateTitle>No available indices on this page.</EmptyStateTitle>
-                  {onlyAvailable ? (
-                    <EmptyStateHint>
-                      <span>Paginate until you find available indices.</span>
-                      <span>Or uncheck “Hide unavailable” to see claimed ones.</span>
-                    </EmptyStateHint>
-                  ) : null}
+                  <EmptyStateTitle>No indices to show on this page.</EmptyStateTitle>
                 </EmptyState>
               ) : (
                 items.map(renderIndexRow)
@@ -386,7 +397,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
                   type="button"
                   size="sm"
                   variant="outline-light"
-                  disabled={busy || page >= MAX_PAGE}
+                  disabled={busy || page >= maxPage}
                   onClick={() => goToPage(page + 1)}
                   data-test="index-page-next"
                   aria-label="Next page"
@@ -397,8 +408,8 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
                   type="button"
                   size="sm"
                   variant="outline-light"
-                  disabled={busy || page === lastPage}
-                  onClick={() => goToPage(lastPage)}
+                  disabled={busy || page === maxPage}
+                  onClick={() => goToPage(maxPage)}
                   data-test="index-page-last"
                   aria-label="Last page"
                 >
@@ -452,8 +463,8 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
                     <>
                       <h6>
                         <SelectedShort>{accountIndexToString(selectedIndex)}</SelectedShort>
-                        <SelectedIdLine>ID: {selectedIndex}</SelectedIdLine>
                       </h6>
+                      <SelectedIdLine>ID: {selectedIndex}</SelectedIdLine>
                       {selectedAssignment ? (
                         <p>
                           {selectedAssignment.frozen
@@ -469,7 +480,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
                   )}
                 </SelectedSummary>
 
-                {!isFrozenByOther && (
+                {!isClaimedByOther && (
                   <>
                     {!walletReady && (
                       <WalletHint data-test="index-wallet-hint">
@@ -523,6 +534,11 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
                           <StyledPopover id="index-process-popover">
                             <Popover.Body>
                               <HintText data-test="index-process-hint">
+                                <HintIntro>
+                                  An account index is a short alias for your address. After you claim
+                                  membership in the Society, you become the next Head; having an index gives
+                                  the next candidates more tattoo design choices to choose from.
+                                </HintIntro>
                                 <strong>How it works</strong>
                                 <HintSteps>
                                   <li>
@@ -858,27 +874,6 @@ const EmptyStateTitle = styled.span`
   }
 `
 
-const EmptyStateHint = styled.div`
-  display: flex;
-  max-width: 22rem;
-  padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 6px;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  background: transparent;
-  color: #b0b4b8;
-  font-size: 0.88rem;
-  line-height: 1.4;
-  text-align: center;
-
-  @media (max-width: 575.98px) {
-    max-width: 100%;
-    font-size: 0.84rem;
-  }
-`
-
 const OWN_ROW_BACKGROUND = 'rgba(230, 0, 122, 0.1)'
 const OWN_ROW_HOVER_BACKGROUND = 'rgba(230, 0, 122, 0.14)'
 const OWN_ROW_ACTIVE_BACKGROUND = 'rgba(230, 0, 122, 0.18)'
@@ -1058,6 +1053,11 @@ const PageNavButton = styled(Button)`
     background: transparent !important;
     color: rgba(255, 255, 255, 0.35) !important;
     opacity: 1;
+
+    svg,
+    svg * {
+      color: rgba(255, 255, 255, 0.35) !important;
+    }
   }
 
   @media (max-width: 575.98px) {
@@ -1177,10 +1177,6 @@ const OwnedHint = styled.p`
 
 const SelectedSummary = styled.div`
   h6 {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 8px;
     margin: 0 0 8px;
     font-size: 1.15rem;
   }
@@ -1202,15 +1198,14 @@ const SelectedSummary = styled.div`
   }
 `
 
-const SelectedIdLine = styled.span`
-  flex-shrink: 0;
+const SelectedIdLine = styled.div`
+  margin: -4px 0 8px;
   color: #9aa0a6;
   font-size: 0.82rem;
   font-weight: 500;
 `
 
 const SelectedShort = styled.span`
-  min-width: 0;
   color: ${(props) => props.theme.colors.white};
   font-size: 1.1rem;
   font-weight: 600;
@@ -1323,6 +1318,11 @@ const HintText = styled.div`
   strong {
     color: #cfd1d3;
   }
+`
+
+const HintIntro = styled.p`
+  margin: 0 0 10px;
+  color: #cfd1d3;
 `
 
 const HintSteps = styled.ol`
