@@ -9,20 +9,20 @@ export type IndexAssignment = {
 }
 
 /** Map of claimed index ID → assignment details. */
-export type TakenIndices = Map<number, IndexAssignment>
+export type ClaimedIndices = Map<number, IndexAssignment>
 
-const cache = new WeakMap<object, Promise<TakenIndices>>()
+const cache = new WeakMap<object, Promise<ClaimedIndices>>()
 
 export function clearIndicesCache(api: AssetHubApi): void {
   cache.delete(api)
 }
 
-export function getTakenIndices(api: AssetHubApi): Promise<TakenIndices> {
+export function getClaimedIndices(api: AssetHubApi): Promise<ClaimedIndices> {
   const cached = cache.get(api)
   if (cached) return cached
 
   const request = api.query.Indices.Accounts.getEntries().then((entries) => {
-    const result: TakenIndices = new Map()
+    const result: ClaimedIndices = new Map()
     entries.forEach(({ keyArgs: [index], value }) => {
       const [owner, deposit, frozen] = value
       result.set(index, { owner, deposit, frozen })
@@ -35,9 +35,9 @@ export function getTakenIndices(api: AssetHubApi): Promise<TakenIndices> {
 
 /** Address → numeric index (one entry per owner; last wins if multiple). */
 export function getIndices(api: AssetHubApi): Promise<Map<string, number>> {
-  return getTakenIndices(api).then((taken) => {
+  return getClaimedIndices(api).then((claimed) => {
     const result = new Map<string, number>()
-    taken.forEach((assignment, index) => result.set(assignment.owner, index))
+    claimed.forEach((assignment, index) => result.set(assignment.owner, index))
     return result
   })
 }
@@ -54,6 +54,10 @@ export function claimIndexTx(api: AssetHubApi, index: number) {
 
 export function freezeIndexTx(api: AssetHubApi, index: number) {
   return api.tx.Indices.freeze({ index })
+}
+
+export function freeIndexTx(api: AssetHubApi, index: number) {
+  return api.tx.Indices.free({ index })
 }
 
 export function getIndexDeposit(api: AssetHubApi): Promise<bigint> {

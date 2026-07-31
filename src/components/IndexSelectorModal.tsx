@@ -1,6 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Badge, Button, Modal, Spinner } from 'react-bootstrap'
-import { FaAnglesLeft, FaAnglesRight, FaChevronLeft, FaChevronRight, FaXmark } from 'react-icons/fa6'
+import { Badge, Button, Modal, OverlayTrigger, Popover, Spinner } from 'react-bootstrap'
+import {
+  FaAnglesLeft,
+  FaAnglesRight,
+  FaCheck,
+  FaChevronLeft,
+  FaChevronRight,
+  FaCircleQuestion,
+  FaXmark
+} from 'react-icons/fa6'
 import styled from 'styled-components'
 import { useAccount } from '@/account/AccountContext'
 import { useAssetHub } from '@/chain/ChainProvider'
@@ -8,9 +16,10 @@ import { useChainQuery } from '@/chain/hooks'
 import {
   claimIndexTx,
   clearIndicesCache,
+  freeIndexTx,
   freezeIndexTx,
+  getClaimedIndices,
   getIndexDeposit,
-  getTakenIndices,
   INDICES_PAGE_SIZE,
   pageRange,
   type IndexAssignment
@@ -28,11 +37,13 @@ type IndexSelectorModalProps = {
 type ListItem = {
   id: number
   short: string
-  taken: IndexAssignment | undefined
+  claimed: IndexAssignment | undefined
 }
 
 /** Highest page for u32 indices with INDICES_PAGE_SIZE entries per page. */
 const MAX_PAGE = Math.floor(0xffffffff / INDICES_PAGE_SIZE)
+
+const TX_TOAST_ID = 'index-selector-tx'
 
 const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
   const { api } = useAssetHub()
@@ -44,74 +55,87 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
   const [claimedIndex, setClaimedIndex] = useState<number | null>(null)
   const [claimLoading, setClaimLoading] = useState(false)
   const [freezeLoading, setFreezeLoading] = useState(false)
+  const [freeLoading, setFreeLoading] = useState(false)
 
-  const takenState = useChainQuery(() => (api ? getTakenIndices(api) : undefined), [api])
+  const claimedState = useChainQuery(() => (api ? getClaimedIndices(api) : undefined), [api])
   const depositState = useChainQuery(() => (api ? getIndexDeposit(api) : undefined), [api])
 
   const ownFrozen = useMemo(() => {
-    if (!activeAccount?.address || !takenState.data) return undefined
-    for (const [index, assignment] of takenState.data) {
+    if (!activeAccount?.address || !claimedState.data) return undefined
+    for (const [index, assignment] of claimedState.data) {
       if (assignment.frozen && isSameAddress(assignment.owner, activeAccount.address)) {
         return { index, short: accountIndexToString(index) }
       }
     }
     return undefined
-  }, [activeAccount?.address, takenState.data])
+  }, [activeAccount?.address, claimedState.data])
 
-  const maxTakenPage = useMemo(() => {
-    if (!takenState.data || takenState.data.size === 0) return 0
+  const ownIndexId = useMemo(() => {
+    if (!activeAccount?.address || !claimedState.data) return undefined
+    for (const [index, assignment] of claimedState.data) {
+      if (isSameAddress(assignment.owner, activeAccount.address)) return index
+    }
+    return undefined
+  }, [activeAccount?.address, claimedState.data])
+
+  const ownItem = useMemo((): ListItem | undefined => {
+    if (ownIndexId === undefined) return undefined
+    return { id: ownIndexId, short: accountIndexToString(ownIndexId), claimed: claimedState.data?.get(ownIndexId) }
+  }, [ownIndexId, claimedState.data])
+
+  const maxClaimedPage = useMemo(() => {
+    if (!claimedState.data || claimedState.data.size === 0) return 0
     let maxId = 0
-    takenState.data.forEach((_, index) => {
+    claimedState.data.forEach((_, index) => {
       if (index > maxId) maxId = index
     })
     return Math.floor(maxId / INDICES_PAGE_SIZE)
-  }, [takenState.data])
+  }, [claimedState.data])
 
   // Soft last page for » : highest claimed index page (falls back to 0).
-  const lastPage = maxTakenPage
+  const lastPage = maxClaimedPage
 
   const { start, end } = pageRange(page)
   const items = useMemo((): ListItem[] => {
-    const taken = takenState.data
+    const claimed = claimedState.data
     const result: ListItem[] = []
     for (let id = start; id <= end; id += 1) {
-      const assignment = taken?.get(id)
-      if (onlyAvailable && assignment) continue
+      if (id === ownIndexId) continue
+      const assignment = claimed?.get(id)
+      const isOwnAssignment = Boolean(assignment && isSameAddress(assignment.owner, activeAccount?.address))
+      if (onlyAvailable && assignment && !isOwnAssignment) continue
       result.push({
         id,
         short: accountIndexToString(id),
-        taken: assignment
+        claimed: assignment
       })
     }
     return result
-  }, [end, onlyAvailable, start, takenState.data])
+  }, [activeAccount?.address, end, onlyAvailable, ownIndexId, start, claimedState.data])
 
-  // Drop selection when "only available" hides a taken index
   useEffect(() => {
-    if (!onlyAvailable || selectedIndex === null || !takenState.data) return
-    if (takenState.data.has(selectedIndex)) setSelectedIndex(null)
-  }, [onlyAvailable, selectedIndex, takenState.data])
+    if (!onlyAvailable || selectedIndex === null || !claimedState.data) return
+    const assignment = claimedState.data.get(selectedIndex)
+    if (assignment && !isSameAddress(assignment.owner, activeAccount?.address)) setSelectedIndex(null)
+  }, [activeAccount?.address, onlyAvailable, selectedIndex, claimedState.data])
 
   useEffect(() => {
     setPageInput(String(page + 1))
   }, [page])
 
-  const selectedAssignment = selectedIndex === null ? undefined : takenState.data?.get(selectedIndex)
+  const selectedAssignment = selectedIndex === null ? undefined : claimedState.data?.get(selectedIndex)
   const isSelectedAvailable = selectedIndex !== null && !selectedAssignment
   const ownsSelectedUnfrozen =
     selectedIndex !== null &&
     Boolean(selectedAssignment) &&
     !selectedAssignment!.frozen &&
     isSameAddress(selectedAssignment!.owner, activeAccount?.address)
-  const canClaim = Boolean(api && polkadotSigner && isSelectedAvailable && !claimLoading && !freezeLoading)
-  const canFreeze = Boolean(
-    api &&
-      polkadotSigner &&
-      selectedIndex !== null &&
-      !claimLoading &&
-      !freezeLoading &&
-      (claimedIndex === selectedIndex || ownsSelectedUnfrozen)
-  )
+  const busy = claimLoading || freezeLoading || freeLoading || isSignerLoading
+  const canClaim = Boolean(api && polkadotSigner && isSelectedAvailable && !busy)
+  const ownsSelected = selectedIndex !== null && (claimedIndex === selectedIndex || ownsSelectedUnfrozen)
+  const canFreeze = Boolean(api && polkadotSigner && ownsSelected && !busy)
+  const canFree = Boolean(api && polkadotSigner && ownsSelected && !busy)
+  const isFrozenByOther = Boolean(selectedAssignment?.frozen)
 
   const goToPage = (nextPage: number) => {
     const next = Math.min(MAX_PAGE, Math.max(0, nextPage))
@@ -130,7 +154,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
 
   const refreshIndices = () => {
     if (api) clearIndicesCache(api)
-    takenState.refetch()
+    claimedState.refetch()
   }
 
   const handleClaim = async () => {
@@ -138,7 +162,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
 
     const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
       setClaimLoading(Boolean(loading))
-      toastByStatus[status](message, { id: message })
+      toastByStatus[status](message, { id: TX_TOAST_ID })
       if (!loading && status === 'success') {
         setClaimedIndex(selectedIndex)
         refreshIndices()
@@ -153,7 +177,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
       })
     } catch (error) {
       console.error(error)
-      toastByStatus.error(error instanceof Error ? error.message : String(error), {})
+      toastByStatus.error(error instanceof Error ? error.message : String(error), { id: TX_TOAST_ID })
       setClaimLoading(false)
     }
   }
@@ -163,7 +187,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
 
     const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
       setFreezeLoading(Boolean(loading))
-      toastByStatus[status](message, { id: message })
+      toastByStatus[status](message, { id: TX_TOAST_ID })
       if (!loading && status === 'success') {
         setClaimedIndex(null)
         refreshIndices()
@@ -178,8 +202,33 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
       })
     } catch (error) {
       console.error(error)
-      toastByStatus.error(error instanceof Error ? error.message : String(error), {})
+      toastByStatus.error(error instanceof Error ? error.message : String(error), { id: TX_TOAST_ID })
       setFreezeLoading(false)
+    }
+  }
+
+  const handleFree = async () => {
+    if (!api || selectedIndex === null || !canFree) return
+
+    const onStatusChange: StatusChangeHandler = ({ loading, message, status }) => {
+      setFreeLoading(Boolean(loading))
+      toastByStatus[status](message, { id: TX_TOAST_ID })
+      if (!loading && status === 'success') {
+        setClaimedIndex(null)
+        refreshIndices()
+      }
+    }
+
+    try {
+      await submitTx(freeIndexTx(api, selectedIndex), polkadotSigner, {
+        finalizedText: `Index ${selectedIndex} freed.`,
+        waitingText: 'Free submitted. Waiting for confirmation...',
+        onStatusChange
+      })
+    } catch (error) {
+      console.error(error)
+      toastByStatus.error(error instanceof Error ? error.message : String(error), { id: TX_TOAST_ID })
+      setFreeLoading(false)
     }
   }
 
@@ -192,9 +241,52 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
     onHide()
   }
 
-  const busy = claimLoading || freezeLoading || isSignerLoading
   const walletReady = Boolean(activeAccount && polkadotSigner)
   const hasFrozenIndex = Boolean(ownFrozen)
+
+  const renderIndexRow = (item: ListItem) => {
+    const isSelected = selectedIndex === item.id
+    const isClaimed = Boolean(item.claimed)
+    const isOwn = isClaimed && isSameAddress(item.claimed!.owner, activeAccount?.address)
+    return (
+      <IndexRow
+        key={item.id}
+        type="button"
+        $selected={isSelected}
+        $claimed={isClaimed}
+        $own={isOwn}
+        onClick={() => setSelectedIndex(item.id)}
+        data-test={`index-row-${item.id}`}
+      >
+        <IndexMain>
+          <IndexShort title={item.short}>{item.short}</IndexShort>
+          <IndexId>ID: {item.id}</IndexId>
+        </IndexMain>
+        {isClaimed ? (
+          <BadgeGroup>
+            {isOwn && (
+              <StatusBadge pill className="p-2" $tone="pink">
+                Yours
+              </StatusBadge>
+            )}
+            {item.claimed!.frozen ? (
+              <Badge pill bg="dark" className="p-2">
+                Frozen
+              </Badge>
+            ) : (
+              <StatusBadge pill className="p-2" $tone="yellow">
+                Claimed
+              </StatusBadge>
+            )}
+          </BadgeGroup>
+        ) : (
+          <StatusBadge pill className="p-2" $tone="cyan">
+            Available
+          </StatusBadge>
+        )}
+      </IndexRow>
+    )
+  }
 
   return (
     <StyledModal
@@ -222,24 +314,29 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
                 </RangeLabel>
               </ListHeaderTitle>
               <CheckboxLabel htmlFor="only-available-indices">
-                <CheckboxInput
-                  type="checkbox"
-                  id="only-available-indices"
-                  checked={onlyAvailable}
-                  onChange={(event) => setOnlyAvailable(event.currentTarget.checked)}
-                  data-test="only-available-checkbox"
-                />
+                <CheckboxBox>
+                  <CheckboxInput
+                    type="checkbox"
+                    id="only-available-indices"
+                    checked={onlyAvailable}
+                    onChange={(event) => setOnlyAvailable(event.currentTarget.checked)}
+                    data-test="only-available-checkbox"
+                  />
+                  <CheckIcon aria-hidden="true" />
+                </CheckboxBox>
                 <span>Hide unavailable</span>
               </CheckboxLabel>
             </ListHeader>
 
+            {ownItem && renderIndexRow(ownItem)}
+
             <IndexList data-test="index-list">
-              {takenState.isLoading ? (
+              {claimedState.isLoading ? (
                 <EmptyState>
                   <Spinner size="sm" animation="border" />
                   <span>Loading indices…</span>
                 </EmptyState>
-              ) : takenState.error ? (
+              ) : claimedState.error ? (
                 <EmptyState>
                   <span>Failed to load indices.</span>
                   <Button size="sm" variant="outline-light" onClick={refreshIndices}>
@@ -252,53 +349,12 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
                   {onlyAvailable ? (
                     <EmptyStateHint>
                       <span>Paginate until you find available indices.</span>
-                      <span>Or uncheck “Hide unavailable” to see taken ones.</span>
+                      <span>Or uncheck “Hide unavailable” to see claimed ones.</span>
                     </EmptyStateHint>
                   ) : null}
                 </EmptyState>
               ) : (
-                items.map((item) => {
-                  const isSelected = selectedIndex === item.id
-                  const isTaken = Boolean(item.taken)
-                  const isOwn = isTaken && isSameAddress(item.taken!.owner, activeAccount?.address)
-                  const isOwnFrozen = Boolean(isOwn && item.taken!.frozen)
-                  return (
-                    <IndexRow
-                      key={item.id}
-                      type="button"
-                      $selected={isSelected}
-                      $taken={isTaken}
-                      onClick={() => setSelectedIndex(item.id)}
-                      data-test={`index-row-${item.id}`}
-                    >
-                      <IndexMain>
-                        <IndexShort title={item.short} $ownFrozen={isOwnFrozen}>
-                          {item.short}
-                        </IndexShort>
-                        <IndexId>ID: {item.id}</IndexId>
-                      </IndexMain>
-                      {isTaken ? (
-                        isOwnFrozen ? (
-                          <StatusBadge pill className="p-2" $tone="pink">
-                            Yours
-                          </StatusBadge>
-                        ) : item.taken!.frozen ? (
-                          <Badge pill bg="dark" className="p-2">
-                            Frozen
-                          </Badge>
-                        ) : (
-                          <StatusBadge pill className="p-2" $tone="yellow">
-                            {isOwn ? 'Yours' : 'Taken'}
-                          </StatusBadge>
-                        )
-                      ) : (
-                        <StatusBadge pill className="p-2" $tone="cyan">
-                          Available
-                        </StatusBadge>
-                      )}
-                    </IndexRow>
-                  )
-                })
+                items.map(renderIndexRow)
               )}
             </IndexList>
 
@@ -396,14 +452,14 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
                     <>
                       <h6>
                         <SelectedShort>{accountIndexToString(selectedIndex)}</SelectedShort>
+                        <SelectedIdLine>ID: {selectedIndex}</SelectedIdLine>
                       </h6>
-                      <SelectedIdLine>ID: {selectedIndex}</SelectedIdLine>
                       {selectedAssignment ? (
                         <p>
                           {selectedAssignment.frozen
                             ? 'This index is permanently frozen to its owner.'
                             : ownsSelectedUnfrozen
-                              ? 'You own this index. Freeze it to bind it permanently.'
+                              ? 'You own this index. Freeze it to bind it permanently, or free it to release it.'
                               : 'This index is already claimed by another account.'}
                         </p>
                       ) : (
@@ -413,52 +469,87 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
                   )}
                 </SelectedSummary>
 
-                {!walletReady && (
-                  <WalletHint data-test="index-wallet-hint">Connect a wallet to claim or freeze an index.</WalletHint>
+                {!isFrozenByOther && (
+                  <>
+                    {!walletReady && (
+                      <WalletHint data-test="index-wallet-hint">
+                        Connect a wallet to claim, freeze, or free an index.
+                      </WalletHint>
+                    )}
+
+                    <ActionButtons>
+                      <Button
+                        variant={canClaim ? 'secondary' : 'outline-secondary'}
+                        disabled={!canClaim || busy}
+                        onClick={() => void handleClaim()}
+                        data-test="claim-index-button"
+                      >
+                        {claimLoading ? <Spinner size="sm" animation="border" /> : 'Claim'}
+                      </Button>
+                      <Button
+                        variant={canFree ? 'danger' : 'outline-danger'}
+                        disabled={!canFree || busy}
+                        onClick={() => void handleFree()}
+                        data-test="free-index-button"
+                      >
+                        {freeLoading ? <Spinner size="sm" animation="border" /> : 'Free'}
+                      </Button>
+                      <Button
+                        variant={canFreeze ? 'secondary' : 'outline-secondary'}
+                        disabled={!canFreeze || busy}
+                        onClick={() => void handleFreeze()}
+                        data-test="freeze-index-button"
+                      >
+                        {freezeLoading ? <Spinner size="sm" animation="border" /> : 'Freeze'}
+                      </Button>
+                    </ActionButtons>
+
+                    <DepositNote data-test="index-deposit">
+                      <span>
+                        Deposit required to claim:{' '}
+                        {depositState.isLoading ? (
+                          <Spinner size="sm" animation="border" />
+                        ) : depositState.data !== undefined ? (
+                          <FormatBalance balance={depositState.data} />
+                        ) : (
+                          '—'
+                        )}
+                      </span>
+                      <OverlayTrigger
+                        trigger="click"
+                        placement="left"
+                        rootClose
+                        overlay={
+                          <StyledPopover id="index-process-popover">
+                            <Popover.Body>
+                              <HintText data-test="index-process-hint">
+                                <strong>How it works</strong>
+                                <HintSteps>
+                                  <li>
+                                    <strong>1a. Claim</strong>: Pick an available index. Locks a small deposit.
+                                  </li>
+                                  <li>
+                                    <strong>1b. Free</strong>: Release a claimed-but-unfrozen index and get your
+                                    deposit back.
+                                  </li>
+                                  <li>
+                                    <strong>2. Freeze</strong>: Makes it permanent. Deposit is spent.
+                                  </li>
+                                </HintSteps>
+                                {"If your account's balance ever drops to zero, an unfrozen index can be " +
+                                  'reassigned to someone else. Freeze it to keep it permanently.'}
+                              </HintText>
+                            </Popover.Body>
+                          </StyledPopover>
+                        }
+                      >
+                        <HelpButton type="button" aria-label="How claiming works" data-test="index-process-help">
+                          <FaCircleQuestion aria-hidden="true" />
+                        </HelpButton>
+                      </OverlayTrigger>
+                    </DepositNote>
+                  </>
                 )}
-
-                <ActionButtons>
-                  <Button
-                    variant="primary"
-                    disabled={!canClaim || busy}
-                    onClick={() => void handleClaim()}
-                    data-test="claim-index-button"
-                  >
-                    {claimLoading ? <Spinner size="sm" animation="border" /> : 'Claim'}
-                  </Button>
-                  <Button
-                    variant="outline-light"
-                    disabled={!canFreeze || busy}
-                    onClick={() => void handleFreeze()}
-                    data-test="freeze-index-button"
-                  >
-                    {freezeLoading ? <Spinner size="sm" animation="border" /> : 'Freeze'}
-                  </Button>
-                </ActionButtons>
-
-                <DepositNote data-test="index-deposit">
-                  Deposit required to claim:{' '}
-                  {depositState.isLoading ? (
-                    <Spinner size="sm" animation="border" />
-                  ) : depositState.data !== undefined ? (
-                    <FormatBalance balance={depositState.data} />
-                  ) : (
-                    '—'
-                  )}
-                </DepositNote>
-
-                <HintText data-test="index-process-hint">
-                  <strong>How it works</strong>
-                  <HintSteps>
-                    <li>
-                      <strong>1. Claim</strong> — pick a free index. Locks a small deposit.
-                    </li>
-                    <li>
-                      <strong>2. Freeze</strong> — makes it permanent. Deposit is spent. No undo.
-                    </li>
-                  </HintSteps>
-                  Skip freeze? You can lose the index later.
-                </HintText>
               </>
             )}
           </ActionPane>
@@ -638,6 +729,12 @@ const CheckboxLabel = styled.label`
   }
 `
 
+const CheckboxBox = styled.span`
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+`
+
 const CheckboxInput = styled.input`
   width: 1.05rem;
   height: 1.05rem;
@@ -647,20 +744,30 @@ const CheckboxInput = styled.input`
   border-radius: 3px;
   background: #2b3035;
   cursor: pointer;
-  flex-shrink: 0;
 
   &:checked {
     border-color: ${(props) => props.theme.colors.primary};
     background-color: ${(props) => props.theme.colors.primary};
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 0.75rem 0.75rem;
   }
 
   &:focus-visible {
     outline: 2px solid ${(props) => props.theme.colors.primary};
     outline-offset: 2px;
+  }
+`
+
+const CheckIcon = styled(FaCheck)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: ${(props) => props.theme.colors.white};
+  font-size: 0.65rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+
+  ${CheckboxInput}:checked + & {
+    opacity: 1;
   }
 `
 
@@ -673,8 +780,27 @@ const IndexList = styled.div`
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
   /* Avoid a half-cut last row feeling “stuck” under the pager */
   scroll-padding-bottom: 4px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
 
   /* Let empty state fill height so the title can sit on the vertical center */
   &:has(> [data-empty='true']) {
@@ -753,36 +879,54 @@ const EmptyStateHint = styled.div`
   }
 `
 
-const IndexRow = styled.button<{ $selected: boolean; $taken: boolean }>`
+const OWN_ROW_BACKGROUND = 'rgba(230, 0, 122, 0.1)'
+const OWN_ROW_HOVER_BACKGROUND = 'rgba(230, 0, 122, 0.14)'
+const OWN_ROW_ACTIVE_BACKGROUND = 'rgba(230, 0, 122, 0.18)'
+
+const IndexRow = styled.button<{ $selected: boolean; $claimed: boolean; $own: boolean }>`
   display: flex;
   width: 100%;
   min-height: 44px;
   padding: 8px 12px 8px 11px;
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  border-left: 2px solid ${(props) => (props.$selected ? props.theme.colors.secondary : 'transparent')};
+  border-left: 2px solid
+    ${(props) => {
+      if (props.$selected) return props.theme.colors.secondary
+      if (props.$own) return props.theme.colors.primary
+      return 'transparent'
+    }};
   border-radius: 0;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  background: ${(props) => (props.$selected ? 'rgba(1, 255, 255, 0.1)' : 'transparent')};
+  background: ${(props) => {
+    if (props.$selected) return 'rgba(1, 255, 255, 0.1)'
+    if (props.$own) return OWN_ROW_BACKGROUND
+    return 'transparent'
+  }};
   color: inherit;
   text-align: left;
   cursor: pointer;
-  opacity: ${(props) => (props.$taken && !props.$selected ? 0.85 : 1)};
+  opacity: ${(props) => (props.$claimed && !props.$selected && !props.$own ? 0.85 : 1)};
   transition: border-color 120ms ease, background-color 120ms ease;
 
   &:hover,
   &:focus-visible {
-    border-left-color: ${(props) => props.theme.colors.secondary} !important;
-    background: ${(props) =>
-      props.$selected ? 'rgba(1, 255, 255, 0.14)' : 'rgba(1, 255, 255, 0.06)'} !important;
+    border-left-color: ${(props) =>
+    props.$own && !props.$selected ? props.theme.colors.primary : props.theme.colors.secondary} !important;
+    background: ${(props) => {
+    if (props.$own && !props.$selected) return OWN_ROW_HOVER_BACKGROUND
+    return props.$selected ? 'rgba(1, 255, 255, 0.14)' : 'rgba(1, 255, 255, 0.06)'
+  }} !important;
     outline: none;
   }
 
   &:active {
-    border-left-color: ${(props) => props.theme.colors.secondary} !important;
-    background: rgba(1, 255, 255, 0.12) !important;
+    border-left-color: ${(props) =>
+    props.$own && !props.$selected ? props.theme.colors.primary : props.theme.colors.secondary} !important;
+    background: ${(props) =>
+    props.$own && !props.$selected ? OWN_ROW_ACTIVE_BACKGROUND : 'rgba(1, 255, 255, 0.12)'} !important;
   }
 
   @media (max-width: 575.98px) {
@@ -801,9 +945,9 @@ const IndexMain = styled.div`
   overflow: hidden;
 `
 
-const IndexShort = styled.span<{ $ownFrozen?: boolean }>`
+const IndexShort = styled.span`
   overflow: hidden;
-  color: ${(props) => (props.$ownFrozen ? props.theme.colors.primary : props.theme.colors.secondary)};
+  color: ${(props) => props.theme.colors.white};
   font-size: 1.05rem;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -831,8 +975,15 @@ const IndexId = styled.span`
   }
 `
 
-/** Available = cyan; own frozen Yours = magenta; Taken = skeptic yellow */
-const StatusBadge = styled(Badge)<{ $tone: 'pink' | 'yellow' | 'cyan' }>`
+const BadgeGroup = styled.div`
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+`
+
+/** Available = cyan; own frozen Yours = magenta; Claimed = skeptic yellow */
+const StatusBadge = styled(Badge) <{ $tone: 'pink' | 'yellow' | 'cyan' }>`
   flex-shrink: 0;
   background-color: ${(props) =>
     props.$tone === 'pink'
@@ -1006,7 +1157,7 @@ const OwnedIndexId = styled.span`
 
 const OwnedIndexShort = styled.span`
   max-width: 100%;
-  color: ${(props) => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.white};
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.2;
@@ -1026,6 +1177,10 @@ const OwnedHint = styled.p`
 
 const SelectedSummary = styled.div`
   h6 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
     margin: 0 0 8px;
     font-size: 1.15rem;
   }
@@ -1047,15 +1202,16 @@ const SelectedSummary = styled.div`
   }
 `
 
-const SelectedIdLine = styled.div`
-  margin: -4px 0 8px;
+const SelectedIdLine = styled.span`
+  flex-shrink: 0;
   color: #9aa0a6;
   font-size: 0.82rem;
   font-weight: 500;
 `
 
 const SelectedShort = styled.span`
-  color: ${(props) => props.theme.colors.secondary};
+  min-width: 0;
+  color: ${(props) => props.theme.colors.white};
   font-size: 1.1rem;
   font-weight: 600;
   word-break: break-all;
@@ -1075,6 +1231,8 @@ const WalletHint = styled.div`
   }
 `
 
+const SECONDARY_HOVER_COLOR = '#00cfcf'
+
 const ActionButtons = styled.div`
   display: flex;
   flex-direction: column;
@@ -1084,46 +1242,25 @@ const ActionButtons = styled.div`
     min-height: 44px;
   }
 
-  /* Magenta hover/active for outline buttons (avoids Bootstrap white flash) */
-  .btn-outline-light {
-    border-color: rgba(255, 255, 255, 0.28);
-    background: transparent;
-    color: #e4e5e6;
-    transition: border-color 120ms ease, background-color 120ms ease, color 120ms ease;
-
-    &:hover,
-    &:focus,
-    &:focus-visible {
-      border-color: ${(props) => props.theme.colors.primary} !important;
-      background: rgba(230, 0, 122, 0.12) !important;
-      color: #fff !important;
-      box-shadow: none !important;
-    }
-
-    &:active,
-    &:active:focus {
-      border-color: ${(props) => props.theme.colors.primary} !important;
-      background: rgba(230, 0, 122, 0.2) !important;
-      color: #fff !important;
-      box-shadow: none !important;
-    }
-
-    &:disabled,
-    &.disabled {
-      border-color: rgba(255, 255, 255, 0.12);
-      background: transparent;
-      color: rgba(255, 255, 255, 0.35);
-      opacity: 1;
-    }
-  }
-
-  .btn-primary {
+  .btn-secondary {
     &:hover,
     &:focus,
     &:focus-visible,
     &:active {
-      border-color: ${(props) => props.theme.colors.primary} !important;
-      box-shadow: 0 0 0 2px rgba(230, 0, 122, 0.35) !important;
+      background-color: ${SECONDARY_HOVER_COLOR} !important;
+      border-color: ${SECONDARY_HOVER_COLOR} !important;
+    }
+  }
+
+  .btn-outline-secondary,
+  .btn-outline-danger {
+    &:disabled,
+    &.disabled {
+      border-color: rgba(255, 255, 255, 0.12) !important;
+      background: transparent !important;
+      color: rgba(255, 255, 255, 0.35) !important;
+      box-shadow: none !important;
+      opacity: 1;
     }
   }
 
@@ -1139,12 +1276,43 @@ const ActionButtons = styled.div`
 `
 
 const DepositNote = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: #cfd1d3;
   font-size: 0.86rem;
 
   @media (max-width: 575.98px) {
     font-size: 0.8rem;
   }
+`
+
+const HelpButton = styled.button`
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #9aa0a6;
+  font-size: 1rem;
+  line-height: 1;
+
+  &:hover,
+  &:focus-visible {
+    color: ${(props) => props.theme.colors.secondary};
+    outline: none;
+  }
+`
+
+const StyledPopover = styled(Popover)`
+  --bs-popover-max-width: 300px;
+  --bs-popover-bg: ${(props) => props.theme.colors.darkGrey};
+  --bs-popover-border-color: rgba(255, 255, 255, 0.12);
+  --bs-popover-body-color: #e4e5e6;
+  --bs-popover-body-padding-x: 14px;
+  --bs-popover-body-padding-y: 12px;
 `
 
 const HintText = styled.div`
@@ -1154,10 +1322,6 @@ const HintText = styled.div`
 
   strong {
     color: #cfd1d3;
-  }
-
-  @media (max-width: 575.98px) {
-    font-size: 0.76rem;
   }
 `
 

@@ -17,7 +17,8 @@ jest.mock('../SettingsDropdown', () => ({
 jest.mock('../SocialIcons', () => ({ SocialIcons: () => null }))
 jest.mock('../Wallets', () => ({ Wallets: () => null }))
 jest.mock('../IndexSelectorModal', () => ({
-  IndexSelectorModal: ({ show }: { show: boolean }) => (show ? <div data-test="index-selector-modal">Index modal</div> : null)
+  IndexSelectorModal: ({ show }: { show: boolean }) =>
+    show ? <div data-test="index-selector-modal">Index modal</div> : null
 }))
 
 describe('Navbar', () => {

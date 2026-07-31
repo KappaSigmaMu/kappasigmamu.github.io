@@ -5,6 +5,7 @@ export const whitelist = {
     'query.Indices.Accounts',
     'const.Indices.Deposit',
     'tx.Indices.claim',
+    'tx.Indices.free',
     'tx.Indices.freeze',
     'query.Society.*',
     'const.Society.*',

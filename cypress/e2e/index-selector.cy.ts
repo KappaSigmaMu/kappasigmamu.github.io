@@ -4,7 +4,7 @@ const CHOPSTICKS_TASK_TIMEOUT = 120000
 const EXPLORE_URL = '/explore?rpc=ws://localhost:8000'
 
 // Seeded in config/kusama.yml: index 0 is frozen to Eve; all other indices are free after reset.
-const SEEDED_TAKEN_INDEX = 0
+const SEEDED_CLAIMED_INDEX = 0
 const AVAILABLE_INDEX = 1
 
 const visitExplore = () => {
@@ -53,23 +53,25 @@ describe('Account Index Selector', () => {
     it('opens from the navbar warning button', () => {
       openIndexSelector()
       cy.contains('.modal-title', 'Select Account Index').should('be.visible')
-      cy.getBySel('index-process-hint').should('be.visible').and('contain.text', 'claim')
       cy.getBySel('index-deposit').should('be.visible')
+
+      cy.getBySel('index-process-help').should('be.visible').click()
+      cy.getBySel('index-process-hint').should('be.visible').and('contain.text', 'claim')
     })
 
-    it('lists available indices and hides taken ones by default', () => {
+    it('lists available indices and hides claimed ones by default', () => {
       openIndexSelector()
 
       cy.getBySel('only-available-checkbox').should('be.checked')
       cy.getBySel(`index-row-${AVAILABLE_INDEX}`).should('be.visible').and('contain.text', 'Available')
-      cy.getBySel(`index-row-${SEEDED_TAKEN_INDEX}`).should('not.exist')
+      cy.getBySel(`index-row-${SEEDED_CLAIMED_INDEX}`).should('not.exist')
     })
 
-    it('shows taken indices when only-available is unchecked', () => {
+    it('shows claimed indices when only-available is unchecked', () => {
       openIndexSelector()
 
       cy.getBySel('only-available-checkbox').uncheck({ force: true })
-      cy.getBySel(`index-row-${SEEDED_TAKEN_INDEX}`)
+      cy.getBySel(`index-row-${SEEDED_CLAIMED_INDEX}`)
         .should('be.visible')
         .and('contain.text', 'Frozen')
       cy.getBySel(`index-row-${AVAILABLE_INDEX}`).should('be.visible').and('contain.text', 'Available')
@@ -136,6 +138,8 @@ describe('Account Index Selector', () => {
       cy.waitForTransactionInclusion({ timeout: CHOPSTICKS_TASK_TIMEOUT })
 
       cy.getBySel('freeze-index-button', { timeout: 30000 }).should('not.be.disabled')
+      cy.getBySel('free-index-button').should('not.be.disabled')
+      cy.getBySel('claim-index-button').should('be.disabled')
       cy.getBySel(`index-row-${AVAILABLE_INDEX}`, { timeout: 30000 }).should('contain.text', 'Yours')
 
       cy.getBySel('freeze-index-button').click()
@@ -148,17 +152,20 @@ describe('Account Index Selector', () => {
         .and('contain.text', `ID: ${AVAILABLE_INDEX}`)
       cy.getBySel('claim-index-button').should('not.exist')
       cy.getBySel('freeze-index-button').should('not.exist')
+      cy.getBySel('free-index-button').should('not.exist')
     })
 
-    it('does not allow claiming an already taken index', () => {
+    it('does not allow claiming an already claimed index', () => {
       cy.connectWallet('Dave')
       openIndexSelector()
 
       cy.getBySel('only-available-checkbox').uncheck({ force: true })
-      cy.getBySel(`index-row-${SEEDED_TAKEN_INDEX}`).should('be.visible').click()
-      cy.getBySel('selected-index-summary').should('contain.text', `Index #${SEEDED_TAKEN_INDEX}`)
-      cy.getBySel('claim-index-button').should('be.disabled')
-      cy.getBySel('freeze-index-button').should('be.disabled')
+      cy.getBySel(`index-row-${SEEDED_CLAIMED_INDEX}`).should('be.visible').click()
+      cy.getBySel('selected-index-summary').should('contain.text', `Index #${SEEDED_CLAIMED_INDEX}`)
+      cy.getBySel('selected-index-summary').should('contain.text', 'permanently frozen to its owner')
+      cy.getBySel('claim-index-button').should('not.exist')
+      cy.getBySel('freeze-index-button').should('not.exist')
+      cy.getBySel('free-index-button').should('not.exist')
     })
 
     it('shows the frozen index and hides claim/freeze when the account already has one', () => {
@@ -167,9 +174,10 @@ describe('Account Index Selector', () => {
 
       cy.getBySel('owned-frozen-index', { timeout: 30000 })
         .should('be.visible')
-        .and('contain.text', `ID: ${SEEDED_TAKEN_INDEX}`)
+        .and('contain.text', `ID: ${SEEDED_CLAIMED_INDEX}`)
       cy.getBySel('claim-index-button').should('not.exist')
       cy.getBySel('freeze-index-button').should('not.exist')
+      cy.getBySel('free-index-button').should('not.exist')
     })
   })
 })
