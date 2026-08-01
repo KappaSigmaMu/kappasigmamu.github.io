@@ -1,5 +1,5 @@
 import { Col, Container, Row } from 'react-bootstrap'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router'
 import { BiddersPage } from './BiddersPage'
 import { CandidatesPage } from './CandidatesPage'
 import { ChainError } from './components/ChainError'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, LinkProps, useLocation } from 'react-router-dom'
+import { Link, LinkProps, useLocation } from 'react-router'
 import styled from 'styled-components'
 
 interface LinkWithQueryProps extends Omit<LinkProps, 'to'> {
