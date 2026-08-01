@@ -25,7 +25,7 @@ module.exports = {
   },
   transformIgnorePatterns: [
     // "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
-    "/node_modules/(?!@kappasigmamu|@babel|@polkadot|polkadot-api|@polkadot-api|scale-ts|@noble|@scure)",
+    "/node_modules/(?!@kappasigmamu|@babel|@polkadot|polkadot-api|@polkadot-api|scale-ts|@noble|@scure|react-router|cookie-es)",
     "^.+\\.module\\.(css|sass|scss)$"
   ],
   modulePaths: [],
