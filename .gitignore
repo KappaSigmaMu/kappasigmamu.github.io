@@ -35,3 +35,7 @@ yarn-error.log*
 db.sqlite*
 *.wasm
 config/kusama-tmp.yml
+---
+
+# Canary rig local tooling
+scripts/canary-rig/.venv/

@@ -1,0 +1,59 @@
+{
+  "source": "public/assets/canary.obj",
+  "vertex_count": 3586,
+  "face_count": 2268,
+  "bounds_min": [
+    -0.709119,
+    -0.320216,
+    -2.161222
+  ],
+  "bounds_max": [
+    0.709119,
+    2.349259,
+    2.179705
+  ],
+  "center_mean": [
+    0.000946114333518927,
+    0.6202148078639107,
+    0.6127555329057434
+  ],
+  "extents": [
+    1.418238,
+    2.669475,
+    4.340927
+  ],
+  "extent_axes_desc": [
+    "Z",
+    "Y",
+    "X"
+  ],
+  "notes": {
+    "largest_extent_axis": "Z",
+    "mid_extent_axis": "Y",
+    "smallest_extent_axis": "X",
+    "hint": "Largest axis is a candidate for wing span; smallest for thickness. Confirm against /game view."
+  },
+  "percentiles": {
+    "x": [
+      -0.492307,
+      -0.27831150000000004,
+      0.0,
+      0.2789005,
+      0.492307
+    ],
+    "y": [
+      -0.300779,
+      -0.255524,
+      0.382196,
+      1.35559,
+      2.16528
+    ],
+    "z": [
+      -1.03881325,
+      0.315039,
+      0.76609,
+      0.944412,
+      1.873346
+    ]
+  }
+}

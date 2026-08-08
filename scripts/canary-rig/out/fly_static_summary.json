@@ -1,0 +1,38 @@
+{
+  "glb": "public/static/canary-fly-static.glb",
+  "obj": "public/static/canary-fly-static.obj",
+  "params": {
+    "wing_open": 0.92,
+    "wing_span": 2.5,
+    "leg_tuck": 1.0,
+    "pitch": 0.0
+  },
+  "stats": {
+    "wing_weight_mean": 0.5454088797952009,
+    "wing_weight_p90": 1.0,
+    "leg_weight_mean": 0.1280399351346692,
+    "leg_weight_p90": 0.4647650200134617,
+    "extent_before": [
+      1.418238,
+      2.669475,
+      4.340927
+    ],
+    "extent_after": [
+      7.018077801768577,
+      2.4524340126209125,
+      4.340927
+    ],
+    "y_chest": 0.382196,
+    "flight_pitch_deg": 0.0
+  },
+  "bounds_min": [
+    -3.515744924547881,
+    0.0,
+    -2.7714080665174334
+  ],
+  "bounds_max": [
+    3.5023328772206956,
+    2.4524340126209125,
+    1.5695189334825663
+  ]
+}

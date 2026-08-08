@@ -6,6 +6,7 @@ import { ExplorePage } from './explore/ExplorePage'
 import { FuturivelPage } from './FuturivelPage'
 import { GilbertoGilPage } from './GilbertoGilPage'
 import { JourneyPage } from './JourneyPage'
+import { GamePage } from './GamePage'
 import { LandingPage } from './LandingPage'
 import { WelcomePage } from './WelcomePage'
 import { WikiPage } from './WikiPage'
@@ -34,42 +35,62 @@ const AppNavigation = () => {
   )
 }
 
-const AppRouter = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<AppNavigation />}>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/gilbertogil" element={<GilbertoGilPage />} />
-          <Route path="/welcome" element={<WelcomePage />} />
-          <Route path="/journey" element={<JourneyPage />} />
-          <Route path="/explore/*" element={<ExplorePage />} />
-          <Route path="/guide" element={<CyborgGuidePage />} />
-          <Route path="/futurivel" element={<FuturivelPage />} />
-          <Route path="/wiki" element={<WikiPage />} />
-          <Route path="*" element={<>NOT FOUND</>} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  )
-}
-
-const App = () => (
+/** Main Society app: chain, wallet, navbar. */
+const MainApp = () => (
   <ChainProvider chain="assetHub" showLoading>
     <ChainProvider chain="people">
       <SocietyProvider>
         <AccountContextProvider>
-          <GlobalStyle />
-          <ThemeProvider theme={Theme}>
-            <GlobalStyle />
-            <Suspense fallback={<p>ERROR/LOADING...</p>}>
-              <AppRouter />
-            </Suspense>
-          </ThemeProvider>
+          <Suspense fallback={<p>ERROR/LOADING...</p>}>
+            <Routes>
+              <Route element={<AppNavigation />}>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/gilbertogil" element={<GilbertoGilPage />} />
+                <Route path="/welcome" element={<WelcomePage />} />
+                <Route path="/journey" element={<JourneyPage />} />
+                <Route path="/explore/*" element={<ExplorePage />} />
+                <Route path="/guide" element={<CyborgGuidePage />} />
+                <Route path="/futurivel" element={<FuturivelPage />} />
+                <Route path="/wiki" element={<WikiPage />} />
+                <Route path="*" element={<>NOT FOUND</>} />
+              </Route>
+            </Routes>
+          </Suspense>
         </AccountContextProvider>
       </SocietyProvider>
     </ChainProvider>
   </ChainProvider>
+)
+
+/** Game sandbox: no navbar, no chain connect overlay. */
+const GameShell = () => {
+  useLayoutEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [])
+
+  return (
+    <Suspense fallback={null}>
+      <GamePage />
+    </Suspense>
+  )
+}
+
+const App = () => (
+  <>
+    <GlobalStyle />
+    <ThemeProvider theme={Theme}>
+      <GlobalStyle />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/game" element={<GameShell />} />
+          <Route path="/*" element={<MainApp />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
+  </>
 )
 
 export { App }

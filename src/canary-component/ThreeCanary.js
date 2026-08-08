@@ -14,6 +14,11 @@ const ThreeCanary = (props) => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
   const config = props.config ? props.config : defaultConfig["canary"]
+  // Defaults preserve the landing-page look; GamePage sets these flags explicitly.
+  const showPoints = config.showPoints !== false && Array.isArray(props.nodes) && props.nodes.length > 0
+  const showParticles = config.showParticles !== false
+  const showEffects = config.showEffects !== false
+  const showGrid = config.showGrid !== false
 
   return (
     <Canvas shadows dpr={[1, 2]} performance={{ min: 0.1 }}>
@@ -27,11 +32,13 @@ const ThreeCanary = (props) => {
 
       <Lights config={config} />
 
-      <gridHelper
-        position={config.gridPosition}
-        color={brandPalette.black}
-        args={[40, 40]}
-      />
+      {showGrid ? (
+        <gridHelper
+          position={config.gridPosition}
+          color={brandPalette.black}
+          args={[40, 40]}
+        />
+      ) : null}
 
       <Suspense fallback={null}>
         <Model
@@ -41,28 +48,32 @@ const ThreeCanary = (props) => {
           meshScale={config.meshScale}
           model={config.model}
         />
-        <Points
-          objectUrl={props.objectUrl}
-          nodesData={props.nodes}
-          onNodeClick={props.onNodeClick}
-          config={config}
-        />
-        <Particles count={isMobile ? 50 : 200} />
+        {showPoints ? (
+          <Points
+            objectUrl={props.objectUrl}
+            nodesData={props.nodes}
+            onNodeClick={props.onNodeClick}
+            config={config}
+          />
+        ) : null}
+        {showParticles ? <Particles count={isMobile ? 50 : 200} /> : null}
 
-        <EffectComposer multisampling={16}>
-          <Bloom
-            mipmapBlur={false}
-            kernelSize={KernelSize.SMALL}
-            luminanceThreshold={config.bloom.luminanceThreshold}
-            luminanceSmoothing={config.bloom.luminanceSmoothing}
-            intensity={config.bloom.intensity}
-          />
-          <Glitch
-            delay={config.glitch.delay}
-            strength={config.glitch.strength}
-            duration={config.glitch.duration}
-          />
-        </EffectComposer>
+        {showEffects ? (
+          <EffectComposer multisampling={16}>
+            <Bloom
+              mipmapBlur={false}
+              kernelSize={KernelSize.SMALL}
+              luminanceThreshold={config.bloom.luminanceThreshold}
+              luminanceSmoothing={config.bloom.luminanceSmoothing}
+              intensity={config.bloom.intensity}
+            />
+            <Glitch
+              delay={config.glitch.delay}
+              strength={config.glitch.strength}
+              duration={config.glitch.duration}
+            />
+          </EffectComposer>
+        ) : null}
       </Suspense>
 
       <CameraControls config={config} />

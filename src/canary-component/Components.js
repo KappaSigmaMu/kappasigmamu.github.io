@@ -210,17 +210,26 @@ const Model = (props) => {
     scene.traverse((obj) => {
       obj.type === "Mesh" && (obj.receiveShadow = obj.castShadow = true)
     })
-    // 0.8 0.2
-    const material = materials[props.model.material]
-    Object.assign(material, {
-      wireframe: true,
-      metalness: props.model.metalness,
-      roughness: Math.min(props.model.roughness ?? props.model.moughness ?? 0.5, 1),
-      opacity: props.model.opacity,
-      color: new THREE.Color(brandPalette[props.model.color]),
-    })
-    material.needsUpdate = true
-  }, [scene, nodes, materials])
+    // Landing defaults to wireframe; GamePage sets model.wireframe: false for a solid mesh.
+    // CLI / trimesh exports may not keep the original material name — style every mesh material.
+    const materialNames = Object.keys(materials || {})
+    const preferred = props.model.material
+    const targets =
+      preferred && materials[preferred]
+        ? [materials[preferred]]
+        : materialNames.map((name) => materials[name]).filter(Boolean)
+
+    for (const material of targets) {
+      Object.assign(material, {
+        wireframe: props.model.wireframe !== false,
+        metalness: props.model.metalness ?? 0.8,
+        roughness: Math.min(props.model.roughness ?? props.model.moughness ?? 0.2, 1),
+        opacity: props.model.opacity ?? 1,
+        color: new THREE.Color(brandPalette[props.model.color] || brandPalette.white),
+      })
+      material.needsUpdate = true
+    }
+  }, [scene, nodes, materials, props.model, props.meshScale])
 
   return <primitive object={scene} {...props} />
 }
@@ -236,8 +245,13 @@ const Lights = ({ config }) => {
   const lightL = useRef(null)
   const lightR = useRef(null)
   const lightF = useRef(null)
+  // Landing keeps the moving "storm" lights; GamePage sets animateLights: false.
+  const animateLights = config.animateLights !== false
 
   useFrame((state) => {
+    if (!animateLights) return
+    if (!groupL.current || !groupR.current || !front.current) return
+
     const t = state.clock.getElapsedTime()
 
     // storm effect
@@ -265,9 +279,22 @@ const Lights = ({ config }) => {
     useHelper(lightF, THREE.PointLightHelper)
   }
 
+  // Fixed three-point layout when not animating (game sandbox).
+  const groupPositions = animateLights
+    ? [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+      ]
+    : [
+        [4, 5, 3],
+        [-4, 4, 2],
+        [0, 3, 5]
+      ]
+
   return (
     <>
-      <group ref={groupL}>
+      <group ref={groupL} position={groupPositions[0]}>
         <pointLight
           ref={lightL}
           color={brandPalette[config.pointLight.color[0]]}
@@ -276,7 +303,7 @@ const Lights = ({ config }) => {
           intensity={config.pointLight.intensity[0] * intensityScale}
         />
       </group>
-      <group ref={groupR}>
+      <group ref={groupR} position={groupPositions[1]}>
         <pointLight
           ref={lightR}
           color={brandPalette[config.pointLight.color[1]]}
@@ -285,7 +312,7 @@ const Lights = ({ config }) => {
           intensity={config.pointLight.intensity[1] * intensityScale}
         />
       </group>
-      <group ref={front}>
+      <group ref={front} position={groupPositions[2]}>
         <pointLight
           ref={lightF}
           color={brandPalette[config.pointLight.color[2]]}
