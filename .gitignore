@@ -43,3 +43,7 @@ scripts/canary-rig/__pycache__/
 # Render output: contact sheets, orthos, zooms. Regenerate with iterate.sh.
 # `*/` matches a single level, so the old scripts/canary-rig/*/*.png missed out/blender/.
 scripts/canary-rig/out/**/*.png
+# Never keep meshes under out/ — a stale canary-fly-static.glb there (the discarded CLI
+# butchered mesh) got opened instead of the real export in public/static/.
+scripts/canary-rig/out/**/*.glb
+scripts/canary-rig/out/**/*.obj

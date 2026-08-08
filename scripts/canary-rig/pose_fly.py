@@ -48,7 +48,7 @@ def rot(axis, deg):
 
 def lay_out_feathers(pts, cards, idx, anchor, spread, base_span, sweep_back, scale=1.0,
                      min_len=0.5, min_aspect=2.0, tip_ratio=1.0, root_ratio=0.45, width=0.0,
-                     tip_keep=0.0, debug=False):
+                     tip_keep=0.0, seat_out=0.18, debug=False):
     """Re-lay the wing's feather cards as a radiating fan.
 
     Reference canary flight photos show the wing as a fan of DISTINCT feather strips, not a
@@ -179,13 +179,15 @@ def lay_out_feathers(pts, cards, idx, anchor, spread, base_span, sweep_back, sca
                 local_q = local_q + np.outer(across * (width / cur - 1.0), perp)
         pts[loc] = local_q + base
         if debug:
-            fp = pts[loc][:, [0, 2]]
-            fc = fp.mean(0)
-            _, _, dv = np.linalg.svd(fp - fc, full_matrices=False)
-            da = dv[0] if dv[0][0] >= 0 else -dv[0]
-            got = np.degrees(np.arctan2(-da[1], da[0]))
-            _dbg.append((np.degrees(ang), got, float(np.ptp((fp - fc) @ da)),
-                         float(np.ptp((fp - fc) @ dv[1]))))
+            # Measure along the slot's OWN tgt/perp, not an SVD axis. SVD picks the wrong
+            # principal axis on cards wider than they are long, so it cannot verify the
+            # very normalisation it is meant to check.
+            fq = pts[loc] - pts[loc].mean(0)
+            dperp = np.cross(n, tgt)
+            dperp /= np.linalg.norm(dperp)
+            got = np.degrees(np.arctan2(-tgt[2], tgt[0]))
+            _dbg.append((np.degrees(ang), got,
+                         float(np.ptp(fq @ tgt)), float(np.ptp(fq @ dperp))))
 
     # Cards the filter kept OUT of the fan (the 39-face plate, and anything too stubby to be
     # a flight feather) were previously left wherever the frame solve dropped them — up at
@@ -204,9 +206,17 @@ def lay_out_feathers(pts, cards, idx, anchor, spread, base_span, sweep_back, sca
         # and are already sensibly arranged relative to each other — only the group needs
         # relocating, tucked just outboard of the socket and slightly below it so the
         # feathers sit over them rather than the other way round.
+        # Align on the LARGEST excluded card (the 39-face wing-root plate), not on the
+        # pooled centroid of every excluded card. The pooled centroid sits between members
+        # that are far apart in rest space, so it landed the plate ~0.14 INBOARD of the
+        # seat — a 1.16-long blade lying across the spine, reading as a wing feather still
+        # stuck to the body, while the little covert was flung outboard past the shoulder.
+        # The plate is the wing root, so it is the member that must meet the socket; the
+        # rest keep their (correct) relative arrangement around it.
         allx = np.concatenate(excluded)
-        centre = pts[allx].mean(0)
-        seat = anchor + outward * 0.18 + np.array([0.0, -0.06, 0.0])
+        ref = max(excluded, key=len)
+        centre = pts[ref].mean(0)
+        seat = anchor + outward * seat_out + np.array([0.0, -0.06, 0.0])
         pts[allx] = pts[allx] + (seat - centre)
     return pts
 
@@ -319,6 +329,13 @@ def build_regions(m, want_parts=False):
         if len(c) >= 30 and abs(cx) > 0.2 and 1.0 < (lo[1] + hi[1]) / 2 < 2.0:
             plates['L' if cx > 0 else 'R'] = v
 
+    def _fin_like(v):
+        cq = v.mean(0)
+        _, _, fv = np.linalg.svd(v - cq, full_matrices=False)
+        ln = float(np.ptp((v - cq) @ fv[0]))
+        wd = float(np.ptp((v - cq) @ fv[1]))
+        return ln > 1.6 and ln / max(wd, 1e-6) > 6.0
+
     def plate_dist(v, side):
         P = plates.get(side)
         if P is None:
@@ -349,6 +366,27 @@ def build_regions(m, want_parts=False):
         elif (abs(cx) > 0.05 and not shell[c].any()
               and plate_dist(v, side) <= WING_ATTACH):
             k = f'wing_{side}'      # free-floating covert / primary lying on the wing
+        elif (shell[c].any() and len(c) <= 12 and abs(cx) > 0.2
+              and plate_dist(v, side) <= WING_ATTACH and _fin_like(v)):
+            # The folded wing's OUTER COVERING: two long thin flaps per side running from
+            # the shoulder all the way back to the tail base, along the flank. They are
+            # welded into the shell at the shoulder ONLY (their rear ends float 0.05-0.10
+            # clear of the torso), so the `not shell[...]` guard above rejected them and
+            # they sat still while the rest of the wing rotated away -- the "blades still
+            # attached to the body". They are open flaps, not torso surface: deleting them
+            # takes the mesh from 394 boundary edges to 380, i.e. it opens no hole. So they
+            # are safe to take into the wing, where they belong -- at 1.92 and 1.77 they
+            # are the longest cards on the bird and read as the outer primaries.
+            k = f'wing_{side}'
+        elif (shell[c].any() and 3 <= len(c) <= 6 and abs(cx) > 0.25
+              and 1.0 < ay < 1.9 and plate_dist(v, side) <= 0.01):
+            # The plate's COLLAR pieces: a 4-face and a 3-face flap per side, welded to the
+            # plate at the shoulder. They stayed behind when the wing opened and hang down
+            # the side of the body -- the subtler of the two flaps visible from the front.
+            # The surrounding torso is a regular 2-face quad grid, so "shell, 3-6 faces,
+            # touching the plate, at shoulder height" picks out exactly these and nothing
+            # else. patch_shell leaves a flattened copy so the shoulder still seals.
+            k = f'wing_{side}'
         elif not shell[c].any() and near(v, legs.get(side), LEG_ATTACH):
             k = f'leg_{side}'       # toe/claw cards, else stranded under the bird
         elif az < -0.5 and (abs(cx) <= 0.25 or not shell[c].any()):
@@ -444,9 +482,291 @@ def patch_shell(m, reg, faces):
         added.extend(remap.values())
     if not added:
         return m, reg
-    out = trimesh.Trimesh(vertices=np.array(V), faces=np.array(F), process=False)
+
+    # Flatten the stay-behind copies onto the surrounding torso skin.
+    #
+    # A verbatim copy keeps the FOLDED wing's shape, so it hangs off the flank as a flap --
+    # exactly what reads as "a blade still attached to the shoulder" once the wing opens.
+    # The copy only has to be a lid over the hole the departing wing leaves, so project it
+    # onto the skin around that hole: same footprint, no protrusion, shoulder reads open.
+    V = np.array(V)
+    torso_faces = np.array([f for f in range(len(m.faces)) if shell[f]
+                            and f not in set(np.concatenate(
+                                [faces[k] for k in ('wing_L', 'wing_R') if k in faces]).tolist())])
+    if len(torso_faces):
+        torso = trimesh.Trimesh(vertices=m.vertices, faces=m.faces[torso_faces], process=False)
+        idx = np.array(sorted(set(added)), dtype=int)
+        proj, _, _ = trimesh.proximity.closest_point_naive(torso, V[idx])
+        V[idx] = proj
+
+    out = trimesh.Trimesh(vertices=V, faces=np.array(F), process=False)
     reg['body'] = np.unique(np.concatenate([reg['body'], np.array(added, dtype=int)]))
     return out, reg
+
+
+def bridge_knees(m, cap=0.0, cap_rings=2):
+    """Skin over the gap the knee fold opens at the front of each knee.
+
+    `detach_parts` gives each leg its own copy of the vertices it shared with the body, so
+    folding the leg pulls it away from the torso and leaves two matching open rims: one ring
+    around the hole in the body, one around the top of the leg. The rest mesh has no open
+    edge here at all, so this is a genuine tear, not an artefact of the asset.
+
+    Both rims come out as 8-vertex loops, so they can simply be lofted together: pair them
+    up, rotate one ordering until the pairing is the shortest, and emit a quad band. That
+    reads as the skin over the joint, which is what a real knee has there.
+    """
+    w = trimesh.Trimesh(vertices=np.round(m.vertices, 5), faces=m.faces, process=True)
+    w.merge_vertices()
+    e = w.edges_sorted
+    u, cnt = np.unique(e, axis=0, return_counts=True)
+    bnd = u[cnt == 1]
+    if not len(bnd):
+        return m
+
+    adj = {}
+    for a, b in bnd:
+        adj.setdefault(int(a), []).append(int(b))
+        adj.setdefault(int(b), []).append(int(a))
+
+    def walk(start, members):
+        """Order a loop by walking its boundary edges (each vertex has exactly 2)."""
+        out, prev, cur = [start], None, start
+        while True:
+            nxt = [n for n in adj[cur] if n != prev and n in members]
+            if not nxt:
+                break
+            prev, cur = cur, nxt[0]
+            if cur == start:
+                break
+            out.append(cur)
+        return out
+
+    seen, loops = set(), []
+    for st in adj:
+        if st in seen:
+            continue
+        comp, stack = [], [st]
+        while stack:
+            n = stack.pop()
+            if n in seen:
+                continue
+            seen.add(n)
+            comp.append(n)
+            stack.extend(adj[n])
+        loops.append(set(comp))
+
+    # Knee zone: beside the centreline, at leg-top height, forward of the tail.
+    knee = []
+    for L in loops:
+        if len(L) != 8:
+            continue
+        P = w.vertices[sorted(L)]
+        c = P.mean(0)
+        if 0.05 < abs(c[0]) < 0.6 and -0.1 < c[1] < 0.8 and c[2] > -0.4:
+            knee.append((c, sorted(L)))
+    if len(knee) < 2:
+        return m
+
+    # Map welded vertices back to real ones by position.
+    pos = {}
+    for i, v in enumerate(np.round(m.vertices, 5)):
+        pos.setdefault(tuple(v), i)
+
+    def real(vs):
+        return [pos[tuple(np.round(w.vertices[v], 5))] for v in vs]
+
+    F = list(m.faces)
+    V2 = list(m.vertices)
+    for side in (1.0, -1.0):
+        mine = [(c, L) for c, L in knee if np.sign(c[0]) == side]
+        if len(mine) != 2:
+            continue
+        (c0, L0), (c1, L1) = mine
+        A0 = walk(L0[0], set(L0))
+        A1 = walk(L1[0], set(L1))
+        if len(A0) != len(A1):
+            continue
+        P0, P1 = w.vertices[A0], w.vertices[A1]
+        # Try every rotation and both directions; keep the shortest total pairing.
+        best, bestk = None, None
+        n = len(A0)
+        for rev in (False, True):
+            cand = A1[::-1] if rev else A1
+            Q = w.vertices[cand]
+            for k in range(n):
+                d = np.linalg.norm(P0 - np.roll(Q, k, axis=0), axis=1).sum()
+                if best is None or d < best:
+                    best, bestk = d, list(np.roll(cand, k, axis=0))
+        R0, R1 = real(A0), real(bestk)
+        Q0, Q1 = m.vertices[R0], m.vertices[R1]
+
+        if cap <= 0:
+            # Flat band: closes the hole but leaves a hard crease at the joint.
+            for i in range(n):
+                a, b = R0[i], R0[(i + 1) % n]
+                c_, d_ = R1[i], R1[(i + 1) % n]
+                F.append([a, b, c_])
+                F.append([b, d_, c_])
+            continue
+
+        # A rounded fillet across the gap: intermediate rings that blend from one rim to
+        # the other while bulging outward on a sine profile, so the offset is ZERO at both
+        # rims and greatest in the middle.
+        #
+        # Two earlier shapes both read wrong. A single bulged ring pushed radially out from
+        # the axis joining the rim centroids went spiky: vertices near that axis have an
+        # ill-defined radial direction and shoot off in whatever direction rounding picks.
+        # A cone to a single apex left a hard crease all round where it met the leg, which
+        # is the "clean cut" -- a straight silhouette line instead of a curve.
+        #
+        # Bulging every vertex along ONE direction fixes the spikes (no per-vertex direction
+        # to go unstable), and the sine profile fixes the crease (the cap leaves and rejoins
+        # the existing surface flush). The rims meet at a corner -- the body rim faces
+        # forward, the leg rim faces down -- so the sum of their outward normals puts the
+        # bump on the front of the knee, where the hole is.
+        allP = np.vstack([Q0, Q1])
+        ctr = allP.mean(0)
+        radius = float(np.linalg.norm(allP - ctr, axis=1).mean())
+        inside = m.vertices.mean(0)
+
+        def outward(P):
+            """Newell normal of a loop, flipped to point away from the body."""
+            c = P.mean(0)
+            nv = np.zeros(3)
+            for i in range(len(P)):
+                nv += np.cross(P[i] - c, P[(i + 1) % len(P)] - c)
+            ln = np.linalg.norm(nv)
+            if ln < 1e-9:
+                return np.zeros(3)
+            nv /= ln
+            return -nv if nv @ (c - inside) < 0 else nv
+
+        dirv = outward(Q0) + outward(Q1)
+        ln = np.linalg.norm(dirv)
+        dirv = dirv / ln if ln > 1e-9 else (ctr - inside) / max(np.linalg.norm(ctr - inside), 1e-9)
+
+        amp = cap * radius
+        rings = [R0]
+        for k in range(1, cap_rings + 1):
+            t = k / (cap_rings + 1.0)
+            ring = (1.0 - t) * Q0 + t * Q1 + dirv * (amp * np.sin(np.pi * t))
+            base = len(V2)
+            V2.extend(ring.tolist())
+            rings.append([base + i for i in range(n)])
+        rings.append(R1)
+
+        for X, Y in zip(rings, rings[1:]):
+            for i in range(n):
+                a, b = X[i], X[(i + 1) % n]
+                c_, d_ = Y[i], Y[(i + 1) % n]
+                F.append([a, b, c_])
+                F.append([b, d_, c_])
+    return trimesh.Trimesh(vertices=np.array(V2), faces=np.array(F), process=False)
+
+
+
+def mirror_wing(V, rest_v, parts, reg, src='L'):
+    """Copy one posed wing onto the other, mirrored across x=0.
+
+    The two wings are fanned independently, and the slot ordering is decided by sorting
+    cards by length. Near-equal lengths tie-break differently per side, so the fans can come
+    out visibly different -- measured up to 1.42 apart on a 6.4 span.
+
+    The REST asset is exactly mirror-symmetric (worst mirrored-position match: 0.0000), so
+    the copy is exact rather than approximate. Cards are paired by mirrored rest centroid
+    and vertices within a pair by mirrored rest position, rather than by position over the
+    whole wing: after `detach_parts` several wing vertices share a rest position, and a
+    whole-wing position match would pair a vertex with a coincident one from another part.
+    """
+    dst = 'R' if src == 'L' else 'L'
+    src_cards, dst_cards = parts[f'wing_{src}'], parts[f'wing_{dst}']
+    if len(src_cards) != len(dst_cards):
+        return V
+
+    def cen(vi):
+        return rest_v[vi].mean(0)
+
+    used = set()
+    for dvi in dst_cards:
+        dc = cen(dvi).copy()
+        dc[0] *= -1.0
+        best, bi = None, None
+        for i, svi in enumerate(src_cards):
+            if i in used or len(svi) != len(dvi):
+                continue
+            d = float(np.linalg.norm(cen(svi) - dc))
+            if best is None or d < best:
+                best, bi = d, i
+        if bi is None:
+            continue
+        used.add(bi)
+        svi = src_cards[bi]
+        S = rest_v[svi].copy()
+        S[:, 0] *= -1.0
+        D = rest_v[dvi]
+        cost = np.sqrt(((D[:, None, :] - S[None, :, :]) ** 2).sum(-1))
+        j = cost.argmin(1)
+        if len(set(j.tolist())) != len(dvi):        # not a clean bijection -- leave it alone
+            continue
+        M = V[svi[j]].copy()
+        M[:, 0] *= -1.0
+        V[dvi] = M
+    return V
+
+
+
+def add_feathers(m, reg, parts, n_extra):
+    """Duplicate feather cards so the fan can be swept further aft without thinning out.
+
+    Reference photos of a canary from above show the trailing edge running unbroken from the
+    wing tip all the way in to the body: the inner wing is filled by secondaries and tertials
+    lying almost along the flank. This asset only carries enough cards to cover the outer
+    wing, so widening `--feather-fan` alone just spreads the same blades over a bigger angle
+    and opens gaps between them. Extra cards let the fan reach the body at the same density.
+
+    The copies are of an existing blade, so they are real geometry from the same artist, not
+    invented shapes -- and `lay_out_feathers` sets each slot's length and width anyway, so a
+    duplicate takes on the size its slot calls for.
+    """
+    if n_extra <= 0:
+        return m, reg, parts
+
+    V, F = list(m.vertices), list(m.faces)
+    for side in ('L', 'R'):
+        key = f'wing_{side}'
+        cards = parts[key]
+
+        # Pick the shortest card that still reads as a flight feather: the new slots are the
+        # innermost ones, which are the short feathers on a real wing.
+        best, pick = None, None
+        for vi in cards:
+            q = m.vertices[vi]
+            c = q.mean(0)
+            _, _, fv = np.linalg.svd(q - c, full_matrices=False)
+            ln = float(np.ptp((q - c) @ fv[0]))
+            wd = float(np.ptp((q - c) @ fv[1]))
+            if ln < 0.6 or ln / max(wd, 1e-6) < 4.0:
+                continue
+            if best is None or ln < best:
+                best, pick = ln, vi
+        if pick is None:
+            continue
+
+        S = set(int(v) for v in pick)
+        pf = [f for f in m.faces if all(int(x) in S for x in f)]
+        for _ in range(n_extra):
+            remap = {}
+            for v in pick:
+                remap[int(v)] = len(V)
+                V.append(m.vertices[v])
+            for f in pf:
+                F.append([remap[int(x)] for x in f])
+            new = np.array(sorted(remap.values()), dtype=int)
+            parts[key].append(new)
+            reg[key] = np.unique(np.concatenate([reg[key], new]))
+
+    return trimesh.Trimesh(vertices=np.array(V), faces=np.array(F), process=False), reg, parts
 
 
 def prepare(path):
@@ -487,6 +807,23 @@ def main():
     p.add_argument('--feather-width', type=float, default=0.0,
                    help='normalise every blade to this width across the wing plane. 0 keeps '
                         'natural widths, which range 0.05-0.80 and read as clumps')
+    p.add_argument('--knee-cap', type=float, default=0.0,
+                   help='bulge the knee bridge outward by this fraction of the rim radius, '
+                        'so the joint reads as a rounded kneecap instead of a flat band')
+    p.add_argument('--feather-extra', type=int, default=0,
+                   help='duplicate this many feather cards per wing, so the fan can sweep '
+                        'further aft and still reach the body without gaps between blades')
+    p.add_argument('--knee-cap-rings', type=int, default=2,
+                   help='intermediate rings across the knee bridge. More rings curve the '
+                        'silhouette; 0 gives a flat band with a hard crease')
+    p.add_argument('--mirror-wing', choices=('none', 'L', 'R'), default='none',
+                   help='copy one posed wing onto the other, mirrored. The two wings fan '
+                        'independently and can end up visibly different; the rest asset is '
+                        'exactly mirror-symmetric, so the copy is exact')
+    p.add_argument('--feather-seat-out', type=float, default=0.18,
+                   help='how far outboard of the socket to seat the wing-root plate and the '
+                        'other cards too stubby to fan. Too small and the plate lies on the '
+                        'body, reading as a feather still stuck to the flank')
     p.add_argument('--feather-root-ratio', type=float, default=0.45,
                    help='length of the innermost feather relative to the longest. Real wings '
                         'are short at the body and long at the outer wing')
@@ -520,7 +857,9 @@ def main():
     A = p.parse_args()
 
     m, reg, parts = prepare(A.mesh)
+    m, reg, parts = add_feathers(m, reg, parts, A.feather_extra)
     V = m.vertices.copy()
+    rest_v = np.array(m.vertices)        # kept for the mirror correspondence
 
     # --- wing transform -------------------------------------------------------
     # Composing yaw/sweep/dihedral/twist about a guessed pivot couples four angles and
@@ -607,10 +946,14 @@ def main():
                                    A.feather_min_len, A.feather_min_aspect,
                                    A.feather_tip_ratio, A.feather_root_ratio,
                                    A.feather_width, A.feather_tip_keep,
-                                   A.debug_feathers)
+                                   A.feather_seat_out, A.debug_feathers)
 
         pts[:, 0] *= mirror                      # back out
         V[idx] = pts
+
+    if A.mirror_wing != 'none':
+        V = mirror_wing(V, rest_v, parts, reg, A.mirror_wing)
+
     if A.tail_fan:
         # Tail feathers are cards too, stacked closed in the perched pose. Splay them
         # about the tail base, symmetric about the centreline.
@@ -683,6 +1026,9 @@ def main():
 
 
     m.vertices = V
+
+    if A.knee_fold:
+        m = bridge_knees(m, A.knee_cap, A.knee_cap_rings)
 
     if A.membrane:
         add_membranes(m, reg, A.membrane)

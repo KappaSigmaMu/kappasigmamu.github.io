@@ -189,6 +189,38 @@ def main():
           f'{len(loose)} island(s) disconnected, worst gap '
           f'{results["worst_island_gap"]:.2f} (want 0)')
 
+    # No blade left lying along the flank.
+    #
+    # This defect class slipped through twice with every other check green, because the
+    # geometry was never rotated, scaled or torn -- it simply stayed put while the wing it
+    # belongs to moved away. Nothing above can see that. The signature is a long thin card
+    # near the centreline, at flank height, running a long way fore-and-aft: the folded
+    # wing's outer covering, welded to the shell at the shoulder. Tail feathers sit lower
+    # (y ~ 0.3-0.6) and wing blades sit outboard -- though since the fan was widened to reach
+    # the body, the innermost secondaries now sit at |x| 0.8-1.1 as well. What still separates
+    # them is HEIGHT: everything in the wing lies in the wing plane at y ~ 1.72, while the
+    # folded-wing flaps draped down the flank at y ~ 1.0. Hence the upper bound on y --
+    # without it this check fires on the legitimate inner wing.
+    flank = []
+    for c in trimesh.graph.connected_components(posed.face_adjacency,
+                                                nodes=np.arange(len(posed.faces))):
+        vi = np.unique(posed.faces[c])
+        v = posed.vertices[vi]
+        if len(v) < 3:
+            continue
+        cq = v.mean(0)
+        _, _, fv = np.linalg.svd(v - cq, full_matrices=False)
+        ln = float(np.ptp((v - cq) @ fv[0]))
+        wd = float(np.ptp((v - cq) @ fv[1]))
+        zspan = float(np.ptp(v[:, 2]))
+        if (ln > 1.5 and ln / max(wd, 1e-6) > 5.0
+                and abs(cq[0]) < 1.2 and 0.7 < cq[1] < 1.4 and zspan > 1.2):
+            flank.append((len(c), np.round(cq, 2).tolist(), round(ln, 2)))
+    results['flank_blades'] = len(flank)
+    check('no blades on the flank', not flank,
+          f'{len(flank)} long thin card(s) lying along the body'
+          + (f': {flank}' if flank else '') + ' (want 0)')
+
     b = posed.bounds
     results['span_x'] = float(b[1][0] - b[0][0])
     results['len_z'] = float(b[1][2] - b[0][2])

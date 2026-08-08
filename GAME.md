@@ -937,3 +937,234 @@ pts[allx] += seat - pts[allx].mean(0)
 ```
 
 Slightly below the socket so the feathers sit over them, not the other way round.
+
+## 20. The blades still stuck to the body
+
+Review note: "there are a couple of wing blades that are still attached to the body."
+
+First hypothesis — a free-floating card was misclassified into `body` and so never moved with
+the wing — was **wrong**. Enumerating every connected component of the rest mesh and marking
+which ones belong to the positionally-welded shell shows that *every* non-shell card is already
+assigned to a wing, a leg or the tail. Nothing is stranded by the classifier.
+
+The real cause was in the seating of the EXCLUDED cards at the end of `lay_out_feathers`.
+Section 19 fixed "shoulder pads" by moving the excluded cards **as one group** instead of
+putting each card's centroid on the same point. But the group was aligned by its *pooled*
+centroid, and its two members are far apart in rest space:
+
+  - the 39-face wing-root plate (len 1.16, aspect 1.33)
+  - one stubby covert       (len 0.22, aspect 1.47)
+
+so the pooled centroid sat between them and landed the plate **0.14 inboard of the seat**, at
+x 0.30 — a 1.16-long blade lying across the spine. That is the blade that reads as still stuck
+to the flank. The covert meanwhile was thrown outboard past the shoulder.
+
+Fix, two parts:
+
+1. Align the group on its **largest** member (the plate), not the pooled centroid. The plate is
+   the wing root, so it is the member that must meet the socket; everything else keeps its
+   already-correct relative arrangement around it. Plate centroid x 0.30 -> 0.81.
+2. Drop `--feather-min-aspect` 1.5 -> 1.4 so the borderline covert (aspect 1.47) is **fanned**
+   rather than seated. Otherwise, once the plate moves outboard, the covert follows it and ends
+   up a shard floating free of the wing. This also leaves the plate as the only excluded card,
+   so the group-seating path degenerates to the simple case.
+
+New knob `--feather-seat-out` (shipped at 0.55) controls how far outboard of the socket the
+plate sits. Too small and it lies on the body — which is exactly the defect above.
+
+### Verification that actually catches this
+
+The numeric gate stayed **16/16 green through the whole defect**, because every check is about
+rotation/scale/tearing and the plate was rigidly translated — just to the wrong place. Added
+check, worth keeping in mind for the next defect of this shape: list every non-shell card in the
+POSED mesh whose centroid is still within |x| < 1.0 of the centreline. Legs and the innermost
+secondaries belong there; a wing-root plate at x 0.30 does not.
+
+## 21. ship.sh
+
+The shipped parameter set used to live only in shell history, so a fresh session could not
+reproduce the export at all. It is now `scripts/canary-rig/ship.sh`:
+
+    ./scripts/canary-rig/ship.sh            # pose + gate + render
+    ./scripts/canary-rig/ship.sh --export   # also write public/static/{glb,obj,aw.obj}
+
+Every value in it came from a specific review note, so changing one is an art decision.
+
+Still open (cosmetic, pre-existing): the seated plate is white in the app — its UVs point at a
+white texel and translating it in 3D cannot change that. It shows as a small white notch at each
+shoulder. Hiding it under the fan trades that against showing it from below.
+
+## 22. The flank blades (the real one)
+
+Review note, with the region circled: two long blades still on the body, "stretching all the
+way to the start of the tail". Section 20 did NOT fix this — it fixed a different, real defect
+(the wing-root plate lying across the spine), but the circled blades are something else.
+
+They are two flaps per side:
+
+    8 faces, len 1.92, aspect 7.6,  centroid [+-0.45, 1.00, -0.01], z from +0.89 to -0.93
+    6 faces, len 1.77, aspect 15.8, centroid [+-0.39, 1.07, -0.13], z from +0.69 to -0.93
+
+i.e. the folded wing's OUTER COVERING, running the whole length of the flank from the shoulder
+to the tail base. They are the longest cards on the bird.
+
+Why every previous pass missed them:
+
+  - `build_regions` requires `not shell[c].any()` before a card may join a wing. These flaps are
+    welded into the shell **at the shoulder**, so they were rejected and fell through to `body`.
+    They then sat perfectly still while the wing rotated away.
+  - `lay_out_feathers` silently `continue`s on any card whose vertices are not in the wing's
+    index set (`len(loc) < 3`). So they vanished from the fan without a word. The tell was in
+    `--debug-feathers` all along: `fanned=17 excluded=1` against 21 cards in the region.
+  - My first scan for strays had two blind spots that hid exactly this: it skipped shell
+    geometry, and it discarded anything aft of z < -0.8 as "tail, not our concern".
+  - A scan that reports a component's region by `owner[vi[0]]` is unreliable when cards share
+    vertices with the plate: it reported these as `wing_L` when they were not in the region at
+    all. Check membership properly (`set(vi) & set(reg[key])`), not via one representative vertex.
+
+Why they can move, despite being shell:
+
+    boundary edges WITH the flaps   : 394
+    boundary edges WITHOUT the flaps: 380
+
+Deleting them *reduces* the open-edge count, so they are open flaps lying on the torso, not part
+of the closed torso surface. Their rear ends are free, floating 0.05-0.10 clear of the body;
+all their shell attachment is at the shoulder — the same seam the wing already hinges on. So
+taking them into the wing opens no hole. Verified: `nothing stranded` and `body geometry
+untouched` both stay green.
+
+Fix: a `_fin_like` branch in `build_regions` admits a shell component to the wing when it is
+small (<= 12 faces), long (> 1.6), thin (aspect > 6), off-centre (|cx| > 0.2) and touching the
+plate. They then fan as the outer primaries, which is what they anatomically are.
+
+Because they are longer than anything previously in the region, `longest` went 1.63 -> 1.92 and
+the fan would have grown ~18%. `--feather-scale` 1.55 -> 1.32 holds the approved silhouette:
+span X 6.43 -> 6.45.
+
+### New gate check: `no blades on the flank`
+
+Every other check stayed green through this defect, because the geometry was never rotated,
+scaled or torn — it just stayed put. The new check looks for a long thin card (len > 1.5,
+aspect > 5) near the centreline (|x| < 1.2) at flank height (y > 0.7) spanning a long way
+fore-and-aft (z span > 1.2). Tail feathers sit lower and wing blades sit outboard, so neither
+trips it. Proved non-vacuous by disabling the fix: it reports all 4 flaps and fails.
+
+## 23. The shoulder flaps
+
+Review note (front view): two flaps per side still attached at the shoulder, hanging down the
+side of the body — "one easier to see and another a bit hard, open both".
+
+  - the easy one: the 39-face plate copy that `patch_shell` leaves behind to seal the hole.
+  - the subtle ones: a 4-face and a 3-face collar flap welded to the plate at the shoulder.
+
+The collar flaps now join the wing. They are pickable without guesswork because the surrounding
+torso is a regular 2-face quad grid, so "shell, 3-6 faces, touching the plate, shoulder height"
+matches exactly these and nothing else.
+
+The patch copy could not simply be deleted — removing it opens 20 boundary edges, i.e. the back
+hole comes back. Instead `patch_shell` now **projects the stay-behind copy onto the surrounding
+torso skin** (`closest_point_naive`). A verbatim copy keeps the FOLDED wing's shape and so hangs
+off the flank as a flap; projected, it covers the same footprint flush with the body. Seals the
+hole, no protrusion.
+
+Review preference recorded: report the outcome, not the mechanism. The criteria is the human
+review, not the checks — the checks only stop regressions.
+
+## 24. The knee hole
+
+Review note: a hole at the front of each knee.
+
+Real tear, not an asset artefact: the rest mesh has 0 open edges in the knee zone, the posed
+mesh had 32. `detach_parts` gives each leg its own copy of the vertices it shared with the body,
+so the knee fold pulls the leg away and leaves two matching open rims — one around the hole in
+the torso, one around the top of the leg.
+
+Both come out as clean 8-vertex loops, so `bridge_knees()` lofts them together: order each loop
+by walking its boundary edges, rotate one ordering (trying both directions) until the pairing is
+shortest, then emit a quad band. 32 faces, and the knee zone goes back to 0 open edges. It reads
+as skin over the joint, which is what is actually there on a bird.
+
+Runs only when `--knee-fold` is set, since without the fold there is nothing to bridge.
+
+## 25. Kneecap and wing mirroring
+
+**Kneecap.** `bridge_knees` takes `--knee-cap` (shipped 0.3) and `--knee-cap-rings` (2). The
+cap is a fillet: intermediate rings blending from one rim to the other, bulged outward on a SINE
+profile, so the offset is zero at both rims and greatest in the middle.
+
+Three shapes were tried before this one, and the two failures are instructive:
+
+  - A single ring pushed radially out from the axis joining the rim centroids went spiky.
+    Vertices near that axis have an ill-defined radial direction, so rounding decided where
+    they went. Fix: bulge every vertex along ONE direction, so there is no per-vertex
+    direction left to go unstable.
+  - A cone to a single apex left a hard crease all round where it met the leg. That is what
+    read as a "weird clean cut" from the side: a straight silhouette line where a joint should
+    curve. Fix: the sine profile, which leaves and rejoins the existing surface flush.
+
+Amplitude matters more than it looks. At 0.9 and 0.5 the fillet pushes past the leg's own
+silhouette and comes to a point again; 0.3 curves without protruding. Direction is the sum of
+the rims' outward normals -- the body rim faces forward, the leg rim faces down, so their sum
+puts the bump on the front of the knee, where the hole is. Amplitude is a FRACTION of the rim
+radius, so it scales with the joint.
+
+**Mirroring.** The two wings fan independently and the slot order comes from sorting cards by
+length, so near-equal lengths tie-break differently per side. Measured asymmetry before the fix:
+chamfer 0.0081, worst nearest-point 0.133, with 15 of 210 vertices more than 0.05 out.
+
+`--mirror-wing L|R` copies one posed wing onto the other. The copy is EXACT, not approximate:
+the rest asset is perfectly mirror-symmetric (worst mirrored-position match 0.0000). After
+mirroring, chamfer is 0.0000.
+
+Pairing is done card-by-card (mirrored rest centroid), then vertex-by-vertex within each pair,
+and is skipped unless the within-card match is a clean bijection. Matching positions over the
+whole wing at once does NOT work: after `detach_parts` several wing vertices share a rest
+position, so a whole-wing match pairs a vertex with a coincident one from a different part.
+Only 173 of 210 whole-wing matches are unique — which is also why the first asymmetry number
+measured this way was meaningless.
+
+Note on ambiguity: "left wing" is ambiguous between the bird's left (+X) and screen-left in a
+front view (-X, since the camera sits at +Z so world +X lands on the right of frame). Shipped
+mirroring the bird's left, +X. Both fans measured equally even (gap sd 8.91 vs 8.92), so there
+was no objective way to pick; flip the flag if the review says otherwise.
+
+**Foot size.** Review asked whether the feet had shrunk. They have not: longest span across the
+foot is 0.5666 in both the rest and the posed mesh (ratio 1.0000), and the radius of gyration is
+identical. Only the axis-aligned bounding box moves (0.6351 -> 0.6365), which changes with
+orientation, not size. The impression comes from `--foot-aim 0 -1 0.35`: pointing the toes down
+foreshortens them from most viewing angles.
+
+Use orientation-free measures (longest span, radius of gyration) when checking whether a rigidly
+posed part changed size. A bounding box will disagree with itself purely because the part turned.
+
+## 26. Filling the inner wing
+
+Review note, with an overhead canary photo: the inner wing (nearest the body) is missing on ours,
+leaving a wedge between the innermost blade and the flank. On the real bird the trailing edge
+runs unbroken from wing tip all the way in to the body.
+
+Widening `--feather-fan` alone does not do it: the same blades just spread over a bigger angle
+and gaps open between them. The asset only carries enough cards to cover the outer wing.
+
+`--feather-extra N` duplicates N feather cards per wing so the fan can reach the body at the
+same blade density. The source is the shortest card that still reads as a flight feather, since
+the new slots are the innermost ones and those are the short feathers on a real wing. Copies are
+real geometry from the asset rather than invented shapes, and `lay_out_feathers` sets each slot's
+length and width anyway, so a duplicate takes on whatever size its slot calls for.
+
+Shipped: `--feather-fan 70 --feather-extra 11` (was 40 / none). Span is unchanged at 6.45,
+because `longest` is a max over natural card lengths and duplicating a card cannot raise it.
+
+### The gate had to be re-scoped, carefully
+
+`no blades on the flank` fired on 10 cards — the new innermost secondaries, at |x| 0.8-1.1.
+The check keyed on cards being near the centreline, which was a fine proxy while the fan stopped
+short of the body and is no longer.
+
+What still separates a real inner-wing feather from the folded-wing flaps the check was written
+for is HEIGHT: the whole wing lies in the wing plane at y ~ 1.72, and the flaps draped down the
+flank at y ~ 1.0. So the bound is now `0.7 < y < 1.4`.
+
+Re-proved non-vacuous after the change by disabling the fin branch: it still fails on the
+original flaps. Worth doing every time a check is loosened — a check relaxed to fit new
+geometry is exactly the kind that quietly stops testing anything.
