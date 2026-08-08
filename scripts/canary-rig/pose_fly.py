@@ -47,7 +47,8 @@ def rot(axis, deg):
 
 
 def lay_out_feathers(pts, cards, idx, anchor, spread, base_span, sweep_back, scale=1.0,
-                     min_len=0.5, min_aspect=2.0, tip_ratio=1.0, root_ratio=0.45):
+                     min_len=0.5, min_aspect=2.0, tip_ratio=1.0, root_ratio=0.45, width=0.0,
+                     tip_keep=0.0, debug=False):
     """Re-lay the wing's feather cards as a radiating fan.
 
     Reference canary flight photos show the wing as a fan of DISTINCT feather strips, not a
@@ -85,6 +86,7 @@ def lay_out_feathers(pts, cards, idx, anchor, spread, base_span, sweep_back, sca
         local.append(np.array(loc))
     if len(local) < 2:
         return pts
+    _dbg = []
 
     # Wing frame from all wing points: e1 outboard-ish, e2 chord, n plane normal.
     # World axes for a LEFT wing: outboard +X, aft -Z, wing-plane normal +Y.
@@ -154,17 +156,58 @@ def lay_out_feathers(pts, cards, idx, anchor, spread, base_span, sweep_back, sca
                 prof *= tip_ratio + (1.0 - tip_ratio) * (frac / 0.3)
             want = longest * scale * prof
             along = local_q @ tgt
-            local_q = local_q + np.outer(along * (want / own - 1.0), tgt)
+            # Stretch the SHAFT, keep the TIP rigid. Scaling the whole card uniformly
+            # magnifies the original tip's little irregularities into a ragged, torn-looking
+            # fringe. Translating the outer `tip_keep` of the feather instead preserves its
+            # tip shape exactly and lengthens only the quill end.
+            lo = float(along.min())
+            span = max(own - tip_keep * own, 1e-6)
+            t = np.clip((along - lo) / span, 0.0, 1.0)
+            local_q = local_q + np.outer(t * (want - own), tgt)
+
+        if width > 0:
+            # Normalise blade WIDTH across the wing plane. Card widths range 0.05..0.80;
+            # the wide ones read as chunks wedged between the thin blades, which is what
+            # looks clumped. Narrowing them to a common width makes every blade read as an
+            # individual feather strip, and stabilises the principal axis (a card wider
+            # than it is long has an unreliable axis, which was scattering the fan angles).
+            perp = np.cross(n, tgt)
+            perp /= np.linalg.norm(perp)
+            across = local_q @ perp
+            cur = float(np.ptp(across))
+            if cur > 1e-6:
+                local_q = local_q + np.outer(across * (width / cur - 1.0), perp)
         pts[loc] = local_q + base
+        if debug:
+            fp = pts[loc][:, [0, 2]]
+            fc = fp.mean(0)
+            _, _, dv = np.linalg.svd(fp - fc, full_matrices=False)
+            da = dv[0] if dv[0][0] >= 0 else -dv[0]
+            got = np.degrees(np.arctan2(-da[1], da[0]))
+            _dbg.append((np.degrees(ang), got, float(np.ptp((fp - fc) @ da)),
+                         float(np.ptp((fp - fc) @ dv[1]))))
 
     # Cards the filter kept OUT of the fan (the 39-face plate, and anything too stubby to be
     # a flight feather) were previously left wherever the frame solve dropped them — up at
     # y 2.05 against a socket at 1.72, reading as a clump sitting on the shoulder. Seat them
     # against the socket instead, so the inner wing joins the body.
-    for loc in excluded:
-        q = pts[loc]
-        seat = anchor + outward * 0.30
-        pts[loc] = q - q.mean(0) + seat
+    if debug:
+        print('  slot  target  actual   len  width')
+        for i, (t, g2, l, w) in enumerate(_dbg):
+            print(f'  {i:>4} {t:>7.1f} {g2:>7.1f} {l:>5.2f} {w:>6.2f}')
+        print(f'  fanned={len(_dbg)}  excluded={len(excluded)}')
+
+    if excluded:
+        # Move them as ONE GROUP, preserving their relative arrangement. Seating each card
+        # individually put every centroid on the same point, so they stacked into a chunky
+        # "shoulder pad" jutting out either side. They are the folded wing's inner surface
+        # and are already sensibly arranged relative to each other — only the group needs
+        # relocating, tucked just outboard of the socket and slightly below it so the
+        # feathers sit over them rather than the other way round.
+        allx = np.concatenate(excluded)
+        centre = pts[allx].mean(0)
+        seat = anchor + outward * 0.18 + np.array([0.0, -0.06, 0.0])
+        pts[allx] = pts[allx] + (seat - centre)
     return pts
 
 
@@ -436,6 +479,14 @@ def main():
     p.add_argument('--feather-tip-ratio', type=float, default=1.0,
                    help='length of the outboard tip feather relative to the inboard ones. '
                         '<1 rounds the wing out; 1.0 gives a long thin pointed wing')
+    p.add_argument('--feather-tip-keep', type=float, default=0.0,
+                   help='fraction of each feather nearest the tip held rigid while the shaft '
+                        'stretches, so tips stay clean instead of turning into a ragged fringe')
+    p.add_argument('--debug-feathers', action='store_true',
+                   help='print target vs achieved angle, length and width for each blade')
+    p.add_argument('--feather-width', type=float, default=0.0,
+                   help='normalise every blade to this width across the wing plane. 0 keeps '
+                        'natural widths, which range 0.05-0.80 and read as clumps')
     p.add_argument('--feather-root-ratio', type=float, default=0.45,
                    help='length of the innermost feather relative to the longest. Real wings '
                         'are short at the body and long at the outer wing')
@@ -554,7 +605,9 @@ def main():
             pts = lay_out_feathers(pts, parts[key], idx, socket, A.feather_fan,
                                    A.feather_base_span, A.feather_sweep, A.feather_scale,
                                    A.feather_min_len, A.feather_min_aspect,
-                                   A.feather_tip_ratio, A.feather_root_ratio)
+                                   A.feather_tip_ratio, A.feather_root_ratio,
+                                   A.feather_width, A.feather_tip_keep,
+                                   A.debug_feathers)
 
         pts[:, 0] *= mirror                      # back out
         V[idx] = pts

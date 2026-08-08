@@ -920,3 +920,20 @@ Shipping:
 ```
 
 Span 6.42.
+
+### 19.8 The "shoulder pads"
+
+Seating the excluded cards (19.6) moved **each card's own centroid** to the same point, so
+they all stacked on top of one another and formed a chunky pad jutting out either side of
+the shoulder — clearly visible from the front, and clumped from above.
+
+They are the folded wing's inner surface and are already sensibly arranged relative to each
+other, so only the **group** needs relocating. One combined centroid, one translation:
+
+```python
+allx = np.concatenate(excluded)
+seat = anchor + outward * 0.18 + [0, -0.06, 0]   # just outboard of the socket, slightly low
+pts[allx] += seat - pts[allx].mean(0)
+```
+
+Slightly below the socket so the feathers sit over them, not the other way round.
