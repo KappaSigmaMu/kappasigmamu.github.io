@@ -39,3 +39,7 @@ config/kusama-tmp.yml
 
 # Canary rig local tooling
 scripts/canary-rig/.venv/
+scripts/canary-rig/__pycache__/
+# Render output: contact sheets, orthos, zooms. Regenerate with iterate.sh.
+# `*/` matches a single level, so the old scripts/canary-rig/*/*.png missed out/blender/.
+scripts/canary-rig/out/**/*.png

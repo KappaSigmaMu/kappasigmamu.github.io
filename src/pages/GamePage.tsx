@@ -10,10 +10,12 @@ import { ThreeCanary, defaultConfig, type CanaryConfig } from '@/canary-componen
 const baseModel = (defaultConfig.canary.model ?? {}) as Record<string, unknown>
 
 /**
- * Rest canary only until we have a non-destructive fly pose.
- * (CLI hinge deform butchered the mesh — do not load canary-fly-static from that path.)
+ * Fly-rest pose built by rigid-body rotation of the artist's own parts
+ * (scripts/canary-rig/pose_fly.py): wings spread + twisted flat, feather cards and tail
+ * fanned, legs tucked, body pitched into a flight attitude. Every part moves rigidly, so
+ * the canary keeps its exact original shape — nothing is deformed.
  */
-const GAME_OBJECT_URL = './static/canary.glb'
+const GAME_OBJECT_URL = './static/canary-fly-static.glb'
 
 const gameCanaryConfig: CanaryConfig = {
   ...defaultConfig.canary,
@@ -34,9 +36,9 @@ const gameCanaryConfig: CanaryConfig = {
 }
 
 if (isMobile) {
-  gameCanaryConfig.cameraPosition = [3, 1.2, 3]
+  gameCanaryConfig.cameraPosition = [4.5, 1.6, 4.5]
 } else {
-  gameCanaryConfig.cameraPosition = [2.2, 1.6, 2.2]
+  gameCanaryConfig.cameraPosition = [3.4, 1.8, 3.4]
 }
 
 const GamePage = () => {
@@ -47,7 +49,7 @@ const GamePage = () => {
       <CanvasHost>
         <ThreeCanary objectUrl={GAME_OBJECT_URL} config={gameCanaryConfig} />
       </CanvasHost>
-      <Hint>Game sandbox — original canary (rest). Fly pose on hold after bad CLI deform.</Hint>
+      <Hint>Game sandbox — fly-rest pose: wings spread + twisted, tail fanned, legs tucked.</Hint>
     </FullPage>
   )
 }
