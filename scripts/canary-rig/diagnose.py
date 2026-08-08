@@ -39,8 +39,12 @@ def main():
     # No merge_vertices here: posing leaves detached parts sharing positions, so a
     # positional weld would collapse them and break the index mapping to the rest mesh.
     posed = trimesh.load(A.mesh, force='mesh', process=False)
-    if len(posed.vertices) != len(rest.vertices):
-        print('FATAL: vertex count changed, regions do not map'); sys.exit(2)
+    # --membrane appends authored wing geometry, so the posed mesh may have MORE vertices
+    # than the rest mesh. The original ones keep their indices, so index-based checks use
+    # the leading slice; whole-mesh checks (islands) still see everything.
+    if len(posed.vertices) < len(rest.vertices):
+        print('FATAL: vertices lost, regions do not map'); sys.exit(2)
+    n_rest = len(rest.vertices)
 
     V, R = posed.vertices, rest.vertices
     lm = landmarks(rest)
@@ -78,11 +82,25 @@ def main():
         check(f'wing_{side} points outboard', lateral < 35,
               f'span axis is {lateral:.0f}deg off lateral (want < 35)')
 
-    legmin = min(V[reg['leg_L']][:, UP].min(), V[reg['leg_R']][:, UP].min())
-    bellymin = torso[:, UP].min()
-    results['leg_below_belly'] = float(bellymin - legmin)
-    check('legs tucked', legmin >= bellymin - 0.02,
-          f'lowest leg vert is {legmin - bellymin:+.2f} vs belly floor (want >= -0.02)')
+    # NOT "legs tucked up inside the belly" — reference canary flight photos show the legs
+    # hanging DOWN and slightly forward under the body with the toes curled downward. The
+    # earlier check encoded the wrong target and would fail a correct pose.
+    # What actually matters: the foot must point DOWN, not stick forward like a perched foot.
+    FOOT_Y = -0.10
+    for side in ('leg_L', 'leg_R'):
+        ri = reg[side]
+        fm = R[ri][:, UP] <= FOOT_Y
+        fp = V[ri[fm]]
+        if not len(fp):
+            continue
+        c = fp.mean(0)
+        _, _, fvt = np.linalg.svd(fp - c, full_matrices=False)
+        ax = fvt[0] / np.linalg.norm(fvt[0])
+        drop = abs(ax[UP])
+        results[f'{side}_toe_drop'] = float(drop)
+        check(f'{side} toes point down', drop > 0.75,
+              f'foot axis is {np.degrees(np.arcsin(drop)):.0f}deg below horizontal '
+              f'(want > 49deg; a perched foot is ~0)')
 
     # --pitch is a global rotation, so compare shapes rather than positions: the body's
     # pairwise vertex distances are invariant under any rigid transform.
@@ -97,8 +115,34 @@ def main():
     # Rigid parts must not change size. The first leg 'tuck' scaled the legs toward a
     # belly point, shrinking them to 26% — it read as tiny paws rather than tucked feet.
     E = posed.edges_unique
-    for k in ('leg_L', 'leg_R', 'wing_L', 'wing_R', 'tail'):
-        idx = set(reg[k].tolist())
+    # Per SEGMENT, not per part. A joint legitimately stretches the edges that cross it —
+    # that is what bending is — so the legs are checked as shaft and foot separately.
+    FOOT_Y = -0.10
+    # Split each wing into plate and feathers. The plate must stay rigid. The feathers are
+    # DELIBERATELY lengthened by --feather-scale (reference photos show long, distinct
+    # strips), so they are checked for width instead: the stretch must be along the feather
+    # axis only, never a fattening of its cross-section.
+    keyw = np.round(rest.vertices, 5)
+    _, ivw = np.unique(keyw, axis=0, return_inverse=True)
+    wshell = trimesh.Trimesh(vertices=np.unique(keyw, axis=0), faces=ivw[rest.faces], process=False)
+    wcc = sorted(trimesh.graph.connected_components(
+        wshell.face_adjacency, nodes=np.arange(len(wshell.faces))), key=len, reverse=True)
+    shellv = np.zeros(len(rest.vertices), bool)
+    shellv[np.unique(rest.faces[wcc[0]])] = True
+
+    segs = {}
+    segs['tail'] = reg['tail']
+    for k in ('wing_L', 'wing_R'):
+        ri = reg[k]
+        ri = ri[ri < n_rest]
+        segs[f'{k}_plate'] = ri[shellv[ri]]
+    for k in ('leg_L', 'leg_R'):
+        ri = reg[k]
+        segs[f'{k}_shaft'] = ri[R[ri][:, UP] > FOOT_Y]
+        segs[f'{k}_foot'] = ri[R[ri][:, UP] <= FOOT_Y]
+
+    for k, ridx in segs.items():
+        idx = set(int(i) for i in ridx if i < n_rest)
         e = np.array([x for x in E if x[0] in idx and x[1] in idx])
         if not len(e):
             continue

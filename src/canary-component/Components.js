@@ -226,6 +226,10 @@ const Model = (props) => {
         roughness: Math.min(props.model.roughness ?? props.model.moughness ?? 0.2, 1),
         opacity: props.model.opacity ?? 1,
         color: new THREE.Color(brandPalette[props.model.color] || brandPalette.white),
+        // Feather cards and the wing membrane are single-sided planes: viewed from below
+        // they render as black backfaces. DoubleSide makes the wing read the same from
+        // above and below, which is how the reference photos show it.
+        side: props.model.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
       })
       material.needsUpdate = true
     }
@@ -421,12 +425,17 @@ const CameraControls = ({ config }) => {
     }
   }, [controlsRef, camera, gl, config.targetPosition])
 
+  // The landing canary is locked to a narrow band around the horizon. The game sandbox
+  // needs the full sphere so the spread wings can be inspected from directly overhead.
+  const minPolar = config.minPolarAngle ?? Math.PI / 2.8
+  const maxPolar = config.maxPolarAngle ?? Math.PI / 1.8
+
   return (
     <OrbitControls
       ref={controlsRef}
       args={[camera, gl.domElement]}
-      minPolarAngle={Math.PI / 2.8}
-      maxPolarAngle={Math.PI / 1.8}
+      minPolarAngle={minPolar}
+      maxPolarAngle={maxPolar}
     />
   )
 }

@@ -28,6 +28,9 @@ WING_ATTACH = 0.22
 # Same idea for the legs: free cards this close to a leg shell travel with it. Without
 # this the toe cards stay behind and read as debris under the bird.
 LEG_ATTACH = 0.15
+# Leg vertices at or below this height are foot/toes rather than the shaft. The model has
+# a real gap between the two: shaft ends at y=-0.03, foot starts at y=-0.20.
+FOOT_Y = -0.10
 
 
 def rot(axis, deg):
@@ -41,6 +44,197 @@ def rot(axis, deg):
         [y * x * (1 - c) + z * s, c + y * y * (1 - c),     y * z * (1 - c) - x * s],
         [z * x * (1 - c) - y * s, z * y * (1 - c) + x * s, c + z * z * (1 - c)],
     ])
+
+
+def lay_out_feathers(pts, cards, idx, anchor, spread, base_span, sweep_back, scale=1.0,
+                     min_len=0.5, min_aspect=2.0, tip_ratio=1.0, root_ratio=0.45):
+    """Re-lay the wing's feather cards as a radiating fan.
+
+    Reference canary flight photos show the wing as a fan of DISTINCT feather strips, not a
+    solid blade. Rotating each card about its own quill (`--fan`) only splays the tips a
+    little and bunches them at wide angles, because the cards start nearly parallel.
+
+    This instead places each feather explicitly, still rigidly: keep its shape, but give it
+    a new base along the wrist line and a new direction stepped across the fan. Longest
+    feather (outer primary) points most outboard; shorter ones sweep progressively aft.
+
+    Operates in left-wing space on `pts` (a copy of the wing vertices), where `cards` are
+    index arrays into the same vertex numbering as `idx`.
+    """
+    pos = {v: i for i, v in enumerate(idx)}
+    local = []
+    excluded = []
+    for vi in cards:
+        loc = [pos[v] for v in vi if v in pos]
+        if len(loc) < 3:
+            continue
+        # Only long, THIN cards are flight feathers. Measured on this wing:
+        #   flight feathers  len 0.65-1.63, aspect 4.9-9.1
+        #   wing plate       len 1.16, aspect 1.3  <- root structure, never fan it
+        #   coverts          len 0.22-0.53, aspect 1.5-3.7  <- small, stay at the root
+        # Fanning the plate and coverts alongside the feathers is what crams the mid-wing
+        # into a lump instead of leaving elegant separate strips.
+        q = pts[np.array(loc)]
+        cq = q.mean(0)
+        _, _, fv = np.linalg.svd(q - cq, full_matrices=False)
+        ln = float(np.ptp((q - cq) @ fv[0]))
+        wd = float(np.ptp((q - cq) @ fv[1]))
+        if ln < min_len or ln / max(wd, 1e-6) < min_aspect:
+            excluded.append(np.array(loc))
+            continue
+        local.append(np.array(loc))
+    if len(local) < 2:
+        return pts
+
+    # Wing frame from all wing points: e1 outboard-ish, e2 chord, n plane normal.
+    # World axes for a LEFT wing: outboard +X, aft -Z, wing-plane normal +Y.
+    e1 = np.array([1.0, 0.0, 0.0])
+    e2 = np.array([0.0, 0.0, -1.0])
+    n = np.array([0.0, 1.0, 0.0])
+    c = pts.mean(0)
+
+    def feather_axis(q):
+        cc = q.mean(0)
+        _, _, fv = np.linalg.svd(q - cc, full_matrices=False)
+        ax = fv[0]
+        t = (q - cc) @ ax
+        if np.linalg.norm(q[np.argmin(t)] - c) > np.linalg.norm(q[np.argmax(t)] - c):
+            ax = -ax
+        return ax / np.linalg.norm(ax), fv[2]
+
+    # Longest feather first: that is the outer primary and takes the outboard-most slot.
+    order = sorted(range(len(local)),
+                   key=lambda i: -float(np.ptp((pts[local[i]] - pts[local[i]].mean(0)) @
+                                               feather_axis(pts[local[i]])[0])))
+    # Anchor the whole fan to the SHOULDER SOCKET, not to the outboard extreme of the
+    # existing quills. Anchoring at the quills left the fan floating above and behind the
+    # shoulder — the wings visibly did not join the body.
+    # Bases run from the socket outboard: shortest feathers (secondaries) sit inboard near
+    # the socket, the longest primary sits at the outboard end, as on a real wing.
+    outward = e1
+
+    longest = max(float(np.ptp((pts[loc] - pts[loc].mean(0)) @ feather_axis(pts[loc])[0]))
+                  for loc in local)
+    m = max(len(order) - 1, 1)
+    for slot, i in enumerate(order):
+        loc = local[i]
+        q = pts[loc]
+        ax, fn = feather_axis(q)
+        quill = q[np.argmin((q - q.mean(0)) @ ax)]
+
+        frac = slot / m
+        ang = np.radians(sweep_back + spread * frac)
+        # +e2, not -e2: with -e2 the fan sweeps toward the HEAD and half the feathers end
+        # up pointing forward past the beak, giving a starburst instead of a swept wing.
+        tgt = np.cos(ang) * e1 + np.sin(ang) * e2
+        tgt /= np.linalg.norm(tgt)
+
+        # Align (long axis, flat-side normal) -> (target direction, wing normal).
+        src = np.column_stack([ax, fn / np.linalg.norm(fn), np.cross(ax, fn / np.linalg.norm(fn))])
+        dst = np.column_stack([tgt, n, np.cross(tgt, n)])
+        Rm = dst @ np.linalg.inv(src)
+
+        base = anchor + outward * (base_span * (1.0 - frac))
+        # The asset's feathers are short relative to the wing the reference shows. Stretch
+        # each one ALONG ITS OWN AXIS only, so its width and shape are untouched and it
+        # still reads as the same feather — just a longer one.
+        local_q = (q - quill) @ Rm.T
+        # Target length is set PER SLOT, not by scaling each feather's natural length.
+        # Natural lengths run longest-outboard, which gives a long thin pointed wing. A
+        # canary's wing is short and ROUND: the swept inner feathers are the long ones and
+        # the outboard tip feathers are shorter, which fills the planform out.
+        own = float(np.ptp(local_q @ tgt))
+        if own > 1e-6:
+            # Wing length profile, reading the reference: feathers are SHORT next to the
+            # body (secondaries, coverts) and grow toward the outer wing (primaries), with
+            # only the last couple tapering back for a rounded tip. frac 0 = outboard slot,
+            # frac 1 = innermost, so length falls off as frac rises.
+            prof = root_ratio + (1.0 - root_ratio) * (1.0 - frac)
+            if frac < 0.3:                       # round off the very tip
+                prof *= tip_ratio + (1.0 - tip_ratio) * (frac / 0.3)
+            want = longest * scale * prof
+            along = local_q @ tgt
+            local_q = local_q + np.outer(along * (want / own - 1.0), tgt)
+        pts[loc] = local_q + base
+
+    # Cards the filter kept OUT of the fan (the 39-face plate, and anything too stubby to be
+    # a flight feather) were previously left wherever the frame solve dropped them — up at
+    # y 2.05 against a socket at 1.72, reading as a clump sitting on the shoulder. Seat them
+    # against the socket instead, so the inner wing joins the body.
+    for loc in excluded:
+        q = pts[loc]
+        seat = anchor + outward * 0.30
+        pts[loc] = q - q.mean(0) + seat
+    return pts
+
+
+
+def add_membranes(m, reg, thickness, stations=14):
+    """Author a wing surface by LOFTING along the span.
+
+    The asset has no spread-wing surface (see 15.2): a 39-face root plate plus thin feather
+    cards shaped to read as a wing only while folded. Spread, they are blades with air
+    between them at any fan angle, so a surface has to be generated.
+
+    An earlier version used the convex hull of the wing points. That is not a wing planform
+    — in the app it rendered as a huge flat paddle. This version instead walks the span in
+    `stations` steps and, at each one, takes the wing's leading and trailing extremes in
+    chord. Lofting between consecutive stations follows the real outline, including its
+    taper and concavity, and stays inside the feather tips instead of bridging across them.
+
+    Built in the wing's own best-fit plane and extruded slightly so it reads solid from
+    both sides rather than vanishing under backface culling.
+
+    This is the ONLY place geometry is added. Head, body and tail stay rigid-only.
+    """
+    V = list(m.vertices)
+    F = list(m.faces)
+    for key in ('wing_L', 'wing_R'):
+        pts = m.vertices[reg[key]]
+        c = pts.mean(0)
+        _, _, vt = np.linalg.svd(pts - c, full_matrices=False)
+        e1, e2, n = vt[0], vt[1], vt[2]
+        if np.sign(e1[0]) != np.sign(c[0] if c[0] else 1.0):
+            e1 = -e1                       # span axis points outboard
+        u = (pts - c) @ e1
+        v = (pts - c) @ e2
+        w = (pts - c) @ n
+
+        edges = []
+        lo_u, hi_u = np.percentile(u, 1), np.percentile(u, 99)
+        for t in np.linspace(lo_u, hi_u, stations):
+            band = np.abs(u - t) <= (hi_u - lo_u) / (stations - 1)
+            if band.sum() < 3:
+                continue
+            edges.append((t, np.percentile(v[band], 4), np.percentile(v[band], 96),
+                          float(np.median(w[band]))))
+        if len(edges) < 3:
+            continue
+        arr = np.array(edges)
+        # Smooth the two chord edges so single stray feather tips do not scallop the outline.
+        for col in (1, 2):
+            arr[:, col] = np.convolve(arr[:, col], np.ones(3) / 3, mode='same')
+            arr[0, col], arr[-1, col] = edges[0][col], edges[-1][col]
+
+        base = len(V)
+        for t, vlo, vhi, wm in arr:
+            mid = c + e1 * t + n * wm
+            for sgn in (1.0, -1.0):
+                V.append(mid + e2 * vlo + n * (thickness / 2) * sgn)
+                V.append(mid + e2 * vhi + n * (thickness / 2) * sgn)
+        k = len(arr)
+        # 4 verts per station: [lo_top, hi_top, lo_bot, hi_bot]
+        for i in range(k - 1):
+            a0, a1, a2, a3 = base + 4 * i, base + 4 * i + 1, base + 4 * i + 2, base + 4 * i + 3
+            b0, b1, b2, b3 = a0 + 4, a1 + 4, a2 + 4, a3 + 4
+            F += [[a0, a1, b1], [a0, b1, b0]]        # top skin
+            F += [[a2, b3, a3], [a2, b2, b3]]        # bottom skin
+            F += [[a0, b0, b2], [a0, b2, a2]]        # trailing rim
+            F += [[a1, a3, b3], [a1, b3, b1]]        # leading rim
+        reg[key] = np.concatenate([reg[key], np.arange(base, len(V))])
+    m.vertices = np.array(V)
+    m.faces = np.array(F)
+    return m
 
 
 def build_regions(m, want_parts=False):
@@ -171,6 +365,47 @@ def detach_parts(m, reg, faces, keys=('wing_L', 'wing_R', 'leg_L', 'leg_R')):
     return out
 
 
+def patch_shell(m, reg, faces):
+    """Leave a copy of each wing plate welded into the torso.
+
+    The 39-face wing plate is part of the positionally-welded shell — it IS the torso's
+    wing-shaped skin. Moving it with the wing therefore opens a hole in the back, which is
+    plainly visible in the app as a black gap at the shoulder.
+
+    Duplicating it costs 78 faces: one copy travels with the wing, one stays behind and
+    keeps the shell closed. The copy that stays reads as the scapular area, which is what
+    that part of a bird looks like anyway.
+    """
+    key = np.round(m.vertices, 5)
+    _, inv = np.unique(key, axis=0, return_inverse=True)
+    welded = trimesh.Trimesh(vertices=np.unique(key, axis=0), faces=inv[m.faces], process=False)
+    wcc = sorted(trimesh.graph.connected_components(
+        welded.face_adjacency, nodes=np.arange(len(welded.faces))), key=len, reverse=True)
+    shell = np.zeros(len(m.faces), bool)
+    shell[wcc[0]] = True
+
+    V = list(m.vertices)
+    F = list(m.faces)
+    added = []
+    for k in ('wing_L', 'wing_R'):
+        plate = np.array([f for f in faces[k] if shell[f]], dtype=int)
+        if not len(plate):
+            continue
+        vs = np.unique(m.faces[plate])
+        remap = {}
+        for v in vs:
+            remap[int(v)] = len(V)
+            V.append(m.vertices[v])
+        for f in m.faces[plate]:
+            F.append([remap[int(x)] for x in f])
+        added.extend(remap.values())
+    if not added:
+        return m, reg
+    out = trimesh.Trimesh(vertices=np.array(V), faces=np.array(F), process=False)
+    reg['body'] = np.unique(np.concatenate([reg['body'], np.array(added, dtype=int)]))
+    return out, reg
+
+
 def prepare(path):
     """Load the rest mesh, recover parts, detach them. Shared by pose and diagnose."""
     m = trimesh.load(path, force='mesh')
@@ -178,6 +413,7 @@ def prepare(path):
     reg, parts, faces = build_regions(m, want_parts=True)
     m = detach_parts(m, reg, faces)
     reg, parts, faces = build_regions(m, want_parts=True)
+    m, reg = patch_shell(m, reg, faces)
     return m, reg, parts
 
 
@@ -192,16 +428,44 @@ def main():
                    help='leading-edge-down roll of the wing plane about its own span axis')
     p.add_argument('--socket', type=float, nargs=3, default=[0.26, 1.72, 0.78],
                    help='where the LEFT wing root attaches, inside the torso shoulder')
+    p.add_argument('--feather-fan', type=float, default=0.0, metavar='SPREAD',
+                   help='re-lay the wing feathers as a radiating fan spanning this many '
+                        'degrees, the way reference flight photos show them')
+    p.add_argument('--feather-base-span', type=float, default=0.45,
+                   help='how far the feather quills spread inboard from the wrist')
+    p.add_argument('--feather-tip-ratio', type=float, default=1.0,
+                   help='length of the outboard tip feather relative to the inboard ones. '
+                        '<1 rounds the wing out; 1.0 gives a long thin pointed wing')
+    p.add_argument('--feather-root-ratio', type=float, default=0.45,
+                   help='length of the innermost feather relative to the longest. Real wings '
+                        'are short at the body and long at the outer wing')
+    p.add_argument('--feather-min-len', type=float, default=0.5,
+                   help='cards shorter than this are coverts, not flight feathers')
+    p.add_argument('--feather-min-aspect', type=float, default=2.0,
+                   help='cards fatter than this length:width ratio are the plate or coverts')
+    p.add_argument('--feather-scale', type=float, default=1.0,
+                   help='lengthen each feather along its own axis (shape/width unchanged)')
+    p.add_argument('--feather-sweep', type=float, default=10.0,
+                   help='angle of the outermost feather from straight outboard')
     p.add_argument('--fan', type=float, default=0.0,
                    help='extra outboard rotation spread across the feather cards, distal card '
                         'gets the most; opens the folded stack into a coherent wing plane')
     p.add_argument('--wrist', type=float, nargs=3, default=None, help='LEFT wrist pivot for --fan')
     p.add_argument('--tail-fan', type=float, default=0.0,
                    help='spread the tail feathers about the tail base, as a bird does in flight')
-    p.add_argument('--leg-fold', type=float, default=0.0,
-                   help='degrees to fold each leg rigidly about its hip, swinging the foot '
-                        'aft and up under the belly (rigid: never changes the foot size)')
+    p.add_argument('--knee-fold', type=float, default=0.0,
+                   help='degrees to draw the whole leg up and aft about the knee (rigid)')
+    p.add_argument('--ankle-fold', type=float, default=0.0,
+                   help='degrees to fold the foot up and aft about the heel (rigid)')
+    p.add_argument('--foot-aim', type=float, nargs=3, default=None,
+                   metavar=('X', 'Y', 'Z'),
+                   help='aim each foot rigidly about its ankle so the heel->toe axis points '
+                        'this way. Reference canaries in flight hang the toes DOWN and a '
+                        'little forward, e.g. 0 -1 0.35')
     p.add_argument('--pitch', type=float, default=0.0, help='pitch the whole bird into a flight attitude')
+    p.add_argument('--membrane', type=float, default=0.0,
+                   help='author a wing surface of this thickness (see add_membranes). The '
+                        'asset has no spread-wing surface, so without this the wing is blades')
     A = p.parse_args()
 
     m, reg, parts = prepare(A.mesh)
@@ -282,6 +546,16 @@ def main():
         Rm = np.column_stack([E1, E2, E3]) @ np.column_stack([e1, e2, e3]).T
         pts = (pts - root) @ Rm.T + socket
 
+        if A.feather_fan:
+            # AFTER the frame solve, in left-wing world space. Laying the fan out in the
+            # folded wing's frame gave a starburst: there "outboard" and "aft" are not
+            # well defined, so target directions came out arbitrary. Here they are simply
+            # world axes — outboard +X, aft -Z, up +Y — and the fan is unambiguous.
+            pts = lay_out_feathers(pts, parts[key], idx, socket, A.feather_fan,
+                                   A.feather_base_span, A.feather_sweep, A.feather_scale,
+                                   A.feather_min_len, A.feather_min_aspect,
+                                   A.feather_tip_ratio, A.feather_root_ratio)
+
         pts[:, 0] *= mirror                      # back out
         V[idx] = pts
     if A.tail_fan:
@@ -297,36 +571,72 @@ def main():
             q = quill(V[vi])
             V[vi] = (V[vi] - q) @ T.T + q
 
-    if A.leg_fold:
-        # RIGID fold about the hip. An earlier version pulled leg vertices toward a belly
-        # point, which is a scale, not a rotation: it shrank the legs to 26% of size and
-        # read as tiny paws. A rigid rotation cannot change the foot's size at all.
+    if A.knee_fold or A.ankle_fold:
+        # The leg has two segments and two joints, and they must be driven separately.
+        # Folding all 250 leg vertices rigidly about the top swings the forward-projecting
+        # foot right around the bird, which reads as an over-tucked leg hinged at the ankle.
+        #   shaft (tibiotarsus):  40 verts, y -0.03..0.35, near vertical
+        #   foot  (toes):        210 verts, y -0.32..-0.20, projecting forward to z 1.01
+        # Both moves stay rigid, so neither can change the foot's size.
         for key in ('leg_L', 'leg_R'):
             idx = reg[key]
-            pts = V[idx]
-            hip = pts[pts[:, GLTF_UP] > np.percentile(pts[:, GLTF_UP], 92)].mean(0)
-            # Fold about the left-right axis so the tarsus swings aft and up under the
-            # belly, the way a bird actually stows it.
-            Rm = rot([1, 0, 0], A.leg_fold)
-            V[idx] = (pts - hip) @ Rm.T + hip
+            pts = V[idx].copy()
+            foot = pts[:, GLTF_UP] <= FOOT_Y
+
+            if A.ankle_fold and foot.any():
+                # Ankle = the heel, the foot's upper-REAR corner. Folding there swings the
+                # toes up and aft; folding at the toe tip would swing the whole foot out.
+                fv = pts[foot]
+                top = fv[fv[:, GLTF_UP] > fv[:, GLTF_UP].max() - 0.06]
+                ankle = top[np.argsort(top[:, GLTF_FWD])[:4]].mean(0)
+                Rm = rot([1, 0, 0], A.ankle_fold)
+                pts[foot] = (pts[foot] - ankle) @ Rm.T + ankle
+
+            if A.knee_fold:
+                # Knee = where the shaft enters the body; draws the whole leg up and aft.
+                knee = pts[pts[:, GLTF_UP] > np.percentile(pts[:, GLTF_UP], 92)].mean(0)
+                Rm = rot([1, 0, 0], A.knee_fold)
+                pts = (pts - knee) @ Rm.T + knee
+
+            if A.foot_aim is not None and foot.any():
+                # Real canaries in flight (reference photos) do NOT hold the foot flat: the
+                # tarsus hangs down-and-slightly-forward under the belly and the toes curl
+                # downward into a loose fist. The model's toes are rigid, so they cannot be
+                # curled — but aiming the whole toe fan DOWNWARD foreshortens it to almost
+                # the same silhouette, which a level sole never does.
+                #
+                # Rotate rigidly about the ankle so the foot's long axis (heel -> toe) points
+                # along --foot-aim.
+                fv = pts[foot]
+                top = fv[fv[:, GLTF_UP] > fv[:, GLTF_UP].max() - 0.06]
+                ankle2 = top[np.argsort(top[:, GLTF_FWD])[:4]].mean(0)
+
+                c = fv.mean(0)
+                _, _, vt = np.linalg.svd(fv - c, full_matrices=False)
+                axis_f = vt[0] / np.linalg.norm(vt[0])
+                # Orient heel -> toe: the toe end is the one further from the ankle.
+                if (fv @ axis_f).max() - (ankle2 @ axis_f) < (ankle2 @ axis_f) - (fv @ axis_f).min():
+                    axis_f = -axis_f
+
+                tgt = np.array(A.foot_aim, float)
+                tgt /= np.linalg.norm(tgt)
+                cross = np.cross(axis_f, tgt)
+                sn = np.linalg.norm(cross)
+                if sn > 1e-8:
+                    ang = np.degrees(np.arctan2(sn, float(axis_f @ tgt)))
+                    pts[foot] = (pts[foot] - ankle2) @ rot(cross / sn, ang).T + ankle2
+
+            V[idx] = pts
 
 
     m.vertices = V
 
+    if A.membrane:
+        add_membranes(m, reg, A.membrane)
+
     if A.pitch:
         m.vertices = m.vertices @ rot([1, 0, 0], A.pitch).T
 
-    if A.leg_fold:
-        # After the global pitch, not before: pitch rotates about X, so which vertex is
-        # lowest depends on z and the pre-pitch ordering does not survive it.
-        W = m.vertices
-        floor = W[reg['body']][:, GLTF_UP].min()
-        for key in ('leg_L', 'leg_R'):
-            idx = reg[key]
-            lift = floor - W[idx][:, GLTF_UP].min()
-            if lift > 0:
-                W[idx] = W[idx] + np.array([0.0, lift + 0.03, 0.0])
-        m.vertices = W
 
     os.makedirs(os.path.dirname(os.path.abspath(A.out)), exist_ok=True)
     m.export(A.out)

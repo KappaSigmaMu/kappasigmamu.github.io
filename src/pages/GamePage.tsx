@@ -24,11 +24,17 @@ const gameCanaryConfig: CanaryConfig = {
   showEffects: false,
   showGrid: true,
   animateLights: false,
+  // Full orbit sphere: the landing canary clamps polar angle to a band around the horizon,
+  // which makes a top-down view of the spread wings impossible.
+  minPolarAngle: 0,
+  maxPolarAngle: Math.PI,
   // Fly-static export may not use the same material name / node scale as the rest GLB.
   meshScale: false,
   model: {
     ...baseModel,
     wireframe: false,
+    // Wing feathers are single-sided cards; without this they are black from below.
+    doubleSided: true,
     // trimesh export often uses a default material name; Model falls back safely if missing.
     material: 'Material',
     scale: 1
@@ -36,9 +42,19 @@ const gameCanaryConfig: CanaryConfig = {
 }
 
 if (isMobile) {
-  gameCanaryConfig.cameraPosition = [4.5, 1.6, 4.5]
+  gameCanaryConfig.cameraPosition = [9, 3.2, 9]
 } else {
-  gameCanaryConfig.cameraPosition = [3.4, 1.8, 3.4]
+  gameCanaryConfig.cameraPosition = [4, 2, 8]
+}
+
+// Sandbox-only: ?cam=x,y,z overrides the camera so a given angle can be reviewed in the
+// real renderer without an edit-and-reload. Blender previews hid holes that show here.
+const camParam = new URLSearchParams(window.location.search).get('cam')
+if (camParam) {
+  const parts = camParam.split(',').map(Number)
+  if (parts.length === 3 && parts.every((n) => Number.isFinite(n))) {
+    gameCanaryConfig.cameraPosition = parts as [number, number, number]
+  }
 }
 
 const GamePage = () => {
@@ -49,7 +65,7 @@ const GamePage = () => {
       <CanvasHost>
         <ThreeCanary objectUrl={GAME_OBJECT_URL} config={gameCanaryConfig} />
       </CanvasHost>
-      <Hint>Game sandbox — fly-rest pose: wings spread + twisted, tail fanned, legs tucked.</Hint>
+      <Hint>Game sandbox — fly-rest pose: fanned feather wings, legs hanging with toes down.</Hint>
     </FullPage>
   )
 }

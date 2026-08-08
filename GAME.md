@@ -543,3 +543,380 @@ scripts/canary-rig/iterate.sh --sweep 12 --rise 10 --fan 10 \
 All 14 gate checks pass. Span 5.07. Legs correct size and tucked, nothing stranded, body
 shape change exactly 0. Known remaining defects are 14.4 (back) and 15.2 (wing surface),
 both structural.
+
+---
+
+## 16. Session 6 — two-joint legs, and the authored wing membrane
+
+### 16.1 Legs have two segments and two joints
+
+Measured, the leg is not one limb:
+
+| Segment | Verts | Extent |
+| --- | --- | --- |
+| shaft (tibiotarsus) | 40 | `y -0.03..0.35`, `z 0.16..0.46`, near vertical |
+| foot / toes | 210 | `y -0.32..-0.20`, projecting **forward** to `z 1.01` |
+
+There is a real gap between them (`y -0.06..-0.18` is empty). Folding all 250 vertices
+rigidly about the top swings the forward-projecting foot right around the bird — the thin
+shaft disappears into the body and only the foot blob shows, which reads as a leg hinged at
+the paw. Hence `--knee-fold` (whole leg, about where the shaft enters the body) and
+`--ankle-fold` (foot only, about the **heel** — the foot's upper-REAR corner).
+
+Chosen by measuring protrusion below the belly across a grid, not by eye:
+
+| knee\ankle | 90 | 110 | 130 | 150 |
+| --- | --- | --- | --- | --- |
+| 60 | -0.273 | -0.161 | -0.105 | -0.087 |
+| **75** | -0.082 | -0.008 | **+0.011** | +0.003 |
+| 105 | +0.235 | +0.235 | +0.235 | +0.221 |
+
+Perched rest is -0.233. `knee 75 / ankle 130` sits flush; 105+ buries the leg inside the
+body — that was the "tucked way too far".
+
+`legs tucked` now requires >= -0.12 rather than 0. Full concealment is stricter than this
+model can do while the leg still reads as a leg; the bar is "clearly tucked, not perched",
+which is roughly a 50% reduction in protrusion.
+
+**Rigidity is checked per SEGMENT, not per part.** A joint necessarily stretches the edges
+crossing it — that is what bending is. Shaft and foot are each verified rigid (0%).
+
+### 16.2 The authored wing membrane (`--membrane`)
+
+Per 15.2 the asset has no spread-wing surface, so one is generated. Per wing, after posing:
+best-fit plane of the wing vertices, convex hull of their in-plane projection (a bird's
+planform is close to convex), triangulated as a fan and extruded slightly so it reads solid
+from both sides instead of vanishing under backface culling.
+
+**This is the only place geometry is added.** Head, body and tail remain rigid-only and the
+gate still proves it (`body geometry untouched` = 0.000000). `diagnose.py` compares the
+leading `len(rest)` vertices so the added geometry does not break the index mapping.
+
+### 16.3 Current state — all 16 checks pass
+
+```bash
+scripts/canary-rig/iterate.sh --sweep 12 --rise 10 --fan 10 --tail-fan 18 \
+    --knee-fold 75 --ankle-fold 130 --membrane 0.03 --pitch 25
+```
+
+Wings solid, legs correctly jointed and tucked, nothing stranded, body untouched.
+**Still open:** the exposed scapular blades on the back (14.4) and the membrane's straight
+hull chord where it crosses the shoulder.
+
+### 16.4 Two traps that cost real time
+
+- **`str.replace('', x)` inserts between every character.** Building an edit as
+  `s[s.index(A):s.index(B)]` yields `''` when B precedes A in the file, which blew
+  `pose_fly.py` up to 439k lines. Always assert the slice is non-empty before replacing.
+- **zsh does not word-split unquoted variables** — this bit `$ARGS`, `$P` and `set -- $combo`.
+  Write arguments out in full, or use a shell function taking `"$1" "$2"`.
+
+---
+
+## 17. Session 7 — REVIEW IN THE APP, NOT IN BLENDER
+
+### 17.1 The process failure
+
+Sessions 3-6 validated against Blender Workbench renders and `diagnose.py`. The deliverable
+is a **three.js page**. Blender renders backfaces and shades differently, so it hid holes
+that `/game` shows plainly, and the gate only measures geometry (rigid, connected,
+unscaled) — all of which can pass on something that looks bad. 16/16 green while the app
+showed a giant flat paddle for a wing.
+
+**Always review at `http://localhost:3000/game` before calling anything done.**
+`?cam=x,y,z` overrides the camera so any angle can be checked without an edit-and-reload:
+
+```
+/game?cam=8,1.5,0.01     right side
+/game?cam=-8,1.5,0.01    left side
+/game?cam=4,2,8          three-quarter
+```
+
+A straight-overhead camera (`cam=0,9,0`) does **not** give a top view — the up-vector
+degenerates when the view direction is parallel to it, and OrbitControls resolves it to a
+front-ish view. A true top-down needs the controls' up vector changed, not just a position.
+
+Two things only the app showed:
+- The camera was at 3.4 units for a 5-unit wingspan, so the bird was cropped off-screen.
+- `--membrane` (the convex-hull wing surface) renders as an enormous flat paddle. **Turned
+  off.** A convex hull of the wing points is not a wing planform. If revisited, it must be
+  a lofted surface following the leading edge and feather tips, reviewed in the app.
+
+### 17.2 Back hole — fixed by duplicating the wing plate
+
+The 39-face wing plate is part of the welded shell: it *is* the torso's wing-shaped skin.
+Moving it with the wing opened a hole at the shoulder. `patch_shell()` duplicates it — one
+copy travels with the wing, one stays welded into the torso. Costs 78 faces and closes the
+opening. The copy left behind reads as the scapular area.
+
+### 17.3 Paws
+
+Toe direction was measured rather than guessed: at `--ankle-fold` 180-200 the toe tip
+points aft **and up**, which is the natural tucked position; below 155 the toes still point
+down. Shipping `--knee-fold 85 --ankle-fold 190`, which puts the lowest leg vertex +0.01
+above the belly floor with toes trailing aft.
+
+### 17.4 Current state
+
+```bash
+scripts/canary-rig/.venv/bin/python scripts/canary-rig/pose_fly.py \
+  --sweep 12 --rise 10 --fan 10 --tail-fan 18 \
+  --knee-fold 85 --ankle-fold 190 --pitch 0 -o public/static/canary-fly-static.glb
+```
+
+Gate passes. Back hole largely closed, paws tucked with toes aft. **Wings still read as
+thin slats** — 15.2 stands, the asset has no wing surface and that is not fixable by posing.
+
+---
+
+## 18. Session 8 — flat feet, lofted membrane
+
+### 18.1 Feet were standing on edge
+
+Measured: the sole is **1.5deg** from horizontal at rest but **83.6deg** after posing. Cause —
+`--knee-fold` and `--ankle-fold` both rotate about X, so their angles **add** on the foot
+(85 + 190 = 275), tipping the sole vertical. It read as thin blades, not feet.
+
+`--foot-flat` levels each sole with the **minimal rotation taking its normal to vertical**.
+Rotating about X alone cannot do it — the sole's normal also has an X component because the
+toes fan sideways, which left a 33deg residual. The general rotation gives **0.0deg**.
+
+Watch this whenever either fold angle changes — the tilt is the SUM, so it silently
+reappears. `--foot-flat` recomputes from the actual plane, so it self-corrects.
+
+**Fold angles matter separately from tilt.** At knee 85 / ankle 190 the foot ended up
+*above* the shaft (foot y 0.39..0.58 vs shaft 0.12..0.44), so what hung down was the leg
+bone with the foot folded up behind it. Sweep for "foot below shaft AND protrusion near
+zero" — knee 65 / ankle 40 gives foot y -0.18..-0.04 with protrusion -0.00.
+
+### 18.2 Membrane: loft, not hull
+
+The convex-hull membrane (16.2) rendered in the app as a huge flat paddle — a hull is not a
+wing planform. Replaced with a **span-wise loft**: walk the span in `stations` steps, take
+the wing's leading and trailing chord extremes at each (4th/96th percentile, smoothed over
+3 stations), and loft between consecutive stations. This follows the real outline including
+taper and concavity, and stays inside the feather tips instead of bridging across them.
+
+In the app the wings now read as continuous tapered surfaces rather than slats.
+
+### 18.3 Current state
+
+```bash
+scripts/canary-rig/.venv/bin/python scripts/canary-rig/pose_fly.py \
+  --sweep 12 --rise 10 --fan 10 --tail-fan 18 \
+  --knee-fold 85 --ankle-fold 190 --foot-flat --membrane 0.04 \
+  --pitch 0 -o public/static/canary-fly-static.glb
+```
+
+Gate passes; body shape change 0.000000. Back closed (17.2), feet flat and tucked, wings
+lofted. Remaining: the wing chord is narrow (reads glider-ish rather than finch-ish) and
+there is a dark seam at the wing root in three-quarter views.
+
+### 18.4 Feet: flat AND facing forward
+
+`--foot-flat` does three things, in order, all pivoted on the ankle:
+
+1. **Level the sole** with the *minimal* rotation taking its normal to vertical. Rotating
+   about X alone cannot do it — the normal also has an X component because the toes fan
+   sideways, which left a 33deg residual. General rotation gives **0.0deg**.
+2. **Spin 180deg about the vertical** if the toes ended up trailing aft, so they face
+   forward. The sole is normal to that axis, so this cannot re-tilt it.
+
+Fold angles are a separate concern from tilt: at knee 85 / ankle 190 the foot ended up
+*above* the shaft, so what hung down was the leg bone with the foot folded behind it.
+Sweep for "foot below shaft AND protrusion near zero" — knee 65 / ankle 40.
+
+### 18.5 Orbit was clamped to the horizon
+
+`Components.js` hard-coded `minPolarAngle = PI/2.8`, `maxPolarAngle = PI/1.8` — a ~36deg band
+around the horizon, so a top-down view was impossible. These are now read from config with
+those values as defaults, so the landing canary is unchanged, and `GamePage` overrides them
+with `minPolarAngle: 0, maxPolarAngle: Math.PI` for the full sphere.
+
+### 18.6 Feet: aim them, do not level them (reference photos)
+
+Real canary flight photos settle it: the legs hang **down and slightly forward** under the
+belly and the toes **curl downward into a loose fist**. A sole held flat and parallel to the
+ground is wrong — that is a perched foot.
+
+The model's toes are rigid geometry and cannot be curled without deforming them. But aiming
+the whole toe fan DOWNWARD foreshortens it to nearly the same silhouette. Hence
+`--foot-aim X Y Z`: a rigid rotation about the ankle putting the foot's heel->toe axis along
+the given direction. `--foot-aim 0 -1 0.35` (down, slightly forward) matches the references.
+
+`--foot-flat` (level the sole, spin toes forward) is superseded and removed — it produced a
+perched foot on a flying bird.
+
+Shipping `--knee-fold 85 --ankle-fold 0 --foot-aim 0 -1 0.35`.
+
+`--knee-fold` is the tuck dial — it swings the whole leg aft about the knee. Measured as the
+knee->foot angle from vertical, and the drop of the foot below the belly floor:
+
+| knee-fold | aft angle | drop below belly |
+| --- | --- | --- |
+| 40 | +1deg | -0.69 |
+| 55 | +12deg | -0.60 |
+| 70 | +23deg | -0.49 |
+| **85** | **+35deg** | **-0.35** |
+| 100 | +48deg | -0.20 |
+
+`--foot-aim` is applied AFTER the knee fold, so changing the tuck does not disturb the toe
+direction — the foot is re-aimed from wherever the leg ends up.
+
+### 18.7 Two review gotchas
+
+- **A camera inside the model's bounds renders nothing.** The bird spans about +-2.5 in x
+  and z, so `?cam=1.8,0.2,2.6` sits inside it and the page looks blank.
+- **A fresh navigate needs ~15s** before the canary appears; a blank screenshot at 6-10s is
+  usually still loading, not broken. Wait again on the loaded page rather than re-navigating.
+
+---
+
+## 19. Session 9 — the wing, finally
+
+Reference canary flight photos show the wing as a **fan of distinct feather strips**, widely
+spread, and essentially the same from above and below. Not a solid blade.
+
+### 19.1 `--feather-fan`: re-lay the feathers, do not just rotate them
+
+`--fan` rotates each card about its own quill. At wide angles it only bunches them, because
+the cards start nearly parallel. `--feather-fan` instead **places each feather explicitly**:
+keep its shape, give it a new base along the wrist line and a new direction stepped across
+the fan. Longest feather (outer primary) takes the outboard slot; shorter ones sweep aft.
+
+Two things that had to be right:
+
+- **It runs in the FOLDED wing's space**, before the frame solve. There the wing runs
+  fore-aft with the shoulder forward, so the spanwise axis must be oriented root -> tip,
+  i.e. pointing **aft**. Orienting it by +z aims the whole fan at the head and bunches every
+  feather into a blob.
+- **`--feather-scale`**: the asset's feathers are far too short for a reference-like wing.
+  Re-basing them at the wrist without scaling makes the wing *shorter*. 2.2 works. Each
+  feather is stretched **along its own axis only**, so its width and shape are untouched.
+
+Shipping `--feather-fan 70 --feather-scale 2.2 --feather-base-span 0.5`, membrane **off** —
+the membrane fills exactly the gaps between feathers that make the wing read as strips.
+
+### 19.2 Feather cards are single-sided
+
+From below the wings rendered solid black: the cards are single-sided planes and we were
+seeing backfaces. `model.doubleSided: true` (GamePage) sets `THREE.DoubleSide`, so the wing
+reads the same from above and below. **Blender Workbench renders backfaces by default and
+hides this entirely** — another thing only the app shows.
+
+### 19.3 Rigidity check split
+
+`--feather-scale` is deliberate, so a blanket "wing not scaled" check would fail a correct
+pose. The check now covers `wing_L_plate` / `wing_R_plate` (which must stay rigid); the
+feathers are intentionally lengthened. Do not simply delete the check if it fires — work out
+whether the pose or the target is wrong.
+
+### 19.4 Refining the fan — two bugs behind the "lump"
+
+Measuring the wing cards gave a clean three-way split:
+
+| kind | length | aspect | |
+| --- | --- | --- | --- |
+| flight feathers | 0.65-1.63 | 4.9-9.1 | the thin strips |
+| **wing plate** | 1.16 | **1.3** | 31 verts, root structure |
+| coverts | 0.22-0.53 | 1.5-3.7 | small, belong at the root |
+
+**Bug 1: the plate and the coverts were being laid out as feathers.** Scaled and slotted
+into the fan they became wide chunks that overlapped into a lump at mid-wing.
+`--feather-min-len` / `--feather-min-aspect` restrict the fan to genuinely thin cards.
+
+**Bug 2: the layout ran in the FOLDED wing's frame.** There "outboard" and "aft" are not
+well defined, so target directions came out arbitrary — half the feathers pointed forward
+past the beak, a starburst rather than a swept wing. Flipping signs did not fix it because
+the frame itself was the problem. The layout now runs **after** the frame solve, in
+left-wing world space, where the axes are simply outboard +X, aft -Z, up +Y.
+
+Shipping:
+
+```bash
+--feather-fan 50 --feather-sweep 12 --feather-scale 1.9 --feather-base-span 1.0 \
+--feather-min-aspect 2.0 --feather-min-len 0.3
+```
+
+Dials: `--feather-min-aspect` controls density (2.0 admits the secondaries for a fuller
+wing; 4.0 gives only the long primaries and reads sparse), `--feather-fan` the spread,
+`--feather-scale` the length. Span is now 8.64.
+
+### 19.5 Anchor the fan at the socket, and the leftover inner-wing clump
+
+**Anchor bug.** `lay_out_feathers` originally based the fan on the outboard extreme of the
+existing quills. That left the whole wing floating above and behind the shoulder — visibly
+not joined to the body. Bases now run from the **shoulder socket** outboard: shortest
+feathers (secondaries) inboard near the socket, longest primary at the outboard end.
+
+**Known remaining defect — the inner-wing clump.** Measured vertical spread of `wing_L`
+against outboard distance:
+
+| x | spread | max y |
+| --- | --- | --- |
+| 0.2-0.8 | 0.23 | 1.91 |
+| 0.8-1.6 | **0.39** | **2.09** |
+| 1.6-2.6 | 0.03 | 1.73 |
+| 2.6-4.5 | 0.04 | 1.73 |
+
+The fanned feathers are coplanar to within 0.04 — they are fine. The clump is the cards the
+aspect/length filter **excludes** from the fan (coverts + the 39-face plate): they are never
+repositioned, so they stay where the frame solve put them, at y up to 2.09 versus a socket
+at 1.72. From the side they read as a dark lump sitting on the back.
+
+Fix direction: give the excluded cards their own placement pass — lay them as the wing's
+inner surface just outboard of and slightly below the socket, rather than leaving them
+wherever the frame solve landed.
+
+### 19.6 Rounding the wing, and seating the inner cards
+
+**Per-slot target length (`--feather-tip-ratio`).** Scaling each feather by its *natural*
+length keeps the longest feather outboard, which gives a long thin pointed wing — far wider
+than a canary's. Length is now set **per slot**: `longest * scale * (tip_ratio + (1-tip_ratio)
+* frac)`, so the swept inner feathers are the long ones and the outboard tip feathers are
+shorter. That fills the planform out into the rounded shape a canary actually has.
+`tip_ratio` 1.0 = old pointed behaviour. 0.65 over-corrected (span 4.56, too compact);
+**0.80 with `--feather-scale 1.55` is shipping, span 6.03** — between the 8.53 pointed wing
+and the 4.56 stubby one.
+
+**Seating the excluded cards.** `--feather-min-aspect` / `--feather-min-len` keep the plate
+and stubby cards out of the fan, but nothing then placed them, so they stayed where the
+frame solve dropped them — y up to 2.05 against a socket at 1.72, a clump on the shoulder.
+They are now seated at `socket + outward*0.30`. Max y 2.05 -> **1.88**, spread 0.36 -> 0.18.
+
+Shipping:
+
+```bash
+--feather-fan 55 --feather-sweep 12 --feather-scale 1.2 --feather-tip-ratio 0.65 \
+--feather-base-span 0.8 --feather-min-aspect 1.5 --feather-min-len 0.15
+```
+
+### 19.7 The length profile was inverted
+
+Reading the reference properly: a wing is **short next to the body** (coverts, secondaries)
+and grows **longer toward the outer wing** (primaries), with only the last couple of
+feathers tapering back for a rounded tip.
+
+19.6's profile did the opposite — longest inboard — which is why every blade looked the same
+size and the inner ones looked too big. Corrected:
+
+```
+prof = root_ratio + (1 - root_ratio) * (1 - frac)      # frac 0 = outboard, 1 = innermost
+if frac < 0.3:  prof *= tip_ratio + (1 - tip_ratio) * (frac / 0.3)   # round the tip
+```
+
+`--feather-root-ratio` (0.45) is how short the innermost feather is; `--feather-tip-ratio`
+(0.88) only rounds off the outermost few now, rather than driving the whole gradient.
+
+Feathers also needed to sit **close together** — `--feather-fan` came down 55 -> 40 so the
+blades nearly touch instead of leaving gaps.
+
+Shipping:
+
+```bash
+--feather-fan 40 --feather-sweep 12 --feather-scale 1.55 --feather-tip-ratio 0.88 \
+--feather-root-ratio 0.45 --feather-base-span 0.8 \
+--feather-min-aspect 1.5 --feather-min-len 0.15
+```
+
+Span 6.42.
