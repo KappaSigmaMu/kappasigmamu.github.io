@@ -5,8 +5,8 @@
 | **Document title** | Deploy KappaSigmaMu (Kusama Society) app to Polkadot Products DevNet |
 | **Author** | _TBD_ |
 | **Date** | 2026-08-07 |
-| **Status** | Draft (revised after design review) |
-| **Repo** | `/Users/laurogripa/code/kusama/kappasigmamu.github.io` (`ksm-app` v2.0.1) |
+| **Status** | Approved (design review complete; ready for PR1) |
+| **Repo** | `ksm-app` v2.0.1 (this repository) |
 | **Audience** | Senior engineers familiar with this React SPA and Kusama Society |
 
 ---
@@ -720,25 +720,25 @@ flowchart TD
 
 ## References
 
-### Codebase (absolute paths)
+### Codebase
 
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/package.json` — scripts, homepage, engines
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/src/chain/client.ts` — PAPI client
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/src/chain/endpoints.ts` — endpoint resolution (`window.location.search`)
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/src/helpers/providers.ts` — Kusama Asset Hub WSS list
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/src/helpers/peopleProviders.ts` — People WSS list
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/src/helpers/wallets.ts` — wallet allowlist
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/src/account/AccountContext.tsx` — signer bridge
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/src/chain/society/` — Society domain logic
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/src/pages/App.tsx` — router + dual ChainProviders
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/src/components/LoadingContainer.tsx` — current connect UX
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/src/components/SettingsDropdown.tsx` — outer URL RPC switcher
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/config/paths.js` — `PUBLIC_URL` / homepage
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/config/env.js` — `DOTENV_ENV` non-layered load
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/public/index.html` — GH Pages SPA hack
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/public/CNAME` — production `ksmsociety.io`
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/netlify.toml` — SPA rewrite
-- `/Users/laurogripa/code/kusama/kappasigmamu.github.io/.env.production` — production React env
+- `package.json` — scripts, homepage, engines
+- `src/chain/client.ts` — PAPI client
+- `src/chain/endpoints.ts` — endpoint resolution (`window.location.search`)
+- `src/helpers/providers.ts` — Kusama Asset Hub WSS list
+- `src/helpers/peopleProviders.ts` — People WSS list
+- `src/helpers/wallets.ts` — wallet allowlist
+- `src/account/AccountContext.tsx` — signer bridge
+- `src/chain/society/` — Society domain logic
+- `src/pages/App.tsx` — router + dual ChainProviders
+- `src/components/LoadingContainer.tsx` — current connect UX
+- `src/components/SettingsDropdown.tsx` — outer URL RPC switcher
+- `config/paths.js` — `PUBLIC_URL` / homepage
+- `config/env.js` — `DOTENV_ENV` non-layered load
+- `public/index.html` — GH Pages SPA hack
+- `public/CNAME` — production `ksmsociety.io`
+- `netlify.toml` — SPA rewrite
+- `.env.production` — production React env
 
 ### External docs
 
