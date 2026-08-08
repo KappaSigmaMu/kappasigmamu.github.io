@@ -98,9 +98,16 @@ def main():
         ax = fvt[0] / np.linalg.norm(fvt[0])
         drop = abs(ax[UP])
         results[f'{side}_toe_drop'] = float(drop)
-        check(f'{side} toes point down', drop > 0.75,
+        # The threshold only has to separate a HANGING foot from a PERCHED one (flat, ~0deg),
+        # which is the thing that goes wrong: the knee fold rotates the whole leg, so a foot
+        # left uncorrected ends up wherever the fold happens to put it. It deliberately does
+        # NOT pin down the hang angle -- that is art direction and has already changed once
+        # (toes straight down, then matched to a reference side view at ~46deg). A check that
+        # encodes the current art direction just has to be edited every time the art changes,
+        # which teaches you to edit checks rather than to trust them.
+        check(f'{side} foot hangs, not perched', drop > 0.42,
               f'foot axis is {np.degrees(np.arcsin(drop)):.0f}deg below horizontal '
-              f'(want > 49deg; a perched foot is ~0)')
+              f'(want > 25deg; a perched foot is ~0)')
 
     # --pitch is a global rotation, so compare shapes rather than positions: the body's
     # pairwise vertex distances are invariant under any rigid transform.
@@ -142,6 +149,39 @@ def main():
         segs[f'{k}_foot'] = ri[R[ri][:, UP] <= FOOT_Y]
 
     for k, ridx in segs.items():
+        if k.endswith('_foot'):
+            # The foot is BENT on purpose (--toe-curl), so per-edge rigidity is the wrong
+            # question -- a curl changes edge lengths by design, most at the toe tips. What
+            # must not happen is the foot changing SIZE, which is the failure this check was
+            # written for in the first place (an early "tuck" pulled the toes toward a belly
+            # point and shrank the feet to 26%, the "tiny paws").
+            #
+            # Measured by SURFACE AREA, not convex-hull volume. A hull is the wrong
+            # invariant for something that curls: the hook encloses the empty space inside
+            # it, so the hull grows as the toes close. It read 6.4% at 90deg of curl but
+            # 20.7% at 60deg -- worse for a smaller change, which is the giveaway.
+            #
+            # Surface area barely moves under a bend (5.4% at the shipped 90deg) and moves
+            # enormously under scaling (74.8% when the feet are shrunk to 60%), so the 8%
+            # threshold sits clear of both. Area goes as the square of scale, so this still
+            # trips on anything past about 4% of linear resize.
+            ri = set(int(i) for i in ridx if i < n_rest)
+            ftri = np.array([f for f in rest.faces if all(int(x) in ri for x in f)])
+            if not len(ftri):
+                continue
+
+            def _area(P):
+                t = P[ftri]
+                return float(np.linalg.norm(
+                    np.cross(t[:, 1] - t[:, 0], t[:, 2] - t[:, 0]), axis=1).sum() / 2)
+
+            ar, ap = _area(R), _area(V)
+            err = abs(ap / max(ar, 1e-12) - 1.0)
+            results[f'{k}_area_err'] = float(err)
+            check(f'{k} keeps its size', err < 0.08,
+                  f'surface area changed by {err * 100:.1f}% (want < 8%)')
+            continue
+
         idx = set(int(i) for i in ridx if i < n_rest)
         e = np.array([x for x in E if x[0] in idx and x[1] in idx])
         if not len(e):

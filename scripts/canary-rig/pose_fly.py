@@ -810,6 +810,12 @@ def main():
     p.add_argument('--knee-cap', type=float, default=0.0,
                    help='bulge the knee bridge outward by this fraction of the rim radius, '
                         'so the joint reads as a rounded kneecap instead of a flat band')
+    p.add_argument('--toe-curl', type=float, default=0.0,
+                   help='curl the toes downward into a loose fist by this many degrees at '
+                        'the claw tips, tapering to nothing at the ankle')
+    p.add_argument('--foot-original', action='store_true',
+                   help="restore each foot to the orientation it has in the SOURCE model, "
+                        "undoing whatever the knee fold did to it. Exact for any knee angle")
     p.add_argument('--feather-extra', type=int, default=0,
                    help='duplicate this many feather cards per wing, so the fan can sweep '
                         'further aft and still reach the body without gaps between blades')
@@ -979,6 +985,58 @@ def main():
             pts = V[idx].copy()
             foot = pts[:, GLTF_UP] <= FOOT_Y
 
+            # NOTE: the curl runs BEFORE the ankle fold. It measures the toe's length
+            # along +Z, which is where the foot points in the rest pose; fold the ankle
+            # first and that axis is collapsed, so the bend radius goes to nothing and
+            # the foot's area explodes (measured 143.7%).
+            if A.toe_curl and foot.any():
+                # Curl the toes into a loose fist, as a flying bird holds them.
+                #
+                # The asset's toes are straight rigid spikes. Any pose that points them
+                # downward puts them edge-on to a side view, so the whole foot collapses to
+                # a sliver -- which is why every earlier attempt stopped reading as a foot.
+                # In the reference the toes CURVE, and that curve is what gives them a
+                # visible profile from the side.
+                #
+                # So bend rather than rotate: the turn applied to each vertex grows with how
+                # far along the toe it sits, zero at the ankle and full at the claw tips.
+                # A progressive bend keeps the toe's length (it is an arc of the same
+                # material, not a scaled copy), so it does not change the mesh's volume the
+                # way scaling would, and it cannot tear the foot open the way rotating whole
+                # toes as rigid pieces would -- they are one welded surface here.
+                fv = pts[foot]
+                top = fv[fv[:, GLTF_UP] > fv[:, GLTF_UP].max() - 0.06]
+                ankle = top[np.argsort(top[:, GLTF_FWD])[:4]].mean(0)
+
+                # Bend the toe axis onto a circular ARC of the same length. Rotating each
+                # vertex about the ankle by an angle that grows with distance is NOT a bend
+                # -- it is a spiral, and it stretched the foot's edges by 90%. Here the
+                # centreline maps to an arc exactly, so its length is preserved, and points
+                # off the centreline move radially, distorting only in proportion to how
+                # thick the toe is against the bend radius.
+                q = fv - ankle
+                sdist = q[:, GLTF_FWD]
+                L = float(sdist.max())
+                total = np.radians(A.toe_curl)
+                if L > 1e-6 and abs(total) > 1e-6:
+                    # Bend toward -Y for a positive curl, +Y for a negative one. The sign has
+                    # to be pulled out and reapplied rather than left inside the radius: with
+                    # R = L/total a negative curl makes R negative, which mirrors the foot
+                    # instead of curling it the other way -- it came out as a straight spike.
+                    sgn = 1.0 if total > 0 else -1.0
+                    R = L / abs(total)
+                    # No clipping: the ankle is the HEEL, so the hind toe sits at negative
+                    # distance. Clipping it to zero drove every one of those vertices onto
+                    # the ankle plane and blew the foot's edge lengths out by 83%. Letting
+                    # the arc run backwards curls the hallux the opposite way, which is the
+                    # direction it curls on a real foot anyway.
+                    th = sdist / R
+                    r = R + sgn * q[:, GLTF_UP]    # radial distance from the arc centre
+                    out = q.copy()
+                    out[:, GLTF_FWD] = r * np.sin(th)
+                    out[:, GLTF_UP] = sgn * (r * np.cos(th) - R)
+                    pts[foot] = out + ankle
+
             if A.ankle_fold and foot.any():
                 # Ankle = the heel, the foot's upper-REAR corner. Folding there swings the
                 # toes up and aft; folding at the toe tip would swing the whole foot out.
@@ -993,6 +1051,33 @@ def main():
                 knee = pts[pts[:, GLTF_UP] > np.percentile(pts[:, GLTF_UP], 92)].mean(0)
                 Rm = rot([1, 0, 0], A.knee_fold)
                 pts = (pts - knee) @ Rm.T + knee
+
+            if A.foot_original and foot.any():
+                # Put the foot back into EXACTLY the orientation it has in the source model.
+                #
+                # The knee fold rotates the whole leg, foot included, so after an 85 degree
+                # fold the foot is nowhere near where the artist left it. Rather than
+                # cancelling that with a hand-tuned angle -- which only works while the knee
+                # angle stays put -- solve for the rotation that actually maps the posed foot
+                # back onto the rest foot (Kabsch) and undo it about the ankle. The foot then
+                # travels with the leg but keeps the source model's own orientation, whatever
+                # the knee is doing.
+                fv = pts[foot]
+                top = fv[fv[:, GLTF_UP] > fv[:, GLTF_UP].max() - 0.06]
+                ankle = top[np.argsort(top[:, GLTF_FWD])[:4]].mean(0)
+
+                # NB: the leg loop does NOT work in mirrored left-space the way the wing
+                # loop does, so the rest foot is used as-is. Multiplying by `mirror` here
+                # picks up whatever value that variable was left holding by the wing loop
+                # and flips the reference, which the Kabsch solve then resolves as a 180
+                # degree roll -- the foot comes out upside down.
+                ref = rest_v[idx][foot]
+                Ac = fv - fv.mean(0)
+                Bc = ref - ref.mean(0)
+                U, _, Vt = np.linalg.svd(Ac.T @ Bc)
+                d = np.sign(np.linalg.det(Vt.T @ U.T))
+                Rm = Vt.T @ np.diag([1.0, 1.0, d]) @ U.T
+                pts[foot] = (pts[foot] - ankle) @ Rm.T + ankle
 
             if A.foot_aim is not None and foot.any():
                 # Real canaries in flight (reference photos) do NOT hold the foot flat: the

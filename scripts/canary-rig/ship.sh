@@ -18,7 +18,7 @@ ARGS=(
   --feather-min-aspect 1.4 --feather-min-len 0.15
   --feather-seat-out 0.55
   --mirror-wing L --knee-cap 0.3 --knee-cap-rings 2
-  --tail-fan 18 --knee-fold 85 --foot-aim 0 -1 0.35
+  --tail-fan 18 --knee-fold 40 --ankle-fold 20 --toe-curl -70
   --membrane 0 --pitch 0
 )
 

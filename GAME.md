@@ -1168,3 +1168,137 @@ flank at y ~ 1.0. So the bound is now `0.7 < y < 1.4`.
 Re-proved non-vacuous after the change by disabling the fin branch: it still fails on the
 original flaps. Worth doing every time a check is loosened — a check relaxed to fit new
 geometry is exactly the kind that quietly stops testing anything.
+
+## 27. Reworking the feet
+
+Review note, with a side-view flight photo: go back to the ORIGINAL feet and match the reference
+anatomically, staying close to the base model aesthetically.
+
+The key thing I had wrong: **the knee fold rotates the whole leg, foot included.** An 85 degree
+fold takes the asset's flat, forward-pointing perched foot and swings it to near vertical. Every
+previous attempt then fought that with `--foot-aim`, which aimed the toe fan straight down and
+foreshortened the foot into a featureless spike -- it stopped reading as a foot at all.
+
+The fix is to let the ankle undo what the knee did: `--knee-fold 85 --ankle-fold -40`, with no
+`--foot-aim`. The foot keeps its original geometry and orientation relative to the shank, so the
+ankle bend, the toes and the hind claw are all legible again, and the foot hangs down-and-forward
+the way the reference does.
+
+Bracketed by rendering: -25 still too steep, -52 flattens the sole out toward perched, -40 sits
+where the reference does (foot axis 46 degrees below horizontal).
+
+### The gate check encoded old art direction
+
+`toes point down` demanded > 49 degrees, which was simply the previous art direction written down
+as a threshold, so the new pose failed it at 46. Renamed to `foot hangs, not perched` with a
+threshold of 25 degrees. What actually goes wrong here is a foot left in the perched orientation
+because nothing corrected the knee fold; the exact hang angle is art direction and has already
+changed once. Re-proved non-vacuous with `--ankle-fold -85` (cancels the fold entirely): reports
+1 degree and fails.
+
+Lesson worth keeping: a check that pins down the current art direction has to be edited every
+time the art changes, which trains you to edit checks instead of trusting them. Check the failure
+mode, not the preference.
+
+## 28. Legs and feet, from the flight reference
+
+Baseline first: `--knee-fold 0` puts the whole lower body back to the home page canary,
+vertex-for-vertex (worst leg displacement 0.0000). Everything below starts from there.
+
+Shipped: `--knee-fold 30 --ankle-fold 35 --toe-curl 90`.
+
+### The toes have to CURL, not just point
+
+Every earlier foot pose failed the same way and I kept mistaking it for an angle problem. The
+asset's toes are straight rigid spikes; any pose that aims them downward puts them edge-on to a
+side view and the foot collapses into a featureless sliver. In the reference the toes CURVE, and
+that curve is exactly what gives them a readable profile from the side. No choice of two joint
+angles can produce it -- a grid of knee x ankle was uniformly bad.
+
+`--toe-curl` bends the toe axis onto a circular ARC of the same length: zero turn at the ankle,
+full turn at the claw tips. Two bugs on the way there, both caught by measuring rather than by
+looking:
+
+  - Rotating each vertex about the ankle by an angle that grows with distance is a SPIRAL, not
+    a bend. Edge lengths blew out 90%.
+  - The ankle is the HEEL, so the hind toe sits at negative distance along the axis. Clipping
+    that to zero drove every hallux vertex onto the ankle plane -- 83%. Letting the arc run
+    backwards curls the hallux the other way, which is the direction it curls anyway.
+
+### Rigidity was the wrong invariant for the foot
+
+`leg_*_foot not scaled` asserted per-edge rigidity, which a curl breaks on purpose. But the
+failure it was written for was the "tiny paws" bug -- an early tuck that pulled the toes toward
+a belly point and shrank the feet to 26%.
+
+Replaced with `leg_*_foot keeps its volume`: convex-hull volume within 5%. That still catches
+shrinking exactly (shrinking the shipped feet to 60% reports 78.6% and fails) while letting an
+arc bend through. Measured on the shipped pose: 0.7%. This also matches the actual brief --
+"without changing the overall volume of the mesh" -- rather than a proxy for it.
+
+The shaft keeps its rigidity check (0%), since nothing should ever bend the shank.
+
+## 29. Correcting section 28
+
+Shipped values are `--knee-fold 85 --toe-curl -90` (not 30/35/90). Two things in section 28 were
+wrong, and both were caught by measuring rather than by looking at a render.
+
+**The tuck was far too weak.** knee 30 left the tarsus hanging almost straight down. In the
+reference the tarsus is drawn up until it is essentially hidden in the belly plumage and only
+the curled foot shows below. That takes ~85 degrees. Usefully, at 85 the rest foot (which points
++Z, forward) is rotated to point straight down on its own, so no ankle fold is needed at all.
+
+**A negative curl was silently mirroring the foot.** `R = L / total` goes negative when the curl
+is negative, which flips the geometry instead of bending it the other way -- it came out as a
+straight spike, and I read that as "too much curl" rather than as a bug. Pull the sign out, bend
+with `R = L / abs(total)`, and reapply it to the radial term.
+
+With that fixed the sign is meaningful, and measurable: heel->claw-tip direction comes out
+forward +0.64 / down -0.77 at curl -90, and backward -0.52 / down -0.85 at +90. The reference
+curls forward, so -90.
+
+**Convex-hull volume was the wrong invariant** (section 28 used it). A hull is meaningless for
+something that curls: the hook encloses the empty space inside it, so the hull grows as the toes
+close. It reported 6.4% at 90 degrees of curl but 20.7% at 60 -- a worse number for a smaller
+change, which is what gave it away.
+
+Now measured by SURFACE AREA, threshold 8%:
+
+    curl -60  3.7%      curl -80  4.8%
+    curl -70  4.3%      curl -90  5.4%      feet shrunk to 60%: 74.8%
+
+Stable under bending, enormous under scaling, so it still catches the "tiny paws" failure it
+exists for. Area goes as the square of scale, so it trips on anything past ~4% of linear resize.
+
+## 30. Bird leg anatomy (correcting 28 and 29)
+
+Shipped: `--knee-fold 40 --ankle-fold 20 --toe-curl -70`. Chosen by the reviewer from three
+rendered options, after four wrong guesses from me.
+
+**The anatomy error.** I was folding at the TOP of the visible shaft and swinging the whole leg
+backward. That is a human knee lifting a shin, and it is wrong for a bird:
+
+  - the femur and most of the tibiotarsus sit INSIDE the body outline, hidden in plumage
+  - the joint you can see is the ANKLE (intertarsal), and it articulates the opposite way to
+    a human knee -- which is why a bird's leg looks like it bends backwards
+  - the visible shaft is the tarsometatarsus, and the foot articulates at its BOTTOM
+
+So rotating the visible shaft about its top end, backwards, animates a segment and a joint that
+are not the ones a bird actually moves. Renders of the two side by side make it obvious; angles
+alone never did.
+
+**Ordering bug found while checking it.** `--toe-curl` measures the toe's length along +Z, which
+is where the foot points in the REST pose. It was running AFTER `--ankle-fold`, which had already
+turned the foot to point downward and collapsed that axis, so the bend radius went to nothing:
+the foot's surface area changed by 143.7%. Order is now curl -> ankle -> knee, and it is back to
+4.3%.
+
+Note this was invisible in the numeric gate for the pose I happened to ship first (`--ankle-fold`
+was 0 there, so the bug could not fire). It only appeared when a later pose used both.
+
+**Proportion caveat, unresolved.** The asset's visible shaft is about 0.32 long with its ankle
+sitting ABOVE the belly line, so most of the leg is inside the torso. Measured against the
+reference photo, our foot hangs ~3-10% of body height below the belly where the reference is
+~40%, and sits ~32-54% back from the head where the reference is ~60-70%. No rotation fixes
+that -- the leg attaches further forward and is proportionally different. Raise it only if the
+review asks; it is a proportion problem, not a pose problem.
