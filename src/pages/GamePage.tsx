@@ -1,71 +1,55 @@
+import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import styled from 'styled-components'
-import { ThreeCanary, defaultConfig, type CanaryConfig } from '@/canary-component'
+import { CanaryStage } from './game/CanaryStage'
 
 /**
- * Bare canary sandbox for the fly-animation pipeline.
- * No Society UI, no post-FX, no wireframe, no member nodes — grid + model only.
- * Static lights; mesh is the CLI fly-pose export (CP2) when present.
+ * Bare canary sandbox for the fly-animation pipeline: grid + model only, no Society UI.
+ *
+ * The three.js work lives in ./game/CanaryStage.js and is deliberately untyped — see the note
+ * at the top of that file for why importing drei from a .tsx breaks an unrelated build.
  */
-const baseModel = (defaultConfig.canary.model ?? {}) as Record<string, unknown>
+type Clip = 'static' | 'fly' | 'glide' | 'idle' | 'walk' | 'hop'
 
-/**
- * Fly-rest pose built by rigid-body rotation of the artist's own parts
- * (scripts/canary-rig/pose_fly.py): wings spread + twisted flat, feather cards and tail
- * fanned, legs tucked, body pitched into a flight attitude. Every part moves rigidly, so
- * the canary keeps its exact original shape — nothing is deformed.
- */
-const GAME_OBJECT_URL = './static/canary-fly-static.glb'
+const CLIPS: Clip[] = ['static', 'fly', 'glide', 'idle', 'walk', 'hop']
 
-const gameCanaryConfig: CanaryConfig = {
-  ...defaultConfig.canary,
-  showPoints: false,
-  showParticles: false,
-  showEffects: false,
-  showGrid: true,
-  animateLights: false,
-  // Full orbit sphere: the landing canary clamps polar angle to a band around the horizon,
-  // which makes a top-down view of the spread wings impossible.
-  minPolarAngle: 0,
-  maxPolarAngle: Math.PI,
-  // Fly-static export may not use the same material name / node scale as the rest GLB.
-  meshScale: false,
-  model: {
-    ...baseModel,
-    wireframe: false,
-    // Wing feathers are single-sided cards; without this they are black from below.
-    doubleSided: true,
-    // trimesh export often uses a default material name; Model falls back safely if missing.
-    material: 'Material',
-    scale: 1
-  }
+const DEFAULT_CAMERA: [number, number, number] = isMobile ? [9, 3.2, 9] : [4, 2, 8]
+
+// Sandbox-only: ?cam=x,y,z reviews a given angle without an edit-and-reload.
+// Blender previews have hidden defects that only show up in this renderer.
+const readCamera = (): [number, number, number] => {
+  const param = new URLSearchParams(window.location.search).get('cam')
+  if (!param) return DEFAULT_CAMERA
+  const parts = param.split(',').map(Number)
+  return parts.length === 3 && parts.every((n) => Number.isFinite(n))
+    ? (parts as [number, number, number])
+    : DEFAULT_CAMERA
 }
 
-if (isMobile) {
-  gameCanaryConfig.cameraPosition = [9, 3.2, 9]
-} else {
-  gameCanaryConfig.cameraPosition = [4, 2, 8]
-}
-
-// Sandbox-only: ?cam=x,y,z overrides the camera so a given angle can be reviewed in the
-// real renderer without an edit-and-reload. Blender previews hid holes that show here.
-const camParam = new URLSearchParams(window.location.search).get('cam')
-if (camParam) {
-  const parts = camParam.split(',').map(Number)
-  if (parts.length === 3 && parts.every((n) => Number.isFinite(n))) {
-    gameCanaryConfig.cameraPosition = parts as [number, number, number]
-  }
-}
+const CAMERA = readCamera()
 
 const GamePage = () => {
   window.scrollTo(0, 0)
+  const [clip, setClip] = useState<Clip>('fly')
 
   return (
     <FullPage>
       <CanvasHost>
-        <ThreeCanary objectUrl={GAME_OBJECT_URL} config={gameCanaryConfig} />
+        <CanaryStage clip={clip} cameraPosition={CAMERA} />
       </CanvasHost>
-      <Hint>Game sandbox — fly-rest pose: fanned feather wings, legs hanging with toes down.</Hint>
+
+      <Switcher>
+        {CLIPS.map((name) => (
+          <ClipButton key={name} data-active={clip === name} onClick={() => setClip(name)}>
+            {name}
+          </ClipButton>
+        ))}
+      </Switcher>
+
+      <Hint>
+        Game sandbox — fly/glide use the new fly-rest mesh; idle/walk/hop are the archived
+        canary-component clips on the original model.
+      </Hint>
     </FullPage>
   )
 }
@@ -81,6 +65,38 @@ const FullPage = styled.div`
 const CanvasHost = styled.div`
   position: absolute;
   inset: 0;
+`
+
+const Switcher = styled.div`
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  display: flex;
+  gap: 0.5rem;
+`
+
+/**
+ * Active state rides on a data-attribute rather than a styled-components generic.
+ *
+ * `styled.button<{ $active: boolean }>` builds a union big enough to trip TS2590 ("union type
+ * too complex") in this project's styled-components setup, and the symptom is not a type error
+ * you can see — the page renders, the buttons appear, and the WebGL canvas silently never
+ * paints a single pixel. Bisecting from the working page pinned it to exactly this generic.
+ */
+const ClipButton = styled.button`
+  padding: 0.45rem 1.1rem;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.white};
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid ${({ theme }) => theme.colors.grey};
+
+  &[data-active='true'] {
+    color: ${({ theme }) => theme.colors.black};
+    background: ${({ theme }) => theme.colors.white};
+  }
 `
 
 const Hint = styled.p`

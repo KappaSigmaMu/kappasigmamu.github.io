@@ -22,5 +22,5 @@
     }
   },
   "include": ["src"],
-  "exclude": ["node_modules", "build", "cypress", "src/canary-component/**/*.js"]
+  "exclude": ["node_modules", "build", "cypress", "src/canary-component/**/*.js", "src/pages/game/**/*.js"]
 }

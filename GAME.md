@@ -1302,3 +1302,52 @@ reference photo, our foot hangs ~3-10% of body height below the belly where the 
 ~40%, and sits ~32-54% back from the head where the reference is ~60-70%. No rotation fixes
 that -- the leg attaches further forward and is proportionally different. Raise it only if the
 review asks; it is a proportion problem, not a pose problem.
+
+## 32. Animations in the sandbox
+
+`/game` now has six buttons, switching between two differently-rigged models:
+
+  static / fly / glide   the current fly-rest mesh, carrying the Anything World skeleton and
+                         clips (scripts/canary-rig/retarget.py)
+  idle / walk / hop      the archived canary-component clips, which animate the ORIGINAL
+                         canary and keep it (scripts/canary-rig/fit_legacy_anims.py)
+
+The archived files (github.com/KappaSigmaMu/canary-component, branch `animations`) need no
+retargeting -- they already animate the model this project still ships. They only sat at ~19x
+scale and off-centre, so each gets one parent node carrying scale and offset.
+
+### trimesh cannot verify a skinned fit
+
+The first fit also rotated -90deg about X, assuming the files were Z-up. They are not. What
+makes this worth writing down is the verification: `trimesh` reported the fitted bounds as an
+EXACT match to the reference, while Blender and the browser both showed the bird standing on
+its tail. trimesh applies node transforms without applying skinning, so for a skinned mesh its
+bounds are not what gets drawn. Verify a skinned fit in Blender (evaluate the depsgraph on a
+posed frame) or in the browser. Never with trimesh.
+
+### and Blender cannot export the fit
+
+Redoing the fit inside Blender -- transform the objects, let the exporter rebuild the inverse
+bind matrices -- produced files back at the original ~19x. Its glTF exporter drops an
+armature's object-level transform, which retarget.py had already run into and documented. The
+parent-node wrapper is the approach that works; only the rotation was ever wrong.
+
+## 33. The sandbox page's invisible failure mode
+
+Worth knowing before touching src/pages/GamePage.tsx: `styled.button<{ $active: boolean }>`
+renders the WebGL canvas permanently blank. No error, no warning, no failed compile -- the page
+draws, the buttons appear, and the canvas never paints a single pixel (verified: zero
+non-transparent pixels, live GL context, correct size).
+
+It is the same styled-components type explosion that produces TS2590 elsewhere. Bisecting from
+the working page: useState alone fine, plain buttons fine, styled buttons fine, and only the
+GENERIC broke it. Active state now rides on a `data-active` attribute with an attribute
+selector.
+
+Related: keep three.js imports out of .tsx entirely. src/pages/game/CanaryStage.js is plain JS
+with a hand-written .d.ts and is excluded from tsconfig, exactly like src/canary-component.
+Importing drei from a .tsx reports TS2590 in src/components/base/index.tsx, and CRA blocks the
+dev bundle on it -- the browser just hangs on "wait until bundle finished".
+
+Run BOTH `npx tsc --noEmit` and `npx eslint src` before believing a change to this page works.
+CRA gates the build on eslint too, and tsc passing is not enough.
