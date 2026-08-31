@@ -22,6 +22,7 @@ import { getWsProvider } from 'polkadot-api/ws'
 import { getPolkadotSigner } from 'polkadot-api/signer'
 import { sr25519CreateDerive } from '@polkadot-labs/hdkd'
 import { DEV_PHRASE, entropyToMiniSecret, mnemonicToEntropy, ss58Address } from '@polkadot-labs/hdkd-helpers'
+import { base32 } from '@scure/base'
 import { config } from './config.mjs'
 import { toHex } from './verify.mjs'
 
@@ -182,6 +183,35 @@ export async function authorizePreimage(contentHash, size) {
   )
 
   return blockHash
+}
+
+/**
+ * Submit `store` signed by the ops account against its account authorization.
+ *
+ * Path B: a signed `store` from an authorized account is feeless and works on Paseo,
+ * where `authorize_preimage` cannot — the faucet grants an account authorization, never
+ * authorizer status. The ops key holds the image bytes only for the duration of this
+ * call; the browser has already proven ownership of the content hash, and the caller
+ * has asserted the bytes hash to it, so ops cannot substitute content.
+ *
+ * Returns both the block hash and the stored CID, read from the `Stored` event and
+ * encoded as a CIDv1 base32 string.
+ */
+export async function storeSigned(envelope) {
+  const { blockHash, events } = await submit(
+    bulletinApi.tx.TransactionStorage.store({ data: envelope })
+  )
+
+  const stored = events.find(
+    (event) => event.type === 'TransactionStorage' && event.value.type === 'Stored'
+  )
+
+  if (!stored) throw new Error('store succeeded but emitted no Stored event')
+
+  const cidBytes = stored.value.value.cid
+  const cid = 'b' + base32.encode(cidBytes).toLowerCase().replace(/=+$/, '')
+
+  return { blockHash, cid }
 }
 
 /**

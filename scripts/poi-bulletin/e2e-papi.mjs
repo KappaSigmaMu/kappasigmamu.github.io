@@ -39,7 +39,7 @@ const SEED = process.env.SIGNING_SEED || '//Bob'
 async function devSign(payload) {
   const response = await fetch(`${BACKEND}/dev-sign`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', Origin: ORIGIN },
     body: JSON.stringify({ seed: SEED, payload })
   })
 

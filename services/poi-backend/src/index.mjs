@@ -10,19 +10,19 @@
  *
  * Routes:
  *   GET  /health     liveness plus ops-account status (no secrets)
- *   POST /authorize  verify uploader, then `authorize_preimage(contentHash, size)`
- *   POST /finalize   `enable_auto_renew(contentHash)` once the bytes are on chain
+ *   POST /authorize  verify uploader, then signed `store` + `enable_auto_renew`
  *   POST /dev-sign   local testing only; signs for dev seeds, refused unless enabled
  *
- * The image bytes never pass through here. The browser hashes them, this service
- * pre-authorizes that one hash, and the browser submits `store` unsigned directly to
- * the node. The ops key can refuse an upload but cannot substitute content for one it
- * has already approved.
+ * The image bytes pass through here so the ops account can sign `store` itself — a
+ * feeless call for an authorized account, and the only path that works on Paseo. The
+ * browser still proves ownership by signing the content hash, and this service asserts
+ * the reconstructed envelope hashes to it, so the ops key can refuse an upload but
+ * cannot substitute content for one it has approved.
  */
 import { createServer } from 'node:http'
+import { blake2b } from '@noble/hashes/blake2.js'
 import { config } from './config.mjs'
 import {
-  authorizePreimage,
   connect,
   devSign,
   disconnect,
@@ -32,27 +32,39 @@ import {
   membershipStatus,
   opsAddress,
   opsAuthorization,
-  opsBalance
+  opsBalance,
+  storeSigned
 } from './chain.mjs'
 import { preflight, readJson, resolveOrigin, send } from './http.mjs'
 import { startKeeper, stopKeeper } from './keeper.mjs'
-import { verifyOwnership } from './verify.mjs'
+import { decodeAddress, toHex, verifyOwnership } from './verify.mjs'
 
 /**
- * Gate an upload and authorize exactly one preimage.
+ * Gate an upload, then store and auto-renew it as the ops account.
  *
  * Checks run cheapest-first, and each one exists for a specific reason:
- *   size      — bounds what a single authorization can commit us to storing
+ *   size      — bounds what a single upload can commit us to storing
  *   signature — proves the uploader holds the key, and binds them to these exact bytes
  *   membership— restricts uploads to Society members and candidates
  *
- * The predecessor (Apillon) checked only the request Origin, which meant any allowed
- * page could overwrite any member's image. That is the flaw this replaces.
+ * Path B: the ops account signs `store` itself against its account authorization — a
+ * signed store from an authorized account is feeless and works on Paseo, where the
+ * unsigned `authorize_preimage` path cannot. The image bytes pass through here, so the
+ * gate reconstructs the envelope and asserts it hashes to the content hash the browser
+ * signed: the ops key can refuse an upload but cannot substitute content for one it has
+ * approved. The predecessor (Apillon) checked only the request Origin, which meant any
+ * allowed page could overwrite any member's image — the flaw this replaces.
  */
 async function handleAuthorize(request, response, origin) {
   const body = await readJson(request)
 
-  if (!body.address || !body.contentHash || !body.signature || typeof body.size !== 'number') {
+  if (
+    !body.address ||
+    !body.contentHash ||
+    !body.signature ||
+    typeof body.size !== 'number' ||
+    typeof body.image !== 'string'
+  ) {
     return send(response, 400, { error: 'Missing required fields' }, origin)
   }
 
@@ -69,29 +81,28 @@ async function handleAuthorize(request, response, origin) {
     return send(response, 403, { error: 'Address is not a Society member or candidate' }, origin)
   }
 
-  const blockHash = await authorizePreimage(body.contentHash, body.size)
+  // Reconstruct the envelope byte-identically to the frontend packEnvelope: a 1-byte
+  // version, the 32-byte owner public key, then the raw image bytes. Any drift here and
+  // the stored CID would not match what the browser expects.
+  const image = Buffer.from(body.image, 'base64')
+  const publicKey = decodeAddress(body.address)
 
-  return send(response, 200, { authorized: true, status, blockHash }, origin)
-}
+  const envelope = new Uint8Array(33 + image.length)
+  envelope[0] = 1
+  envelope.set(publicKey, 1)
+  envelope.set(image, 33)
 
-/**
- * Register auto-renewal for bytes already on chain.
- *
- * Deliberately not gated on a signature. It can only be called for a content hash that
- * was already authorized and stored, it grants nothing new, and requiring a second
- * wallet prompt after the upload would strand images whose owner dismissed it — the
- * failure mode being silent deletion two weeks later.
- */
-async function handleFinalize(request, response, origin) {
-  const body = await readJson(request)
-
-  if (!body.contentHash) {
-    return send(response, 400, { error: 'Missing contentHash' }, origin)
+  // Bind the signed hash to the actual bytes. verifyOwnership proved the address signed
+  // contentHash; this proves contentHash is the hash of these exact bytes, closing the
+  // gap that would otherwise let the caller sign one hash and store different content.
+  if (toHex(blake2b(envelope, { dkLen: 32 })) !== body.contentHash) {
+    return send(response, 400, { error: 'Content hash does not match image bytes' }, origin)
   }
 
-  const blockHash = await enableAutoRenew(body.contentHash)
+  const { blockHash, cid } = await storeSigned(envelope)
+  await enableAutoRenew(body.contentHash)
 
-  return send(response, 200, { autoRenew: true, blockHash }, origin)
+  return send(response, 200, { authorized: true, status, cid, blockHash }, origin)
 }
 
 /**
@@ -147,7 +158,6 @@ async function handleHealth(response) {
 
 const routes = {
   'POST /authorize': handleAuthorize,
-  'POST /finalize': handleFinalize,
   'POST /dev-sign': handleDevSign
 }
 

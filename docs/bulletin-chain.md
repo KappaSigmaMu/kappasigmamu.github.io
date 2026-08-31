@@ -37,7 +37,7 @@ Good for: static sites, images/media, NFT and app metadata, JSON documents, dApp
 | Authorizations page | https://paritytech.github.io/polkadot-bulletin-chain/authorizations |
 | Paseo RPC / WebSocket | `wss://paseo-bulletin-rpc.polkadot.io` |
 | Paseo "next" RPC (appears in Rust SDK example) | `wss://paseo-bulletin-next-rpc.polkadot.io` |
-| IPFS HTTP gateway | `https://paseo-ipfs.polkadot.io/ipfs/<CID>` |
+| IPFS HTTP gateway | `https://paseo-bulletin-next-ipfs.polkadot.io/ipfs/<CID>` |
 | Polkadot.js Apps, pre-pointed | https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fpaseo-bulletin-rpc.polkadot.io |
 | Local dev node | `ws://127.0.0.1:9944` |
 
@@ -332,7 +332,7 @@ PAPI integration notes: [book page](https://github.com/paritytech/polkadot-bulle
 
 | Method | How | When |
 |---|---|---|
-| HTTP gateway | `GET https://paseo-ipfs.polkadot.io/ipfs/<CID>` | Fastest to wire; centralized read path |
+| HTTP gateway | `GET https://paseo-bulletin-next-ipfs.polkadot.io/ipfs/<CID>` | Fastest to wire; centralized read path |
 | Direct P2P (Helia) | libp2p + Bitswap in-browser — [helia.io](https://helia.io/) | Production decentralized read |
 | Kubo / any IPFS client | Standard Bitswap against collators — [Kubo docs](https://docs.ipfs.tech/install/command-line/) | Server-side, scripting |
 | Console UI Download page | P2P or gateway toggle — [console](https://paritytech.github.io/polkadot-bulletin-chain/) | Manual verification while debugging |

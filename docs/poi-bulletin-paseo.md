@@ -272,7 +272,7 @@ Then confirm with `node scripts/status.mjs` before deploying anything.
 
 Use `wss://paseo-bulletin-next-rpc.polkadot.io`. The endpoint named in the official docs
 is the dead one, so anyone following the tutorial hits a silent hang rather than an
-error. The IPFS gateway is `https://paseo-ipfs.polkadot.io/ipfs/<CID>`.
+error. The IPFS gateway is `https://paseo-bulletin-next-ipfs.polkadot.io/ipfs/<CID>`.
 
 Note `dryRun` is refused on the public node (`-32601: RPC call is unsafe to be called
 externally`), so extrinsics cannot be simulated before submitting — the first real
@@ -385,6 +385,6 @@ Unchanged by this move and still open:
    refusals, `/health`, keeper and container verified against live Paseo + Kusama.
 8. Deploy the backend with the real `.env`; confirm `/health` from the deployed host.
 9. Point the frontend at it; run one upload with a real Society key.
-10. Confirm the CID reads back through `https://paseo-ipfs.polkadot.io/ipfs/<CID>`.
+10. Confirm the CID reads back through `https://paseo-bulletin-next-ipfs.polkadot.io/ipfs/<CID>`.
 11. Check `yarn status` again — transactions and bytes should have decremented by one upload.
 12. Note the authorization expiry block and calendar the manual re-authorization.
