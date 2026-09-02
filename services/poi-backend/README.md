@@ -69,14 +69,15 @@ portal.
 | Route | Purpose |
 |---|---|
 | `GET /health` | Liveness plus ops address, balance and authorization expiry. No secrets. |
-| `POST /authorize` | Gate the uploader, then `authorize_preimage(contentHash, size)`. |
-| `POST /finalize` | `enable_auto_renew(contentHash)` once the bytes are on chain. |
+| `POST /authorize` | Gate the uploader, then ops-sign `store` and `enable_auto_renew`. |
 | `POST /dev-sign` | Local testing only. Refused unless `ALLOW_DEV_SIGNING=true`. |
 
-**Image bytes never pass through here.** The browser hashes them, this service
-pre-authorizes that one hash, and the browser submits `store` unsigned straight to the
-node. The ops key can refuse an upload but cannot substitute content for one it has
-already approved.
+**The ops account signs every `store`.** The browser hashes the image, signs that
+content hash, and sends the bytes here; the service verifies the uploader, asserts the
+bytes hash to the signed hash, then signs `store` and `enable_auto_renew` itself. This
+is the only path that works on Paseo, where the faucet grants an account authorization
+but not the authorizer status the unsigned `authorize_preimage` path needs. The ops key
+can refuse an upload but cannot substitute content for one it has approved.
 
 ### The gate
 
@@ -132,20 +133,58 @@ from the Console faucet, out of band — see the Paseo doc.
 The container binds to `127.0.0.1`. It speaks plain HTTP and has no rate limiting, so
 put a TLS-terminating reverse proxy in front of it.
 
-### Fully local POC
+### Run the whole system locally
+
+Four moving parts: a Bulletin dev node, a Kubo IPFS gateway, and this backend (all three
+in `docker-compose.local.yml`), plus a Chopsticks fork of Asset Hub Kusama that runs on
+the **host** — it is not in the compose file because it needs the repo's
+`config/kusama.yml` fixture to seed Society candidates.
+
+| Part | Where | Endpoint |
+|---|---|---|
+| Bulletin dev node (`polkadot-omni-node --dev --ipfs-server`) | compose | `ws://…:9944` |
+| Kubo IPFS gateway (peers to the node over Bitswap) | compose | `http://…:8283` |
+| poi-backend (ops = `//Ops`, dev-signing on) | compose | `http://127.0.0.1:8787` |
+| Chopsticks fork of Asset Hub Kusama | host | `ws://127.0.0.1:8000` |
+
+**Prerequisites (once):**
 
 ```bash
-docker compose -f docker-compose.local.yml up -d
-docker compose -f docker-compose.local.yml exec poi-backend yarn setup:local
+# From the repo root — the descriptors must exist before the image builds.
+(cd ../.. && yarn papi generate && yarn install)
+
+# The Bulletin dev chain-spec. It is ~1.9 MB and gitignored, so a fresh clone has none:
+# generate it and drop it at spec/bulletin-dev-spec.json. Full recipe (binaries + runtime
+# build + chain-spec-builder) is in docs/poi-bulletin-poc-local.md.
+ls spec/bulletin-dev-spec.json   # must exist; the local compose mounts spec/ read-only
 ```
 
-That brings up the Bulletin dev node and the Kubo gateway alongside the backend. Asset
-Hub is **not** included — Society membership is read from a Chopsticks fork that runs on
-the host (`yarn chopsticks`), because it needs the repo's `config/kusama.yml` fixture to
-seed candidates.
+**Bring it up:**
 
-`setup-local-chain.mjs` reruns after every node restart: `--dev` wipes the database,
-taking the authorizer registration and the ops authorization with it. It is idempotent.
+```bash
+# 1. Chopsticks (Society membership), from the repo root, left running in its own shell.
+(cd ../.. && yarn chopsticks)                        # ws://127.0.0.1:8000
+
+# 2. Node + gateway + backend.
+docker compose -f docker-compose.local.yml up -d
+
+# 3. Register the ops authorizer, fund it, and self-authorize on the dev chain.
+docker compose -f docker-compose.local.yml exec poi-backend yarn setup:local
+
+# 4. Confirm the ops account is ready.
+docker compose -f docker-compose.local.yml exec poi-backend yarn status
+```
+
+The browser app is separate: `yarn start` at the repo root serves it on `:3000`, which is
+the origin the local backend allows.
+
+`yarn setup:local` must be rerun after every node restart — `--dev` wipes the database,
+taking the authorizer registration and the ops authorization with it. It is idempotent,
+so rerunning it is free.
+
+**End-to-end check** (no browser): `yarn test:gate` against the running backend exercises
+the gate; a signed upload then stores and reads back through the gateway at
+`http://127.0.0.1:8283/ipfs/<cid>`.
 
 ## Operational notes
 
