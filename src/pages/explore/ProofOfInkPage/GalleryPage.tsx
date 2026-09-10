@@ -1,109 +1,98 @@
 import { useEffect, useState } from 'react'
 import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
-import { useSociety } from '@/chain/society/SocietyContext'
+import { fetchGallery, fetchEnvelope, imageObjectUrl, KIND_IMAGE } from '@/chain/bulletin'
 import { AccountIdentity } from '@/components/AccountIdentity'
-import { getLatestPinnedHash, fastestGateway, imageUrl } from '@/helpers/ipfs'
-import { ChainError } from '@/pages/explore/components/ChainError'
 import { Identicon } from '@/pages/explore/components/Identicon'
 
+type GalleryImage = { address: string; url: string }
+
+/**
+ * Proof-of-Ink gallery, read straight from the Bulletin chain.
+ *
+ * The backend enumerates every stored blob and derives its CID; the browser fetches each
+ * envelope, keeps the images (kind 1) and drops the verification videos (kind 2), and
+ * shows the most recent image per owner. Nothing here is indexed off-chain — every entry
+ * is a blob that is actually stored, and its owner is read out of the bytes.
+ */
 const GalleryPage = (): JSX.Element => {
-  const { memberEntries, info } = useSociety()
-  const members = memberEntries.data
-    ?.map(({ accountId }) => accountId)
-    .filter((accountId) => accountId !== info.data?.founder)
-  const [folderHash, setFolderHash] = useState('')
-  const [gateway, setGateway] = useState('')
+  const [images, setImages] = useState<GalleryImage[] | null>(null)
+  const [error, setError] = useState<Error | null>(null)
+
   useEffect(() => {
     let cancelled = false
+    const urls: string[] = []
+
     ;(async () => {
       try {
-        const nextFolderHash = await getLatestPinnedHash()
-        const nextGateway = await fastestGateway(nextFolderHash)
-        if (!cancelled) {
-          setFolderHash(nextFolderHash)
-          setGateway(nextGateway)
+        const items = await fetchGallery()
+        const byAddress = new Map<string, string>()
+
+        // Later chain entries overwrite earlier ones, so each member shows their newest image.
+        for (const { cid } of items) {
+          try {
+            const envelope = await fetchEnvelope(cid)
+            if (envelope.kind !== KIND_IMAGE) continue
+            const url = imageObjectUrl(envelope.media)
+            urls.push(url)
+            byAddress.set(envelope.address, url)
+          } catch {
+            // A single unreachable blob should not blank the whole gallery.
+          }
         }
-      } catch {}
+
+        if (!cancelled) {
+          setImages(Array.from(byAddress, ([address, url]) => ({ address, url })))
+        }
+      } catch (caught) {
+        if (!cancelled) setError(caught as Error)
+      }
     })()
+
     return () => {
       cancelled = true
+      urls.forEach((url) => URL.revokeObjectURL(url))
     }
   }, [])
-  const error = memberEntries.error ?? info.error
+
   if (error)
     return (
-      <ChainError
-        error={error}
-        onRetry={() => {
-          memberEntries.refetch()
-          info.refetch()
-        }}
-      />
+      <Container>
+        <p className="text-center mt-4">Could not load the gallery: {error.message}</p>
+      </Container>
     )
-  if (!folderHash || !gateway || !members || !info.data)
-    return <Spinner className="mx-auto d-block" animation="border" role="status" variant="primary" />
+
+  if (!images) return <Spinner className="mx-auto d-block" animation="border" role="status" variant="primary" />
+
+  if (images.length === 0)
+    return (
+      <Container>
+        <p className="text-center mt-4">No Proof-of-Ink submitted yet.</p>
+      </Container>
+    )
+
   return (
     <Container>
       <Row>
-        {members.map((member) => (
-          <ProofOfInkImage key={member} gateway={gateway} folderHash={folderHash} member={member} />
+        {images.map(({ address, url }) => (
+          <ProofOfInkImage key={address} member={address} image={url} />
         ))}
       </Row>
     </Container>
   )
 }
 
-const ProofOfInkImage = ({
-  gateway,
-  folderHash,
-  member
-}: {
-  gateway: string
-  folderHash: string
-  member: string
-}): JSX.Element => {
-  const [error, setError] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [selectedImage, setSelectedImage] = useState('')
+const ProofOfInkImage = ({ member, image }: { member: string; image: string }): JSX.Element => {
   const [modalShow, setModalShow] = useState(false)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (loading && !error) {
-        setError(true)
-        setLoading(false)
-      }
-    }, 10_000)
-    return () => clearTimeout(timer)
-  }, [loading, error])
-  const image = imageUrl({ gateway, folderHash, member })
+
   return (
     <>
       <Col xs={12} sm={6} md={6} lg={3} className="mb-3">
         <Border>
-          <ImageContainer
-            onClick={() => {
-              if (!loading && !error) {
-                setSelectedImage(image)
-                setModalShow(true)
-              }
-            }}
-            $clickable={!error && !loading}
-          >
+          <ImageContainer onClick={() => setModalShow(true)} $clickable>
             <Row>
               <Col xs={12} className="p-0">
-                {loading && !error && (
-                  <Spinner className="m-0 mt-3" animation="border" role="status" variant="secondary" />
-                )}
-                {!loading && error && <p className="m-0 mt-3">Missing Proof-of-Ink</p>}
-                <StyledImage
-                  src={image}
-                  onLoad={() => {
-                    setError(false)
-                    setLoading(false)
-                  }}
-                  style={loading || error ? { display: 'none' } : {}}
-                />
+                <StyledImage src={image} />
               </Col>
             </Row>
           </ImageContainer>
@@ -121,12 +110,13 @@ const ProofOfInkImage = ({
       </Col>
       <StyledModalContent size="lg" show={modalShow} onHide={() => setModalShow(false)} centered>
         <Modal.Body style={{ display: 'flex', justifyContent: 'center' }}>
-          {selectedImage && <StyledModalImage src={selectedImage} />}
+          <StyledModalImage src={image} />
         </Modal.Body>
       </StyledModalContent>
     </>
   )
 }
+
 const StyledModalContent = styled(Modal)`
   .modal-content {
     background-color: ${(props) => props.theme.colors.lightGrey};

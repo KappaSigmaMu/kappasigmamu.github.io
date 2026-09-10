@@ -28,7 +28,7 @@ services:
       BULLETIN_WS: ${BULLETIN_WS}
       ASSET_HUB_WS: ${ASSET_HUB_WS}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
-      MAX_IMAGE_BYTES: ${MAX_IMAGE_BYTES:-1048576}
+      MAX_IMAGE_BYTES: ${MAX_IMAGE_BYTES:-8388608}
       # Never true outside a local dev chain — see env.example.
       SUDO_BOOTSTRAP: ${SUDO_BOOTSTRAP:-false}
       ALLOW_DEV_SIGNING: ${ALLOW_DEV_SIGNING:-false}

@@ -68,9 +68,19 @@ export function verifyOwnership(contentHash, signature, address) {
     const message = hexToBytes(contentHash)
     if (sr25519.verify(message, signatureBytes, publicKey)) return true
 
-    // Extension wallets wrap payloads in <Bytes>…</Bytes> before signing.
-    const wrapped = new TextEncoder().encode(`<Bytes>${contentHash}</Bytes>`)
-    return sr25519.verify(wrapped, signatureBytes, publicKey)
+    // Extension wallets wrap payloads in <Bytes>…</Bytes> before signing. There are two
+    // wrapped variants depending on how the wallet treats a `type: 'bytes'` signRaw
+    // payload: some wrap the 0x-hex STRING, others wrap the RAW decoded bytes. PAPI's
+    // pjs-signer hands the wallet the hex string, and polkadot-js / Talisman then wrap
+    // the raw bytes of it — so both must be accepted.
+    const open = new TextEncoder().encode('<Bytes>')
+    const close = new TextEncoder().encode('</Bytes>')
+
+    const wrappedHexString = new TextEncoder().encode(`<Bytes>${contentHash}</Bytes>`)
+    if (sr25519.verify(wrappedHexString, signatureBytes, publicKey)) return true
+
+    const wrappedRawBytes = new Uint8Array([...open, ...message, ...close])
+    return sr25519.verify(wrappedRawBytes, signatureBytes, publicKey)
   } catch {
     return false
   }

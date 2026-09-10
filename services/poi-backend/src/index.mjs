@@ -35,6 +35,8 @@ import {
   opsBalance,
   storeSigned
 } from './chain.mjs'
+import { readManifest, recordUpload } from './manifest.mjs'
+import { matrixEnabled, postVideo } from './matrix.mjs'
 import { preflight, readJson, resolveOrigin, send } from './http.mjs'
 import { startKeeper, stopKeeper } from './keeper.mjs'
 import { decodeAddress, toHex, verifyOwnership } from './verify.mjs'
@@ -56,7 +58,13 @@ import { decodeAddress, toHex, verifyOwnership } from './verify.mjs'
  * allowed page could overwrite any member's image — the flaw this replaces.
  */
 async function handleAuthorize(request, response, origin) {
-  const body = await readJson(request)
+  // The media rides in the JSON body as base64 (~4/3 inflation). Size the read limit off
+  // the larger cap — video (Matrix) is far bigger than the image (2 MiB chain) — plus
+  // headroom for the envelope's other fields, so a within-policy upload is never rejected
+  // as "Body too large" mid-request.
+  const maxMediaBytes = Math.max(config.maxImageBytes, config.maxVideoBytes)
+  const bodyLimit = Math.ceil((maxMediaBytes * 4) / 3) + 16 * 1024
+  const body = await readJson(request, bodyLimit)
 
   if (
     !body.address ||
@@ -68,8 +76,16 @@ async function handleAuthorize(request, response, origin) {
     return send(response, 400, { error: 'Missing required fields' }, origin)
   }
 
-  if (body.size <= 0 || body.size > config.maxImageBytes) {
-    return send(response, 400, { error: `Size must be between 1 and ${config.maxImageBytes} bytes` }, origin)
+  const kind = body.kind === undefined ? 1 : body.kind
+  if (kind !== 1 && kind !== 2) {
+    return send(response, 400, { error: 'kind must be 1 (image) or 2 (video)' }, origin)
+  }
+
+  // The image is stored on the Bulletin chain, hard-capped at 2 MiB per blob; the video
+  // goes to Matrix and may be far larger. Enforce the right ceiling for the kind.
+  const maxBytes = kind === 2 ? config.maxVideoBytes : config.maxImageBytes
+  if (body.size <= 0 || body.size > maxBytes) {
+    return send(response, 400, { error: `Size must be between 1 and ${maxBytes} bytes` }, origin)
   }
 
   if (!verifyOwnership(body.contentHash, body.signature, body.address)) {
@@ -82,13 +98,13 @@ async function handleAuthorize(request, response, origin) {
   }
 
   // Reconstruct the envelope byte-identically to the frontend packEnvelope: a 1-byte
-  // version, the 32-byte owner public key, then the raw image bytes. Any drift here and
-  // the stored CID would not match what the browser expects.
+  // media kind (1 image, 2 video), the 32-byte owner public key, then the raw image bytes.
+  // Any drift here and the stored CID would not match what the browser expects.
   const image = Buffer.from(body.image, 'base64')
   const publicKey = decodeAddress(body.address)
 
   const envelope = new Uint8Array(33 + image.length)
-  envelope[0] = 1
+  envelope[0] = kind
   envelope.set(publicKey, 1)
   envelope.set(image, 33)
 
@@ -99,10 +115,129 @@ async function handleAuthorize(request, response, origin) {
     return send(response, 400, { error: 'Content hash does not match image bytes' }, origin)
   }
 
+  // Image (kind 1) is gallery content: store it on chain and record its CID. Video (kind 2)
+  // is a verification clip too big for the chain: post the raw bytes (envelope header
+  // stripped — Matrix should hold a playable file) to the Matrix room, and record the mxc
+  // reference instead of a CID. Both kinds were signed by the member over their content
+  // hash, so ownership is proven either way.
+  if (kind === 2) {
+    if (!matrixEnabled()) {
+      return send(response, 503, { error: 'Video uploads are not configured' }, origin)
+    }
+
+    const mimetype = typeof body.mimetype === 'string' && body.mimetype ? body.mimetype : 'video/mp4'
+    const { mxc, eventId } = await postVideo({
+      bytes: image, // raw video bytes; the 33-byte envelope header is not part of the file
+      mimetype,
+      filename: `poi-${body.address}.${mimetype === 'video/webm' ? 'webm' : 'mp4'}`,
+      owner: body.address
+    })
+    await recordUpload({ address: body.address, kind, mxc, eventId, contentHash: body.contentHash })
+
+    return send(response, 200, { authorized: true, status, mxc, eventId }, origin)
+  }
+
   const { blockHash, cid } = await storeSigned(envelope)
   await enableAutoRenew(body.contentHash)
+  await recordUpload({ address: body.address, kind, cid, contentHash: body.contentHash })
 
   return send(response, 200, { authorized: true, status, cid, blockHash }, origin)
+}
+
+/**
+ * Gate and store a full Proof-of-Ink submission — image and video — in one signed call.
+ *
+ * The member signs once, over a payload that commits to both media at once:
+ *   imageHash = blake2b([1][owner][image]),  videoHash = blake2b([2][owner][video])
+ *   signed    = blake2b(imageHash ++ videoHash)
+ * so one signature binds them to the exact image AND the exact video together — neither can
+ * be swapped without breaking it. The image is stored on the Bulletin chain (gallery
+ * content); the video, too large for the chain's 2 MiB per-blob cap and not public, is
+ * posted to Matrix for a desk to review. Both are recorded in the manifest.
+ */
+async function handleSubmit(request, response, origin) {
+  // Both media ride in the JSON body as base64 (~4/3 inflation); size the read limit off
+  // the combined caps plus headroom so a within-policy submission is never cut off.
+  const bodyLimit = Math.ceil(((config.maxImageBytes + config.maxVideoBytes) * 4) / 3) + 16 * 1024
+  const body = await readJson(request, bodyLimit)
+
+  if (
+    !body.address ||
+    !body.signature ||
+    typeof body.image !== 'string' ||
+    typeof body.video !== 'string' ||
+    !body.imageHash ||
+    !body.videoHash
+  ) {
+    return send(response, 400, { error: 'Missing required fields' }, origin)
+  }
+
+  const image = Buffer.from(body.image, 'base64')
+  const video = Buffer.from(body.video, 'base64')
+
+  if (image.length <= 0 || image.length > config.maxImageBytes) {
+    return send(response, 400, { error: `Image size must be between 1 and ${config.maxImageBytes} bytes` }, origin)
+  }
+  if (video.length <= 0 || video.length > config.maxVideoBytes) {
+    return send(response, 400, { error: `Video size must be between 1 and ${config.maxVideoBytes} bytes` }, origin)
+  }
+
+  const publicKey = decodeAddress(body.address)
+
+  // Rebuild each envelope and assert it hashes to the hash the caller claims — this binds
+  // the (single) signature, taken over the two hashes, to these exact bytes.
+  const imageEnvelope = new Uint8Array(33 + image.length)
+  imageEnvelope[0] = 1
+  imageEnvelope.set(publicKey, 1)
+  imageEnvelope.set(image, 33)
+
+  const videoEnvelope = new Uint8Array(33 + video.length)
+  videoEnvelope[0] = 2
+  videoEnvelope.set(publicKey, 1)
+  videoEnvelope.set(video, 33)
+
+  const imageHash = toHex(blake2b(imageEnvelope, { dkLen: 32 }))
+  const videoHash = toHex(blake2b(videoEnvelope, { dkLen: 32 }))
+  if (imageHash !== body.imageHash || videoHash !== body.videoHash) {
+    return send(response, 400, { error: 'Content hash does not match media bytes' }, origin)
+  }
+
+  // The signed payload is blake2b of the two 32-byte digests concatenated.
+  const imageHashBytes = Buffer.from(body.imageHash.replace(/^0x/, ''), 'hex')
+  const videoHashBytes = Buffer.from(body.videoHash.replace(/^0x/, ''), 'hex')
+  const signedPayload = toHex(blake2b(new Uint8Array([...imageHashBytes, ...videoHashBytes]), { dkLen: 32 }))
+
+  if (!verifyOwnership(signedPayload, body.signature, body.address)) {
+    return send(response, 401, { error: 'Invalid signature' }, origin)
+  }
+
+  const status = await membershipStatus(body.address)
+  if (status === 'none') {
+    return send(response, 403, { error: 'Address is not a Society member or candidate' }, origin)
+  }
+
+  if (!matrixEnabled()) {
+    return send(response, 503, { error: 'Video uploads are not configured' }, origin)
+  }
+
+  // Video → Matrix (verification) FIRST. Storing the image is an irreversible on-chain
+  // spend, so the fallible off-chain step runs before it: if Matrix rejects the upload,
+  // nothing has been written to the chain and the member can retry cleanly.
+  const mimetype = typeof body.videoMimetype === 'string' && body.videoMimetype ? body.videoMimetype : 'video/mp4'
+  const { mxc, eventId } = await postVideo({
+    bytes: video,
+    mimetype,
+    filename: `poi-${body.address}.${mimetype === 'video/webm' ? 'webm' : 'mp4'}`,
+    owner: body.address
+  })
+  await recordUpload({ address: body.address, kind: 2, mxc, eventId, contentHash: body.videoHash })
+
+  // Image → chain (gallery). Only reached once the video is safely in Matrix.
+  const { blockHash, cid } = await storeSigned(imageEnvelope)
+  await enableAutoRenew(body.imageHash)
+  await recordUpload({ address: body.address, kind: 1, cid, contentHash: body.imageHash })
+
+  return send(response, 200, { authorized: true, status, cid, blockHash, mxc, eventId }, origin)
 }
 
 /**
@@ -156,9 +291,24 @@ async function handleHealth(response) {
   }
 }
 
+/**
+ * List stored Proof-of-Ink blobs for the gallery.
+ *
+ * Returns the manifest this backend maintains — one entry per upload it has stored, owner
+ * and media kind included. The chain holds every user's blobs with no POI marker, so the
+ * manifest, not a chain scan, is the source of truth for what belongs in the gallery. The
+ * browser fetches each CID, keeps the images, and drops the verification videos.
+ */
+async function handleGallery(response, origin) {
+  const items = await readManifest()
+  return send(response, 200, { items }, origin)
+}
+
 const routes = {
   'POST /authorize': handleAuthorize,
-  'POST /dev-sign': handleDevSign
+  'POST /submit': handleSubmit,
+  'POST /dev-sign': handleDevSign,
+  'GET /gallery': (request, response, origin) => handleGallery(response, origin)
 }
 
 const server = createServer(async (request, response) => {

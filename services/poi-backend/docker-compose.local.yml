@@ -56,12 +56,18 @@ services:
       # Chopsticks on the host, not in this compose file.
       ASSET_HUB_WS: ws://host.docker.internal:8000
       ALLOWED_ORIGINS: http://localhost:3000
-      MAX_IMAGE_BYTES: 1048576
+      MAX_IMAGE_BYTES: 8388608
+      MANIFEST_PATH: /data/manifest.json
       # Dev chain only. Both of these are refused in the production compose file.
       OPS_SEED: //Ops
       SUDO_BOOTSTRAP: 'true'
       ALLOW_DEV_SIGNING: 'true'
+    volumes:
+      - poi-manifest:/data
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     depends_on:
       - bulletin-node
+
+volumes:
+  poi-manifest:

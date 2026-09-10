@@ -85,6 +85,11 @@ const NavigationBar = ({ totals, loading = false }: { totals: Totals; loading?: 
               Next Head
             </Nav.Link>
           </StyledNavItem>
+          <StyledNavItem>
+            <Nav.Link as={LinkWithQuery} to="/explore/poi/submit">
+              Submit
+            </Nav.Link>
+          </StyledNavItem>
         </StyledNav>
       )}
     </>

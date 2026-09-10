@@ -10,3 +10,6 @@ secrets/
 
 # Local chain spec, generated from a polkadot-bulletin-chain checkout.
 spec/
+
+# The locally-written upload manifest (MANIFEST_PATH default). Persist it via a volume.
+data/

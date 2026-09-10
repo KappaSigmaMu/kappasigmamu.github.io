@@ -23,6 +23,7 @@ import { getPolkadotSigner } from 'polkadot-api/signer'
 import { sr25519CreateDerive } from '@polkadot-labs/hdkd'
 import { DEV_PHRASE, entropyToMiniSecret, mnemonicToEntropy, ss58Address } from '@polkadot-labs/hdkd-helpers'
 import { base32 } from '@scure/base'
+import { Twox128 } from '@polkadot-api/substrate-bindings'
 import { config } from './config.mjs'
 import { toHex } from './verify.mjs'
 
@@ -197,6 +198,58 @@ export async function authorizePreimage(contentHash, size) {
  * Returns both the block hash and the stored CID, read from the `Stored` event and
  * encoded as a CIDv1 base32 string.
  */
+const toHexNoPrefix = (bytes) => Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('')
+const STORAGE_PREFIX_TX_BY_CONTENT_HASH =
+  '0x' +
+  toHexNoPrefix(Twox128(new TextEncoder().encode('TransactionStorage'))) +
+  toHexNoPrefix(Twox128(new TextEncoder().encode('TransactionByContentHash')))
+
+/**
+ * Derive a stored blob's CIDv1 from its blake2b-256 content hash.
+ *
+ * Bulletin's `store` emits the CID in its `Stored` event, but the CID is a pure function
+ * of the content hash — CIDv1, raw codec, a blake2b-256 multihash whose digest is the
+ * content hash itself — so the gallery can reconstruct every blob's gateway URL from the
+ * on-chain `TransactionByContentHash` keys alone, with no store-time event to consult.
+ */
+export function deriveCid(contentHashHex) {
+  const ch = contentHashHex.replace(/^0x/, '')
+  const digest = Uint8Array.from(ch.match(/../g).map((byte) => Number.parseInt(byte, 16)))
+  // CIDv1(0x01) + raw(0x55) + multihash: blake2b-256 code (varint 0xa0 0xe4), length 0x20, digest.
+  const cidBytes = new Uint8Array([0x01, 0x55, 0xa0, 0xe4, 0x02, 0x20, ...digest])
+  return 'b' + base32.encode(cidBytes).toLowerCase().replace(/=+$/, '')
+}
+
+/**
+ * Every stored content hash on chain, read from `TransactionStorage.TransactionByContentHash`.
+ *
+ * That map is not in the descriptor whitelist, so enumerate it with a raw key scan over
+ * the twox128(pallet)+twox128(item) prefix and strip the Blake2_128Concat hasher (16-byte
+ * hash + the 32-byte content hash) off each key. Returns 0x-prefixed content hashes.
+ */
+export async function listStoredContentHashes() {
+  const prefix = STORAGE_PREFIX_TX_BY_CONTENT_HASH
+  const pageSize = 200
+  const hashes = []
+  let startKey = prefix
+
+  for (;;) {
+    const keys = await bulletinClient._request('state_getKeysPaged', [prefix, pageSize, startKey])
+    if (!keys || keys.length === 0) break
+
+    for (const key of keys) {
+      // key = prefix(32 bytes hex=64) + blake2_128 hasher(16 bytes=32 hex) + contentHash(32 bytes=64 hex)
+      const contentHash = '0x' + key.slice(key.length - 64)
+      hashes.push(contentHash)
+    }
+
+    if (keys.length < pageSize) break
+    startKey = keys[keys.length - 1]
+  }
+
+  return hashes
+}
+
 export async function storeSigned(envelope) {
   const { blockHash, events } = await submit(
     bulletinApi.tx.TransactionStorage.store({ data: envelope })
@@ -215,18 +268,50 @@ export async function storeSigned(envelope) {
 }
 
 /**
- * Register recurring renewal for stored data.
+ * Register recurring renewal for stored data, idempotently.
  *
  * Without it the data is deleted at the end of the retention period (~14 days). The
  * browser cannot make this call: `enable_auto_renew` requires a signed *and authorized*
  * origin, and the store was unsigned.
+ *
+ * Re-enabling for a content hash that already has a renewal is rejected at the validity
+ * layer as `Invalid: Custom(11)` (RENEWAL_ALREADY_ENABLED). That happens whenever the
+ * same bytes are uploaded twice — same bytes, same hash, same existing registration — and
+ * it is not a failure: the renewal we wanted is already in place. Swallow only that one
+ * code and treat it as success; every other error still propagates.
  */
 export async function enableAutoRenew(contentHash) {
-  const { blockHash } = await submit(
-    bulletinApi.tx.DataRenewal.enable_auto_renew({ content_hash: contentHash })
-  )
+  try {
+    const { blockHash } = await submit(
+      bulletinApi.tx.DataRenewal.enable_auto_renew({ content_hash: contentHash })
+    )
 
-  return blockHash
+    return blockHash
+  } catch (error) {
+    if (isRenewalAlreadyEnabled(error)) return null
+    throw error
+  }
+}
+
+/** The Bulletin data-renewal custom validity code for "renewal already registered". */
+const RENEWAL_ALREADY_ENABLED_CODE = 11
+
+/**
+ * True when a submit failed with the RENEWAL_ALREADY_ENABLED validity code.
+ *
+ * `submit` throws `${error.type}: ${JSON.stringify(error.value)}`, so an `Invalid`
+ * validity error carrying a custom code stringifies to a `Custom` object with a numeric
+ * `value`. The stringify may be pretty-printed (`"value": 11`) or compact (`"value":11`),
+ * so match the `Custom` type and then read the code number out of the message rather than
+ * pinning an exact substring. On the Bulletin data-renewal pallet, code 11 is
+ * RENEWAL_ALREADY_ENABLED; a `Custom` code that is any other number still propagates.
+ */
+function isRenewalAlreadyEnabled(error) {
+  const message = String(error?.message ?? error)
+  if (!message.includes('"type": "Custom"') && !message.includes('"type":"Custom"')) return false
+
+  const code = message.match(/"value"\s*:\s*(\d+)\s*}/)
+  return code !== null && Number(code[1]) === RENEWAL_ALREADY_ENABLED_CODE
 }
 
 /**

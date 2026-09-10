@@ -3,6 +3,7 @@ import { ExamplesPage } from './ExamplesPage'
 import { GalleryPage } from './GalleryPage'
 import { NextHeadPage } from './NextHeadPage'
 import { RulesPage } from './RulesPage'
+import { SubmitPage } from './SubmitPage'
 import { NavigateWithQuery } from '@/components/NavigateWithQuery'
 
 const ProofOfInkPage = (): JSX.Element => (
@@ -12,6 +13,7 @@ const ProofOfInkPage = (): JSX.Element => (
     <Route path="/rules" element={<RulesPage />} />
     <Route path="/gallery" element={<GalleryPage />} />
     <Route path="/next-head" element={<NextHeadPage />} />
+    <Route path="/submit" element={<SubmitPage />} />
   </Routes>
 )
 
