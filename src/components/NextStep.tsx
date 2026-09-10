@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import { ReactElement, useState } from 'react'
 import { Button } from 'react-bootstrap'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import styled from 'styled-components'
 import { LinkWithQuery } from './LinkWithQuery'
 import { isVotingPeriod } from './rotation-bar/helpers/periods'

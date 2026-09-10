@@ -1,5 +1,5 @@
 import { Col, Container } from 'react-bootstrap'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router'
 import styled from 'styled-components'
 import { ExternalLink, OutlinedPrimaryLgButton, OutlinedSecondaryLgButton } from '@/components/base'
 import GilWireframe from '@/static/gil-wireframe.png'

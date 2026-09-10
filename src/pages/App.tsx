@@ -1,5 +1,5 @@
 import { Suspense, useLayoutEffect } from 'react'
-import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router'
 import { ThemeProvider } from 'styled-components'
 import { CyborgGuidePage } from './CyborgGuidePage'
 import { ExplorePage } from './explore/ExplorePage'

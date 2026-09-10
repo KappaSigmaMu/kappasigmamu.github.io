@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router'
 import styled from 'styled-components'
 import { LoadingSpinner } from './explore/components/LoadingSpinner'
 import { ThreeCanary, defaultConfig, type CanaryConfig } from '@/canary-component'
