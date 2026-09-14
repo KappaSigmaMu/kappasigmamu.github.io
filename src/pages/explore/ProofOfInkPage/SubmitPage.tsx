@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 import { useAccount } from '@/account/AccountContext'
 import { packEnvelope, contentHash, combinedHash, submitProofOfInk, KIND_IMAGE, KIND_VIDEO } from '@/chain/bulletin'
