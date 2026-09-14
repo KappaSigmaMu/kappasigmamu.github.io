@@ -2,10 +2,6 @@
 
 Gates tattoo uploads and makes the two Bulletin Chain calls the browser cannot sign.
 
-Design and rationale: [`docs/poi-bulletin-design-decisions.md`](../../docs/poi-bulletin-design-decisions.md).
-Local bring-up: [`docs/poi-bulletin-poc-local.md`](../../docs/poi-bulletin-poc-local.md).
-Paseo cutover: [`docs/poi-bulletin-paseo.md`](../../docs/poi-bulletin-paseo.md).
-
 ## Why this is self-hosted
 
 The earlier design was a Cloudflare Worker plus a Node signer beside it. That split was
@@ -154,8 +150,8 @@ the **host** — it is not in the compose file because it needs the repo's
 (cd ../.. && yarn papi generate && yarn install)
 
 # The Bulletin dev chain-spec. It is ~1.9 MB and gitignored, so a fresh clone has none:
-# generate it and drop it at spec/bulletin-dev-spec.json. Full recipe (binaries + runtime
-# build + chain-spec-builder) is in docs/poi-bulletin-poc-local.md.
+# generate it with polkadot-bulletin-chain's chain-spec-builder and drop it at
+# spec/bulletin-dev-spec.json.
 ls spec/bulletin-dev-spec.json   # must exist; the local compose mounts spec/ read-only
 ```
 

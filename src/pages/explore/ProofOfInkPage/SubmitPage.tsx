@@ -31,7 +31,13 @@ const SubmitPage = (): JSX.Element => {
   const eligible = level === 'candidate' || level === 'cyborg'
 
   const pickFile =
-    (set: (file: File | null) => void, accept: (file: File) => boolean, reject: string, maxSize: number, tooBig: string) =>
+    (
+      set: (file: File | null) => void,
+      accept: (file: File) => boolean,
+      reject: string,
+      maxSize: number,
+      tooBig: string
+    ) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0]
       if (!file) return
