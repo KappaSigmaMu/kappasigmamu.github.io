@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router'
 import { ExamplesPage } from './ExamplesPage'
 import { GalleryPage } from './GalleryPage'
 import { NextHeadPage } from './NextHeadPage'
