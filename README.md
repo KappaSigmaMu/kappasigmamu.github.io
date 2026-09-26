@@ -157,37 +157,38 @@ cp config/kusama.yml.sample config/kusama.yml
 Run a suite:
 
 ```bash
-yarn test:e2e:smoke
-yarn test:e2e:wallet
-yarn test:e2e:bidding
-yarn test:e2e:payouts
-yarn test:e2e:candidate-voting
-yarn test:e2e:members
-yarn test:e2e:membership-claim
-yarn test:e2e:user-journeys
-yarn test:e2e:error-handling
-yarn test:e2e:suspended
+yarn test:e2e dashboard
+yarn test:e2e smoke
+yarn test:e2e wallet
+yarn test:e2e bidding
+yarn test:e2e payouts
+yarn test:e2e candidate-voting
+yarn test:e2e members
+yarn test:e2e membership-claim
+yarn test:e2e index-selector
+yarn test:e2e user-journeys
+yarn test:e2e error-handling
+yarn test:e2e suspended
 ```
 
 Run every suite:
 
 ```bash
-yarn test:e2e        # alias for test:e2e:all
-yarn test:e2e:all
+yarn test:e2e all
 ```
 
 Run tests matching a title substring:
 
 ```bash
-yarn test:e2e:grep "should place a bid"
+yarn test:e2e grep "should place a bid"
 ```
 
 Re-run only tests that failed in the previous run (any command above accepts this flag):
 
 ```bash
-yarn test:e2e:bidding --failed
-yarn test:e2e:all --failed
-yarn test:e2e:grep "place a bid" --failed
+yarn test:e2e bidding --failed
+yarn test:e2e all --failed
+yarn test:e2e grep "place a bid" --failed
 ```
 
 Failed tests are cached in `cypress/.cache/failed-tests.json` after each run.
@@ -195,8 +196,8 @@ Failed tests are cached in `cypress/.cache/failed-tests.json` after each run.
 Interactive / local debugging:
 
 ```bash
-yarn test:e2e:open     # Cypress UI with Chopsticks + dev server
-yarn test:e2e:headed   # headless runner with visible browser (no servers started)
+yarn test:e2e open             # Cypress UI with Chopsticks + dev server
+yarn test:e2e smoke --headed   # run a suite with a visible browser
 ```
 
 All suite commands are implemented by `scripts/test-e2e.js`, which starts Chopsticks, waits for RPC readiness, starts the app, and runs Cypress.

@@ -123,13 +123,12 @@ function runWithServers(cypressCommand, env = {}) {
 function printUsage() {
   const suiteNames = Object.keys(SUITES).join(', ')
   console.error(`Usage:
-  yarn test:e2e:<suite> [--failed]
-  yarn test:e2e:all [--failed]
-  yarn test:e2e:grep "<title substring>" [--failed]
-  yarn test:e2e:open
-  yarn test:e2e:headed
+  yarn test:e2e <suite> [--failed] [--headed]
+  yarn test:e2e all [--failed] [--headed]
+  yarn test:e2e grep "<title substring>" [--failed]
+  yarn test:e2e open
 
-Suites: ${suiteNames}, all, grep
+Suites: ${suiteNames}
 
 Options:
   --failed   Re-run only tests that failed in the last run (cached in cypress/.cache/failed-tests.json)
@@ -152,19 +151,10 @@ function main() {
     process.exit(result.status ?? 1)
   }
 
-  if (target === 'headed') {
-    const result = spawnSync(buildCypressCommand({ mode: 'run', headed: true }), {
-      stdio: 'inherit',
-      shell: true,
-      env: process.env,
-    })
-    process.exit(result.status ?? 1)
-  }
-
   if (target === 'grep') {
     const grepPattern = positional.slice(1).join(' ').trim()
     if (!grepPattern) {
-      console.error('Usage: yarn test:e2e:grep "<test title substring>" [--failed]')
+      console.error('Usage: yarn test:e2e grep "<test title substring>" [--failed]')
       process.exit(1)
     }
 
