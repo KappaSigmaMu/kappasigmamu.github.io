@@ -1,4 +1,4 @@
-name: "E2E: Membership Claim"
+name: "E2E"
 
 on:
   pull_request:
@@ -13,9 +13,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-e2e-membership-claim:
+  test-e2e:
+    name: ${{ matrix.suite }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - dashboard
+          - smoke
+          - wallet
+          - bidding
+          - payouts
+          - candidate-voting
+          - members
+          - membership-claim
+          - user-journeys
+          - error-handling
+          - suspended
 
     steps:
       - uses: actions/checkout@v4
@@ -38,19 +54,16 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Generate PAPI descriptors
-        run: yarn papi
-
       - name: Setup Chopsticks config
         run: cp config/kusama.yml.sample config/kusama.yml
 
-      - name: Run membership claim E2E tests
-        run: yarn test:e2e:membership-claim
+      - name: Run ${{ matrix.suite }} E2E tests
+        run: yarn node scripts/test-e2e.js ${{ matrix.suite }}
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-membership-claim-screenshots
+          name: cypress-${{ matrix.suite }}-screenshots
           path: cypress/screenshots
           include-hidden-files: true
