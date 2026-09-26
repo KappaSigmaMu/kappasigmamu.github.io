@@ -14366,7 +14366,6 @@ __metadata:
     marked: "npm:^18.0.5"
     mini-css-extract-plugin: "npm:^2.10.2"
     optimize-css-assets-webpack-plugin: "npm:^6.0.1"
-    pnp-webpack-plugin: "npm:^1.7.0"
     polkadot-api: "npm:^2.1.8"
     postcss: "npm:^8.5.25"
     postcss-flexbugs-fixes: "npm:^5.0.2"
@@ -14399,7 +14398,6 @@ __metadata:
     styled-components: "npm:^6.4.3"
     terser-webpack-plugin: "npm:^5.6.1"
     three: "npm:^0.185.0"
-    ts-pnp: "npm:^1.2.0"
     typescript: "npm:^6.0.3"
     url: "npm:^0.11.4"
     url-loader: "npm:^4.1.1"
@@ -15869,15 +15867,6 @@ __metadata:
   version: 0.0.1
   resolution: "pnglib@npm:0.0.1"
   checksum: 10c0/f7a3904d5a25e9a8fdc2487c3ba6074fd8a7559748097c2eb5586301279c17d994b0181dca43e9cfd2f8f9f3b6de19d5a69b155c6a479f659632593ab6ca43c1
-  languageName: node
-  linkType: hard
-
-"pnp-webpack-plugin@npm:^1.7.0":
-  version: 1.7.0
-  resolution: "pnp-webpack-plugin@npm:1.7.0"
-  dependencies:
-    ts-pnp: "npm:^1.1.6"
-  checksum: 10c0/79d1973ec0b04be6d44f15d5625991701a010dae28f2798d974d3aa164e8c60dc7fa22fd01a47fb6af369c4ba6585c3030d4deb775ccfecd7156594bc223d086
   languageName: node
   linkType: hard
 
@@ -19308,16 +19297,6 @@ __metadata:
   peerDependencies:
     typescript: ">=4.8.4"
   checksum: 10c0/767849383c114e7f1971fa976b20e73ac28fd0c70d8d65c0004790bf4d8f89888c7e4cf6d5949f9c1beae9bc3c64835bef77bbe27fddf45a3c7b60cebcf85c8c
-  languageName: node
-  linkType: hard
-
-"ts-pnp@npm:^1.1.6, ts-pnp@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "ts-pnp@npm:1.2.0"
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 10c0/ff32b4f810f9d99f676d70fe2c0e327cb6c812214bd4fc7135870b039f9e85a85b2c20f8fe030d9bd36e9598a12faa391f10aecb95df624b92f1af6bd47dc397
   languageName: node
   linkType: hard
 
