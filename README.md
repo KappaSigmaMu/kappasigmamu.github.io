@@ -24,15 +24,6 @@ cp .env.development.sample .env.development
 yarn install
 ```
 
-## Running with Docker
-
-- Run:
-```bash
-docker-compose up
-```
-
-- Open [http://localhost:3000](http://localhost:3000) to view it in the browser. The container share the sources files with your machine. The application compiles automatically after editing.
-
 ## Running a development node of Kusama
 
 ### Using Chopsticks:
