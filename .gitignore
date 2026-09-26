@@ -32,3 +32,6 @@ yarn-error.log*
 **/*/*.swp
 db.sqlite*
 *.wasm
+
+# internal notes
+docs/internal/
