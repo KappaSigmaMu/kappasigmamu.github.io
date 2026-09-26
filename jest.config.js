@@ -7,8 +7,7 @@ module.exports = {
     "!src/**/*.d.ts"
   ],
   setupFiles: [
-    "<rootDir>/config/env.js",
-    "react-app-polyfill/jsdom"
+    "<rootDir>/config/env.js"
   ],
   setupFilesAfterEnv: [
     "<rootDir>/src/setupTests.ts"
@@ -18,33 +17,22 @@ module.exports = {
     "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
   ],
   testEnvironment: "jest-environment-jsdom",
-  testRunner: "jest-circus/runner",
   transform: {
     "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/babelTransform.js",
     "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
     "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
   },
   transformIgnorePatterns: [
-    // "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
-    "/node_modules/(?!@kappasigmamu|@babel|@polkadot|polkadot-api|@polkadot-api|scale-ts|@noble|@scure|react-router|cookie-es)",
-    "^.+\\.module\\.(css|sass|scss)$"
+    "/node_modules/(?!@kappasigmamu|@babel|@polkadot|polkadot-api|@polkadot-api|scale-ts|@noble|@scure|react-router|cookie-es)"
   ],
-  modulePaths: [],
-  modulePathIgnorePatterns: ["<rootDir>/src/__tests__/fixtures"],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
-    "^react-native$": "react-native-web",
-    "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    "^@/(.*)$": "<rootDir>/src/$1"
   },
   moduleFileExtensions: [
-    "web.js",
     "js",
-    "web.ts",
     "ts",
-    "web.tsx",
     "tsx",
     "json",
-    "web.jsx",
     "jsx",
     "node"
   ],
