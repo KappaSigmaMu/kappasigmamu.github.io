@@ -13494,6 +13494,7 @@ __metadata:
     jest: "npm:^30.4.2"
     jest-environment-jsdom: "npm:^30.4.1"
     jest-watch-typeahead: "npm:^3.0.1"
+    js-yaml: "npm:^4.3.2"
     marked: "npm:^18.0.5"
     mini-css-extract-plugin: "npm:^2.10.2"
     optimize-css-assets-webpack-plugin: "npm:^6.0.1"
