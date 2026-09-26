@@ -4,7 +4,7 @@ This is a dedicated interface for Kusama Society.
 
 ## Dependencies
 
-* [Node v24.18.0](#)
+* [Node v24.18.0](https://nodejs.org/en/download)
 * [yarn](https://yarnpkg.com)
 
 ## Setup
@@ -16,12 +16,17 @@ This is a dedicated interface for Kusama Society.
 cp .env.development.sample .env.development
 ```
 
-> Use `"PROVIDER_SOCKET": "wss://kusama-rpc.polkadot.io"` (or one of the other options available on the sample config file) if you want to connect to production RPC
+> Use `REACT_APP_PROVIDER_SOCKET=wss://kusama-asset-hub-rpc.polkadot.io` (or one of the other options available on the sample config file) if you want to connect to production RPC
 
 ## Installation
 
 ```bash
 yarn install
+```
+
+After a Kusama Asset Hub or People runtime upgrade, refresh the chain metadata and descriptors:
+```bash
+yarn papi update
 ```
 
 ## Running a development node of Kusama
@@ -33,7 +38,7 @@ yarn install
 cp config/kusama.yml.sample config/kusama.yml
 ```
 
-- Use [Chopsticks](https://github.com/AcalaNetwork/chopsticks) and set `"PROVIDER_SOCKET": "ws://127.0.0.1:8000"` on your `.env.development` to run a local fork of Kusama with predetermined Society storage and a custom runtime (uncomment the `wasm-override` parameter on the config file if you want a custom runtime):
+- Use [Chopsticks](https://github.com/AcalaNetwork/chopsticks) and set `REACT_APP_PROVIDER_SOCKET=ws://127.0.0.1:8000` on your `.env.development` to run a local fork of Kusama with predetermined Society storage and a custom runtime (uncomment the `wasm-override` parameter on the config file if you want a custom runtime):
 ```
 yarn chopsticks
 ```
@@ -216,7 +221,7 @@ Builds the app for production to the `build` folder.
 
 ## Documentation
 
-- [Substrate Developer Hub](https://substrate.dev)
+- [Polkadot Developer Docs](https://docs.polkadot.com)
 - [Create React App](https://github.com/facebook/create-react-app)
-- [Polkadot js API](https://polkadot.js.org/api)
+- [Polkadot API (PAPI)](https://papi.how)
 - [Chopsticks](https://github.com/AcalaNetwork/chopsticks)
