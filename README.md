@@ -54,12 +54,12 @@ Chopsticks allows for custom runtimes to be used. You can build a custom runtime
 - Follow [this guide](https://docs.substrate.io/install/) to install Rust and the necessary dependencies to build Substrate
 - Clone the [forked repository](https://github.com/KappaSigmaMu/custom-kusama-runtime) and checkout to this branch:
 ```
-git checkout customized-society-pallet
+git checkout main
 ```
 - Change the code (if you need, if not you can skip this step and use our customized version)
-- In the root folder of the forked repository, browse to Kusama's runtime directory
+- In the root folder of the forked repository, browse to Asset Hub Kusama's runtime directory
 ```
-cd relay/kusama
+cd system-parachains/asset-hubs/asset-hub-kusama
 ```
 - Inside the directory, run:
 ```
@@ -67,7 +67,7 @@ cargo build --release
 ```
 - After finishing the build, browse back to the root directory and copy the wasm blob to this repository, renaming it to `custom-kusama-runtime.wasm`:
 ```
-cp target/release/wbuild/staging-kusama-runtime/staging_kusama_runtime.wasm ../kappasigmamu.github.io/custom-kusama-runtime.wasm
+cp target/release/wbuild/asset-hub-kusama-runtime/asset_hub_kusama_runtime.wasm ../kappasigmamu.github.io/custom-kusama-runtime.wasm
 ```
 - Uncomment the `wasm-override` parameter on `config/kusama.yml` and run Chopsticks:
 ```
