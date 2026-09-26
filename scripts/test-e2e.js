@@ -21,10 +21,6 @@ const SUITES = {
   suspended: 'cypress/e2e/suspended.cy.ts',
 }
 
-const SUITE_ENV = {
-  'membership-claim': { KUSAMA_BLOCK_NUMBER: '18230000' },
-}
-
 function parseArgs(argv) {
   const flags = new Set(['--failed', '--headed'])
   const positional = []
@@ -106,17 +102,16 @@ function buildCypressCommand({ mode, spec, grep, headed }) {
   return parts.join(' ')
 }
 
-function runWithServers(cypressCommand, env = {}) {
+function runWithServers(cypressCommand) {
   const escapedCypressCommand = cypressCommand.replace(/"/g, '\\"')
   const withApp = `start-server-and-test start:test:ready http://localhost:3000 "${escapedCypressCommand}"`
   const command = `start-server-and-test chopsticks:test http://localhost:8000 '${withApp}'`
-  const kusamaBlockNumber =
-    env.KUSAMA_BLOCK_NUMBER ?? process.env.KUSAMA_BLOCK_NUMBER ?? DEFAULT_KUSAMA_BLOCK_NUMBER
+  const kusamaBlockNumber = process.env.KUSAMA_BLOCK_NUMBER ?? DEFAULT_KUSAMA_BLOCK_NUMBER
 
   return spawnSync(command, {
     stdio: 'inherit',
     shell: true,
-    env: { ...process.env, KUSAMA_BLOCK_NUMBER: kusamaBlockNumber, ...env },
+    env: { ...process.env, KUSAMA_BLOCK_NUMBER: kusamaBlockNumber },
   })
 }
 
@@ -197,10 +192,7 @@ function main() {
     grep = buildGrepPattern(failedTests.map((entry) => entry.title))
   }
 
-  const result = runWithServers(
-    buildCypressCommand({ mode: 'run', spec, grep, headed }),
-    SUITE_ENV[target] ?? {}
-  )
+  const result = runWithServers(buildCypressCommand({ mode: 'run', spec, grep, headed }))
   process.exit(result.status ?? 1)
 }
 
