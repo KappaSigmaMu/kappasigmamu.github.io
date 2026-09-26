@@ -152,9 +152,6 @@
     "chopsticks": "yarn dlx -p @acala-network/chopsticks@1.5.0 -p sqlite3 chopsticks --config=config/kusama.yml",
     "chopsticks:test": "yarn dlx -p @acala-network/chopsticks@1.5.0 -p sqlite3 chopsticks --config=config/kusama.yml --runtime-log-level=0 --save-blocks=false",
     "dev": "start-server-and-test chopsticks http://localhost:8000 start:ready",
-    "cy:open": "cypress open",
-    "cy:run": "cypress run",
-    "cy:run:headless": "cypress run --headless",
     "deploy": "gh-pages -d build",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --max-warnings=0",
@@ -180,8 +177,7 @@
     "test:e2e:grep": "node scripts/test-e2e.js grep",
     "test:e2e:all": "node scripts/test-e2e.js all",
     "test:e2e:headed": "node scripts/test-e2e.js headed",
-    "test:e2e:open": "node scripts/test-e2e.js open",
-    "test:debug": "cypress open --config watchForFileChanges=true"
+    "test:e2e:open": "node scripts/test-e2e.js open"
   },
   "eslintConfig": {
     "extends": [
