@@ -1,6 +1,6 @@
 // @ts-nocheck
 const canaryConfig = {
-  objectUrl: "/assets/canary.glb",
+  objectUrl: "/static/canary.glb",
   nodeCoords: "canary.geometry.attributes.position",
   nodeSigns: [1, 1, -1],
   nodeScale: 0.12,

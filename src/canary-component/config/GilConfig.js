@@ -1,6 +1,6 @@
 // @ts-nocheck
 const gilConfig = {
-  objectUrl: "/assets/gil.glb",
+  objectUrl: "/static/gil.glb",
   nodeCoords: "Baked_GIL_BUSTO003_1.geometry.attributes.position",
   nodeSigns: [-1, 1, -1],
   nodeScale: 1.8,

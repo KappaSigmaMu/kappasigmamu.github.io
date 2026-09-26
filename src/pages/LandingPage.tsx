@@ -12,7 +12,7 @@ import KappaSigmaMuTitle from '@/static/kappa-sigma-mu-title.svg'
 
 const customCanaryConfig: CanaryConfig = {
   ...defaultConfig.canary,
-  objectUrl: '/assets/canary.glb',
+  objectUrl: '/static/canary.glb',
   nodeCoords: 'canary.geometry.attributes.position'
 }
 
