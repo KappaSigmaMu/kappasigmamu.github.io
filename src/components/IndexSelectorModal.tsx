@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Modal, OverlayTrigger, Popover, Spinner } from 'react-bootstrap'
 import {
   FaAnglesLeft,
@@ -70,6 +70,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
   const [claimLoading, setClaimLoading] = useState(false)
   const [freezeLoading, setFreezeLoading] = useState(false)
   const [freeLoading, setFreeLoading] = useState(false)
+  const listRef = useRef<HTMLDivElement>(null)
 
   const claimedState = useChainQuery(() => (api ? getClaimedIndices(api) : undefined), [api])
   const depositState = useChainQuery(() => (api ? getIndexDeposit(api) : undefined), [api])
@@ -160,6 +161,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
     const next = Math.min(maxPage, Math.max(0, nextPage))
     setPage(next)
     setSelectedIndex(null)
+    if (listRef.current) listRef.current.scrollTop = 0
   }
 
   const submitGoToPage = () => {
@@ -347,7 +349,7 @@ const IndexSelectorModal = ({ show, onHide }: IndexSelectorModalProps) => {
 
             {ownItem && renderIndexRow(ownItem)}
 
-            <IndexList data-test="index-list">
+            <IndexList ref={listRef} data-test="index-list">
               {claimedState.isLoading ? (
                 <EmptyState>
                   <Spinner size="sm" animation="border" />

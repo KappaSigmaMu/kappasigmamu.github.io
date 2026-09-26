@@ -84,7 +84,7 @@ describe('Account Index Selector', () => {
       cy.getBySel('index-page-prev').should('be.disabled')
       cy.getBySel('index-row-0').should('not.exist')
       cy.getBySel('index-row-1').should('be.visible')
-      cy.getBySel('index-row-100', { timeout: 10000 }).should('be.visible')
+      cy.getBySel('index-row-100', { timeout: 10000 }).scrollIntoView().should('be.visible')
 
       cy.getBySel('index-page-next').click()
       cy.getBySel('index-row-101', { timeout: 10000 }).should('be.visible')

@@ -29,6 +29,7 @@ jobs:
           - candidate-voting
           - members
           - membership-claim
+          - index-selector
           - user-journeys
           - error-handling
           - suspended
