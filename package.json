@@ -150,12 +150,6 @@
     "test": "jest",
     "test:e2e": "node scripts/test-e2e.js"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": [
     ">0.2%",
     "not ie <= 99",
