@@ -55,7 +55,7 @@ bottom drive obey lake curtain smoke basket hold race lonely fit walk//Alice
 
 ### Building and running your own custom runtime
 
-Chopsticks allows for custom runtimes to be used. You can build a custom runtime using our fork of the runtimes repository, this version changes the rotation periods from days to seconds, in order to facilitate tests and development.
+Chopsticks allows for custom runtimes to be used. You can build a custom runtime using our fork of the runtimes repository, this version changes the rotation periods from days to a few relay-chain blocks, in order to facilitate tests and development.
 - Follow [this guide](https://docs.substrate.io/install/) to install Rust and the necessary dependencies to build Substrate
 - Clone the [forked repository](https://github.com/KappaSigmaMu/custom-kusama-runtime) and checkout to this branch:
 ```

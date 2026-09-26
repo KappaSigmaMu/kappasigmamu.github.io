@@ -147,6 +147,8 @@ import-storage:
       round: 5
     ChallengeRoundCount: 6
     RoundCount: 6
+    NextIntakeAt: null # Recomputed from the current block so the custom runtime rotates
+    NextChallengeAt: null
     MemberCount: 2
     Head: 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw # Eve
     Pot: '50000000000000'
