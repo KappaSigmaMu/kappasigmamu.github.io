@@ -160,7 +160,7 @@
     "start:test": "DOTENV_ENV=test node scripts/start.js",
     "start:test:ready": "node scripts/wait-for-chopsticks.js && yarn start:test",
     "postinstall": "papi",
-    "test": "node scripts/test.js",
+    "test": "jest",
     "test:e2e": "node scripts/test-e2e.js"
   },
   "eslintConfig": {

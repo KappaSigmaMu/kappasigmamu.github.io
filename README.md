@@ -138,7 +138,11 @@ You can automatically fix some issues with `yarn lint:fix`
 yarn test
 ```
 
-Launches Jest in interactive watch mode.
+Watch mode:
+
+```bash
+yarn test --watch
+```
 
 Non-watch run (as used in CI):
 

@@ -7,6 +7,7 @@ module.exports = {
     "!src/**/*.d.ts"
   ],
   setupFiles: [
+    "<rootDir>/config/env.js",
     "react-app-polyfill/jsdom"
   ],
   setupFilesAfterEnv: [
