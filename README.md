@@ -47,6 +47,11 @@ cp config/kusama.yml.sample config/kusama.yml
 yarn chopsticks
 ```
 
+- Or start Chopsticks and the app together with one command. It waits for the Chopsticks RPC before starting the app, and Ctrl+C stops both:
+```
+yarn dev
+```
+
 - Private keys for development accounts. Change hard derivation key to switch from `Alice` to `Bob`, `Charlie`, etc. Use this private key to import these development accounts to a wallet of your choice.
 ```
 bottom drive obey lake curtain smoke basket hold race lonely fit walk//Alice
