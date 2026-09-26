@@ -6877,15 +6877,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^14.6.1":
-  version: 14.6.1
-  resolution: "@testing-library/user-event@npm:14.6.1"
-  peerDependencies:
-    "@testing-library/dom": ">=7.21.4"
-  checksum: 10c0/75fea130a52bf320d35d46ed54f3eec77e71a56911b8b69a3fe29497b0b9947b2dc80d30f04054ad4ce7f577856ae3e5397ea7dff0ef14944d3909784c7a93fe
-  languageName: node
-  linkType: hard
-
 "@trickfilm400/rollup-plugin-off-main-thread@npm:^3.0.0-pre1":
   version: 3.0.0-pre1
   resolution: "@trickfilm400/rollup-plugin-off-main-thread@npm:3.0.0-pre1"
@@ -7087,17 +7078,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/hoist-non-react-statics@npm:*":
-  version: 3.3.7
-  resolution: "@types/hoist-non-react-statics@npm:3.3.7"
-  dependencies:
-    hoist-non-react-statics: "npm:^3.3.0"
-  peerDependencies:
-    "@types/react": "*"
-  checksum: 10c0/ed8f4e88338f7d021d0f956adf6089d2a12b2e254a03c05292324f2e986d2376eb9efdb8a4f04596823e8fca88c9d06361d20dab4a2a00dc935fb36ac911de55
-  languageName: node
-  linkType: hard
-
 "@types/html-minifier-terser@npm:^6.0.0":
   version: 6.1.0
   resolution: "@types/html-minifier-terser@npm:6.1.0"
@@ -7273,15 +7253,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-test-renderer@npm:^19.1.0":
-  version: 19.1.0
-  resolution: "@types/react-test-renderer@npm:19.1.0"
-  dependencies:
-    "@types/react": "npm:*"
-  checksum: 10c0/799654e430df10aeaf267d71507fb64ec151359ead7e3774111bfd4abce7e0911dba461811195c06c22a6d17496ea92537d3185320ff4112fe29954cad1b9152
-  languageName: node
-  linkType: hard
-
 "@types/react-transition-group@npm:^4.4.6":
   version: 4.4.12
   resolution: "@types/react-transition-group@npm:4.4.12"
@@ -7291,7 +7262,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:>=16.9.11, @types/react@npm:^19.2.17":
+"@types/react@npm:>=16.9.11, @types/react@npm:^19.2.17":
   version: 19.2.17
   resolution: "@types/react@npm:19.2.17"
   dependencies:
@@ -7404,17 +7375,6 @@ __metadata:
   version: 0.17.4
   resolution: "@types/stats.js@npm:0.17.4"
   checksum: 10c0/4fe0429998519f0476f03a25b4900b4d4a1474606478657271e40a884f7936ba902ea564b1c95cfd33a8e84af46cef6e1e98bb23e86fd3b6676cd5b974987151
-  languageName: node
-  linkType: hard
-
-"@types/styled-components@npm:^5.1.36":
-  version: 5.1.36
-  resolution: "@types/styled-components@npm:5.1.36"
-  dependencies:
-    "@types/hoist-non-react-statics": "npm:*"
-    "@types/react": "npm:*"
-    csstype: "npm:^3.2.2"
-  checksum: 10c0/bbbf65e22a852a5bc3e1839aa591372febe084e33b8d4f44712f790e0675df9f5a327c6c6a262bbf5fd08032afe2ac9b265de92c72efca0bfa5dea09d7127c28
   languageName: node
   linkType: hard
 
@@ -9197,13 +9157,6 @@ __metadata:
   version: 6.3.0
   resolution: "camelcase@npm:6.3.0"
   checksum: 10c0/0d701658219bd3116d12da3eab31acddb3f9440790c0792e0d398f0a520a6a4058018e546862b6fba89d7ae990efaeb97da71e1913e9ebf5a8b5621a3d55c710
-  languageName: node
-  linkType: hard
-
-"camelcase@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "camelcase@npm:9.0.0"
-  checksum: 10c0/7171e1540b9b227cab9d59b7afa05174d14c10268171c18bdf2240eb1485ad6851592f1253ddc291f7ae34caad42c18206d339538965c67fb17fc995c0bb509b
   languageName: node
   linkType: hard
 
@@ -12557,15 +12510,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.3.0":
-  version: 3.3.2
-  resolution: "hoist-non-react-statics@npm:3.3.2"
-  dependencies:
-    react-is: "npm:^16.7.0"
-  checksum: 10c0/fe0889169e845d738b59b64badf5e55fa3cf20454f9203d1eb088df322d49d4318df774828e789898dcb280e8a5521bb59b3203385662ca5e9218a6ca5820e74
-  languageName: node
-  linkType: hard
-
 "hoopy@npm:^0.1.4":
   version: 0.1.4
   resolution: "hoopy@npm:0.1.4"
@@ -13886,7 +13830,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-resolve@npm:30.4.1, jest-resolve@npm:^30.4.1":
+"jest-resolve@npm:30.4.1":
   version: 30.4.1
   resolution: "jest-resolve@npm:30.4.1"
   dependencies:
@@ -14376,13 +14320,10 @@ __metadata:
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.1"
     "@testing-library/react": "npm:^16.3.2"
-    "@testing-library/user-event": "npm:^14.6.1"
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^26.0.1"
     "@types/react": "npm:^19.2.17"
     "@types/react-dom": "npm:^19.2.3"
-    "@types/react-test-renderer": "npm:^19.1.0"
-    "@types/styled-components": "npm:^5.1.36"
     "@types/three": "npm:^0.185.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.62.1"
     "@typescript-eslint/parser": "npm:^8.62.1"
@@ -14395,7 +14336,6 @@ __metadata:
     bfj: "npm:^9.1.3"
     bootstrap: "npm:^5.3.8"
     browserslist: "npm:^4.28.7"
-    camelcase: "npm:^9.0.0"
     case-sensitive-paths-webpack-plugin: "npm:^2.4.0"
     css-loader: "npm:^7.1.4"
     cypress: "npm:^15.18.0"
@@ -14422,7 +14362,6 @@ __metadata:
     jest: "npm:^30.4.2"
     jest-circus: "npm:^30.4.2"
     jest-environment-jsdom: "npm:^30.4.1"
-    jest-resolve: "npm:^30.4.1"
     jest-watch-typeahead: "npm:^3.0.1"
     marked: "npm:^18.0.5"
     mini-css-extract-plugin: "npm:^2.10.2"
@@ -14435,7 +14374,6 @@ __metadata:
     postcss-normalize: "npm:^13.0.1"
     postcss-preset-env: "npm:^11.3.2"
     postcss-safe-parser: "npm:^7.0.1"
-    prompts: "npm:^2.4.2"
     query-string: "npm:^9.5.1"
     react: "npm:^19.2.7"
     react-app-polyfill: "npm:^3.0.0"
@@ -14449,7 +14387,6 @@ __metadata:
     react-is: "npm:^19.2.7"
     react-refresh: "npm:^0.18.0"
     react-router: "npm:^8.3.0"
-    react-test-renderer: "npm:^19.2.7"
     resolve: "npm:^1.22.12"
     resolve-url-loader: "npm:^5.0.0"
     rxjs: "npm:^7.8.2"
@@ -17267,7 +17204,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.13.1, react-is@npm:^16.3.2, react-is@npm:^16.7.0":
+"react-is@npm:^16.13.1, react-is@npm:^16.3.2":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: 10c0/33977da7a5f1a287936a0c85639fec6ca74f4f15ef1e59a6bc20338fc73dc69555381e211f7a3529b8150a1f71e4225525b41b60b52965bda53ce7d47377ada1
@@ -17323,18 +17260,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
   checksum: 10c0/380b428c1a79766401e3f2472486b1c2a5e04d3d3a27a011cf7f7ee6b9a24c56026659ebea9e08b65495fbef02bd4a98817895ff7d84db5df4fc6ce23e01cba8
-  languageName: node
-  linkType: hard
-
-"react-test-renderer@npm:^19.2.7":
-  version: 19.2.7
-  resolution: "react-test-renderer@npm:19.2.7"
-  dependencies:
-    react-is: "npm:^19.2.7"
-    scheduler: "npm:^0.27.0"
-  peerDependencies:
-    react: ^19.2.7
-  checksum: 10c0/81a065f09a3400453baf6a518b0f2536312041d7e216f361bfea6d54e800ba6e125b1eced2322f349a96ec0227c5a277b56aaa6a7c31562fcb169130151d804d
   languageName: node
   linkType: hard
 
