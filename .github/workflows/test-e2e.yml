@@ -58,7 +58,7 @@ jobs:
         run: cp config/kusama.yml.sample config/kusama.yml
 
       - name: Run ${{ matrix.suite }} E2E tests
-        run: yarn node scripts/test-e2e.js ${{ matrix.suite }}
+        run: yarn test:e2e ${{ matrix.suite }}
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
