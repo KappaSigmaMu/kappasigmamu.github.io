@@ -13530,7 +13530,6 @@ __metadata:
     typescript: "npm:^6.0.3"
     url: "npm:^0.11.4"
     url-loader: "npm:^4.1.1"
-    web-vitals: "npm:^5.3.0"
     webpack: "npm:^5.108.3"
     webpack-dev-server: "npm:^5.2.6"
     webpack-manifest-plugin: "npm:^6.0.1"
@@ -18847,13 +18846,6 @@ __metadata:
   version: 3.3.3
   resolution: "web-streams-polyfill@npm:3.3.3"
   checksum: 10c0/64e855c47f6c8330b5436147db1c75cb7e7474d924166800e8e2aab5eb6c76aac4981a84261dd2982b3e754490900b99791c80ae1407a9fa0dcff74f82ea3a7f
-  languageName: node
-  linkType: hard
-
-"web-vitals@npm:^5.3.0":
-  version: 5.3.0
-  resolution: "web-vitals@npm:5.3.0"
-  checksum: 10c0/a073c024d791bfac7a92f82607999b45be978ef3070f642f3cdd94c50d3e1651cf62b2475039248256b2d84651e16fa9bdcaa4b03f31af8bfeefb05832298b97
   languageName: node
   linkType: hard
 
