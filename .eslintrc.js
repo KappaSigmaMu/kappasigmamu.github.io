@@ -9,7 +9,8 @@ module.exports = {
   settings: { react: { version: 'detect' }},
   plugins: [
     '@typescript-eslint/eslint-plugin',
-    'import'
+    'import',
+    'react-hooks'
   ],
   extends: [
     'plugin:@typescript-eslint/recommended',
@@ -72,6 +73,7 @@ module.exports = {
     'no-useless-rename': 'warn',
     'object-shorthand': 'warn',
     'react/react-in-jsx-scope': 'off',
+    'react-hooks/rules-of-hooks': 'error',
     'semi': ['error', 'never'],
   },
 };
