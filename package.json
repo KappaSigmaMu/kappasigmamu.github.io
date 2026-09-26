@@ -148,7 +148,7 @@
     "uuid@^8.3.2": "^11.1.1"
   },
   "scripts": {
-    "build": "papi && node scripts/build.js",
+    "build": "node scripts/build.js",
     "chopsticks": "yarn dlx -p @acala-network/chopsticks@1.5.0 -p sqlite3 chopsticks --config=config/kusama.yml",
     "chopsticks:test": "yarn dlx -p @acala-network/chopsticks@1.5.0 -p sqlite3 chopsticks --config=config/kusama.yml --runtime-log-level=0 --save-blocks=false",
     "dev": "start-server-and-test chopsticks http://localhost:8000 start:ready",
@@ -164,6 +164,7 @@
     "start:ready": "node scripts/wait-for-chopsticks.js && yarn start",
     "start:test": "DOTENV_ENV=test node scripts/start.js",
     "start:test:ready": "node scripts/wait-for-chopsticks.js && yarn start:test",
+    "postinstall": "papi",
     "test": "node scripts/test.js",
     "test:e2e": "node scripts/test-e2e.js all",
     "test:e2e:dashboard": "node scripts/test-e2e.js dashboard",
@@ -197,6 +198,5 @@
     "not dead",
     "not op_mini all"
   ],
-  "packageManager": "yarn@4.17.0",
-  "postinstall": "papi"
+  "packageManager": "yarn@4.17.0"
 }
